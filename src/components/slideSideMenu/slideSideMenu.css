@@ -1,0 +1,58 @@
+.SlideSideMenuWrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 2;
+}
+.SlideSideMenu {
+  position: absolute;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  padding: 10px;
+  background-color: #eef1f6;
+  overflow: hidden;
+  padding-top: 50px;
+  z-index: 3;
+}
+.sideMenuUl {
+  line-height: 30px;
+  padding-left: 20px;
+  list-style-type: none;
+}
+@-webkit-keyframes on {
+  0% {
+    right: -200px;
+  }
+  100% {
+    right: 0;
+  }
+}
+@keyframes on {
+  0% {
+    right: -200px;
+  }
+  100% {
+    right: 0;
+  }
+}
+@-webkit-keyframes off {
+  0% {
+    right: 0px;
+  }
+  100% {
+    right: -200px;
+  }
+}
+@keyframes off {
+  0% {
+    right: 0px;
+  }
+  100% {
+    right: -200px;
+  }
+}

@@ -1,0 +1,128 @@
+.navContainerMap {
+  position: relative;
+  display: flex;
+  max-width: 1000px;
+  margin: 0 auto;
+  justify-content: space-between;
+  top: 0px;
+  z-index: 1;
+}
+.mapContainer {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  transition: 0.3s ease all;
+}
+.mapMarkerWrap {
+  position: absolute;
+  top: -90px;
+  left: -38px;
+  cursor: pointer;
+  width: 76px;
+  height: 90px;
+  background-color: transparent;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.GooggleMapReact {
+  height: 100%;
+  width: 100%;
+}
+.mapMarker {
+  width: 100%;
+  height: 60px;
+  background-color: black;
+  display: flex;
+  align-items: center;
+}
+.mapMarkerName {
+  padding: 1px 2px;
+  font-size: 8px;
+  height: 19px;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 0 0 5px 5px;
+  background-color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+.openedTo {
+  display: block;
+  font-weight: normal;
+  font-size: 7px;
+  line-height: 6px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+.markerText {
+  color: #fff;
+  font-size: 9px;
+  text-align: center;
+  padding: 5px;
+}
+.arrow {
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border: 10px solid transparent;
+  border-top-color: #fff;
+  border-bottom: 0;
+}
+.mapMarker img {
+  width: 100%;
+  height: 100%;
+}
+.clusterMarker {
+  width: 36px;
+  height: 36px;
+  background: #e32a6c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.clusterMarker p {
+  font-weight: bold;
+  font-size: 16px;
+  color: #ffffff;
+}
+@media screen and (max-width: 1020px) {
+  .navContainerMap {
+    padding: 0 15px;
+    transition: 0.2s ease all;
+  }
+}
+@media screen and (max-width: 760px) {
+  .navContainerMap {
+    justify-content: center;
+  }
+  .mapContainer {
+    position: fixed;
+    top: 105px;
+    width: 100%;
+    height: calc(100% - 135px);
+  }
+}
+
+@keyframes toLeft {
+  0% {
+    right: 0px;
+  }
+  100% {
+    right: 200px;
+  }
+}
+@keyframes toRight {
+  0% {
+    right: 200px;
+  }
+  100% {
+    right: 0px;
+  }
+}

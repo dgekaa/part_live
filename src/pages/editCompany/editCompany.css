@@ -1,0 +1,9 @@
+.editCompanyContent {
+  padding: 70px 20px;
+  text-align: center;
+}
+.editCompanyContent li {
+  padding-top: 10px;
+  list-style-type: none;
+  text-align: left;
+}

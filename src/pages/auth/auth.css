@@ -1,0 +1,103 @@
+.Login {
+  background: #ffffff;
+  height: 100vh;
+  padding-top: 160px;
+  background-color: #e5e5e5;
+}
+.authBlock {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 258px;
+  padding: 20px 0;
+  /* height: 231px; */
+  background: #ffffff;
+  border: 1px solid #eef1f6;
+  border-radius: 10px;
+  flex-direction: column;
+}
+.authBlock h4 {
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  margin-bottom: 15px;
+}
+.authBlock input {
+  transition: 0.3s ease all;
+  width: 189px;
+  height: 30px;
+  outline: none;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 7px 0px;
+  padding: 0 10px;
+}
+.authBlock form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.authBlock input[type="submit"] {
+  background: #e32a6c;
+  border: 1px solid #e32a6c;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  cursor: pointer;
+}
+.errorField {
+  display: block;
+  transition: 0.3s ease all;
+  margin: 15px 10px 0 10px;
+  font-size: 11px;
+  color: rgb(241, 62, 62);
+}
+.forgetPass {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #bdbdbd;
+  line-height: 8px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s ease color;
+}
+.forgetPass:hover {
+  color: #e32a6c;
+}
+.successText {
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  margin-bottom: 25px;
+  margin-top: 5px;
+}
+.btnSubmit {
+  background: #e32a6c;
+  border: 1px solid #e32a6c;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  cursor: pointer;
+  width: 189px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
