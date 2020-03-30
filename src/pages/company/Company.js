@@ -32,6 +32,8 @@ const Company = props => {
   const [isLoading, setIsLoading] = useState(true);
   const [curDistance, setCurDistance] = useState(null);
 
+  const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
+
   const numberDayNow = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   useEffect(() => {
@@ -118,6 +120,22 @@ const Company = props => {
     console.log("Геолокация недоступна ");
   }
 
+  const mouseDownHandler = e => {
+    setMouseMapCoordinates({
+      clientX: e.clientX,
+      clientY: e.clientY
+    });
+  };
+
+  const mouseUpHandler = e => {
+    if (
+      +mouseMapCoordinates.clientX === +e.clientX &&
+      +mouseMapCoordinates.clientY === +e.clientY
+    ) {
+      togglePopup();
+    }
+  };
+
   return (
     <div
       onClick={e => {
@@ -194,7 +212,7 @@ const Company = props => {
                     {DATA.place.name}
                     <span className="mobileCompanyType">"</span>
                   </h3>
-                  <p className="typeOfPati">тип мероприятия?????</p>
+                  <p className="typeOfPati">"Вечеринка для студентов"</p>
                   <p className="dayOfWeek">{DAY_OF_WEEK[numberDayNow]}</p>
                   <p className="distance">
                     {curDistance && (
@@ -248,8 +266,27 @@ const Company = props => {
                 </div>
                 {windowWidth && windowWidth > 760 && (
                   <div className="smallMapWrap">
-                    <div className="smallMap" onClick={togglePopup}>
-                      <GoogleMap togglePopupGoogleMap={togglePopup} />
+                    <div
+                      className="smallMap"
+                      onMouseDown={mouseDownHandler}
+                      onMouseUp={mouseUpHandler}
+                    >
+                      <GoogleMap
+                        togglePopupGoogleMap={togglePopup}
+                        styleContainerMap={{ height: "85px" }}
+                        initialCenterMap={
+                          DATA.place.coordinates
+                            ? {
+                                lat: Number(
+                                  DATA.place.coordinates.split(",")[0]
+                                ),
+                                lng: Number(
+                                  DATA.place.coordinates.split(",")[1]
+                                )
+                              }
+                            : null
+                        }
+                      />
                     </div>
                   </div>
                 )}
@@ -258,8 +295,23 @@ const Company = props => {
             </div>
             {!!windowWidth && windowWidth <= 760 && (
               <div className="smallMapWrap">
-                <div className="smallMap" onClick={togglePopup} w>
-                  <GoogleMap togglePopupGoogleMap={togglePopup} />
+                <div
+                  className="smallMap"
+                  onMouseDown={mouseDownHandler}
+                  onMouseUp={mouseUpHandler}
+                >
+                  <GoogleMap
+                    togglePopupGoogleMap={togglePopup}
+                    styleContainerMap={{ height: "200px" }}
+                    initialCenterMap={
+                      DATA.place.coordinates
+                        ? {
+                            lat: Number(DATA.place.coordinates.split(",")[0]),
+                            lng: Number(DATA.place.coordinates.split(",")[1])
+                          }
+                        : null
+                    }
+                  />
                 </div>
                 <p className="smallMapLocation">
                   {DATA ? DATA.place.address : ""}

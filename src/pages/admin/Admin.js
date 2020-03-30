@@ -15,8 +15,8 @@ import "./admin.css";
 import { Redirect } from "react-router-dom";
 
 const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
-  const [hours, setHours] = useState("00");
-  const [minutes, setMinutes] = useState("00");
+  const [hours, setHours] = useState(realTimeInPicker.split(":")[0]);
+  const [minutes, setMinutes] = useState(realTimeInPicker.split(":")[1]);
 
   const clickHandlerTop = (e, max) => {
     e.target.nextSibling.innerText = +e.target.nextSibling.innerText + 1;
@@ -67,7 +67,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
             }}
           ></span>
           <p className="timePickerHours">
-            {realTimeInPicker && Number(realTimeInPicker.split(":")[0])}
+            {realTimeInPicker && realTimeInPicker.split(":")[0]}
           </p>
           <span
             className="bottomArrow"
@@ -85,7 +85,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
             }}
           ></span>
           <p className="timePickerMinutes">
-            {realTimeInPicker && Number(realTimeInPicker.split(":")[1])}
+            {realTimeInPicker && realTimeInPicker.split(":")[1]}
           </p>
           <span
             className="bottomArrow"
@@ -170,7 +170,6 @@ const Admin = props => {
       .then(data => {
         if (!data.errors) {
           setIsLoading(false);
-          console.log(data, " %%%%%%%%%%%%%%%%%");
           setDATA(data.data.place);
         } else {
           console.log(data.errors, " ERRORS");
@@ -417,6 +416,7 @@ const Admin = props => {
                         {!!DATA.schedules &&
                           DATA.schedules.map((el, i) => {
                             if (i < 7) {
+                              console.log(el, " ELLL => DATA.schedules");
                               return (
                                 <tr key={i}>
                                   <td>{SHORT_DAY_OF_WEEK[i]}</td>
