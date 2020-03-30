@@ -117,8 +117,7 @@ export const isWorkTimeNow = (item, setWorkTime, setIsWork) => {
   } else {
     setIsWork(false);
     setWorkTime(
-      "_Закрыто_ " +
-        todayWorkTime.start_time.split(":")[0] +
+      todayWorkTime.start_time.split(":")[0] +
         ":" +
         todayWorkTime.start_time.split(":")[1] +
         "-" +

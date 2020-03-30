@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
-import GooggleMapReact from "google-map-react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ReactHLS from "react-hls";
 
+import GoogleMap from "../../components/googleMap/GoogleMap";
 import Popup from "../../components/popup/Popup";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -12,7 +12,7 @@ import Loader from "../../components/loader/Loader";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
-import { API_KEY } from "../../constants";
+import { DAY_OF_WEEK } from "../../constants";
 
 import "./company.css";
 
@@ -22,15 +22,7 @@ const Company = props => {
   const [showPopup, setShowPopap] = useState(false);
   const [DATA, setDATA] = useState(null);
   const [geoposition, setGeoposition] = useState([0, 0]);
-  const dayOfWeek = [
-    "Понедельник",
-    "Вторник",
-    "Среда",
-    "Четверг",
-    "Пятница",
-    "Суббота",
-    "Воскресенье"
-  ];
+
   const [showStream, setShowStream] = useState(false);
   const [workTime, setWorkTime] = useState(false);
   const [isWork, setIsWork] = useState(false);
@@ -175,18 +167,19 @@ const Company = props => {
             <div className="shadowBlock">
               <div className="videoBlock">
                 {showStream && (
-                  <ReactHLS
-                    url={DATA.place.streams[0].url}
-                    controls={true}
-                    autoplay={true}
-                  />
+                  <div className="yesVideo">
+                    <ReactHLS
+                      url={DATA.place.streams[0].url}
+                      controls={true}
+                      autoplay={true}
+                    />
+                  </div>
                 )}
                 {!showStream && (
                   <div className="noVideo">
                     На данный момент трансляция не запланирована
                   </div>
                 )}
-
                 <div className="showWatchPeople"></div>
                 <p className="videoDescription">
                   <span>{DATA.place.name}</span> - {DATA.place.description}
@@ -202,7 +195,7 @@ const Company = props => {
                     <span className="mobileCompanyType">"</span>
                   </h3>
                   <p className="typeOfPati">тип мероприятия?????</p>
-                  <p className="dayOfWeek">{dayOfWeek[numberDayNow]}</p>
+                  <p className="dayOfWeek">{DAY_OF_WEEK[numberDayNow]}</p>
                   <p className="distance">
                     {curDistance && (
                       <span>{Number(curDistance).toFixed(2)} km</span>
@@ -255,30 +248,8 @@ const Company = props => {
                 </div>
                 {windowWidth && windowWidth > 760 && (
                   <div className="smallMapWrap">
-                    <div className="smallMap">
-                      <GooggleMapReact
-                        onClick={() => {
-                          togglePopup();
-                        }}
-                        // <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZQdg3dPHXD5Bt-Dgi85wNHG5G_MXpR7g&amp;&libraries=geometry,places"></script>
-                        bootstrapURLKeys={{
-                          key: API_KEY
-                        }}
-                        defaultCenter={{
-                          lat: geoposition[0],
-                          lng: geoposition[1]
-                        }}
-                        defaultZoom={10}
-                      >
-                        <Marker lat={geoposition[0]} lng={geoposition[1]}>
-                          <button className="mapMarkerCompany">
-                            <img
-                              alt="img"
-                              src={`${process.env.PUBLIC_URL}/img/location.png`}
-                            ></img>
-                          </button>
-                        </Marker>
-                      </GooggleMapReact>
+                    <div className="smallMap" onClick={togglePopup}>
+                      <GoogleMap togglePopupGoogleMap={togglePopup} />
                     </div>
                   </div>
                 )}
@@ -287,29 +258,8 @@ const Company = props => {
             </div>
             {!!windowWidth && windowWidth <= 760 && (
               <div className="smallMapWrap">
-                <div className="smallMap">
-                  <GooggleMapReact
-                    onClick={() => {
-                      togglePopup();
-                    }}
-                    bootstrapURLKeys={{
-                      key: API_KEY
-                    }}
-                    defaultCenter={{
-                      lat: geoposition[0],
-                      lng: geoposition[1]
-                    }}
-                    defaultZoom={10}
-                  >
-                    <Marker lat={geoposition[0]} lng={geoposition[1]}>
-                      <button className="mapMarkerCompany">
-                        <img
-                          alt="img"
-                          src={`${process.env.PUBLIC_URL}/img/location.png`}
-                        ></img>
-                      </button>
-                    </Marker>
-                  </GooggleMapReact>
+                <div className="smallMap" onClick={togglePopup} w>
+                  <GoogleMap togglePopupGoogleMap={togglePopup} />
                 </div>
                 <p className="smallMapLocation">
                   {DATA ? DATA.place.address : ""}
@@ -321,29 +271,19 @@ const Company = props => {
         {!DATA && isLoading && <Loader />}
         {showPopup && (
           <Popup togglePopup={togglePopup}>
-            <GooggleMapReact
-              style={{ height: "100%", width: "100%" }}
-              bootstrapURLKeys={{
-                key: API_KEY
-              }}
-              defaultCenter={{
-                lat: geoposition[0],
-                lng: geoposition[1]
-              }}
-              defaultZoom={10}
-            >
-              <Marker lat={geoposition[0]} lng={geoposition[1]}>
-                <button className="mapMarkerCompany">
-                  <img
-                    alt="img"
-                    src={`${process.env.PUBLIC_URL}/img/location.png`}
-                  ></img>
-                </button>
-              </Marker>
-            </GooggleMapReact>
-            <div className="closeBtn" onClick={togglePopup}>
-              &#215;
-            </div>
+            <GoogleMap
+              togglePopupGoogleMap={togglePopup}
+              styleContainerMap={{ width: "100vw" }}
+              closeBtn
+              initialCenterMap={
+                DATA.place.coordinates
+                  ? {
+                      lat: Number(DATA.place.coordinates.split(",")[0]),
+                      lng: Number(DATA.place.coordinates.split(",")[1])
+                    }
+                  : null
+              }
+            />
           </Popup>
         )}
       </div>

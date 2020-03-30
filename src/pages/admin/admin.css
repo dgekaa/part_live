@@ -1,336 +1,331 @@
+body {
+  background-color: #fff;
+}
+.adminContent {
+  margin-top: 48px;
+  margin-bottom: 45px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 .adminContent img {
   transition: 0.3s ease all;
 }
+
+.adminContent img {
+  height: 380px;
+  border-radius: 0 0 5px 5px;
+}
+.adminMenuContainer {
+  margin-top: 10px;
+}
+
+.adminMenuContainer .menuBlock {
+  font-size: 17px;
+  line-height: 20px;
+  letter-spacing: 0.05em;
+  padding: 10px 17px;
+  border-bottom: 1px solid #ececec;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s ease background-colord;
+}
+.adminMenuContainer .menuBlock:hover {
+  background-color: #eee;
+}
+.rotateArrow {
+  transition: 0.4s ease all;
+  transform: rotate(0deg);
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 17px;
+  top: 10px;
+}
+.adminMenuContainer .rotateArrow::before {
+  content: "";
+  width: 12px;
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  transform: rotate(135deg);
+  background-color: #bdbdbd;
+}
+.adminMenuContainer .rotateArrow::after {
+  content: "";
+  width: 12px;
+  height: 2px;
+  position: absolute;
+  top: 10px;
+  transform: rotate(45deg);
+  background-color: #bdbdbd;
+}
+.drDownWrap {
+  transition: 0.4s ease all;
+  overflow: hidden;
+  max-height: 0px;
+  padding: 0px 20px;
+}
+.workSchedule table,
+.streamSchedule table {
+  margin: 20px 0;
+  width: 100%;
+  border-collapse: collapse;
+}
+.workSchedule table tr td,
+.streamSchedule table tr td {
+  text-align: center;
+  border: 1px solid #eee;
+  padding: 8px 10px;
+  font-size: 16px;
+}
+.workSchedule table tr td:first-of-type,
+.streamSchedule table tr td:first-of-type {
+  font-weight: bold;
+  font-size: 13px;
+}
+.workSchedule table tr td:last-of-type,
+.streamSchedule table tr td:last-of-type {
+  cursor: pointer;
+  transition: 0.3s ease background-color;
+}
+.workSchedule table tr td:last-of-type:hover,
+.streamSchedule table tr td:last-of-type:hover {
+  background-color: #eee;
+}
+
+.popupWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100vw;
+  height: calc(100vh - 100px);
+  padding: 20px;
+}
+.closePopupBtn {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  top: 115px;
+  right: 10px;
+  position: absolute;
+  cursor: pointer;
+}
+.closePopupBtn::before {
+  content: "";
+  width: 30px;
+  height: 2px;
+  position: absolute;
+  z-index: 5;
+  right: 0px;
+  top: 9px;
+  transform: rotate(45deg);
+  background-color: #000;
+}
+.uploadFile {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  align-items: center;
+}
+.chooseImg {
+  text-align: center;
+}
+.uploadFile .fileName {
+  color: "#999";
+}
+.uploadFileContainer,
+.pickAddress {
+  background-color: #fae5ed;
+  /* box-shadow: 0 0 2px 0 #e32a6c; */
+  padding: 5px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+.uploadFileContainer h3,
+.pickAddress h3 {
+  font-weight: normal;
+  color: #999;
+  text-align: center;
+}
+.curAddress {
+  border-bottom: 1px solid #eee;
+  margin: 5px 0 10px 0;
+}
+.chooseAddressBtn,
+.uploadFileBtn {
+  background-color: #e32a6c;
+  border: 1px solid #e32a6c;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 5px;
+  text-align: center;
+  text-transform: inherit;
+  text-overflow: ellipsis;
+  font-size: 16px;
+}
+.pickFileBtn {
+  transition: 0.3s ease all;
+  cursor: pointer;
+  border: 1px solid #eee;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.pickFileBtn:hover {
+  background-color: #eee;
+}
+.closePopupBtn::after {
+  content: "";
+  width: 30px;
+  height: 2px;
+  right: 0px;
+  top: 9px;
+  position: absolute;
+  z-index: 5;
+  transform: rotate(-45deg);
+  background-color: #000;
+}
+.makeAsDayOff {
+  font-size: 18px;
+  color: #e32a6c;
+  padding: 30px 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.saveBtn {
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: #e32a6c;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 40px;
+  font-size: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  align-self: center;
+  width: 235px;
+  height: 45px;
+  line-height: 45px;
+}
+.timePickerWrap {
+}
+.TimePickerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.timePicker {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 15px;
+  background: #ffffff;
+  border: 1px solid #d6d6d6;
+  box-sizing: border-box;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+}
+.timePickerName {
+  text-align: center;
+  padding-bottom: 15px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #909090;
+}
+.space {
+  display: inline-block;
+  width: 30px;
+  height: 20px;
+}
+.timePickerHoursWrap,
+.timePickerMinutesWrap {
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 60px;
+  height: 120px;
+  align-items: center;
+  justify-content: center;
+}
+.timePickerHours,
+.timePickerMinutes {
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  padding: 10px 0;
+  justify-content: center;
+}
+.twoDots {
+  display: flex;
+  width: 10px;
+  font-weight: bold;
+  align-self: center;
+  justify-content: center;
+}
+.topArrow,
+.bottomArrow {
+  cursor: pointer;
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  position: relative;
+}
+.topArrow::after {
+  content: "";
+  width: 15px;
+  height: 2px;
+  top: 7px;
+  right: 17.5px;
+  background-color: #909090;
+  position: absolute;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+.topArrow::before {
+  content: "";
+  width: 15px;
+  height: 2px;
+  top: 7px;
+  left: 17.5px;
+  background-color: #909090;
+  position: absolute;
+  border-radius: 2px;
+  transform: rotate(-45deg);
+}
+.bottomArrow::after {
+  content: "";
+  width: 15px;
+  height: 2px;
+  top: 9px;
+  right: 17.5px;
+  background-color: #909090;
+  position: absolute;
+  transform: rotate(-45deg);
+  border-radius: 2px;
+}
+.bottomArrow::before {
+  content: "";
+  width: 15px;
+  height: 2px;
+  top: 9px;
+  left: 17.5px;
+  background-color: #909090;
+  position: absolute;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
 @media screen and (max-width: 760px) {
-  body {
-    background-color: #fff;
-  }
   .adminContent {
     margin-top: 48px;
     margin-bottom: 45px;
-  }
-  .adminContent img {
-    height: 380px;
-    border-radius: 0 0 5px 5px;
-  }
-  .adminMenuContainer {
-    margin-top: 10px;
-  }
-  .adminMenuContainer .menuBlock {
-    font-size: 17px;
-    line-height: 20px;
-    letter-spacing: 0.05em;
-    padding: 10px 17px;
-    border-bottom: 1px solid #ececec;
-    position: relative;
-    cursor: pointer;
-    transition: 0.3s ease background-colord;
-  }
-  .adminMenuContainer .menuBlock:hover {
-    background-color: #eee;
-  }
-  .rotateArrow {
-    transition: 0.4s ease all;
-    transform: rotate(0deg);
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 17px;
-    top: 10px;
-  }
-  .adminMenuContainer .rotateArrow::before {
-    content: "";
-    width: 12px;
-    height: 2px;
-    position: absolute;
-    right: 0;
-    top: 10px;
-    transform: rotate(135deg);
-    background-color: #bdbdbd;
-  }
-  .adminMenuContainer .rotateArrow::after {
-    content: "";
-    width: 12px;
-    height: 2px;
-    position: absolute;
-    top: 10px;
-    transform: rotate(45deg);
-    background-color: #bdbdbd;
-  }
-  .drDownWrap {
-    transition: 0.4s ease all;
-    overflow: hidden;
-    max-height: 0px;
-    padding: 0px 20px;
-  }
-  .workSchedule table,
-  .streamSchedule table {
-    margin: 20px 0;
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .workSchedule table tr td,
-  .streamSchedule table tr td {
-    text-align: center;
-    border: 1px solid #eee;
-    padding: 8px 10px;
-    font-size: 16px;
-  }
-  .workSchedule table tr td:first-of-type,
-  .streamSchedule table tr td:first-of-type {
-    font-weight: bold;
-    font-size: 13px;
-  }
-  .workSchedule table tr td:last-of-type,
-  .streamSchedule table tr td:last-of-type {
-    cursor: pointer;
-    transition: 0.3s ease background-color;
-  }
-  .workSchedule table tr td:last-of-type:hover,
-  .streamSchedule table tr td:last-of-type:hover {
-    background-color: #eee;
-  }
-  .addressInput {
-    position: absolute;
-    z-index: 2;
-    top: 50px;
-    left: 10px;
-    padding: 8px 5px;
-    width: 70%;
-    border: none;
-    outline: none;
-    box-shadow: none;
-  }
-  .popupWrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100vw;
-    height: calc(100vh - 100px);
-    padding: 20px;
-  }
-  .closePopupBtn {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    top: 115px;
-    right: 10px;
-    position: absolute;
-    cursor: pointer;
-  }
-  .closePopupBtn::before {
-    content: "";
-    width: 30px;
-    height: 2px;
-    position: absolute;
-    z-index: 5;
-    right: 0px;
-    top: 9px;
-    transform: rotate(45deg);
-    background-color: #000;
-  }
-  .uploadFile {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    align-items: center;
-  }
-  .chooseImg {
-    text-align: center;
-  }
-  .uploadFile .fileName {
-    color: "#999";
-  }
-  .uploadFileContainer,
-  .pickAddress {
-    box-shadow: 0 0 2px 0 #e32a6c;
-    padding: 5px;
-    margin: 5px 0;
-    border-radius: 5px;
-  }
-  .uploadFileContainer h3,
-  .pickAddress h3 {
-    font-weight: normal;
-    color: #999;
-    text-align: center;
-  }
-  .curAddress {
-    border-bottom: 1px solid #eee;
-    margin: 5px 0 10px 0;
-  }
-  .chooseAddressBtn,
-  .uploadFileBtn {
-    background-color: #e32a6c;
-    border: 1px solid #e32a6c;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 5px;
-    text-align: center;
-    text-transform: inherit;
-    text-overflow: ellipsis;
-    font-size: 16px;
-  }
-  .pickFileBtn {
-    transition: 0.3s ease all;
-    cursor: pointer;
-    border: 1px solid #eee;
-    padding: 10px;
-    border-radius: 5px;
-  }
-
-  .pickFileBtn:hover {
-    background-color: #eee;
-  }
-  .closePopupBtn::after {
-    content: "";
-    width: 30px;
-    height: 2px;
-    right: 0px;
-    top: 9px;
-    position: absolute;
-    z-index: 5;
-    transform: rotate(-45deg);
-    background-color: #000;
-  }
-  .makeAsDayOff {
-    font-size: 18px;
-    color: #e32a6c;
-    padding: 30px 0;
-    text-align: center;
-    cursor: pointer;
-  }
-  .pointPosition {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    left: calc(50% - 10px);
-    top: calc(50% - 10px);
-  }
-  .saveBtn {
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-    background-color: #e32a6c;
-    border-radius: 4px;
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 40px;
-    font-size: 16px;
-    text-align: center;
-    text-transform: uppercase;
-    align-self: center;
-    width: 235px;
-    height: 45px;
-    line-height: 45px;
-  }
-  .timePickerWrap {
-  }
-  .TimePickerContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-  .timePicker {
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 15px;
-    background: #ffffff;
-    border: 1px solid #d6d6d6;
-    box-sizing: border-box;
-    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px;
-  }
-  .timePickerName {
-    text-align: center;
-    padding-bottom: 15px;
-    font-weight: bold;
-    font-size: 16px;
-    color: #909090;
-  }
-  .space {
-    display: inline-block;
-    width: 30px;
-    height: 20px;
-  }
-  .timePickerHoursWrap,
-  .timePickerMinutesWrap {
-    font-size: 20px;
-    display: flex;
-    flex-direction: column;
-    width: 60px;
-    height: 120px;
-    align-items: center;
-    justify-content: center;
-  }
-  .timePickerHours,
-  .timePickerMinutes {
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 28px;
-    padding: 10px 0;
-    justify-content: center;
-  }
-  .twoDots {
-    display: flex;
-    width: 10px;
-    font-weight: bold;
-    align-self: center;
-    justify-content: center;
-  }
-  .topArrow,
-  .bottomArrow {
-    cursor: pointer;
-    display: inline-block;
-    width: 100%;
-    height: 20px;
-    position: relative;
-  }
-  .topArrow::after {
-    content: "";
-    width: 15px;
-    height: 2px;
-    top: 7px;
-    right: 17.5px;
-    background-color: #909090;
-    position: absolute;
-    border-radius: 2px;
-    transform: rotate(45deg);
-  }
-  .topArrow::before {
-    content: "";
-    width: 15px;
-    height: 2px;
-    top: 7px;
-    left: 17.5px;
-    background-color: #909090;
-    position: absolute;
-    border-radius: 2px;
-    transform: rotate(-45deg);
-  }
-  .bottomArrow::after {
-    content: "";
-    width: 15px;
-    height: 2px;
-    top: 9px;
-    right: 17.5px;
-    background-color: #909090;
-    position: absolute;
-    transform: rotate(-45deg);
-    border-radius: 2px;
-  }
-  .bottomArrow::before {
-    content: "";
-    width: 15px;
-    height: 2px;
-    top: 9px;
-    left: 17.5px;
-    background-color: #909090;
-    position: absolute;
-    border-radius: 2px;
-    transform: rotate(45deg);
   }
 }
 @media screen and (max-width: 560px) {

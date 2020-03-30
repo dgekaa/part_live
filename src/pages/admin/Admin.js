@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import GooggleMapReact from "google-map-react";
-import fetchGoogleMaps from "fetch-google-maps";
+import GoogleMap from "../../components/googleMap/GoogleMap";
 
 import { useCookies } from "react-cookie";
 import ReactHLS from "react-hls";
@@ -10,12 +9,12 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { API_KEY } from "../../constants";
+import { SHORT_DAY_OF_WEEK } from "../../constants";
 
 import "./admin.css";
 import { Redirect } from "react-router-dom";
 
-const TimePicker = ({ timePickerName, setTime }) => {
+const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
 
@@ -67,7 +66,9 @@ const TimePicker = ({ timePickerName, setTime }) => {
               clickHandlerTop(e, 24);
             }}
           ></span>
-          <p className="timePickerHours">00</p>
+          <p className="timePickerHours">
+            {realTimeInPicker && Number(realTimeInPicker.split(":")[0])}
+          </p>
           <span
             className="bottomArrow"
             onClick={e => {
@@ -83,7 +84,9 @@ const TimePicker = ({ timePickerName, setTime }) => {
               clickHandlerTop(e, 60);
             }}
           ></span>
-          <p className="timePickerMinutes">00</p>
+          <p className="timePickerMinutes">
+            {realTimeInPicker && Number(realTimeInPicker.split(":")[1])}
+          </p>
           <span
             className="bottomArrow"
             onClick={e => {
@@ -96,8 +99,6 @@ const TimePicker = ({ timePickerName, setTime }) => {
   );
 };
 
-const Marker = ({ children }) => children;
-
 const Admin = props => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
@@ -107,74 +108,48 @@ const Admin = props => {
   const [showPopupGoogleMap, setShowPopapGoogleMap] = useState(false);
   const [startTimePicker, setStartTimePicker] = useState("00:00");
   const [endTimePicker, setEndTimePicker] = useState("00:00");
+
+  const [startRealTimeInPicker, setStartRealTimeInPicker] = useState();
+  const [endRealTimeInPicker, setEndRealTimeInPicker] = useState();
+
   const [clickedTime, setClickedTime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [centerOfMap, setCenterOfMap] = useState({
-    lat: 53.904577,
-    lng: 27.557328
-  });
   const fileInput = useRef(null);
   const [cookies, setCookie, removeCookie] = useCookies([]);
 
-  useEffect(() => {
-    fetchGoogleMaps({
-      apiKey: API_KEY,
-      language: "ru",
-      libraries: ["places"]
-    }).then(Maps => {
-      const geocoder = new Maps.Geocoder();
+  const chooseNewAddress = (streetName, latLng) => {
+    const stringLatLng = "" + latLng.lat + "," + latLng.lng;
 
-      // КООРДИНАТЫ В АДРЕС
-      geocoder.geocode(
+    if (cookies.origin_data) {
+      QUERY(
         {
-          location: {
-            lat: parseFloat(centerOfMap.lat),
-            lng: parseFloat(centerOfMap.lng)
-          }
-        },
-        (results, status) => {
-          if (status === "OK") {
-            if (results[0]) {
-              console.log(
-                results[0].formatted_address,
-                "-----formatted_address"
-              );
-            } else {
-              console.log("No results found");
+          query: `mutation {
+          updatePlace(
+            input:{
+              id:"${props.match.params.id}"
+              address : "${streetName}"
+              coordinates: "${stringLatLng}"
             }
+          ){id address coordinates}
+        }`
+        },
+        cookies.origin_data
+      )
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+          if (!data.errors) {
+            togglePopupGoogleMap();
+            refreshData();
           } else {
-            console.log("Geocoder failed due to: " + status);
           }
-        }
-      );
-      // АВТОЗАВПОЛНЕНИЕ ИНПУТА
-      const addressId = document.querySelector("#addressInput");
-      const autocomplete = new Maps.places.Autocomplete(addressId, {});
-
-      Maps.event.addListener(autocomplete, "place_changed", function() {
-        const place = autocomplete.getPlace();
-        console.log(place.address_components, " !!__!!!___!!!!");
-      });
-
-      // ИЗ УЛИЦЫ В КООРДИНАТЫ
-      geocoder.geocode(
-        { address: "улица Янки Мавра, Минск, Беларусь" },
-        function(results, status) {
-          console.log(results, " ---RES---", status);
-
-          if (status == window.google.maps.GeocoderStatus.OK) {
-            console.log(results[0].geometry.location.lat());
-            console.log(results[0].geometry.location.lng());
-          } else {
-            console.log(
-              "Geocode was not successful for the following reason: ",
-              status
-            );
-          }
-        }
-      );
-    });
-  }, [centerOfMap]);
+        })
+        .catch(err => {
+          console.log(err, "  *****************ERR");
+        });
+    }
+  };
 
   const refreshData = () => {
     QUERY({
@@ -306,9 +281,13 @@ const Admin = props => {
       const fd = new FormData();
       fd.append("image", selectedFile, selectedFile.name);
       console.log(selectedFile, "---selecteedFile");
-      console.log(fd, "---fd");
+      console.log(fd, "---------======= fd");
     }
   };
+  useEffect(() => {
+    console.log(startTimePicker, "startTimePicker");
+    console.log(endTimePicker, "endTimePicker");
+  }, [startTimePicker]);
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -408,7 +387,9 @@ const Admin = props => {
                     </div>
                     <div className="pickAddress">
                       <h3>Выбрать адрес заведения</h3>
-                      <p className="curAddress">Текущий адрес</p>
+                      <p className="curAddress">
+                        {DATA.address || "Адрес не задан"}
+                      </p>
                       <p
                         onClick={() => {
                           togglePopupGoogleMap();
@@ -434,19 +415,25 @@ const Admin = props => {
                     <table>
                       <tbody>
                         {!!DATA.schedules &&
-                          DATA.schedules.map((el, i) => (
-                            <tr key={i}>
-                              <td>{el.day}</td>
-                              <td
-                                onClick={() => {
-                                  togglePopupDatePicker();
-                                  setClickedTime(el);
-                                }}
-                              >
-                                {el.start_time} - {el.end_time}
-                              </td>
-                            </tr>
-                          ))}
+                          DATA.schedules.map((el, i) => {
+                            if (i < 7) {
+                              return (
+                                <tr key={i}>
+                                  <td>{SHORT_DAY_OF_WEEK[i]}</td>
+                                  <td
+                                    onClick={() => {
+                                      setStartRealTimeInPicker(el.start_time);
+                                      setEndRealTimeInPicker(el.end_time);
+                                      togglePopupDatePicker();
+                                      setClickedTime(el);
+                                    }}
+                                  >
+                                    {el.start_time} - {el.end_time}
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          })}
                       </tbody>
                     </table>
                   </div>
@@ -470,9 +457,11 @@ const Admin = props => {
                             if (i < 7) {
                               return (
                                 <tr key={i}>
-                                  <td>{el.day}</td>
+                                  <td>{SHORT_DAY_OF_WEEK[i]}</td>
                                   <td
                                     onClick={() => {
+                                      setStartRealTimeInPicker(el.start_time);
+                                      setEndRealTimeInPicker(el.end_time);
                                       togglePopupDatePicker();
                                       setClickedTime(el);
                                     }}
@@ -512,7 +501,6 @@ const Admin = props => {
           <Popup
             togglePopup={togglePopupDatePicker}
             wrpaStyle={{ alignItems: "flex-end" }}
-            style={{}}
           >
             <div className="popupWrapper">
               <span
@@ -520,9 +508,17 @@ const Admin = props => {
                 onClick={togglePopupDatePicker}
               ></span>
               <div className="TimePickerContainer">
-                <TimePicker timePickerName="Пн" setTime={setStartTime} />
+                <TimePicker
+                  realTimeInPicker={startRealTimeInPicker}
+                  timePickerName="!!!!!!"
+                  setTime={setStartTime}
+                />
                 <span className="space"></span>
-                <TimePicker timePickerName="Вт" setTime={setEndTime} />
+                <TimePicker
+                  realTimeInPicker={endRealTimeInPicker}
+                  timePickerName="!!!!"
+                  setTime={setEndTime}
+                />
               </div>
               <p className="makeAsDayOff">Сделать выходным</p>
               <div
@@ -538,42 +534,25 @@ const Admin = props => {
           </Popup>
         )}
         {showPopupGoogleMap && (
-          <Popup togglePopup={togglePopupGoogleMap}>
-            <input
-              type="text"
-              id="addressInput"
-              className="addressInput"
-            ></input>
-            <GooggleMapReact
-              style={{ height: "100%", width: "100%" }}
-              bootstrapURLKeys={{
-                key: API_KEY
-              }}
-              defaultCenter={{
-                lat: 53.904577,
-                lng: 27.557328
-              }}
-              defaultZoom={11}
-              onChange={data => {
-                setCenterOfMap(data.center);
-              }}
-            >
-              {/* <Marker lat={centerOfMap.lat} lng={centerOfMap.lng}>
-                <button className="mapMarkerCompany">
-                  <img
-                    alt="!"
-                    src={`${process.env.PUBLIC_URL}/img/location.png`}
-                  ></img>
-                </button>
-              </Marker> */}
-            </GooggleMapReact>
-            <div className="closeBtn" onClick={togglePopupGoogleMap}>
-              &#215;
-            </div>
-            <img
-              className="pointPosition"
-              alt="!"
-              src={`${process.env.PUBLIC_URL}/img/location.png`}
+          <Popup
+            togglePopup={togglePopupGoogleMap}
+            style={{
+              width: "100%",
+              height: "100%"
+            }}
+          >
+            <GoogleMap
+              initialCenterMap={
+                DATA.coordinates
+                  ? {
+                      lat: Number(DATA.coordinates.split(",")[0]),
+                      lng: Number(DATA.coordinates.split(",")[1])
+                    }
+                  : null
+              }
+              togglePopupGoogleMap={togglePopupGoogleMap}
+              chooseNewAddress={chooseNewAddress}
+              isNewAddress
             />
           </Popup>
         )}

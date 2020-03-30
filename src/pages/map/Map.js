@@ -119,7 +119,6 @@ const MapComponent = props => {
   if (navigator.geolocation && !defaultCenter) {
     navigator.geolocation.getCurrentPosition(
       pos => {
-        console.log(pos.coords, "GEO POS____");
         setDefaultCenter({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude
@@ -223,8 +222,6 @@ const MapComponent = props => {
               }
 
               //БЕЗ ЗАМЕНЫ НА ЦИФРЫ
-              console.log(cluster.item, " ITEM");
-
               let streamTime = "",
                 workTime = "",
                 isWork = false;

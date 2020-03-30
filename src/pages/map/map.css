@@ -4,8 +4,11 @@
   max-width: 1000px;
   margin: 0 auto;
   justify-content: space-between;
-  top: 0px;
+  top: 15px;
   z-index: 1;
+}
+.gm-fullscreen-control {
+  display: none;
 }
 .mapContainer {
   position: absolute;
