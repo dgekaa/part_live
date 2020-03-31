@@ -113,7 +113,7 @@ const Company = props => {
         );
       },
       err => {
-        console.log(err, " GEOLOCATION ERROR ");
+        // console.log(err, " GEOLOCATION ERROR ");
       }
     );
   } else {

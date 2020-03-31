@@ -130,7 +130,7 @@ const MapComponent = props => {
         });
       },
       err => {
-        console.log(err, " GEOLOCATION ERROR");
+        // console.log(err, " GEOLOCATION ERROR");
       }
     );
   } else {
