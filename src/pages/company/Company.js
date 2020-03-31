@@ -227,6 +227,10 @@ const Company = props => {
                 </p>
                 <div className="timeBlocks">
                   <div className="timeBlock">
+                    {console.log(window.env, " window.env")}
+                    {console.log(window._env_, " window._env_")}
+
+                    {console.log(process.env, " process.env")}
                     <img
                       height="16"
                       width="16"
