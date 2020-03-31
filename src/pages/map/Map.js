@@ -9,6 +9,7 @@ import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { API_KEY } from "../../constants";
 
+import { styles } from "../../components/googleMap/GoogleMapStyles";
 import "./map.css";
 
 import TypeNav from "../../components/typeNav/TypeNav";
@@ -17,6 +18,10 @@ import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
 
 const Marker = ({ children }) => children;
+
+const createMapOptions = maps => {
+  return { styles: styles };
+};
 
 const MapComponent = props => {
   const [DATA, setDATA] = useState([]);
@@ -160,6 +165,7 @@ const MapComponent = props => {
       {!isLoading && (
         <div className="mapContainer">
           <GooggleMapReact
+            options={createMapOptions}
             style={{
               height: "100%",
               width: "100%"
@@ -173,7 +179,7 @@ const MapComponent = props => {
                 lng: 27.557328
               }
             }
-            defaultZoom={8}
+            defaultZoom={11}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => {
               mapRef.current = map;

@@ -128,8 +128,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       >
         <div
           className={
-            !clickedTypeLocal ? "companyNavBlock activeBtn" : "companyNavBlock"
+            !clickedTypeLocal ? "activeBtn companyNavBlock" : "companyNavBlock"
           }
+          style={!clickedTypeLocal ? { background: "#e32a6c" } : {}}
           onClick={e => {
             clickedType();
             setClickedTypeLocal();
@@ -138,9 +139,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           <Link
             className={
               !clickedTypeLocal
-                ? "companyNavLink activeBtnText"
+                ? "activeBtnText companyNavLink"
                 : "companyNavLink"
             }
+            style={!clickedTypeLocal ? { color: "#fff" } : {}}
             to={currentPage}
           >
             <p className="allText">Все</p>
@@ -153,8 +155,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               ref={slideBtn}
               className={
                 clickedTypeLocal === el.name
-                  ? "companyNavBlock activeBtn"
+                  ? "activeBtn companyNavBlock"
                   : "companyNavBlock"
+              }
+              style={
+                clickedTypeLocal === el.name ? { background: "#e32a6c" } : {}
               }
               key={i}
               onClick={e => {
@@ -166,9 +171,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               <Link
                 className={
                   clickedTypeLocal === el.name
-                    ? "companyNavLink activeBtnText"
+                    ? "activeBtnText companyNavLink"
                     : "companyNavLink"
                 }
+                style={clickedTypeLocal === el.name ? { color: "#fff" } : {}}
                 to={currentPage}
               >
                 <img

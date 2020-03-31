@@ -180,6 +180,36 @@ const Admin = props => {
       });
   };
 
+  const setDayOf = () => {
+    if (cookies.origin_data) {
+      console.log(clickedTime.id, "clickedTime.id");
+      QUERY(
+        {
+          query: `mutation {
+          deleteSchedule(
+            id:"${clickedTime.id}"
+          ){id day start_time end_time}
+        }`
+        },
+        cookies.origin_data
+      )
+        .then(res => {
+          return res.json();
+        })
+        .then(data => {
+          if (!data.errors) {
+            refreshData();
+            console.log(data, " ??????????????????");
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch(err => {
+          console.log(err, "  *****************ERR");
+        });
+    }
+  };
+
   const setWorkTimeOfOneDay = () => {
     if (cookies.origin_data) {
       QUERY(
@@ -520,7 +550,9 @@ const Admin = props => {
                   setTime={setEndTime}
                 />
               </div>
-              <p className="makeAsDayOff">Сделать выходным</p>
+              <p className="makeAsDayOff" onClick={setDayOf}>
+                Сделать выходным
+              </p>
               <div
                 className="saveBtn"
                 onClick={() => {

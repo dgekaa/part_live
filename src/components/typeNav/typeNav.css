@@ -23,18 +23,25 @@
   height: 70px;
   border: 2px solid #c4c4c4;
   border-right: none;
-
   cursor: pointer;
+  transition: 0.5s ease all;
 }
 .typeNavBlock:last-of-type {
   border-right: 2px solid #c4c4c4;
+}
+.typeNavBlock:hover {
+  background: #e32a6c;
 }
 .typeNavText {
   font-size: 14px;
   font-weight: bold;
   text-decoration: none;
-  color: "#fff";
+  color: #000;
 }
+.typeNavText:hover {
+  color: #fff;
+}
+
 @media screen and (max-width: 760px) {
   .TypeNav {
     display: none;

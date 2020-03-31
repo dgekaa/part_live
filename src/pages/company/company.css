@@ -337,17 +337,15 @@
   .video {
     height: 250px;
   }
-
+  .smallMapWrap {
+    height: 160px;
+  }
   .smallMap {
     height: 160px;
   }
 }
 @media screen and (max-width: 360px) {
   .video {
-    height: 160px;
-  }
-
-  .smallMap {
     height: 160px;
   }
 }

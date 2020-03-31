@@ -54,6 +54,12 @@ export const isShowStreamNow = (item, setShowStream) => {
     setShowStream(true);
   } else {
     setShowStream(false);
+    const sch = item.streams[0].schedules;
+    for (let i = 0; i < sch.length; i++) {
+      if (i < 7) {
+        console.log(sch[i], " SCH");
+      }
+    }
   }
 };
 

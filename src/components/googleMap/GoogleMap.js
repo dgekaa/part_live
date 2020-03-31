@@ -6,6 +6,7 @@ import { API_KEY } from "../../constants";
 
 import "react-google-places-autocomplete/dist/assets/index.css";
 
+import { styles } from "./GoogleMapStyles.js";
 import "./googleMap.css";
 
 const LoadingContainer = props => <div></div>;
@@ -86,10 +87,11 @@ const MapContainer = ({
         google={google}
         onReady={onReady}
         onClick={mapClicked}
-        onDragend={onDragend}
+        onDragend={isNewAddress && onDragend}
         zoom={initialZoom}
         initialCenter={initialCenter}
         center={toCenter}
+        styles={styles}
       >
         <Marker
           onClick={onMarkerClick}
