@@ -12,8 +12,8 @@ const SmallCompanyBlock = ({ item }) => {
   const [curDistance, setCurDistance] = useState(null);
 
   useEffect(() => {
-    isShowStreamNow(item, setShowStream);
-    isWorkTimeNow(item, setWorkTime, setIsWork);
+    // isShowStreamNow(item, setShowStream);
+    // isWorkTimeNow(item, setWorkTime, setIsWork);
   }, [item]);
 
   if (navigator.geolocation) {

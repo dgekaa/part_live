@@ -16,6 +16,8 @@ const currentTimeMS =
   new Date().getHours() * HtoMs + new Date().getMinutes() * MtoMs;
 
 export const isShowStreamNow = (item, setShowStream) => {
+  console.log(item.streams[0].schedules, "  item.streams[0]");
+
   const yesterdayStream = item.streams[0].schedules[numberDayYest],
     todayStream = item.streams[0].schedules[numberDayNow];
 

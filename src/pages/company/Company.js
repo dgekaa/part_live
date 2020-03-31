@@ -38,8 +38,8 @@ const Company = props => {
 
   useEffect(() => {
     if (DATA) {
-      isShowStreamNow(DATA.place, setShowStream);
-      isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
+      // isShowStreamNow(DATA.place, setShowStream);
+      // isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
     }
   }, [DATA]);
 

@@ -242,8 +242,8 @@ const MapComponent = props => {
                 isWork = bool;
               };
 
-              isShowStreamNow(cluster.item, setShowStream);
-              isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
+              // isShowStreamNow(cluster.item, setShowStream);
+              // isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
 
               return (
                 <Marker
