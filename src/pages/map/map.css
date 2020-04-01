@@ -4,8 +4,7 @@
   max-width: 1000px;
   margin: 0 auto;
   justify-content: space-between;
-  top: 100px;
-  /* z-index: 1; */
+  top: 50px;
 }
 .gm-fullscreen-control {
   display: none;

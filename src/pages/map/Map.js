@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 
+import { EN_SHORT_TO_RU_LONG } from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { API_KEY } from "../../constants";
@@ -287,7 +288,7 @@ const MapComponent = props => {
                             >
                               {nextStreamTime.start_time &&
                                 "Трансляция начнется в " +
-                                  nextStreamTime.day +
+                                  EN_SHORT_TO_RU_LONG[nextStreamTime.day] +
                                   " в " +
                                   nextStreamTime.start_time}
 

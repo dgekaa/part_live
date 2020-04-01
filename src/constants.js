@@ -35,6 +35,15 @@ export const SHORT_DAY_OF_WEEK = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб"
 //     Sun: "Sun"
 //   }
 // ];
+export const EN_SHORT_TO_RU_LONG = {
+  Mon: "понедельник",
+  Tue: "вторник",
+  Wed: "среда",
+  Thu: "четверг",
+  Fri: "пфтница",
+  Sat: "суббота",
+  Sun: "воскресенье"
+};
 
 export const EN_SHORT_DAY_OF_WEEK = [
   {

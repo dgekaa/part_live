@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./smallCompanyBlock.css";
 import { Link } from "react-router-dom";
 
+import { EN_SHORT_TO_RU_LONG } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 
@@ -62,7 +63,7 @@ const SmallCompanyBlock = ({ item }) => {
             <p style={{ color: "#fff", textAlign: "center", padding: "20px" }}>
               {nextStreamTime.start_time &&
                 "Трансляция начнется в " +
-                  nextStreamTime.day +
+                  EN_SHORT_TO_RU_LONG[nextStreamTime.day] +
                   " в " +
                   nextStreamTime.start_time}
 
@@ -77,13 +78,24 @@ const SmallCompanyBlock = ({ item }) => {
             <p className="companyName1">{item.name}</p>
             <p className="companyType1">{item.categories[0].name} </p>
           </div>
-          {/* <p className="companyTitle1">???????</p> */}
+          <p className="companyTitle1">"Супер пати всех студентов"</p>
         </div>
         <div className="bottomBlockText1">
-          <div className="row1">
-            <p className="leftText1">Время работы</p>
+          <div className="rowCompanyBlock">
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <img
+                alt="Loc"
+                src={`${process.env.PUBLIC_URL}/img/eye.png`}
+                className="eyeCompanyBlock"
+              />
+              <p className="leftTextCompanyBlock">25 752</p>
+            </div>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <span className="circle"></span>
+              <p className="leftTextCompanyBlock">255</p>
+            </div>
           </div>
-          <p className="rightText1">{workTime}</p>
+          <p className="workTimeText">{workTime}</p>
         </div>
       </div>
       <div className="descriptionMobile1">
