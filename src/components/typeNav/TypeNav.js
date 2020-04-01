@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "./typeNav.css";
 
 const TypeNav = ({ style }) => {
-  // console.log(props, "PROPS NAV___");
   const pathname = window.location.pathname;
   return (
     <div className="TypeNav" style={{ ...style }}>

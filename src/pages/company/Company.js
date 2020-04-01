@@ -16,14 +16,13 @@ import { DAY_OF_WEEK } from "../../constants";
 
 import "./company.css";
 
-const Marker = ({ children }) => children;
-
 const Company = props => {
   const [showPopup, setShowPopap] = useState(false);
   const [DATA, setDATA] = useState(null);
   const [geoposition, setGeoposition] = useState([0, 0]);
 
   const [showStream, setShowStream] = useState(false);
+  const [nextStreamTime, setNextStreamTime] = useState(false);
   const [workTime, setWorkTime] = useState(false);
   const [isWork, setIsWork] = useState(false);
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
@@ -38,8 +37,8 @@ const Company = props => {
 
   useEffect(() => {
     if (DATA) {
-      // isShowStreamNow(DATA.place, setShowStream);
-      // isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
+      isShowStreamNow(DATA.place, setShowStream, setNextStreamTime);
+      isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
     }
   }, [DATA]);
 
@@ -113,7 +112,7 @@ const Company = props => {
         );
       },
       err => {
-        // console.log(err, " GEOLOCATION ERROR ");
+        console.log(err, " GEOLOCATION ERROR ");
       }
     );
   } else {
@@ -195,7 +194,13 @@ const Company = props => {
                 )}
                 {!showStream && (
                   <div className="noVideo">
-                    На данный момент трансляция не запланирована
+                    {nextStreamTime.start_time &&
+                      "Трансляция начнется в " +
+                        nextStreamTime.day +
+                        " в " +
+                        nextStreamTime.start_time}
+
+                    {!nextStreamTime.start_time && "Нет предстоящих трансляций"}
                   </div>
                 )}
                 <div className="showWatchPeople"></div>
@@ -227,10 +232,6 @@ const Company = props => {
                 </p>
                 <div className="timeBlocks">
                   <div className="timeBlock">
-                    {console.log(window.env, " window.env")}
-                    {console.log(window._env_, " window._env_")}
-
-                    {console.log(process.env, " process.env")}
                     <img
                       height="16"
                       width="16"

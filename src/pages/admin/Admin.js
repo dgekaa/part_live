@@ -9,7 +9,7 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { SHORT_DAY_OF_WEEK } from "../../constants";
+import { SHORT_DAY_OF_WEEK, EN_SHORT_DAY_OF_WEEK } from "../../constants";
 
 import "./admin.css";
 import { Redirect } from "react-router-dom";
@@ -111,6 +111,9 @@ const Admin = props => {
 
   const [startRealTimeInPicker, setStartRealTimeInPicker] = useState();
   const [endRealTimeInPicker, setEndRealTimeInPicker] = useState();
+  const [isEmptyTime, setIsEmptyTime] = useState(true);
+  const [enumWeekName, setEnumWeekName] = useState("");
+  const [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false);
 
   const [clickedTime, setClickedTime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -180,16 +183,15 @@ const Admin = props => {
       });
   };
 
-  const setDayOf = () => {
+  const setAsDayOf = () => {
     if (cookies.origin_data) {
-      console.log(clickedTime.id, "clickedTime.id");
       QUERY(
         {
           query: `mutation {
-          deleteSchedule(
-            id:"${clickedTime.id}"
-          ){id day start_time end_time}
-        }`
+            deleteSchedule(
+              id:"${clickedTime.id}"
+            ){id day start_time end_time}
+          }`
         },
         cookies.origin_data
       )
@@ -210,36 +212,179 @@ const Admin = props => {
     }
   };
 
+  const setStreamTimeOfOneDay = () => {
+    if (cookies.origin_data) {
+      if (!DATA.streams[0]) {
+        //стрим не существует
+        QUERY(
+          {
+            query: `mutation {
+              createStream(
+                input:{
+                  name: "${DATA.name}"
+                  url :"https://partycamera.org/maxshow/index.m3u8"
+                  preview :"http://partycamera.org:80/maxshow/preview.mp4"
+                  place:{
+                    connect:"${props.match.params.id}"
+                  }
+                  schedules:{
+                    create:[
+                       {
+                        day: ${enumWeekName}
+                        start_time: "${startTimePicker}"
+                        end_time: "${endTimePicker}"
+                      }
+                    ]
+                  }
+                }
+              ) {
+                id name url
+                }
+            }`
+          },
+          cookies.origin_data
+        )
+          .then(res => res.json())
+          .then(data => {
+            if (!data.errors) {
+              refreshData();
+              console.log(data, "FETCH data");
+            } else {
+              console.log(data.errors, " ERRORS");
+            }
+          })
+          .catch(err => console.log(err, "  *******ERR"));
+      }
+      if (DATA.streams[0] && !isEmptyTime) {
+        // не пустое время стрима и мтрим уже существет
+        QUERY(
+          {
+            query: `mutation {
+              updateStream (
+                input:{
+                  id:"${DATA.streams[0].id}"
+                  schedules:{
+                    update:[
+                       {
+                        id: ${clickedTime.id}
+                        start_time: "${startTimePicker}"
+                        end_time: "${endTimePicker}"
+                      }
+                    ]
+                  }
+                }
+              ) {
+                id name url
+                }
+            }`
+          },
+          cookies.origin_data
+        )
+          .then(res => res.json())
+          .then(data => {
+            if (!data.errors) {
+              refreshData();
+              console.log(data, "FETCH data");
+            } else {
+              console.log(data.errors, " ERRORS");
+            }
+          })
+          .catch(err => console.log(err, "  *******ERR"));
+      }
+      if (DATA.streams[0] && isEmptyTime) {
+        // пустое время стрима и мтрим уже существет
+        QUERY(
+          {
+            query: `mutation {
+              updateStream (
+                input:{
+                  id:"${DATA.streams[0].id}"
+                  schedules:{
+                    create:[
+                       {
+                        day: ${enumWeekName}
+                        start_time: "${startTimePicker}"
+                        end_time: "${endTimePicker}"
+                      }
+                    ]
+                  }
+                }
+              ) {
+                id name url
+                }
+            }`
+          },
+          cookies.origin_data
+        )
+          .then(res => res.json())
+          .then(data => {
+            if (!data.errors) {
+              refreshData();
+              console.log(data, "FETCH data");
+            } else {
+              console.log(data.errors, " ERRORS");
+            }
+          })
+          .catch(err => console.log(err, "  *******ERR"));
+      }
+    }
+  };
   const setWorkTimeOfOneDay = () => {
     if (cookies.origin_data) {
-      QUERY(
-        {
-          query: `mutation {
+      if (isEmptyTime) {
+        //СОЗДАТЬ время работы заведения
+        QUERY(
+          {
+            query: `mutation {
+              updatePlace(
+                input:{
+                  id:"${props.match.params.id}"
+                  schedules:{
+                    create:{
+                      day: ${enumWeekName} start_time: "${startTimePicker}" end_time: "${endTimePicker}"
+                    }
+                  }
+                }
+              ){id}
+            }`
+          },
+          cookies.origin_data
+        )
+          .then(res => res.json())
+          .then(data => {
+            if (!data.errors) {
+              refreshData();
+            } else {
+              console.log(data.errors, " ERRORS");
+            }
+          })
+          .catch(err => console.log(err, "  *******ERR"));
+      }
+
+      if (!isEmptyTime) {
+        //ИЗМЕНИТЬ время работы заведения
+        QUERY(
+          {
+            query: `mutation {
           updateSchedule(
             input:{
-              id:"${clickedTime.id}"
-              start_time: "${startTimePicker}"
-              end_time: "${endTimePicker}"
+              id:"${clickedTime.id}" start_time: "${startTimePicker}" end_time: "${endTimePicker}"
             }
-          ){id day start_time end_time}
+          ){id}
         }`
-        },
-        cookies.origin_data
-      )
-        .then(res => {
-          return res.json();
-        })
-        .then(data => {
-          if (!data.errors) {
-            refreshData();
-            console.log(data, " ??????????????????");
-          } else {
-            console.log(data.errors, " ERRORS");
-          }
-        })
-        .catch(err => {
-          console.log(err, "  *****************ERR");
-        });
+          },
+          cookies.origin_data
+        )
+          .then(res => res.json())
+          .then(data => {
+            if (!data.errors) {
+              refreshData();
+            } else {
+              console.log(data.errors, " ERRORS");
+            }
+          })
+          .catch(err => console.log(err, "  *******ERR"));
+      }
     }
   };
 
@@ -288,11 +433,13 @@ const Admin = props => {
       : setShowPopapGoogleMap(true);
   };
 
-  if (showPopupDatePicker || showPopupGoogleMap) {
-    document.body.style.overflow = "hidden";
-  } else {
-    document.body.style.overflow = "auto";
-  }
+  useEffect(() => {
+    if (showPopupDatePicker || showPopupGoogleMap) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showPopupDatePicker, showPopupGoogleMap]);
 
   const setStartTime = (h, m) => {
     setStartTimePicker("" + h + ":" + m);
@@ -313,10 +460,21 @@ const Admin = props => {
       console.log(fd, "---------======= fd");
     }
   };
-  useEffect(() => {
-    console.log(startTimePicker, "startTimePicker");
-    console.log(endTimePicker, "endTimePicker");
-  }, [startTimePicker]);
+
+  const SetNewTimeObject = data => {
+    const timeObject = {};
+    EN_SHORT_DAY_OF_WEEK.forEach((e, i) => {
+      data.forEach((el, ind) => {
+        if (!timeObject[e.day]) {
+          timeObject[e.day] = "Пусто";
+        }
+        if (el.day) {
+          timeObject[el.day] = el;
+        }
+      });
+    });
+    return timeObject;
+  };
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -360,7 +518,7 @@ const Admin = props => {
           {isLoading && <Loader />}
           {!isLoading && (
             <div className="adminContent">
-              {!!DATA.streams && (
+              {!!DATA.streams && DATA.streams[0] && (
                 <ReactHLS
                   url={DATA.streams[0].url}
                   controls={true}
@@ -372,7 +530,6 @@ const Admin = props => {
                   }}
                 />
               )}
-
               <div className="adminMenuContainer">
                 <div className="menuBlockWrap profile">
                   <div
@@ -443,26 +600,44 @@ const Admin = props => {
                   <div className="drDownWrap">
                     <table>
                       <tbody>
-                        {!!DATA.schedules &&
-                          DATA.schedules.map((el, i) => {
-                            if (i < 7) {
-                              console.log(el, " ELLL => DATA.schedules");
-                              return (
-                                <tr key={i}>
-                                  <td>{SHORT_DAY_OF_WEEK[i]}</td>
-                                  <td
-                                    onClick={() => {
-                                      setStartRealTimeInPicker(el.start_time);
-                                      setEndRealTimeInPicker(el.end_time);
+                        {DATA.schedules &&
+                          EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                            const oneDay = SetNewTimeObject(DATA.schedules)[
+                              el.day
+                            ];
+                            return (
+                              <tr key={i}>
+                                <td>{el.day}</td>
+                                <td
+                                  onClick={() => {
+                                    if (oneDay && oneDay.id) {
+                                      setIsEmptyTime(false); //не пустое время
+                                      setEnumWeekName(""); //день недели для отправки запроса
+                                      setStartRealTimeInPicker(
+                                        oneDay.start_time
+                                      );
+                                      setEndRealTimeInPicker(oneDay.end_time);
                                       togglePopupDatePicker();
-                                      setClickedTime(el);
-                                    }}
-                                  >
-                                    {el.start_time} - {el.end_time}
-                                  </td>
-                                </tr>
-                              );
-                            }
+                                      setClickedTime(oneDay); //объект для отправки запроса
+                                      setIsSetWorkTimeDPick(true);
+                                    } else {
+                                      setIsEmptyTime(true);
+                                      setEnumWeekName(el.day);
+                                      setStartRealTimeInPicker("00:00");
+                                      setEndRealTimeInPicker("00:00");
+                                      togglePopupDatePicker();
+                                      setIsSetWorkTimeDPick(true);
+                                    }
+                                  }}
+                                >
+                                  {oneDay && oneDay.id
+                                    ? oneDay.start_time +
+                                      " - " +
+                                      oneDay.end_time
+                                    : "Выходной"}
+                                </td>
+                              </tr>
+                            );
                           })}
                       </tbody>
                     </table>
@@ -481,26 +656,44 @@ const Admin = props => {
                   <div className="drDownWrap">
                     <table>
                       <tbody>
-                        {!!DATA &&
-                          DATA.streams &&
-                          DATA.streams[0].schedules.map((el, i) => {
-                            if (i < 7) {
-                              return (
-                                <tr key={i}>
-                                  <td>{SHORT_DAY_OF_WEEK[i]}</td>
-                                  <td
-                                    onClick={() => {
-                                      setStartRealTimeInPicker(el.start_time);
-                                      setEndRealTimeInPicker(el.end_time);
+                        {DATA.streams &&
+                          EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                            const oneDay = SetNewTimeObject(
+                              DATA.streams[0] ? DATA.streams[0].schedules : []
+                            )[el.day];
+                            return (
+                              <tr key={i}>
+                                <td>{el.day}</td>
+                                <td
+                                  onClick={() => {
+                                    if (oneDay && oneDay.id) {
+                                      setIsEmptyTime(false); //не пустое время
+                                      setEnumWeekName("");
+                                      setStartRealTimeInPicker(
+                                        oneDay.start_time
+                                      );
+                                      setEndRealTimeInPicker(oneDay.end_time);
                                       togglePopupDatePicker();
-                                      setClickedTime(el);
-                                    }}
-                                  >
-                                    {el.start_time} - {el.end_time}
-                                  </td>
-                                </tr>
-                              );
-                            }
+                                      setClickedTime(oneDay);
+                                      setIsSetWorkTimeDPick(false);
+                                    } else {
+                                      setIsEmptyTime(true); //пустое время
+                                      setEnumWeekName(el.day);
+                                      setStartRealTimeInPicker("00:00");
+                                      setEndRealTimeInPicker("00:00");
+                                      togglePopupDatePicker();
+                                      setIsSetWorkTimeDPick(false);
+                                    }
+                                  }}
+                                >
+                                  {oneDay && oneDay.id
+                                    ? oneDay.start_time +
+                                      " - " +
+                                      oneDay.end_time
+                                    : "Выходной"}
+                                </td>
+                              </tr>
+                            );
                           })}
                       </tbody>
                     </table>
@@ -540,7 +733,7 @@ const Admin = props => {
               <div className="TimePickerContainer">
                 <TimePicker
                   realTimeInPicker={startRealTimeInPicker}
-                  timePickerName="!!!!!!"
+                  timePickerName="!!!!"
                   setTime={setStartTime}
                 />
                 <span className="space"></span>
@@ -550,14 +743,21 @@ const Admin = props => {
                   setTime={setEndTime}
                 />
               </div>
-              <p className="makeAsDayOff" onClick={setDayOf}>
+              <p
+                className="makeAsDayOff"
+                onClick={() => {
+                  setAsDayOf();
+                  togglePopupDatePicker();
+                }}
+              >
                 Сделать выходным
               </p>
               <div
                 className="saveBtn"
                 onClick={() => {
                   togglePopupDatePicker();
-                  setWorkTimeOfOneDay();
+                  isSetWorkTimeDPick && setWorkTimeOfOneDay();
+                  !isSetWorkTimeDPick && setStreamTimeOfOneDay();
                 }}
               >
                 Сохранить

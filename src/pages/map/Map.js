@@ -130,7 +130,7 @@ const MapComponent = props => {
         });
       },
       err => {
-        // console.log(err, " GEOLOCATION ERROR");
+        console.log(err, " GEOLOCATION ERROR");
       }
     );
   } else {
@@ -230,7 +230,8 @@ const MapComponent = props => {
               //БЕЗ ЗАМЕНЫ НА ЦИФРЫ
               let streamTime = "",
                 workTime = "",
-                isWork = false;
+                isWork = false,
+                nextStreamTime = "";
 
               const setShowStream = time => {
                 streamTime = time;
@@ -241,9 +242,12 @@ const MapComponent = props => {
               const setIsWork = bool => {
                 isWork = bool;
               };
+              const setNextStreamTime = time => {
+                nextStreamTime = time;
+              };
 
-              // isShowStreamNow(cluster.item, setShowStream);
-              // isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
+              isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
+              isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
 
               return (
                 <Marker
@@ -281,7 +285,14 @@ const MapComponent = props => {
                                 padding: "3px"
                               }}
                             >
-                              Трансляции нет
+                              {nextStreamTime.start_time &&
+                                "Трансляция начнется в " +
+                                  nextStreamTime.day +
+                                  " в " +
+                                  nextStreamTime.start_time}
+
+                              {!nextStreamTime.start_time &&
+                                "Нет предстоящих трансляций"}
                             </p>
                           </div>
                         )}

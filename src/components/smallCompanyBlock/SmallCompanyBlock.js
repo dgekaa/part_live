@@ -10,10 +10,11 @@ const SmallCompanyBlock = ({ item }) => {
   const [workTime, setWorkTime] = useState(false);
   const [isWork, setIsWork] = useState(false);
   const [curDistance, setCurDistance] = useState(null);
+  const [nextStreamTime, setNextStreamTime] = useState(false);
 
   useEffect(() => {
-    // isShowStreamNow(item, setShowStream);
-    // isWorkTimeNow(item, setWorkTime, setIsWork);
+    isShowStreamNow(item, setShowStream, setNextStreamTime);
+    isWorkTimeNow(item, setWorkTime, setIsWork);
   }, [item]);
 
   if (navigator.geolocation) {
@@ -29,7 +30,7 @@ const SmallCompanyBlock = ({ item }) => {
         );
       },
       err => {
-        // console.log(err, " GEOLOCATION ERROR ");
+        console.log(err, " GEOLOCATION ERROR ");
       }
     );
   } else {
@@ -59,7 +60,13 @@ const SmallCompanyBlock = ({ item }) => {
             }}
           >
             <p style={{ color: "#fff", textAlign: "center", padding: "20px" }}>
-              На данный момент стрим не идет
+              {nextStreamTime.start_time &&
+                "Трансляция начнется в " +
+                  nextStreamTime.day +
+                  " в " +
+                  nextStreamTime.start_time}
+
+              {!nextStreamTime.start_time && "Нет предстоящих трансляций"}
             </p>
           </div>
         )}
