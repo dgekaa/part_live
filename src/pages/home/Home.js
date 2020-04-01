@@ -116,13 +116,7 @@ const Home = props => {
               ))}
             {!companyData.length && isLoading && <Loader />}
             {!companyData.length && !isLoading && (
-              <div
-                style={{
-                  padding: "20px"
-                }}
-              >
-                Заведений с данным типо нет
-              </div>
+              <div className="noOneCompany">Нет заведений</div>
             )}
           </div>
         </div>

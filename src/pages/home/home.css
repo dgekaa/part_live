@@ -1,6 +1,6 @@
 .homeContentWrap {
   padding-top: 50px;
-  max-width: 1040px;
+  max-width: 1000px;
   margin: 0 auto;
   -webkit-transition: 0.3s ease all;
   -o-transition: 0.3s ease all;
@@ -15,6 +15,13 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  height: 54px;
+}
+.noOneCompany {
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  padding: 30px;
 }
 .homeContent {
   margin-top: 50px;

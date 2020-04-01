@@ -143,6 +143,15 @@ const Company = props => {
         }
       }}
     >
+      <Header
+        logo
+        burger
+        arrow
+        toSlideFixedHeader={isShowMenu}
+        isShowMenu={isShowMenu}
+        showSlideSideMenu={showSlideSideMenu}
+        showSideMenu={showSideMenu}
+      />
       <div
         className="Company"
         style={
@@ -168,28 +177,33 @@ const Company = props => {
             <Link to="/home"> &#60; На главную</Link>
           </div>
         )}
-        {windowWidth && windowWidth < 760 && (
-          <Header
-            logo
-            burger
-            arrow
-            toSlideFixedHeader={isShowMenu}
-            isShowMenu={isShowMenu}
-            showSlideSideMenu={showSlideSideMenu}
-            showSideMenu={showSideMenu}
-          />
-        )}
         {DATA && (
           <div className="flex">
             <div className="shadowBlock">
               <div className="videoBlock">
                 {showStream && (
-                  <div className="yesVideo">
-                    <ReactHLS
-                      url={DATA.place.streams[0].url}
-                      controls={true}
-                      autoplay={true}
-                    />
+                  <div>
+                    <div className="yesVideo">
+                      <ReactHLS
+                        url={DATA.place.streams[0].url}
+                        controls={true}
+                        autoplay={true}
+                      />
+                    </div>
+                    <div className="rowCompanyBlockStream">
+                      <div className="rowCompanyBlockStreem">
+                        <img
+                          alt="eye"
+                          src={`${process.env.PUBLIC_URL}/img/eye.png`}
+                          className="eyeCompanyBlock"
+                        />
+                        <p className="leftTextCompanyBlock">25 752</p>
+                      </div>
+                      <div className="rowCompanyBlockStreem">
+                        <span className="circle"></span>
+                        <p className="leftTextCompanyBlock">255</p>
+                      </div>
+                    </div>
                   </div>
                 )}
                 {!showStream && (
@@ -217,7 +231,7 @@ const Company = props => {
                     {DATA.place.name}
                     <span className="mobileCompanyType">"</span>
                   </h3>
-                  <p className="typeOfPati">"Вечеринка для студентов"</p>
+                  <p className="typeOfPati">"Супер пати всех студентов"</p>
                   <p className="dayOfWeek">{DAY_OF_WEEK[numberDayNow]}</p>
                   <p className="distance">
                     {curDistance && (

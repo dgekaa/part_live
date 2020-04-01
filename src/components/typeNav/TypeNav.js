@@ -9,6 +9,15 @@ const TypeNav = ({ style }) => {
     <div className="TypeNav" style={{ ...style }}>
       <Link
         className="typeNavText typeNavBlock"
+        to={{ pathname: "/home" }}
+        style={
+          pathname === "/home" ? { color: "#fff", background: "#e32a6c" } : {}
+        }
+      >
+        <p>СПИСОК </p>
+      </Link>
+      <Link
+        className="typeNavText typeNavBlock"
         to={{
           pathname: "/map"
         }}
@@ -17,15 +26,6 @@ const TypeNav = ({ style }) => {
         }
       >
         <p>КАРТА</p>
-      </Link>
-      <Link
-        className="typeNavText typeNavBlock"
-        to={{ pathname: "/home" }}
-        style={
-          pathname === "/home" ? { color: "#fff", background: "#e32a6c" } : {}
-        }
-      >
-        <p>СПИСОК </p>
       </Link>
     </div>
   );

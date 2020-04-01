@@ -24,7 +24,7 @@ const MapContainer = ({
     lat: 53.904241,
     lng: 27.556932
   }; // Минск
-  const initialZoom = 11;
+  const initialZoom = 10;
 
   const [streetName, setStreetName] = useState("");
   const [latLng, setLatLng] = useState("");

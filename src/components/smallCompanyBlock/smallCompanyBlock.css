@@ -113,6 +113,10 @@
   -ms-grid-row-align: center;
   align-self: center;
 }
+.smallRowCompanyBlock {
+  display: flex;
+  flex-direction: row;
+}
 .rowCompanyBlock {
   display: -webkit-box;
   display: -ms-flexbox;

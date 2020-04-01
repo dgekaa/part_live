@@ -17,7 +17,6 @@ const SmallCompanyBlock = ({ item }) => {
     isShowStreamNow(item, setShowStream, setNextStreamTime);
     isWorkTimeNow(item, setWorkTime, setIsWork);
   }, [item]);
-
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       pos => {
@@ -44,7 +43,7 @@ const SmallCompanyBlock = ({ item }) => {
       className="SmallCompanyBlock1"
     >
       <div className="imgContainer1" style={{ background: "#000" }}>
-        {!!showStream && (
+        {!!showStream && item.streams[0] && (
           <video
             className="companyImg1"
             src={item.streams[0].preview}
@@ -82,15 +81,15 @@ const SmallCompanyBlock = ({ item }) => {
         </div>
         <div className="bottomBlockText1">
           <div className="rowCompanyBlock">
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <div className="smallRowCompanyBlock">
               <img
-                alt="Loc"
+                alt="eye"
                 src={`${process.env.PUBLIC_URL}/img/eye.png`}
                 className="eyeCompanyBlock"
               />
               <p className="leftTextCompanyBlock">25 752</p>
             </div>
-            <div style={{ display: "flex", flexDirection: "row" }}>
+            <div className="smallRowCompanyBlock">
               <span className="circle"></span>
               <p className="leftTextCompanyBlock">255</p>
             </div>

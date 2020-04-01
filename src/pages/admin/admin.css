@@ -197,7 +197,9 @@ body {
   text-align: center;
   cursor: pointer;
 }
-
+.streamAddress {
+  width: 100%;
+}
 .saveBtn {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
   background-color: #e32a6c;

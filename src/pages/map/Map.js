@@ -180,7 +180,7 @@ const MapComponent = props => {
                 lng: 27.557328
               }
             }
-            defaultZoom={11}
+            defaultZoom={10}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => {
               mapRef.current = map;
@@ -305,6 +305,11 @@ const MapComponent = props => {
                             <span> Открыто: до {workTime.split("-")[1]}</span>
                           )}
                           {!isWork && <span> Закрыто </span>}
+                          <p style={{ paddingTop: "3px" }}>
+                            {workTime
+                              ? "Время работы: " + workTime
+                              : "Время работы не указано "}
+                          </p>
                         </span>
                       </p>
                       <div className="arrow"></div>

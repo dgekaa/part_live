@@ -656,6 +656,12 @@ const Admin = props => {
                   <div className="drDownWrap">
                     <table>
                       <tbody>
+                        <tr>
+                          <input
+                            className="streamAddress"
+                            placeholder="Введите адрес стрима"
+                          />
+                        </tr>
                         {DATA.streams &&
                           EN_SHORT_DAY_OF_WEEK.map((el, i) => {
                             const oneDay = SetNewTimeObject(
