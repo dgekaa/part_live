@@ -59,7 +59,6 @@
   border-radius: 0 5px 5px 0;
 }
 .companyNavBlock:first-of-type {
-  border-right: 2px solid #c4c4c4;
   border-radius: 5px 0 0 5px;
 }
 .allText {
@@ -112,8 +111,10 @@
   }
   .companyNavBlock:last-of-type {
     border-right: none;
-    /* background-color: red;
-    border-radius: 0 5px 5px 0; */
+    border-radius: 10px;
+  }
+  .companyNavBlock:first-of-type {
+    border-radius: 10px;
   }
   .сompanyNavText,
   .allText {

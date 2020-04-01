@@ -198,7 +198,27 @@ body {
   cursor: pointer;
 }
 .streamAddress {
-  width: 100%;
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #eee;
+  padding: 0 7px;
+  flex: 1;
+  height: 30px;
+}
+.chooseStreamAddress {
+  margin-top: 15px;
+  display: flex;
+}
+.chooseStreamAddress div {
+  cursor: pointer;
+  border: 1px solid #eee;
+  height: 30px;
+  padding: 0 10px;
+  margin-left: 10px;
+  border-radius: 5px;
+  background-color: #e32a6c;
+  color: #fff;
+  line-height: 28px;
 }
 .saveBtn {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);

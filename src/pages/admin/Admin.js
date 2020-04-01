@@ -114,6 +114,7 @@ const Admin = props => {
   const [isEmptyTime, setIsEmptyTime] = useState(true);
   const [enumWeekName, setEnumWeekName] = useState("");
   const [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false);
+  const [streamAddressData, setStreamAddressData] = useState("");
 
   const [clickedTime, setClickedTime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -212,51 +213,69 @@ const Admin = props => {
     }
   };
 
-  const setStreamTimeOfOneDay = () => {
+  const updateStream = name => {
     if (cookies.origin_data) {
-      if (!DATA.streams[0]) {
-        //стрим не существует
-        QUERY(
-          {
-            query: `mutation {
+      QUERY(
+        {
+          query: `mutation {
+            updateStream (
+              input:{
+                id:"${DATA.streams[0].id}"
+                url: "${name}"
+              }
+            ) {
+              id name url
+              }
+          }`
+        },
+        cookies.origin_data
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (!data.errors) {
+            refreshData();
+            console.log(data, "FETCH data");
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch(err => console.log(err, "  *******ERR"));
+    }
+  };
+
+  const createStream = name => {
+    if (cookies.origin_data) {
+      QUERY(
+        {
+          query: `mutation {
               createStream(
                 input:{
                   name: "${DATA.name}"
-                  url :"https://partycamera.org/maxshow/index.m3u8"
-                  preview :"http://partycamera.org:80/maxshow/preview.mp4"
-                  place:{
-                    connect:"${props.match.params.id}"
-                  }
-                  schedules:{
-                    create:[
-                       {
-                        day: ${enumWeekName}
-                        start_time: "${startTimePicker}"
-                        end_time: "${endTimePicker}"
-                      }
-                    ]
-                  }
-                }
-              ) {
-                id name url
-                }
+                  url :  "${name}" 
+                  preview : ""
+                  place:{connect:"${props.match.params.id}"}                  
+                }) {id name url}
             }`
-          },
-          cookies.origin_data
-        )
-          .then(res => res.json())
-          .then(data => {
-            if (!data.errors) {
-              refreshData();
-              console.log(data, "FETCH data");
-            } else {
-              console.log(data.errors, " ERRORS");
-            }
-          })
-          .catch(err => console.log(err, "  *******ERR"));
-      }
+        },
+        cookies.origin_data
+      )
+        .then(res => res.json())
+        .then(data => {
+          if (!data.errors) {
+            refreshData();
+            console.log(data, "FETCH data");
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch(err => console.log(err, "  *******ERR"));
+    }
+  };
+
+  const setStreamTimeOfOneDay = () => {
+    if (cookies.origin_data) {
       if (DATA.streams[0] && !isEmptyTime) {
-        // не пустое время стрима и мтрим уже существет
+        // не пустое время стрима и стрим уже существет
         QUERY(
           {
             query: `mutation {
@@ -292,7 +311,7 @@ const Admin = props => {
           .catch(err => console.log(err, "  *******ERR"));
       }
       if (DATA.streams[0] && isEmptyTime) {
-        // пустое время стрима и мтрим уже существет
+        // пустое время стрима и стрим уже существет
         QUERY(
           {
             query: `mutation {
@@ -654,14 +673,39 @@ const Admin = props => {
                     <span className="rotateArrow"></span>
                   </div>
                   <div className="drDownWrap">
+                    <div className="chooseStreamAddress">
+                      <input
+                        className="streamAddress"
+                        placeholder={
+                          (DATA.streams &&
+                            DATA.streams[0] &&
+                            DATA.streams[0].url &&
+                            DATA.streams[0].url) ||
+                          "Введите адрес стрима"
+                        }
+                        value={streamAddressData}
+                        onInput={e => {
+                          setStreamAddressData(e.target.value);
+                        }}
+                      />
+                      <div
+                        onClick={() => {
+                          if (streamAddressData) {
+                            if (!DATA.streams[0]) {
+                              createStream(streamAddressData);
+                            } else {
+                              updateStream(streamAddressData);
+                            }
+                          } else {
+                            alert("Заполните поле");
+                          }
+                        }}
+                      >
+                        Сохранить
+                      </div>
+                    </div>
                     <table>
                       <tbody>
-                        <tr>
-                          <input
-                            className="streamAddress"
-                            placeholder="Введите адрес стрима"
-                          />
-                        </tr>
                         {DATA.streams &&
                           EN_SHORT_DAY_OF_WEEK.map((el, i) => {
                             const oneDay = SetNewTimeObject(
@@ -672,23 +716,27 @@ const Admin = props => {
                                 <td>{el.day}</td>
                                 <td
                                   onClick={() => {
-                                    if (oneDay && oneDay.id) {
-                                      setIsEmptyTime(false); //не пустое время
-                                      setEnumWeekName("");
-                                      setStartRealTimeInPicker(
-                                        oneDay.start_time
-                                      );
-                                      setEndRealTimeInPicker(oneDay.end_time);
-                                      togglePopupDatePicker();
-                                      setClickedTime(oneDay);
-                                      setIsSetWorkTimeDPick(false);
+                                    if (!DATA.streams[0]) {
+                                      alert("Стрим еще не создан");
                                     } else {
-                                      setIsEmptyTime(true); //пустое время
-                                      setEnumWeekName(el.day);
-                                      setStartRealTimeInPicker("00:00");
-                                      setEndRealTimeInPicker("00:00");
-                                      togglePopupDatePicker();
-                                      setIsSetWorkTimeDPick(false);
+                                      if (oneDay && oneDay.id) {
+                                        setIsEmptyTime(false); //не пустое время
+                                        setEnumWeekName("");
+                                        setStartRealTimeInPicker(
+                                          oneDay.start_time
+                                        );
+                                        setEndRealTimeInPicker(oneDay.end_time);
+                                        togglePopupDatePicker();
+                                        setClickedTime(oneDay);
+                                        setIsSetWorkTimeDPick(false);
+                                      } else {
+                                        setIsEmptyTime(true); //пустое время
+                                        setEnumWeekName(el.day);
+                                        setStartRealTimeInPicker("00:00");
+                                        setEndRealTimeInPicker("00:00");
+                                        togglePopupDatePicker();
+                                        setIsSetWorkTimeDPick(false);
+                                      }
                                     }
                                   }}
                                 >
