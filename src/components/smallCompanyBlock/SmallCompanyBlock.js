@@ -97,13 +97,14 @@ const SmallCompanyBlock = ({ item }) => {
           <p className="workTimeText">{workTime}</p>
         </div>
       </div>
-      <div className="descriptionMobile1">
-        <p className="nameOfCompany1">
-          {item.categories[0].name} “{item.name}”
-        </p>
+      <div className="descriptionMobile">
+        <p className="nameOfCompany">{item.name}</p>
         <p className="distanceFirst1 distanceFirstLeft1">
-          {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
-          {!curDistance && " 0 km."}
+          <div className="distanceAndType">
+            {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
+            {!curDistance && " 0 km."}
+            <span>{item.categories[0].name}</span>
+          </div>
         </p>
         {isWork && (
           <p className="endTime1">

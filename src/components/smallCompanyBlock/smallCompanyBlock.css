@@ -42,7 +42,7 @@
   flex-direction: column;
   padding: 9px;
 }
-.descriptionMobile1 {
+.descriptionMobile {
   display: none;
 }
 .companyNameWrap1 {
@@ -116,6 +116,10 @@
 .smallRowCompanyBlock {
   display: flex;
   flex-direction: row;
+}
+.distanceAndType {
+  display: flex;
+  justify-content: space-between;
 }
 .rowCompanyBlock {
   display: -webkit-box;
@@ -203,17 +207,21 @@
     background-color: #000;
     border-radius: 5px;
   }
-  .nameOfCompany1 {
+  .nameOfCompany {
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
   }
   .description1 {
     display: none;
   }
-  .descriptionMobile1 {
+  .descriptionMobile {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
