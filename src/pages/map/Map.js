@@ -180,7 +180,7 @@ const MapComponent = props => {
                 lng: 27.557328
               }
             }
-            defaultZoom={11}
+            defaultZoom={13}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => {
               mapRef.current = map;
