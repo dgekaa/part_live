@@ -25,6 +25,11 @@
   margin-bottom: 15px;
 }
 .authBlock input {
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
   -webkit-appearance: none;
   transition: 0.3s ease all;
   width: 189px;
@@ -45,6 +50,11 @@
   flex-direction: column;
 }
 .authBlock input[type="submit"] {
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
   -webkit-appearance: none;
   background: #e32a6c;
   border: 1px solid #e32a6c;
