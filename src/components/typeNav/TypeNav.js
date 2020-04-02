@@ -9,7 +9,7 @@ const TypeNav = ({ style }) => {
     <div className="TypeNav" style={{ ...style }}>
       <Link
         className="typeNavText typeNavBlock"
-        to={{ pathname: "/home" }}
+        to={{ pathname: "/home", props: "!!!! @@ ###" }}
         style={
           pathname === "/home" ? { color: "#fff", background: "#e32a6c" } : {}
         }

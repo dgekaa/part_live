@@ -128,21 +128,32 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       >
         <div
           className={
-            !clickedTypeLocal ? "activeBtn companyNavBlock" : "companyNavBlock"
+            !clickedTypeLocal && !localStorage.getItem("filter_type")
+              ? "activeBtn companyNavBlock"
+              : "companyNavBlock"
           }
-          style={!clickedTypeLocal ? { background: "#e32a6c" } : {}}
+          style={
+            !clickedTypeLocal && !localStorage.getItem("filter_type")
+              ? { background: "#e32a6c" }
+              : {}
+          }
           onClick={e => {
             clickedType();
             setClickedTypeLocal();
+            localStorage.setItem("filter_type", "");
           }}
         >
           <Link
             className={
-              !clickedTypeLocal
+              !clickedTypeLocal && !localStorage.getItem("filter_type")
                 ? "activeBtnText companyNavLink"
                 : "companyNavLink"
             }
-            style={!clickedTypeLocal ? { color: "#fff" } : {}}
+            style={
+              !clickedTypeLocal && !localStorage.getItem("filter_type")
+                ? { color: "#fff" }
+                : {}
+            }
             to={currentPage}
           >
             <p className="allText">Все</p>
@@ -150,31 +161,48 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         </div>
         {uniqueCompanyType.map((el, i) => {
           const slideBtn = React.createRef();
+          // console.log(el.name, "--------");
+          // console.log(clickedTypeLocal, "clickedTypeLocal");
+          // console.log(
+          //   localStorage.getItem("filter_type"),
+          //   "localStorage.getItem(filter_type) "
+          // );
           return (
             <div
               ref={slideBtn}
               className={
-                clickedTypeLocal === el.name
+                // clickedTypeLocal === el.name &&
+                localStorage.getItem("filter_type") === el.name
                   ? "activeBtn companyNavBlock"
                   : "companyNavBlock"
               }
               style={
-                clickedTypeLocal === el.name ? { background: "#e32a6c" } : {}
+                // clickedTypeLocal === el.name &&
+                localStorage.getItem("filter_type") === el.name
+                  ? { background: "#e32a6c" }
+                  : {}
               }
               key={i}
               onClick={e => {
                 clickedType(el.name);
                 setClickedTypeLocal(el.name);
+                localStorage.setItem("filter_type", el.name);
                 scrollBtnToCenter(e);
               }}
             >
               <Link
                 className={
-                  clickedTypeLocal === el.name
+                  // clickedTypeLocal === el.name &&
+                  localStorage.getItem("filter_type") === el.name
                     ? "activeBtnText companyNavLink"
                     : "companyNavLink"
                 }
-                style={clickedTypeLocal === el.name ? { color: "#fff" } : {}}
+                style={
+                  // clickedTypeLocal === el.name &&
+                  localStorage.getItem("filter_type") === el.name
+                    ? { color: "#fff" }
+                    : {}
+                }
                 to={currentPage}
               >
                 <img

@@ -101,6 +101,13 @@ const MapComponent = props => {
     }
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
+      const filterName = localStorage.getItem("filter_type");
+      clickedType(filterName);
+    }
+  }, [DATA]);
+
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [referrer, setReferrer] = useState("");

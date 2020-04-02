@@ -9,7 +9,7 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { SHORT_DAY_OF_WEEK, EN_SHORT_DAY_OF_WEEK } from "../../constants";
+import { EN_SHORT_DAY_OF_WEEK } from "../../constants";
 
 import "./admin.css";
 import { Redirect } from "react-router-dom";
@@ -221,7 +221,8 @@ const Admin = props => {
             updateStream (
               input:{
                 id:"${DATA.streams[0].id}"
-                url: "${name}"
+                url :"https://partycamera.org/${name}/index.m3u8"
+                preview : "http://partycamera.org:80/${name}/preview.mp4"
               }
             ) {
               id name url
@@ -242,7 +243,8 @@ const Admin = props => {
         .catch(err => console.log(err, "  *******ERR"));
     }
   };
-
+  //https://partycamera.org/klever/index.m3u8
+  // http://partycamera.org:80/maxshow/preview.mp4
   const createStream = name => {
     if (cookies.origin_data) {
       QUERY(
@@ -251,8 +253,8 @@ const Admin = props => {
               createStream(
                 input:{
                   name: "${DATA.name}"
-                  url :  "${name}" 
-                  preview : ""
+                  url :"https://partycamera.org/${name}/index.m3u8"
+                  preview : "http://partycamera.org:80/${name}/preview.mp4"
                   place:{connect:"${props.match.params.id}"}                  
                 }) {id name url}
             }`
