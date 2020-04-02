@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import GooggleMapReact from "google-map-react";
 import useSupercluster from "use-supercluster";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 
-import { EN_SHORT_TO_RU_LONG, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
+import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { API_KEY } from "../../constants";
@@ -34,6 +34,7 @@ const MapComponent = props => {
   const [bounds, setBounds] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
 
   useEffect(() => {
     QUERY({
@@ -83,7 +84,7 @@ const MapComponent = props => {
     bounds,
     zoom,
     options: {
-      radius: 170,
+      radius: 190,
       maxZoom: 20
     }
   });
@@ -101,6 +102,7 @@ const MapComponent = props => {
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const [referrer, setReferrer] = useState("");
 
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
@@ -137,6 +139,22 @@ const MapComponent = props => {
   } else {
     console.log("Геолокация недоступна");
   }
+
+  const mouseDownHandler = e => {
+    setMouseMapCoordinates({
+      clientX: e.clientX,
+      clientY: e.clientY
+    });
+  };
+
+  const mouseUpHandler = (e, data) => {
+    if (
+      +mouseMapCoordinates.clientX === +e.clientX &&
+      +mouseMapCoordinates.clientY === +e.clientY
+    ) {
+      setReferrer(`/company/${data}`);
+    }
+  };
 
   return (
     <div
@@ -257,8 +275,16 @@ const MapComponent = props => {
                   lng={longitude}
                 >
                   <Link
+                    onMouseDown={e => {
+                      mouseDownHandler(e);
+                    }}
+                    onMouseUp={e => {
+                      mouseUpHandler(e, cluster.item.id);
+                    }}
                     to={{
-                      pathname: `/company/${cluster.item.id}`
+                      pathname: referrer
+                        ? `/company/${cluster.item.id}`
+                        : `/map`
                     }}
                   >
                     <div className="mapMarkerWrap">

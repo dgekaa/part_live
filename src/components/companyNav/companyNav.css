@@ -63,14 +63,14 @@
 }
 .allText {
   font-weight: bold;
-  font-size: 14;
+  font-size: 12px;
   text-transform: uppercase;
 }
 .сompanyNavText {
-  margin-top: 4px;
+  margin-top: 3px;
   font-size: 12px;
-  font-weight: bold;
-  line-height: 14px;
+  font-weight: 900;
+  line-height: 12px;
   text-transform: uppercase;
 }
 @media screen and (max-width: 760px) {
@@ -119,7 +119,7 @@
   .сompanyNavText,
   .allText {
     text-transform: none;
-    font-family: Roboto, Geneva, Arial, Helvetica, sans-serif;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
     font-style: normal;
     font-weight: normal !important;
     font-size: 12px;
