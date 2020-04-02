@@ -77,7 +77,7 @@ const SmallCompanyBlock = ({ item }) => {
             <p className="companyName1">{item.name}</p>
             <p className="companyType1">{item.categories[0].name} </p>
           </div>
-          <p className="companyTitle1">"Супер пати всех студентов"</p>
+          <p className="companyTitle">"Супер пати всех студентов"</p>
         </div>
         <div className="bottomBlockText1">
           <div className="rowCompanyBlock">
@@ -99,13 +99,13 @@ const SmallCompanyBlock = ({ item }) => {
       </div>
       <div className="descriptionMobile">
         <p className="nameOfCompany">{item.name}</p>
-        <p className="distanceFirst1 distanceFirstLeft1">
+        <div className="distanceFirst1 distanceFirstLeft1">
           <div className="distanceAndType">
             {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
             {!curDistance && " 0 km."}
             <span>{item.categories[0].name}</span>
           </div>
-        </p>
+        </div>
         {isWork && (
           <p className="endTime1">
             Открыто: до
