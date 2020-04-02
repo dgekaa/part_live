@@ -40,8 +40,17 @@ export const EN_SHORT_TO_RU_LONG = {
   Tue: "вторник",
   Wed: "среда",
   Thu: "четверг",
-  Fri: "пфтница",
+  Fri: "пятница",
   Sat: "суббота",
+  Sun: "воскресенье"
+};
+export const EN_SHORT_TO_RU_LONG_V_P = {
+  Mon: "понедельник",
+  Tue: "вторник",
+  Wed: "среду",
+  Thu: "четверг",
+  Fri: "пятницу",
+  Sat: "субботу",
   Sun: "воскресенье"
 };
 

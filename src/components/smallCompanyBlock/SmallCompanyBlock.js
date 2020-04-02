@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./smallCompanyBlock.css";
 import { Link } from "react-router-dom";
 
-import { EN_SHORT_TO_RU_LONG } from "../../constants";
+import { EN_SHORT_TO_RU_LONG, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 
@@ -62,7 +62,7 @@ const SmallCompanyBlock = ({ item }) => {
             <p style={{ color: "#fff", textAlign: "center", padding: "20px" }}>
               {nextStreamTime.start_time &&
                 "Трансляция начнется в " +
-                  EN_SHORT_TO_RU_LONG[nextStreamTime.day] +
+                  EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
                   " в " +
                   nextStreamTime.start_time}
 

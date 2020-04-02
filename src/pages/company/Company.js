@@ -12,7 +12,11 @@ import Loader from "../../components/loader/Loader";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
-import { DAY_OF_WEEK, EN_SHORT_TO_RU_LONG } from "../../constants";
+import {
+  DAY_OF_WEEK,
+  EN_SHORT_TO_RU_LONG,
+  EN_SHORT_TO_RU_LONG_V_P
+} from "../../constants";
 
 import "./company.css";
 
@@ -210,7 +214,7 @@ const Company = props => {
                   <div className="noVideo">
                     {nextStreamTime.start_time &&
                       "Трансляция начнется в " +
-                        EN_SHORT_TO_RU_LONG[nextStreamTime.day] +
+                        EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
                         " в " +
                         nextStreamTime.start_time}
 

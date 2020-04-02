@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 
-import { EN_SHORT_TO_RU_LONG } from "../../constants";
+import { EN_SHORT_TO_RU_LONG, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { API_KEY } from "../../constants";
@@ -180,7 +180,7 @@ const MapComponent = props => {
                 lng: 27.557328
               }
             }
-            defaultZoom={10}
+            defaultZoom={11}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => {
               mapRef.current = map;
@@ -287,8 +287,8 @@ const MapComponent = props => {
                               }}
                             >
                               {nextStreamTime.start_time &&
-                                "Трансляция начнется в " +
-                                  EN_SHORT_TO_RU_LONG[nextStreamTime.day] +
+                                "Начало трансляции в " +
+                                  EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
                                   " в " +
                                   nextStreamTime.start_time}
 
@@ -299,17 +299,10 @@ const MapComponent = props => {
                         )}
                       </div>
                       <p className="mapMarkerName">
-                        {cluster.item.categories[0].name} "{cluster.item.name}"
+                        {cluster.item.name}
                         <span className="openedTo">
-                          {isWork && (
-                            <span> Открыто: до {workTime.split("-")[1]}</span>
-                          )}
+                          {isWork && <span> Открыто:{workTime} </span>}
                           {!isWork && <span> Закрыто </span>}
-                          <p style={{ paddingTop: "3px" }}>
-                            {workTime
-                              ? "Время работы: " + workTime
-                              : "Время работы не указано "}
-                          </p>
                         </span>
                       </p>
                       <div className="arrow"></div>
