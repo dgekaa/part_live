@@ -98,10 +98,17 @@ const Company = props => {
     setIsShowMenu(true);
   };
 
-  window.onresize = function(e) {
-    setWindowWidth(e.target.innerWidth);
-    hideSideMenu();
-  };
+  !windowWidth && setWindowWidth(window.innerWidth);
+
+  console.log(windowWidth, " WWWs");
+
+  useEffect(() => {
+    window.onresize = function(e) {
+      setWindowWidth(e.target.innerWidth);
+      hideSideMenu();
+      console.log(windowWidth, " WWWs 111");
+    };
+  });
 
   if (navigator.geolocation && DATA) {
     navigator.geolocation.getCurrentPosition(
@@ -151,7 +158,19 @@ const Company = props => {
         logo
         burger
         arrow
-        toSlideFixedHeader={isShowMenu}
+        style={
+          windowWidth && windowWidth <= 760
+            ? isShowMenu
+              ? {
+                  animation: "toLeftFixed 0.3s ease",
+                  left: "-200px"
+                }
+              : {
+                  animation: "toRightFixed 0.3s ease",
+                  left: "0px"
+                }
+            : {}
+        }
         isShowMenu={isShowMenu}
         showSlideSideMenu={showSlideSideMenu}
         showSideMenu={showSideMenu}
@@ -159,16 +178,18 @@ const Company = props => {
       <div
         className="Company"
         style={
-          isShowMenu
-            ? {
-                animation: "toLeft 0.3s ease",
-                position: "relative",
-                right: "200px"
-              }
-            : {
-                animation: "toRight 0.3s ease",
-                position: "relative"
-              }
+          windowWidth && windowWidth <= 760
+            ? isShowMenu
+              ? {
+                  animation: "toLeft 0.3s ease",
+                  position: "relative",
+                  right: "200px"
+                }
+              : {
+                  animation: "toRight 0.3s ease",
+                  position: "relative"
+                }
+            : {}
         }
         onClick={e => {
           if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
@@ -362,7 +383,21 @@ const Company = props => {
           </Popup>
         )}
       </div>
-      <BottomMenu toSlideFixedBottomMenu={isShowMenu} />
+      <BottomMenu
+        style={
+          windowWidth && windowWidth <= 760
+            ? isShowMenu
+              ? {
+                  animation: "toLeftFixed 0.3s ease",
+                  left: "-200px"
+                }
+              : {
+                  animation: "toRightFixed 0.3s ease",
+                  left: "0px"
+                }
+            : {}
+        }
+      />
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>
   );

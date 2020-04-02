@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import Burger from "../burger/Burger";
 import "./header.css";
+import { styles } from "../googleMap/GoogleMapStyles";
 
 const Header = ({
   showSlideSideMenu,
@@ -15,22 +16,15 @@ const Header = ({
   toSlideFixedHeader
 }) => {
   let history = useHistory();
+
+  const [windowWidth, setWindowWidth] = useState();
+
+  window.onresize = function(e) {
+    setWindowWidth(e.target.innerWidth);
+  };
+
   return (
-    <div
-      className="headerContainer"
-      style={
-        (style,
-        toSlideFixedHeader
-          ? {
-              animation: "toLeftFixed 0.3s ease",
-              left: "-200px"
-            }
-          : {
-              animation: "toRightFixed 0.3s ease",
-              left: "0px"
-            })
-      }
-    >
+    <div className="headerContainer" style={style}>
       <div className="header">
         {arrow && (
           <div

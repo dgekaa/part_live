@@ -32,6 +32,7 @@ const MapComponent = props => {
   const mapRef = useRef();
   const [zoom, setZoom] = useState(11);
   const [bounds, setBounds] = useState(null);
+  const [windowWidth, setWindowWidth] = useState();
 
   const [isLoading, setIsLoading] = useState(true);
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
@@ -118,9 +119,17 @@ const MapComponent = props => {
     setIsShowMenu(true);
   };
 
-  window.onresize = function(e) {
-    hideSideMenu();
-  };
+  !windowWidth && setWindowWidth(window.innerWidth);
+
+  console.log(windowWidth, " WWWs");
+
+  useEffect(() => {
+    window.onresize = function(e) {
+      setWindowWidth(e.target.innerWidth);
+      hideSideMenu();
+      console.log(windowWidth, " WWWs 111");
+    };
+  });
 
   const [defaultCenter, setDefaultCenter] = useState();
 
@@ -168,21 +177,49 @@ const MapComponent = props => {
         logo
         arrow
         burger
-        toSlideFixedHeader={isShowMenu}
         showSlideSideMenu={showSlideSideMenu}
         showSideMenu={showSideMenu}
+        style={
+          windowWidth && windowWidth <= 760
+            ? isShowMenu
+              ? {
+                  animation: "toLeftFixed 0.3s ease",
+                  left: "-200px"
+                }
+              : {
+                  animation: "toRightFixed 0.3s ease",
+                  left: "0px"
+                }
+            : {}
+        }
       />
       <div className="navContainerMap">
         <CompanyNav
           style={{ zIndex: 1 }}
           currentPage="/map"
           clickedType={clickedType}
+          toSlideFixedNav={isShowMenu}
         />
         <TypeNav style={{ zIndex: 1 }} />
       </div>
       {isLoading && <Loader />}
       {!isLoading && (
-        <div className="mapContainer">
+        <div
+          className="mapContainer"
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px"
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px"
+                  }
+              : {}
+          }
+        >
           <GooggleMapReact
             options={createMapOptions}
             style={{
@@ -341,7 +378,21 @@ const MapComponent = props => {
         </div>
       )}
 
-      <BottomMenu toSlideFixedBottomMenu={isShowMenu} />
+      <BottomMenu
+        style={
+          windowWidth && windowWidth <= 760
+            ? isShowMenu
+              ? {
+                  animation: "toLeftFixed 0.3s ease",
+                  left: "-200px"
+                }
+              : {
+                  animation: "toRightFixed 0.3s ease",
+                  left: "0px"
+                }
+            : {}
+        }
+      />
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>
   );

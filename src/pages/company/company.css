@@ -219,6 +219,9 @@
     margin: 10px;
     padding-top: 55px;
   }
+  .rowCompanyBlockStream {
+    display: none;
+  }
   .shadowBlock {
     flex-direction: column;
     background: #ffffff;

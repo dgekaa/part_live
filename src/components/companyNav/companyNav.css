@@ -62,14 +62,14 @@
   border-radius: 5px 0 0 5px;
 }
 .allText {
-  font-weight: 900;
+  font-weight: bold;
   font-size: 12px;
   text-transform: uppercase;
 }
 .сompanyNavText {
   margin-top: 3px;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: bold;
   line-height: 12px;
   text-transform: uppercase;
 }

@@ -17,6 +17,7 @@ const Home = props => {
   const [companyData, setCompanyData] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [windowWidth, setWindowWidth] = useState();
 
   useEffect(() => {
     QUERY({
@@ -70,6 +71,17 @@ const Home = props => {
     setIsShowMenu(true);
   };
 
+  !windowWidth && setWindowWidth(window.innerWidth);
+  console.log(windowWidth, " WWWs");
+
+  useEffect(() => {
+    window.onresize = function(e) {
+      setWindowWidth(e.target.innerWidth);
+      hideSideMenu();
+      console.log(windowWidth, " WWWs 111");
+    };
+  });
+
   return (
     <div
       onClick={e => {
@@ -77,28 +89,45 @@ const Home = props => {
           hideSideMenu();
         }
       }}
-      style={
-        isShowMenu
-          ? {
-              animation: "toLeft 0.3s ease",
-              position: "relative",
-              right: "200px"
-            }
-          : {
-              animation: "toRight 0.3s ease",
-              position: "relative"
-            }
-      }
     >
       <div>
         <Header
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px"
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px"
+                  }
+              : {}
+          }
           logo
           burger
-          toSlideFixedHeader={isShowMenu}
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <div className="homeContentWrap">
+
+        <div
+          className="homeContentWrap"
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeft 0.3s ease",
+                    position: "relative",
+                    right: "200px"
+                  }
+                : {
+                    animation: "toRight 0.3s ease",
+                    position: "relative"
+                  }
+              : {}
+          }
+        >
           <div className="navContainer">
             <CompanyNav
               currentPage="/home"
@@ -121,7 +150,21 @@ const Home = props => {
           </div>
         </div>
 
-        <BottomMenu toSlideFixedBottomMenu={isShowMenu} />
+        <BottomMenu
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px"
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px"
+                  }
+              : {}
+          }
+        />
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

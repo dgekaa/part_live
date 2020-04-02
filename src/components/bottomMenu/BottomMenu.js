@@ -3,23 +3,9 @@ import { Link } from "react-router-dom";
 
 import "./bottomMenu.css";
 
-const BottomMenu = ({ style, toSlideFixedBottomMenu }) => {
+const BottomMenu = ({ style }) => {
   return (
-    <div
-      className="BottomMenu"
-      style={
-        (toSlideFixedBottomMenu
-          ? {
-              animation: "toLeftFixed 0.3s ease",
-              left: "-200px"
-            }
-          : {
-              animation: "toRightFixed 0.3s ease",
-              left: "0px"
-            },
-        style)
-      }
-    >
+    <div className="BottomMenu" style={style}>
       <Link to="/home">
         <img
           alt="Home"
