@@ -25,6 +25,7 @@
   margin-bottom: 15px;
 }
 .authBlock input {
+  -webkit-appearance: none;
   transition: 0.3s ease all;
   width: 189px;
   height: 30px;
@@ -43,6 +44,7 @@
   flex-direction: column;
 }
 .authBlock input[type="submit"] {
+  -webkit-appearance: none;
   background: #e32a6c;
   border: 1px solid #e32a6c;
   box-sizing: border-box;
