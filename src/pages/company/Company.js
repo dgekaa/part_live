@@ -12,11 +12,7 @@ import Loader from "../../components/loader/Loader";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
-import {
-  DAY_OF_WEEK,
-  EN_SHORT_TO_RU_LONG,
-  EN_SHORT_TO_RU_LONG_V_P
-} from "../../constants";
+import { DAY_OF_WEEK, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 
 import "./company.css";
 
