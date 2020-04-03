@@ -321,33 +321,32 @@ const MapComponent = props => {
                 >
                   <Link
                     onMouseDown={e => {
-                      !("ontouchstart" in document.documentElement) &&
-                        mouseDownHandler(e);
+                      // !("ontouchstart" in document.documentElement) &&
+                      mouseDownHandler(e);
                     }}
                     onMouseUp={e => {
-                      !("ontouchstart" in document.documentElement) &&
-                        mouseUpHandler(e, cluster.item.id);
+                      // !("ontouchstart" in document.documentElement) &&
+                      mouseUpHandler(e, cluster.item.id);
                     }}
                     onTouchStart={e => {
-                      "ontouchstart" in document.documentElement &&
-                        mouseDownHandler(
-                          {
-                            clientX: e.nativeEvent.changedTouches[0].clientX,
-                            clientY: e.nativeEvent.changedTouches[0].clientY
-                          },
-                          cluster.item.id
-                        );
+                      // "ontouchstart" in document.documentElement &&
+                      mouseDownHandler(
+                        {
+                          clientX: e.nativeEvent.changedTouches[0].clientX,
+                          clientY: e.nativeEvent.changedTouches[0].clientY
+                        },
+                        cluster.item.id
+                      );
                     }}
                     onTouchEnd={e => {
-                      console.log(e.nativeEvent, "onTouchEnd");
-                      "ontouchstart" in document.documentElement &&
-                        mouseUpHandler(
-                          {
-                            clientX: e.nativeEvent.changedTouches[0].clientX,
-                            clientY: e.nativeEvent.changedTouches[0].clientY
-                          },
-                          cluster.item.id
-                        );
+                      // "ontouchstart" in document.documentElement &&
+                      mouseUpHandler(
+                        {
+                          clientX: e.nativeEvent.changedTouches[0].clientX,
+                          clientY: e.nativeEvent.changedTouches[0].clientY
+                        },
+                        cluster.item.id
+                      );
                     }}
                     to={{
                       pathname: referrer
