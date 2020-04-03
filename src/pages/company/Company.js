@@ -242,14 +242,14 @@ const Company = props => {
                 </p>
               </div>
               <div className="desc">
-                <div className="mobileDescription">
-                  {/* <h3>
+                {/* <div className="mobileDescription">
+                  <h3>
                     <span className="mobileCompanyType">
                       {DATA.place.categories[0].name} "
                     </span>
                     {DATA.place.name}
                     <span className="mobileCompanyType">"</span>
-                  </h3> */}
+                  </h3>
                   <p className="typeOfPati">"Супер пати всех студентов"</p>
                   <p className="dayOfWeek">{DAY_OF_WEEK[numberDayNow]}</p>
                   <p className="distance">
@@ -258,7 +258,7 @@ const Company = props => {
                     )}
                     {!curDistance && " 0 km"}
                   </p>
-                </div>
+                </div> */}
                 <p className="smallOpenedTo">
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
                   {!isWork && "Закрыто"}
