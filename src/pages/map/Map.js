@@ -153,22 +153,25 @@ const MapComponent = props => {
   }
 
   const mouseDownHandler = e => {
+    alert("mouseDownHandler");
+
     setMouseMapCoordinates({
       clientX: e.clientX,
       clientY: e.clientY
     });
-    alert(e.clientX);
+    // alert(e.clientX);
   };
 
   const mouseUpHandler = (e, data) => {
     alert("mouseUpHandler");
+
+    // alert("mouseUpHandler");
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
     ) {
-      alert(mouseMapCoordinates.clientX);
-      alert(data);
-      alert(e.clientX);
+      alert("mouseUpHandler --if");
+
       setReferrer(`/company/${data}`);
     }
   };
@@ -321,10 +324,13 @@ const MapComponent = props => {
                 >
                   <Link
                     onMouseDown={e => {
+                      alert("onMouseDown");
                       // !("ontouchstart" in document.documentElement) &&
                       mouseDownHandler(e);
                     }}
                     onMouseUp={e => {
+                      alert("onMouseUp");
+
                       // !("ontouchstart" in document.documentElement) &&
                       mouseUpHandler(e, cluster.item.id);
                     }}
@@ -337,6 +343,7 @@ const MapComponent = props => {
                         },
                         cluster.item.id
                       );
+                      alert("onTouchStart");
                     }}
                     onTouchEnd={e => {
                       // "ontouchstart" in document.documentElement &&
@@ -347,6 +354,9 @@ const MapComponent = props => {
                         },
                         cluster.item.id
                       );
+                      alert("onTouchEnd");
+                      alert(e.nativeEvent.changedTouches[0].clientX);
+                      alert(cluster.item.id);
                     }}
                     to={{
                       pathname: referrer
