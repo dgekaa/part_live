@@ -161,6 +161,7 @@ const MapComponent = props => {
   };
 
   const mouseUpHandler = (e, data) => {
+    alert("mouseUpHandler");
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
