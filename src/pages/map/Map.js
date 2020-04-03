@@ -165,11 +165,11 @@ const MapComponent = props => {
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
     ) {
+      alert(mouseMapCoordinates.clientX);
+      alert(data);
+      alert(e.clientX);
       setReferrer(`/company/${data}`);
     }
-    alert(mouseMapCoordinates.clientX);
-    alert(data);
-    alert(e.clientX);
   };
 
   return (
