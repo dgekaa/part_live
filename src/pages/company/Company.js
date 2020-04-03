@@ -261,9 +261,10 @@ const Company = props => {
                 </div>
                 <p className="smallOpenedTo">
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
-                  {!isWork && "Закрыто"}
+                  {!isWork && "Закрыто !!!"}
                 </p>
                 <div className="timeBlocks">
+                  sss
                   <div className="timeBlock">
                     <img
                       height="16"
