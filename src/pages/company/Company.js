@@ -243,15 +243,15 @@ const Company = props => {
               </div>
               <div className="desc">
                 <div className="mobileDescription">
-                  <h3>
+                  {/* <h3>
                     <span className="mobileCompanyType">
                       {DATA.place.categories[0].name} "
                     </span>
                     {DATA.place.name}
                     <span className="mobileCompanyType">"</span>
-                  </h3>
-                  {/* <p className="typeOfPati">"Супер пати всех студентов"</p>
-                  <p className="dayOfWeek">{DAY_OF_WEEK[numberDayNow]}</p> */}
+                  </h3> */}
+                  <p className="typeOfPati">"Супер пати всех студентов"</p>
+                  <p className="dayOfWeek">{DAY_OF_WEEK[numberDayNow]}</p>
                   <p className="distance">
                     {curDistance && (
                       <span>{Number(curDistance).toFixed(2)} km</span>
