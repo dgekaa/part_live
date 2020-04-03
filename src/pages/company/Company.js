@@ -242,7 +242,7 @@ const Company = props => {
                 </p>
               </div>
               <div className="desc">
-                <div className="mobileDescription">
+                {/* <div className="mobileDescription">
                   <h3>
                     <span className="mobileCompanyType">
                       {DATA.place.categories[0].name} "
@@ -263,7 +263,7 @@ const Company = props => {
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
                   {!isWork && "Закрыто"}
                 </p>
-                <div className="timeBlocks">
+                <div className="timeBlocks"> */}
                   <div className="timeBlock">
                     <img
                       height="16"
