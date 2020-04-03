@@ -336,6 +336,7 @@ const MapComponent = props => {
                         mouseUpHandler(e, cluster.item.id);
                     }}
                     onTouchStart={e => {
+                      alert("onTouchStart");
                       // "ontouchstart" in document.documentElement &&
                       mouseDownHandler(
                         {
@@ -344,9 +345,10 @@ const MapComponent = props => {
                         },
                         cluster.item.id
                       );
-                      alert("onTouchStart");
                     }}
                     onTouchEnd={e => {
+                      alert("onTouchEnd");
+
                       // "ontouchstart" in document.documentElement &&
                       mouseUpHandler(
                         {
@@ -355,7 +357,6 @@ const MapComponent = props => {
                         },
                         cluster.item.id
                       );
-                      alert("onTouchEnd");
                     }}
                     to={{
                       pathname: referrer
