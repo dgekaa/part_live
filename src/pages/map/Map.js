@@ -316,17 +316,34 @@ const MapComponent = props => {
                 >
                   <Link
                     onMouseDown={e => {
-                      mouseDownHandler(e);
+                      !("ontouchstart" in document.documentElement) &&
+                        mouseDownHandler(e);
                     }}
                     onMouseUp={e => {
-                      mouseUpHandler(e, cluster.item.id);
+                      !("ontouchstart" in document.documentElement) &&
+                        mouseUpHandler(e, cluster.item.id);
                     }}
                     onTouchStart={e => {
-                      mouseDownHandler(e);
+                      "ontouchstart" in document.documentElement &&
+                        mouseDownHandler(
+                          {
+                            clientX: e.nativeEvent.changedTouches[0].clientX,
+                            clientY: e.nativeEvent.changedTouches[0].clientY
+                          },
+                          cluster.item.id
+                        );
                     }}
                     // "ontouchstart" in document.documentElement
                     onTouchEnd={e => {
-                      mouseUpHandler(e, cluster.item.id);
+                      console.log(e.nativeEvent, "onTouchEnd");
+                      "ontouchstart" in document.documentElement &&
+                        mouseUpHandler(
+                          {
+                            clientX: e.nativeEvent.changedTouches[0].clientX,
+                            clientY: e.nativeEvent.changedTouches[0].clientY
+                          },
+                          cluster.item.id
+                        );
                     }}
                     to={{
                       pathname: referrer
