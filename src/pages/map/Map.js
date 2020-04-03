@@ -152,6 +152,11 @@ const MapComponent = props => {
     console.log("Геолокация недоступна");
   }
 
+  useEffect(() => {
+    alert("referrer");
+    alert(referrer);
+  }, [referrer]);
+
   const mouseDownHandler = e => {
     alert("mouseDownHandler");
 
@@ -311,7 +316,6 @@ const MapComponent = props => {
               const setNextStreamTime = time => {
                 nextStreamTime = time;
               };
-
               isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
               isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
 
