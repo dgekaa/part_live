@@ -152,30 +152,18 @@ const MapComponent = props => {
     console.log("Геолокация недоступна");
   }
 
-  useEffect(() => {
-    alert("referrer");
-    alert(referrer);
-  }, [referrer]);
-
   const mouseDownHandler = e => {
-    alert("mouseDownHandler");
-
     setMouseMapCoordinates({
       clientX: e.clientX,
       clientY: e.clientY
     });
-    // alert(e.clientX);
   };
 
   const mouseUpHandler = (e, data) => {
-    alert("mouseUpHandler");
-
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
     ) {
-      alert("mouseUpHandler --if");
-
       setReferrer(`/company/${data}`);
     }
   };
@@ -328,20 +316,13 @@ const MapComponent = props => {
                   <Link
                     onMouseDown={e => {
                       !("ontouchstart" in document.documentElement) &&
-                        alert("onMouseDown");
-                      !("ontouchstart" in document.documentElement) &&
                         mouseDownHandler(e);
                     }}
                     onMouseUp={e => {
                       !("ontouchstart" in document.documentElement) &&
-                        alert("onMouseUp");
-
-                      !("ontouchstart" in document.documentElement) &&
                         mouseUpHandler(e, cluster.item.id);
                     }}
                     onTouchStart={e => {
-                      alert("onTouchStart");
-                      // "ontouchstart" in document.documentElement &&
                       mouseDownHandler(
                         {
                           clientX: e.nativeEvent.changedTouches[0].clientX,
@@ -351,9 +332,6 @@ const MapComponent = props => {
                       );
                     }}
                     onTouchEnd={e => {
-                      alert("onTouchEnd");
-
-                      // "ontouchstart" in document.documentElement &&
                       mouseUpHandler(
                         {
                           clientX: e.nativeEvent.changedTouches[0].clientX,

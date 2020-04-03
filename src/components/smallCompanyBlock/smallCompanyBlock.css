@@ -166,23 +166,17 @@
     height: 350px;
     width: calc(33.3% - 10px);
   }
-  .companyImg1 {
-  }
 }
 @media screen and (max-width: 960px) {
   .SmallCompanyBlock1 {
     height: 320px;
     width: calc(33.3% - 10px);
   }
-  .companyImg1 {
-  }
 }
 @media screen and (max-width: 860px) {
   .SmallCompanyBlock1 {
     height: 290px;
     width: calc(33.3% - 10px);
-  }
-  .companyImg1 {
   }
 }
 
@@ -305,7 +299,5 @@
   .imgContainer1 {
     height: 160px;
     border-radius: 5px;
-  }
-  .companyImg1 {
   }
 }
