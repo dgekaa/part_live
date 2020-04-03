@@ -36,14 +36,15 @@ const Company = props => {
   const numberDayNow = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   useEffect(() => {
-    if (DATA) {
-      isShowStreamNow(DATA.place, setShowStream, setNextStreamTime);
-      isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
+    if (localStorage.getItem("uniqueCompanyType")) {
+      localStorage.setItem("uniqueCompanyType", "");
     }
-  }, [DATA]);
+  }, []);
 
   useEffect(() => {
     if (DATA) {
+      isShowStreamNow(DATA.place, setShowStream, setNextStreamTime);
+      isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
       setGeoposition([
         +DATA.place.coordinates.split(",")[0],
         +DATA.place.coordinates.split(",")[1]
@@ -96,13 +97,10 @@ const Company = props => {
 
   !windowWidth && setWindowWidth(window.innerWidth);
 
-  console.log(windowWidth, " WWWs");
-
   useEffect(() => {
     window.onresize = function(e) {
       setWindowWidth(e.target.innerWidth);
       hideSideMenu();
-      console.log(windowWidth, " WWWs 111");
     };
   });
 

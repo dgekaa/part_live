@@ -14,8 +14,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const [scrollLeft, setScrollLeft] = useState();
   const [clickedTypeLocal, setClickedTypeLocal] = useState();
 
-  const [typeData, setTypeData] = useState();
-
   const slideBtnMenu = useRef(null);
 
   useEffect(() => {
@@ -41,14 +39,12 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     if (
       uniqueCompanyType &&
       uniqueCompanyType.length &&
-      !JSON.parse(localStorage.getItem("uniqueCompanyType"))
+      !localStorage.getItem("uniqueCompanyType")
     ) {
       localStorage.setItem(
         "uniqueCompanyType",
         JSON.stringify(uniqueCompanyType)
       );
-
-      // setTypeData(JSON.parse(localStorage.getItem("uniqueCompanyType")));
     }
     if (uniqueCompanyType) {
     }
@@ -178,7 +174,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             <p className="allText">Все</p>
           </Link>
         </div>
-        {JSON.parse(localStorage.getItem("uniqueCompanyType")) &&
+        {localStorage.getItem("uniqueCompanyType") &&
           JSON.parse(localStorage.getItem("uniqueCompanyType")).map((el, i) => {
             const slideBtn = React.createRef();
             return (
@@ -219,13 +215,24 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                   }
                   to={currentPage}
                 >
-                  <img
-                    alt="Icon"
-                    className="сompanyNavImg"
-                    src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
-                    width="30"
-                    height="30"
-                  />
+                  {localStorage.getItem("filter_type") === el.name ? (
+                    <img
+                      alt="Icon"
+                      className="сompanyNavImg"
+                      src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
+                      width="30"
+                      height="30"
+                    />
+                  ) : (
+                    <img
+                      alt="Icon"
+                      className="сompanyNavImg"
+                      src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
+                      width="30"
+                      height="30"
+                    />
+                  )}
+
                   <p className="сompanyNavText">{el.name}</p>
                 </Link>
               </div>

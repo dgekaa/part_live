@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 import { Redirect } from "react-router-dom";
@@ -19,6 +19,12 @@ const Login = () => {
   const [allValidationError, setAllValidationError] = useState("");
   const loginRef = useRef(null);
   const [cookies, setCookie, removeCookie] = useCookies([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("uniqueCompanyType")) {
+      localStorage.setItem("uniqueCompanyType", "");
+    }
+  }, []);
 
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);

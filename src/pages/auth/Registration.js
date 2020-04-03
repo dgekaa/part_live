@@ -36,6 +36,12 @@ const Registration = () => {
   const register = useRef(null);
 
   useEffect(() => {
+    if (localStorage.getItem("uniqueCompanyType")) {
+      localStorage.setItem("uniqueCompanyType", "");
+    }
+  }, []);
+
+  useEffect(() => {
     if (allValidationError) {
       console.log(allValidationError, ":ASDA");
       const nameFirstErrInput = Object.keys(allValidationError)[0].split(

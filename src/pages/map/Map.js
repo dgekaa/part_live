@@ -128,13 +128,10 @@ const MapComponent = props => {
 
   !windowWidth && setWindowWidth(window.innerWidth);
 
-  console.log(windowWidth, " WWWs");
-
   useEffect(() => {
     window.onresize = function(e) {
       setWindowWidth(e.target.innerWidth);
       hideSideMenu();
-      console.log(windowWidth, " WWWs 111");
     };
   });
 

@@ -155,6 +155,12 @@ const Admin = props => {
     }
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("uniqueCompanyType")) {
+      localStorage.setItem("uniqueCompanyType", "");
+    }
+  }, []);
+
   const refreshData = () => {
     QUERY({
       query: `query {

@@ -39,7 +39,7 @@ const EditCompany = () => {
   useEffect(() => {
     QUERY({
       query: `query {
-            places {id name}
+            places {id name  categories{name slug}}
           }`
     })
       .then(res => {
@@ -104,14 +104,23 @@ const EditCompany = () => {
           />
           {!isLoading && (
             <div className="editCompanyContent">
-              <h3>СПИСОК СТРИМОВ</h3>
-              <ul>
-                {places.map(({ id, name }) => (
-                  <li key={id}>
-                    <Link to={`/admin/${id}`}>{name}</Link>
-                  </li>
-                ))}
-              </ul>
+              <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
+              <table>
+                <tbody>
+                  {console.log(places, " QQQWEQWE")}
+                  {places.map(({ id, name, categories }) => (
+                    <tr key={id}>
+                      <td className="name">
+                        <Link to={`/admin/${id}`}>{name}</Link>
+                      </td>
+                      <td className="enName">{id}</td>
+                      <td className="typeCompany">
+                        {categories[0].name.toLowerCase()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
           {isLoading && <Loader />}

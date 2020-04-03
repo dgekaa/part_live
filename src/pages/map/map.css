@@ -97,7 +97,7 @@
 }
 @media screen and (max-width: 1020px) {
   .navContainerMap {
-    padding: 0 15px;
+    padding: 0 25px;
     transition: 0.2s ease all;
   }
 }

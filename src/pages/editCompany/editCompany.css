@@ -1,9 +1,50 @@
 .editCompanyContent {
-  padding: 70px 20px;
-  text-align: center;
+  max-width: 950px;
+  margin: 0 auto;
+  padding-top: 60px;
 }
-.editCompanyContent li {
-  padding-top: 10px;
-  list-style-type: none;
-  text-align: left;
+.editCompanyContent h3 {
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+.editCompanyContent table {
+  width: 60%;
+  min-width: 600px;
+}
+.editCompanyContent tr {
+  display: flex;
+}
+.editCompanyContent td {
+  padding: 4px;
+  display: flex;
+
+  flex: 1;
+}
+.editCompanyContent td:first-of-type {
+  flex: 1.5;
+}
+.editCompanyContent .name {
+  font-weight: 500;
+  font-size: 18px;
+}
+.editCompanyContent .name a {
+  display: block;
+  width: 100%;
+}
+.editCompanyContent .enName {
+  font-weight: 500;
+  font-size: 18px;
+  color: #aeaeae;
+}
+.editCompanyContent .typeCompany {
+  font-weight: 500;
+  font-size: 18px;
+  color: #e32a6c;
+}
+
+@media screen and (max-width: 1000px) {
+  .editCompanyContent {
+    margin: 0 25px;
+  }
 }
