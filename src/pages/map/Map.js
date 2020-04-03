@@ -167,6 +167,7 @@ const MapComponent = props => {
     ) {
       setReferrer(`/company/${data}`);
     }
+    alert(mouseMapCoordinates.clientX);
     alert(e.clientX);
   };
 
