@@ -241,8 +241,8 @@ const Company = props => {
                   <span>{DATA.place.name}</span> - {DATA.place.description}
                 </p>
               </div>
-              <div className="desc">
-                {/* <div className="mobileDescription">
+              {/* <div className="desc">
+                <div className="mobileDescription">
                   <h3>
                     <span className="mobileCompanyType">
                       {DATA.place.categories[0].name} "
@@ -258,7 +258,7 @@ const Company = props => {
                     )}
                     {!curDistance && " 0 km"}
                   </p>
-                </div> */}
+                </div>
                 <p className="smallOpenedTo">
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
                   {!isWork && "Закрыто"}
@@ -328,7 +328,7 @@ const Company = props => {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
               <div className="type">{DATA.place.categories[0].name}</div>
             </div>
             {!!windowWidth && windowWidth <= 760 && (
