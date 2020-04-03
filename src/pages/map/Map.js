@@ -165,7 +165,6 @@ const MapComponent = props => {
   const mouseUpHandler = (e, data) => {
     alert("mouseUpHandler");
 
-    // alert("mouseUpHandler");
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
@@ -324,15 +323,17 @@ const MapComponent = props => {
                 >
                   <Link
                     onMouseDown={e => {
-                      alert("onMouseDown");
-                      // !("ontouchstart" in document.documentElement) &&
-                      mouseDownHandler(e);
+                      !("ontouchstart" in document.documentElement) &&
+                        alert("onMouseDown");
+                      !("ontouchstart" in document.documentElement) &&
+                        mouseDownHandler(e);
                     }}
                     onMouseUp={e => {
-                      alert("onMouseUp");
+                      !("ontouchstart" in document.documentElement) &&
+                        alert("onMouseUp");
 
-                      // !("ontouchstart" in document.documentElement) &&
-                      mouseUpHandler(e, cluster.item.id);
+                      !("ontouchstart" in document.documentElement) &&
+                        mouseUpHandler(e, cluster.item.id);
                     }}
                     onTouchStart={e => {
                       // "ontouchstart" in document.documentElement &&
@@ -355,8 +356,6 @@ const MapComponent = props => {
                         cluster.item.id
                       );
                       alert("onTouchEnd");
-                      alert(e.nativeEvent.changedTouches[0].clientX);
-                      alert(cluster.item.id);
                     }}
                     to={{
                       pathname: referrer
