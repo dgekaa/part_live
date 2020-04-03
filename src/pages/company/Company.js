@@ -259,10 +259,10 @@ const Company = props => {
                     {!curDistance && " 0 km"}
                   </p>
                 </div>
-                <p className="smallOpenedTo">
+                {/* <p className="smallOpenedTo">
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
                   {!isWork && "Закрыто"}
-                </p>
+                </p> */}
                 <div className="timeBlocks">
                   <div className="timeBlock">
                     <img
