@@ -33,7 +33,6 @@ const MapComponent = props => {
   const [zoom, setZoom] = useState(11);
   const [bounds, setBounds] = useState(null);
   const [windowWidth, setWindowWidth] = useState();
-
   const [isLoading, setIsLoading] = useState(true);
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
 
@@ -168,10 +167,6 @@ const MapComponent = props => {
       setReferrer(`/company/${data}`);
     }
   };
-  let supportsTouch;
-  useEffect(() => {
-    supportsTouch = "ontouchstart" in document.documentElement;
-  }, []);
 
   return (
     <div
@@ -321,16 +316,17 @@ const MapComponent = props => {
                 >
                   <Link
                     onMouseDown={e => {
-                      !supportsTouch && mouseDownHandler(e);
+                      mouseDownHandler(e);
                     }}
                     onMouseUp={e => {
-                      !supportsTouch && mouseUpHandler(e, cluster.item.id);
+                      mouseUpHandler(e, cluster.item.id);
                     }}
                     onTouchStart={e => {
-                      supportsTouch && mouseDownHandler(e);
+                      mouseDownHandler(e);
                     }}
+                    // "ontouchstart" in document.documentElement
                     onTouchEnd={e => {
-                      supportsTouch && mouseUpHandler(e, cluster.item.id);
+                      mouseUpHandler(e, cluster.item.id);
                     }}
                     to={{
                       pathname: referrer
