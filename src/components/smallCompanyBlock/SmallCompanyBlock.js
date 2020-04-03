@@ -59,12 +59,18 @@ const SmallCompanyBlock = ({ item }) => {
               justifyContent: "center"
             }}
           >
+            {console.log(nextStreamTime.day, " !!!!! ____ !!!!!")}
+
             <p style={{ color: "#fff", textAlign: "center", padding: "20px" }}>
               {nextStreamTime.start_time &&
+                nextStreamTime.day.toLowerCase() !== "сегодня" &&
                 "Трансляция начнется в " +
                   EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
                   " в " +
                   nextStreamTime.start_time}
+              {nextStreamTime.start_time &&
+                nextStreamTime.day.toLowerCase() === "сегодня" &&
+                "Трансляция начнется сегодня в " + nextStreamTime.start_time}
 
               {!nextStreamTime.start_time && "Нет предстоящих трансляций"}
             </p>

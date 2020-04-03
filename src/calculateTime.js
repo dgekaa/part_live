@@ -105,6 +105,14 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
             sortedArr[i].start_time.split(":")[0] * HtoMs +
             sortedArr[i].start_time.split(":")[1] * MtoMs;
           if (currentTimeMS < todayStartStream) {
+            // console.log(
+            //   {
+            //     id: item.id,
+            //     day: "сегодня",
+            //     start_time: sortedArr[i].start_time
+            //   },
+            //   "-----"
+            // );
             setNextStreamTime({
               id: item.id,
               day: "сегодня",
@@ -119,6 +127,11 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
         for (let i = 0; i < sortedArr.length; i++) {
           if (sortedArr[i] && i > new Date().getDay() - 1) {
             if (sortedArr[i].start_time) {
+              // console.log({
+              //   id: item.id,
+              //   day: "сегодня",
+              //   start_time: sortedArr[i].start_time
+              // });
               setNextStreamTime({
                 id: item.id,
 
@@ -136,6 +149,11 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
         for (let i = 0; i < sortedArr.length; i++) {
           if (sortedArr[i] && i < new Date().getDay() - 1) {
             if (sortedArr[i].start_time) {
+              // console.log({
+              //   id: item.id,
+              //   day: "сегодня",
+              //   start_time: sortedArr[i].start_time
+              // });
               setNextStreamTime({
                 id: item.id,
 

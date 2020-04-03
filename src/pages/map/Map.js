@@ -333,7 +333,6 @@ const MapComponent = props => {
                           cluster.item.id
                         );
                     }}
-                    // "ontouchstart" in document.documentElement
                     onTouchEnd={e => {
                       console.log(e.nativeEvent, "onTouchEnd");
                       "ontouchstart" in document.documentElement &&

@@ -778,7 +778,7 @@ const Admin = props => {
           )}
         </div>
         <BottomMenu
-          style={{ borderTop: "1px solid #ECECEC" }}
+          // style={{ borderTop: "1px solid #ECECEC" }}
           toSlideFixedBottomMenu={isShowMenu}
         />
         <SlideSideMenu isShowMenu={isShowMenu} />
