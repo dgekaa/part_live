@@ -258,12 +258,12 @@ const Company = props => {
                     )}
                     {!curDistance && " 0 km"}
                   </p>
-                </div>
-                <p className="smallOpenedTo">
+                </div> */}
+                {/* <p className="smallOpenedTo">
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
                   {!isWork && "Закрыто"}
-                </p>
-                <div className="timeBlocks"> */}
+                </p> */}
+                {/* <div className="timeBlocks">
                   <div className="timeBlock">
                     <img
                       height="16"
@@ -301,7 +301,7 @@ const Company = props => {
                       <span>{DATA.place.address}</span>
                     </p>
                   </div>
-                </div>
+                </div> */}
                 {/* {windowWidth && windowWidth > 760 && (
                   <div className="smallMapWrap">
                     <div
