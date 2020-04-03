@@ -157,6 +157,7 @@ const MapComponent = props => {
       clientX: e.clientX,
       clientY: e.clientY
     });
+    alert((e.clientX = "e.clientX mouseDownHandler"));
   };
 
   const mouseUpHandler = (e, data) => {
@@ -166,6 +167,7 @@ const MapComponent = props => {
     ) {
       setReferrer(`/company/${data}`);
     }
+    alert((e.clientX = "e.clientX mouseUpHandler"));
   };
 
   return (
