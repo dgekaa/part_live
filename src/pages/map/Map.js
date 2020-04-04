@@ -20,11 +20,11 @@ import Loader from "../../components/loader/Loader";
 
 const Marker = ({ children }) => children;
 
-const createMapOptions = maps => {
+const createMapOptions = (maps) => {
   return { styles: styles };
 };
 
-const MapComponent = props => {
+const MapComponent = (props) => {
   const [DATA, setDATA] = useState([]);
 
   const [markers, setMarkers] = useState([]);
@@ -45,17 +45,17 @@ const MapComponent = props => {
           }
           schedules{id day start_time end_time}
           categories{id name slug}}
-        }`
+        }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setIsLoading(false);
         setMarkers(data.data.places);
         setDATA(data.data.places);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  ERR");
       });
   }, []);
@@ -67,15 +67,15 @@ const MapComponent = props => {
       properties: {
         cluster: false,
         crimeId: i,
-        category: el.categories[0].name
+        category: el.categories[0].name,
       },
       geometry: {
         type: "Point",
         coordinates: [
           +el.coordinates.split(",")[1],
-          +el.coordinates.split(",")[0]
-        ]
-      }
+          +el.coordinates.split(",")[0],
+        ],
+      },
     };
   });
 
@@ -85,14 +85,14 @@ const MapComponent = props => {
     zoom,
     options: {
       radius: 190,
-      maxZoom: 20
-    }
+      maxZoom: 20,
+    },
   });
 
-  const clickedType = type => {
+  const clickedType = (type) => {
     if (type) {
       const filteredData = DATA.filter(
-        el => el.categories[0].name.toUpperCase() === type.toUpperCase()
+        (el) => el.categories[0].name.toUpperCase() === type.toUpperCase()
       );
       setMarkers(filteredData);
     } else {
@@ -128,7 +128,7 @@ const MapComponent = props => {
   !windowWidth && setWindowWidth(window.innerWidth);
 
   useEffect(() => {
-    window.onresize = function(e) {
+    window.onresize = function (e) {
       setWindowWidth(e.target.innerWidth);
       hideSideMenu();
     };
@@ -138,13 +138,13 @@ const MapComponent = props => {
 
   if (navigator.geolocation && !defaultCenter) {
     navigator.geolocation.getCurrentPosition(
-      pos => {
+      (pos) => {
         setDefaultCenter({
           lat: pos.coords.latitude,
-          lng: pos.coords.longitude
+          lng: pos.coords.longitude,
         });
       },
-      err => {
+      (err) => {
         console.log(err, " GEOLOCATION ERROR");
       }
     );
@@ -152,10 +152,10 @@ const MapComponent = props => {
     console.log("Геолокация недоступна");
   }
 
-  const mouseDownHandler = e => {
+  const mouseDownHandler = (e) => {
     setMouseMapCoordinates({
       clientX: e.clientX,
-      clientY: e.clientY
+      clientY: e.clientY,
     });
   };
 
@@ -170,7 +170,7 @@ const MapComponent = props => {
 
   return (
     <div
-      onClick={e => {
+      onClick={(e) => {
         if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
           hideSideMenu();
         }
@@ -187,11 +187,11 @@ const MapComponent = props => {
             ? isShowMenu
               ? {
                   animation: "toLeftFixed 0.3s ease",
-                  left: "-200px"
+                  left: "-200px",
                 }
               : {
                   animation: "toRightFixed 0.3s ease",
-                  left: "0px"
+                  left: "0px",
                 }
             : {}
         }
@@ -214,11 +214,11 @@ const MapComponent = props => {
               ? isShowMenu
                 ? {
                     animation: "toLeftFixed 0.3s ease",
-                    left: "-200px"
+                    left: "-200px",
                   }
                 : {
                     animation: "toRightFixed 0.3s ease",
-                    left: "0px"
+                    left: "0px",
                   }
               : {}
           }
@@ -227,15 +227,15 @@ const MapComponent = props => {
             options={createMapOptions}
             style={{
               height: "100%",
-              width: "100%"
+              width: "100%",
             }}
             bootstrapURLKeys={{
-              key: API_KEY
+              key: API_KEY,
             }}
             defaultCenter={
               defaultCenter || {
                 lat: 53.904577,
-                lng: 27.557328
+                lng: 27.557328,
               }
             }
             defaultZoom={12}
@@ -249,7 +249,7 @@ const MapComponent = props => {
                 bounds.nw.lng,
                 bounds.se.lat,
                 bounds.se.lng,
-                bounds.nw.lat
+                bounds.nw.lat,
               ]);
             }}
           >
@@ -264,11 +264,11 @@ const MapComponent = props => {
               </Marker>
             )}
 
-            {clusters.map(cluster => {
+            {clusters.map((cluster) => {
               const [longitude, latitude] = cluster.geometry.coordinates;
               const {
                 cluster: isCluster,
-                point_count: pointCount
+                point_count: pointCount,
               } = cluster.properties;
 
               //ЗАМЕНА НА ЦИФРЫ
@@ -292,16 +292,16 @@ const MapComponent = props => {
                 isWork = false,
                 nextStreamTime = "";
 
-              const setShowStream = time => {
+              const setShowStream = (time) => {
                 streamTime = time;
               };
-              const setWorkTime = time => {
+              const setWorkTime = (time) => {
                 workTime = time;
               };
-              const setIsWork = bool => {
+              const setIsWork = (bool) => {
                 isWork = bool;
               };
-              const setNextStreamTime = time => {
+              const setNextStreamTime = (time) => {
                 nextStreamTime = time;
               };
               isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
@@ -314,28 +314,28 @@ const MapComponent = props => {
                   lng={longitude}
                 >
                   <Link
-                    onMouseDown={e => {
+                    onMouseDown={(e) => {
                       !("ontouchstart" in document.documentElement) &&
                         mouseDownHandler(e);
                     }}
-                    onMouseUp={e => {
+                    onMouseUp={(e) => {
                       !("ontouchstart" in document.documentElement) &&
                         mouseUpHandler(e, cluster.item.id);
                     }}
-                    onTouchStart={e => {
+                    onTouchStart={(e) => {
                       mouseDownHandler(
                         {
                           clientX: e.nativeEvent.changedTouches[0].clientX,
-                          clientY: e.nativeEvent.changedTouches[0].clientY
+                          clientY: e.nativeEvent.changedTouches[0].clientY,
                         },
                         cluster.item.id
                       );
                     }}
-                    onTouchEnd={e => {
+                    onTouchEnd={(e) => {
                       mouseUpHandler(
                         {
                           clientX: e.nativeEvent.changedTouches[0].clientX,
-                          clientY: e.nativeEvent.changedTouches[0].clientY
+                          clientY: e.nativeEvent.changedTouches[0].clientY,
                         },
                         cluster.item.id
                       );
@@ -343,7 +343,7 @@ const MapComponent = props => {
                     to={{
                       pathname: referrer
                         ? `/company/${cluster.item.id}`
-                        : `/map`
+                        : `/map`,
                     }}
                   >
                     <div className="mapMarkerWrap">
@@ -361,14 +361,14 @@ const MapComponent = props => {
                             style={{
                               display: "flex",
                               alignItems: "center",
-                              justifyContent: "center"
+                              justifyContent: "center",
                             }}
                           >
                             <p
                               style={{
                                 color: "#fff",
                                 textAlign: "center",
-                                padding: "3px"
+                                padding: "3px",
                               }}
                             >
                               {nextStreamTime.start_time &&
@@ -406,11 +406,11 @@ const MapComponent = props => {
             ? isShowMenu
               ? {
                   animation: "toLeftFixed 0.3s ease",
-                  left: "-200px"
+                  left: "-200px",
                 }
               : {
                   animation: "toRightFixed 0.3s ease",
-                  left: "0px"
+                  left: "0px",
                 }
             : {}
         }

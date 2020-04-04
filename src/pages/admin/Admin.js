@@ -62,7 +62,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
         <div className="timePickerHoursWrap">
           <span
             className="topArrow"
-            onClick={e => {
+            onClick={(e) => {
               clickHandlerTop(e, 24);
             }}
           ></span>
@@ -71,7 +71,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
           </p>
           <span
             className="bottomArrow"
-            onClick={e => {
+            onClick={(e) => {
               clickHandlerBottom(e, 24);
             }}
           ></span>
@@ -80,7 +80,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
         <div className="timePickerMinutesWrap">
           <span
             className="topArrow"
-            onClick={e => {
+            onClick={(e) => {
               clickHandlerTop(e, 60);
             }}
           ></span>
@@ -89,7 +89,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
           </p>
           <span
             className="bottomArrow"
-            onClick={e => {
+            onClick={(e) => {
               clickHandlerBottom(e, 60);
             }}
           ></span>
@@ -99,7 +99,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
   );
 };
 
-const Admin = props => {
+const Admin = (props) => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -135,21 +135,21 @@ const Admin = props => {
               coordinates: "${stringLatLng}"
             }
           ){id address coordinates}
-        }`
+        }`,
         },
         cookies.origin_data
       )
-        .then(res => {
+        .then((res) => {
           return res.json();
         })
-        .then(data => {
+        .then((data) => {
           if (!data.errors) {
             togglePopupGoogleMap();
             refreshData();
           } else {
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "  *****************ERR");
         });
     }
@@ -172,12 +172,12 @@ const Admin = props => {
         schedules {id day start_time end_time}
         categories {id name}
       }
-  }`
+  }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (!data.errors) {
           setIsLoading(false);
           setDATA(data.data.place);
@@ -185,7 +185,7 @@ const Admin = props => {
           console.log(data.errors, " ERRORS");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  *****************ERR");
       });
   };
@@ -198,14 +198,14 @@ const Admin = props => {
             deleteSchedule(
               id:"${clickedTime.id}"
             ){id day start_time end_time}
-          }`
+          }`,
         },
         cookies.origin_data
       )
-        .then(res => {
+        .then((res) => {
           return res.json();
         })
-        .then(data => {
+        .then((data) => {
           if (!data.errors) {
             refreshData();
             console.log(data, " ??????????????????");
@@ -213,13 +213,13 @@ const Admin = props => {
             console.log(data.errors, " ERRORS");
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err, "  *****************ERR");
         });
     }
   };
 
-  const updateStream = name => {
+  const updateStream = (name) => {
     if (cookies.origin_data) {
       QUERY(
         {
@@ -233,12 +233,12 @@ const Admin = props => {
             ) {
               id name url
               }
-          }`
+          }`,
         },
         cookies.origin_data
       )
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (!data.errors) {
             refreshData();
             console.log(data, "FETCH data");
@@ -246,12 +246,12 @@ const Admin = props => {
             console.log(data.errors, " ERRORS");
           }
         })
-        .catch(err => console.log(err, "  *******ERR"));
+        .catch((err) => console.log(err, "  *******ERR"));
     }
   };
   //https://partycamera.org/klever/index.m3u8
   // http://partycamera.org:80/maxshow/preview.mp4
-  const createStream = name => {
+  const createStream = (name) => {
     if (cookies.origin_data) {
       QUERY(
         {
@@ -263,12 +263,12 @@ const Admin = props => {
                   preview : "http://partycamera.org:80/${name}/preview.mp4"
                   place:{connect:"${props.match.params.id}"}                  
                 }) {id name url}
-            }`
+            }`,
         },
         cookies.origin_data
       )
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (!data.errors) {
             refreshData();
             console.log(data, "FETCH data");
@@ -276,7 +276,7 @@ const Admin = props => {
             console.log(data.errors, " ERRORS");
           }
         })
-        .catch(err => console.log(err, "  *******ERR"));
+        .catch((err) => console.log(err, "  *******ERR"));
     }
   };
 
@@ -303,12 +303,12 @@ const Admin = props => {
               ) {
                 id name url
                 }
-            }`
+            }`,
           },
           cookies.origin_data
         )
-          .then(res => res.json())
-          .then(data => {
+          .then((res) => res.json())
+          .then((data) => {
             if (!data.errors) {
               refreshData();
               console.log(data, "FETCH data");
@@ -316,7 +316,7 @@ const Admin = props => {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch(err => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, "  *******ERR"));
       }
       if (DATA.streams[0] && isEmptyTime) {
         // пустое время стрима и стрим уже существет
@@ -339,12 +339,12 @@ const Admin = props => {
               ) {
                 id name url
                 }
-            }`
+            }`,
           },
           cookies.origin_data
         )
-          .then(res => res.json())
-          .then(data => {
+          .then((res) => res.json())
+          .then((data) => {
             if (!data.errors) {
               refreshData();
               console.log(data, "FETCH data");
@@ -352,7 +352,7 @@ const Admin = props => {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch(err => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, "  *******ERR"));
       }
     }
   };
@@ -373,19 +373,19 @@ const Admin = props => {
                   }
                 }
               ){id}
-            }`
+            }`,
           },
           cookies.origin_data
         )
-          .then(res => res.json())
-          .then(data => {
+          .then((res) => res.json())
+          .then((data) => {
             if (!data.errors) {
               refreshData();
             } else {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch(err => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, "  *******ERR"));
       }
 
       if (!isEmptyTime) {
@@ -398,19 +398,19 @@ const Admin = props => {
               id:"${clickedTime.id}" start_time: "${startTimePicker}" end_time: "${endTimePicker}"
             }
           ){id}
-        }`
+        }`,
           },
           cookies.origin_data
         )
-          .then(res => res.json())
-          .then(data => {
+          .then((res) => res.json())
+          .then((data) => {
             if (!data.errors) {
               refreshData();
             } else {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch(err => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, "  *******ERR"));
       }
     }
   };
@@ -433,11 +433,11 @@ const Admin = props => {
     setIsShowMenu(true);
   };
 
-  window.onresize = function(e) {
+  window.onresize = function (e) {
     hideSideMenu();
   };
 
-  const accordionHandler = e => {
+  const accordionHandler = (e) => {
     if (e.target.nextSibling.style.maxHeight) {
       e.target.nextSibling.style.maxHeight = null;
       e.target.firstElementChild.style.transform = "rotate(0deg)";
@@ -475,11 +475,11 @@ const Admin = props => {
     setEndTimePicker("" + h + ":" + m);
   };
 
-  const selectFile = e => {
+  const selectFile = (e) => {
     setSelectedFile(e.target.files[0]);
   };
 
-  const uploadFile = e => {
+  const uploadFile = (e) => {
     if (selectedFile) {
       const fd = new FormData();
       fd.append("image", selectedFile, selectedFile.name);
@@ -488,7 +488,7 @@ const Admin = props => {
     }
   };
 
-  const SetNewTimeObject = data => {
+  const SetNewTimeObject = (data) => {
     const timeObject = {};
     EN_SHORT_DAY_OF_WEEK.forEach((e, i) => {
       data.forEach((el, ind) => {
@@ -508,7 +508,7 @@ const Admin = props => {
   } else {
     return (
       <div
-        onClick={e => {
+        onClick={(e) => {
           if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
             hideSideMenu();
           }
@@ -521,14 +521,14 @@ const Admin = props => {
               ? {
                   animation: "toLeft 0.3s ease",
                   position: "relative",
-                  right: "200px"
+                  right: "200px",
                 }
               : {
                   animation: "toRight 0.3s ease",
-                  position: "relative"
+                  position: "relative",
                 }
           }
-          onClick={e => {
+          onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
             }
@@ -553,7 +553,7 @@ const Admin = props => {
                   videoProps={{
                     autoPlay: true,
                     crossOrigin: "anonymous",
-                    preload: "metadata"
+                    preload: "metadata",
                   }}
                 />
               )}
@@ -561,7 +561,7 @@ const Admin = props => {
                 <div className="menuBlockWrap profile">
                   <div
                     className="menuBlock"
-                    onClick={e => {
+                    onClick={(e) => {
                       accordionHandler(e);
                     }}
                   >
@@ -617,7 +617,7 @@ const Admin = props => {
                 <div className="menuBlockWrap workSchedule">
                   <div
                     className="menuBlock"
-                    onClick={e => {
+                    onClick={(e) => {
                       accordionHandler(e);
                     }}
                   >
@@ -673,7 +673,7 @@ const Admin = props => {
                 <div className="menuBlockWrap streamSchedule">
                   <div
                     className="menuBlock"
-                    onClick={e => {
+                    onClick={(e) => {
                       accordionHandler(e);
                     }}
                   >
@@ -692,7 +692,7 @@ const Admin = props => {
                           "Введите адрес стрима"
                         }
                         value={streamAddressData}
-                        onInput={e => {
+                        onInput={(e) => {
                           setStreamAddressData(e.target.value);
                         }}
                       />
@@ -764,7 +764,7 @@ const Admin = props => {
                 <div className="menuBlockWrap address">
                   <div
                     className="menuBlock"
-                    onClick={e => {
+                    onClick={(e) => {
                       accordionHandler(e);
                     }}
                   >
@@ -778,7 +778,7 @@ const Admin = props => {
           )}
         </div>
         <BottomMenu
-          // style={{ borderTop: "1px solid #ECECEC" }}
+          style={{ borderTop: "1px solid #ECECEC" }}
           toSlideFixedBottomMenu={isShowMenu}
         />
         <SlideSideMenu isShowMenu={isShowMenu} />
@@ -832,7 +832,7 @@ const Admin = props => {
             togglePopup={togglePopupGoogleMap}
             style={{
               width: "100%",
-              height: "100%"
+              height: "100%",
             }}
           >
             <GoogleMap
@@ -840,7 +840,7 @@ const Admin = props => {
                 DATA.coordinates
                   ? {
                       lat: Number(DATA.coordinates.split(",")[0]),
-                      lng: Number(DATA.coordinates.split(",")[1])
+                      lng: Number(DATA.coordinates.split(",")[1]),
                     }
                   : null
               }

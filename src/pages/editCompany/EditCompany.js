@@ -26,7 +26,7 @@ const EditCompany = () => {
     setIsShowMenu(true);
   };
 
-  window.onresize = function(e) {
+  window.onresize = function (e) {
     hideSideMenu();
   };
 
@@ -40,12 +40,12 @@ const EditCompany = () => {
     QUERY({
       query: `query {
             places {id name  categories{name slug}}
-          }`
+          }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (!data.errors) {
           setIsLoading(false);
           setPlaces(data.data.places);
@@ -54,7 +54,7 @@ const EditCompany = () => {
           console.log(data.errors, " ERRORS");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  *****************ERR");
       });
   }, []);
@@ -68,7 +68,7 @@ const EditCompany = () => {
   } else {
     return (
       <div
-        onClick={e => {
+        onClick={(e) => {
           if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
             hideSideMenu();
           }
@@ -81,14 +81,14 @@ const EditCompany = () => {
               ? {
                   animation: "toLeft 0.3s ease",
                   position: "relative",
-                  right: "200px"
+                  right: "200px",
                 }
               : {
                   animation: "toRight 0.3s ease",
-                  position: "relative"
+                  position: "relative",
                 }
           }
-          onClick={e => {
+          onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
             }
@@ -127,7 +127,7 @@ const EditCompany = () => {
         </div>
 
         <BottomMenu
-          // style={{ borderTop: "1px solid #ECECEC" }}
+          style={{ borderTop: "1px solid #ECECEC" }}
           toSlideFixedBottomMenu={isShowMenu}
         />
         <SlideSideMenu isShowMenu={isShowMenu} />

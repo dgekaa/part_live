@@ -4,27 +4,24 @@
 @media screen and (max-width: 760px) {
   .BottomMenu {
     display: flex;
-    height: 64px;
-    background: transparent;
+    height: 55px;
+    background: #fff;
     position: fixed;
     bottom: 0;
     width: 100%;
     z-index: 0;
     left: 0;
+    align-items: center;
     padding-left: calc(50% - 130px);
   }
   .BottomMenu a {
     display: inline-block;
-    border-top: 2px solid #c4c4c4;
-    border-right: 2px solid #c4c4c4;
-    border-left: 2px solid #c4c4c4;
-
-    padding-top: 4px;
+    border: 1px solid #c4c4c4;
     font-size: 16px;
     font-weight: bold;
-    height: 100%;
+    height: 40px;
     cursor: pointer;
-    width: 130px;
+    width: 90px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,11 +33,11 @@
     background: #e32a6c;
   }
   .BottomMenu a:first-of-type {
-    border-radius: 5px 0 0 0;
     border-right: none;
+    border-radius: 5px 0 0 5px;
   }
   .BottomMenu a:last-of-type {
-    border-radius: 0 5px 0 0;
+    border-radius: 0 5px 5px 0;
   }
 
   /* .homeImg,
