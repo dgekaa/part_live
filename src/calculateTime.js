@@ -18,10 +18,10 @@ const HtoMs = 3600000,
 
 const currentTimeMS =
   new Date().getHours() * HtoMs + new Date().getMinutes() * MtoMs;
+console.log(numberDayNow, "numberDayNow");
+const curDay = EN_SHORT_DAY_OF_WEEK[numberDayNow].day;
 
-const curDay = EN_SHORT_DAY_OF_WEEK[new Date().getDay() - 1].day;
-
-const SetNewTimeObject = data => {
+const SetNewTimeObject = (data) => {
   const timeObject = {};
   EN_SHORT_DAY_OF_WEEK.forEach((e, i) => {
     data.forEach((el, ind) => {
@@ -40,7 +40,7 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
   if (item.streams[0]) {
     let yesterdayStream, todayStream;
 
-    item.streams[0].schedules.forEach(el => {
+    item.streams[0].schedules.forEach((el) => {
       if (dayNameYest === el.day) {
         yesterdayStream = el;
       }
@@ -116,7 +116,7 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
             setNextStreamTime({
               id: item.id,
               day: "сегодня",
-              start_time: sortedArr[i].start_time
+              start_time: sortedArr[i].start_time,
             });
 
             isSetTime = true;
@@ -125,18 +125,13 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
       }
       if (!isSetTime) {
         for (let i = 0; i < sortedArr.length; i++) {
-          if (sortedArr[i] && i > new Date().getDay() - 1) {
+          if (sortedArr[i] && i > numberDayNow) {
             if (sortedArr[i].start_time) {
-              // console.log({
-              //   id: item.id,
-              //   day: "сегодня",
-              //   start_time: sortedArr[i].start_time
-              // });
               setNextStreamTime({
                 id: item.id,
 
                 day: sortedArr[i].day,
-                start_time: sortedArr[i].start_time
+                start_time: sortedArr[i].start_time,
               });
 
               isSetTime = true;
@@ -147,7 +142,7 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
       }
       if (!isSetTime) {
         for (let i = 0; i < sortedArr.length; i++) {
-          if (sortedArr[i] && i < new Date().getDay() - 1) {
+          if (sortedArr[i] && i < numberDayNow) {
             if (sortedArr[i].start_time) {
               // console.log({
               //   id: item.id,
@@ -158,7 +153,7 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
                 id: item.id,
 
                 day: sortedArr[i].day,
-                start_time: sortedArr[i].start_time
+                start_time: sortedArr[i].start_time,
               });
               isSetTime = true;
               break;
@@ -173,7 +168,7 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
 export const isWorkTimeNow = (item, setWorkTime, setIsWork) => {
   let yesterdayWorkTime, todayWorkTime;
 
-  item.schedules.forEach(el => {
+  item.schedules.forEach((el) => {
     if (dayNameYest === el.day) {
       yesterdayWorkTime = el;
     }
