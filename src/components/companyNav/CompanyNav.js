@@ -13,6 +13,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const [startX, setStartX] = useState();
   const [scrollLeft, setScrollLeft] = useState();
   const [clickedTypeLocal, setClickedTypeLocal] = useState();
+  const [hoveredBtn, setHoveredBtn] = useState();
 
   const slideBtnMenu = useRef(null);
 
@@ -22,15 +23,15 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         categories {
           id name slug
         }
-      }`
+      }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setUniqueCompanyType(data.data.categories);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  ERR");
       });
   }, []);
@@ -53,7 +54,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const supportsTouch = "ontouchstart" in document.documentElement;
   smoothscroll.polyfill();
 
-  const scrollBtnToCenter = e => {
+  const scrollBtnToCenter = (e) => {
     e.preventDefault();
     const btnPositionToCenter =
       slideBtnMenu.current.offsetWidth / 2 -
@@ -63,7 +64,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
 
     slideBtnMenu.current.scrollTo({
       left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
-      behavior: "smooth"
+      behavior: "smooth",
     });
   };
 
@@ -72,16 +73,16 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       className="overflowClass"
       style={
         ({
-          ...style
+          ...style,
         },
         toSlideFixedNav
           ? {
               animation: "toLeftFixed 0.3s ease",
-              left: "-200px"
+              left: "-200px",
             }
           : {
               animation: "toRightFixed 0.3s ease",
-              left: "0px"
+              left: "0px",
             })
       }
     >
@@ -89,7 +90,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         className={"сompanyNav"}
         ref={slideBtnMenu}
         // //BROWSER ===========================================
-        onMouseDown={e => {
+        onMouseDown={(e) => {
           if (!supportsTouch) {
             setIsDown(true);
             setStartX(e.pageX - slideBtnMenu.current.offsetLeft);
@@ -106,7 +107,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             setIsDown(false);
           }
         }}
-        onMouseMove={e => {
+        onMouseMove={(e) => {
           if (!supportsTouch) {
             if (!isDown) return;
             e.preventDefault();
@@ -152,7 +153,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               ? { background: "#e32a6c" }
               : {}
           }
-          onClick={e => {
+          onClick={(e) => {
             clickedType();
             setClickedTypeLocal();
             localStorage.setItem("filter_type", "");
@@ -193,11 +194,17 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                     : {}
                 }
                 key={i}
-                onClick={e => {
+                onClick={(e) => {
                   clickedType(el.name);
                   setClickedTypeLocal(el.name);
                   localStorage.setItem("filter_type", el.name);
                   scrollBtnToCenter(e);
+                }}
+                onMouseOver={() => {
+                  setHoveredBtn(el.name);
+                }}
+                onMouseOut={() => {
+                  setHoveredBtn("");
                 }}
               >
                 <Link
@@ -219,7 +226,15 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                     <img
                       alt="Icon"
                       className="сompanyNavImg"
-                      src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
+                      src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                      width="30"
+                      height="30"
+                    />
+                  ) : hoveredBtn === el.name ? (
+                    <img
+                      alt="Icon"
+                      className="сompanyNavImg"
+                      src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
                       width="30"
                       height="30"
                     />

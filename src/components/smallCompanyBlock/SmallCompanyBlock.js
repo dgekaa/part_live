@@ -17,9 +17,10 @@ const SmallCompanyBlock = ({ item }) => {
     isShowStreamNow(item, setShowStream, setNextStreamTime);
     isWorkTimeNow(item, setWorkTime, setIsWork);
   }, [item]);
+
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      pos => {
+      (pos) => {
         setCurDistance(
           getDistanceFromLatLonInKm(
             pos.coords.latitude,
@@ -29,7 +30,7 @@ const SmallCompanyBlock = ({ item }) => {
           )
         );
       },
-      err => {
+      (err) => {
         console.log(err, " GEOLOCATION ERROR ");
       }
     );
@@ -56,7 +57,7 @@ const SmallCompanyBlock = ({ item }) => {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             {console.log(nextStreamTime.day, " !!!!! ____ !!!!!")}
