@@ -11,6 +11,9 @@ import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import { EN_SHORT_DAY_OF_WEEK } from "../../constants";
 
+import {} from "@mobiscroll/react-lite";
+import "@mobiscroll/react-lite/dist/css/mobiscroll.min.css";
+
 import "./admin.css";
 import { Redirect } from "react-router-dom";
 
@@ -115,11 +118,20 @@ const Admin = (props) => {
   const [enumWeekName, setEnumWeekName] = useState("");
   const [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false);
   const [streamAddressData, setStreamAddressData] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const [clickedTime, setClickedTime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const fileInput = useRef(null);
   const [cookies, setCookie, removeCookie] = useCookies([]);
+
+  !windowWidth && setWindowWidth(window.innerWidth);
+
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
 
   const chooseNewAddress = (streetName, latLng) => {
     const stringLatLng = "" + latLng.lat + "," + latLng.lng;
@@ -799,6 +811,7 @@ const Admin = (props) => {
                   setTime={setStartTime}
                 />
                 <span className="space"></span>
+
                 <TimePicker
                   realTimeInPicker={endRealTimeInPicker}
                   timePickerName="!!!!"

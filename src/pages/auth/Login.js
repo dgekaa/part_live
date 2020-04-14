@@ -47,12 +47,12 @@ const Login = () => {
         }) {access_token refresh_token expires_in token_type
           user {id name email}
         }
-      }`
+      }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (!data.errors) {
           console.log(data, " LOGIN");
           setCookie("origin_data", data.data.login.access_token);
@@ -78,7 +78,7 @@ const Login = () => {
           console.log(data.errors[0], "------------------ERR");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         removeCookie("origin_data");
         removeCookie("origin_id");
 
@@ -91,26 +91,7 @@ const Login = () => {
     return <Redirect to="/editCompany" />;
   } else {
     return (
-      <div
-        className="Login"
-        onClick={e => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-            hideSideMenu();
-          }
-        }}
-        style={
-          isShowMenu
-            ? {
-                animation: "toLeft 0.3s ease",
-                position: "relative",
-                right: "200px"
-              }
-            : {
-                animation: "toRight 0.3s ease",
-                position: "relative"
-              }
-        }
-      >
+      <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
         <Header
           logo
           burger
@@ -118,51 +99,72 @@ const Login = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <div className="authBlock">
-          <h4>{!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}</h4>
-          <form
-            ref={loginRef}
-            onSubmit={e => {
-              e.preventDefault();
-              !isForgetPass && userLogin(email, password);
-            }}
-          >
-            <input
-              type="text"
-              name="email"
-              placeholder="email"
-              value={email}
-              onChange={e => {
-                setEmail(e.target.value);
+        <div
+          className="Login"
+          onClick={(e) => {
+            if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+              hideSideMenu();
+            }
+          }}
+          style={
+            isShowMenu
+              ? {
+                  animation: "toLeft 0.3s ease",
+                  position: "relative",
+                  right: "200px",
+                }
+              : {
+                  animation: "toRight 0.3s ease",
+                  position: "relative",
+                }
+          }
+        >
+          <div className="authBlock">
+            <h4>{!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}</h4>
+            <form
+              ref={loginRef}
+              onSubmit={(e) => {
+                e.preventDefault();
+                !isForgetPass && userLogin(email, password);
               }}
-            />
-            {!isForgetPass && (
+            >
               <input
-                type="password"
-                name="password"
-                placeholder="password"
-                value={password}
-                onChange={e => {
-                  setPassword(e.target.value);
+                type="text"
+                name="email"
+                placeholder="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
                 }}
               />
-            )}
-            {!isForgetPass && <input type="submit" value="ВОЙТИ" />}
-            {isForgetPass && <p className="btnSubmit">ОТПРАВИТЬ</p>}
-          </form>
-          <p
-            className="forgetPass"
-            onClick={() => {
-              setIsForgetPass(prev => !prev);
-            }}
-          >
-            {!isForgetPass ? "  Забыли пароль?" : " Уже есть аккаунт?"}
-            <span className="errorField">
-              {!isForgetPass && allValidationError}
-            </span>
-          </p>
+              {!isForgetPass && (
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              )}
+              {!isForgetPass && <input type="submit" value="ВОЙТИ" />}
+              {isForgetPass && <p className="btnSubmit">ОТПРАВИТЬ</p>}
+            </form>
+            <p
+              className="forgetPass"
+              onClick={() => {
+                setIsForgetPass((prev) => !prev);
+              }}
+            >
+              {!isForgetPass ? "  Забыли пароль?" : " Уже есть аккаунт?"}
+              <span className="errorField">
+                {!isForgetPass && allValidationError}
+              </span>
+            </p>
+          </div>
+          <SlideSideMenu isShowMenu={isShowMenu} />
         </div>
-        <SlideSideMenu isShowMenu={isShowMenu} />
       </div>
     );
   }

@@ -60,8 +60,6 @@ const SmallCompanyBlock = ({ item }) => {
               justifyContent: "center",
             }}
           >
-            {console.log(nextStreamTime.day, " !!!!! ____ !!!!!")}
-
             <p style={{ color: "#fff", textAlign: "center", padding: "20px" }}>
               {nextStreamTime.start_time &&
                 nextStreamTime.day.toLowerCase() !== "сегодня" &&

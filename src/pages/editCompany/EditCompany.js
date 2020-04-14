@@ -4,6 +4,7 @@ import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Loader from "../../components/loader/Loader";
+import ReactHLS from "react-hls";
 
 import QUERY from "../../query";
 
@@ -13,6 +14,7 @@ import { Redirect, Link } from "react-router-dom";
 const EditCompany = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const [scriptErr, setScriptErr] = useState({});
 
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
@@ -39,7 +41,7 @@ const EditCompany = () => {
   useEffect(() => {
     QUERY({
       query: `query {
-            places {id name  categories{name slug}}
+            places {id name  categories{name slug} streams{url preview}}
           }`,
     })
       .then((res) => {
@@ -49,7 +51,6 @@ const EditCompany = () => {
         if (!data.errors) {
           setIsLoading(false);
           setPlaces(data.data.places);
-          console.log(data.data.places, " edit compani  DATA");
         } else {
           console.log(data.errors, " ERRORS");
         }
@@ -107,18 +108,43 @@ const EditCompany = () => {
               <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
               <table>
                 <tbody>
-                  {console.log(places, " QQQWEQWE")}
-                  {places.map(({ id, name, categories }) => (
-                    <tr key={id}>
-                      <td className="name">
-                        <Link to={`/admin/${id}`}>{name}</Link>
-                      </td>
-                      <td className="enName">{id}</td>
-                      <td className="typeCompany">
-                        {categories[0].name.toLowerCase()}
-                      </td>
-                    </tr>
-                  ))}
+                  {places.map(({ id, name, categories, streams }, i) => {
+                    return (
+                      <tr key={id}>
+                        <td className="name">
+                          <Link to={`/admin/${id}`}>{name}</Link>
+                        </td>
+                        <td className="enName">{id}</td>
+                        <td className="typeCompany">
+                          {categories[0].name.toLowerCase()}
+                        </td>
+                        <td className="enName">
+                          {streams[0] && streams[0].preview ? (
+                            <div>
+                              {console.log(scriptErr, "scriptErr[i]")}
+                              {(scriptErr[i] && scriptErr[i]) || "Ok"}
+                              <video
+                                onError={(err) => {
+                                  console.log(err.type, " _______________");
+                                  setScriptErr((prev) => ({
+                                    ...prev,
+                                    [i]: "Err",
+                                  }));
+                                  console.log(err, "ERRRR", i);
+                                }}
+                                style={{ display: "none" }}
+                                className="companyImg1"
+                                src={streams[0] && streams[0].preview}
+                                autoPlay
+                              />
+                            </div>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

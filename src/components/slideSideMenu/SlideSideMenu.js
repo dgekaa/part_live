@@ -23,14 +23,14 @@ const SlideSideMenu = ({ isShowMenu }) => {
       {
         query: `mutation {
         logout{status message}
-      }`
+      }`,
       },
       cookies.origin_data
     )
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         if (!data.errors) {
           console.log(data, " LOGOUT");
           removeCookie("origin_data");
@@ -39,7 +39,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
           console.log(data.errors, " ERRORS LOGOUT");
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  *******ERR LOGOUT");
       });
 
