@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -121,16 +121,15 @@ const EditCompany = () => {
                         <td className="enName">
                           {streams[0] && streams[0].preview ? (
                             <div>
-                              {console.log(scriptErr, "scriptErr[i]")}
                               {(scriptErr[i] && scriptErr[i]) || "Ok"}
                               <video
+                                type="application/x-mpegURL"
                                 onError={(err) => {
-                                  console.log(err.type, " _______________");
                                   setScriptErr((prev) => ({
                                     ...prev,
                                     [i]: "Err",
                                   }));
-                                  console.log(err, "ERRRR", i);
+                                  console.log(err.message, "ERRRR", i);
                                 }}
                                 style={{ display: "none" }}
                                 className="companyImg1"

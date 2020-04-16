@@ -42,14 +42,19 @@
 
 .registrBtn,
 .loginBtn {
-  background-color: green;
+  background-color: transparent;
+  font-size: 16px;
+  color: #000;
   margin-left: 10px;
   padding: 5px;
   border-radius: 5px;
-  color: #fff;
   cursor: pointer;
+  transition: 0.3s ease color;
 }
-
+.registrBtn:hover,
+.loginBtn:hover {
+  color: #e32a6c;
+}
 @media screen and (max-width: 760px) {
   .headerContainer {
     position: fixed;

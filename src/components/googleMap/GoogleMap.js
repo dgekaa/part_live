@@ -9,7 +9,7 @@ import "react-google-places-autocomplete/dist/assets/index.css";
 import { styles } from "./GoogleMapStyles.js";
 import "./googleMap.css";
 
-const LoadingContainer = props => <div></div>;
+const LoadingContainer = (props) => <div></div>;
 
 const MapContainer = ({
   google,
@@ -18,11 +18,11 @@ const MapContainer = ({
   chooseNewAddress, //выбор адреса (street latLng)
   isNewAddress, //функционал для выбора адреса
   styleContainerMap,
-  closeBtn //крестик
+  closeBtn, //крестик
 }) => {
   const initialCenter = initialCenterMap || {
     lat: 53.904241,
-    lng: 27.556932
+    lng: 27.556932,
   }; // Минск
   const initialZoom = 11;
 
@@ -32,10 +32,10 @@ const MapContainer = ({
 
   const geocoder = new google.maps.Geocoder();
 
-  const getStreetFromLatLng = location => {
+  const getStreetFromLatLng = (location) => {
     geocoder.geocode(
       {
-        location: location
+        location: location,
       },
       (results, status) => {
         if (status === "OK") {
@@ -51,11 +51,11 @@ const MapContainer = ({
   };
 
   const getLatLngFromStreet = (street, fromInput) => {
-    geocoder.geocode({ address: street }, function(results, status) {
+    geocoder.geocode({ address: street }, function (results, status) {
       if (status === google.maps.GeocoderStatus.OK) {
         const latLng = {
           lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng()
+          lng: results[0].geometry.location.lng(),
         };
         setLatLng(latLng);
         fromInput && setToCenter(latLng);
@@ -70,12 +70,12 @@ const MapContainer = ({
   const onDragend = (mapProps, map, e) => {
     getStreetFromLatLng({
       lat: map.center.lat(),
-      lng: map.center.lng()
+      lng: map.center.lng(),
     });
   };
   const onMarkerClick = (props, marker, e) => {};
 
-  const onPlaceSelected = place => {
+  const onPlaceSelected = (place) => {
     setStreetName(place.description);
     getLatLngFromStreet(place.description, true);
   };
@@ -137,7 +137,7 @@ const MapContainer = ({
               }
             }}
           >
-            Выбрать
+            Сохранить
           </div>
           <div className="cancelNewAddressBtn" onClick={togglePopupGoogleMap}>
             Отмена
@@ -151,5 +151,5 @@ const MapContainer = ({
 export default GoogleApiWrapper({
   apiKey: API_KEY,
   language: "ru",
-  LoadingContainer: LoadingContainer
+  LoadingContainer: LoadingContainer,
 })(MapContainer);

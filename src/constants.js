@@ -7,7 +7,7 @@ export const DAY_OF_WEEK = [
   "Четверг",
   "Пятница",
   "Суббота",
-  "Воскресенье"
+  "Воскресенье",
 ];
 
 export const SHORT_DAY_OF_WEEK = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
@@ -42,7 +42,7 @@ export const EN_SHORT_TO_RU_LONG = {
   Thu: "четверг",
   Fri: "пятница",
   Sat: "суббота",
-  Sun: "воскресенье"
+  Sun: "воскресенье",
 };
 export const EN_SHORT_TO_RU_LONG_V_P = {
   Mon: "понедельник",
@@ -51,29 +51,38 @@ export const EN_SHORT_TO_RU_LONG_V_P = {
   Thu: "четверг",
   Fri: "пятницу",
   Sat: "субботу",
-  Sun: "воскресенье"
+  Sun: "воскресенье",
+};
+export const EN_SHORT_TO_RU_SHORT = {
+  Mon: "Пн",
+  Tue: "Вт",
+  Wed: "Ср",
+  Thu: "Чт",
+  Fri: "Пт",
+  Sat: "Сб",
+  Sun: "Вс",
 };
 
 export const EN_SHORT_DAY_OF_WEEK = [
   {
-    day: "Mon"
+    day: "Mon",
   },
   {
-    day: "Tue"
+    day: "Tue",
   },
   {
-    day: "Wed"
+    day: "Wed",
   },
   {
-    day: "Thu"
+    day: "Thu",
   },
   {
-    day: "Fri"
+    day: "Fri",
   },
   {
-    day: "Sat"
+    day: "Sat",
   },
   {
-    day: "Sun"
-  }
+    day: "Sun",
+  },
 ];

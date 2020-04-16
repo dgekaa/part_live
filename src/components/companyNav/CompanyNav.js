@@ -47,8 +47,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         JSON.stringify(uniqueCompanyType)
       );
     }
-    if (uniqueCompanyType) {
-    }
   }, [uniqueCompanyType]);
 
   const supportsTouch = "ontouchstart" in document.documentElement;
@@ -116,31 +114,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             slideBtnMenu.current.scrollLeft = scrollLeft - walk;
           }
         }}
-        //TOUCH =============================================
-        // onTouchStart={e => {
-        //   if (supportsTouch) {
-        //     setIsDown(true);
-        //     setStartX(
-        //       Math.ceil(e.nativeEvent.touches[0].clientX) -
-        //         slideBtnMenu.current.offsetLeft
-        //     );
-        //     setScrollLeft(slideBtnMenu.current.scrollLeft);
-        //   }
-        // }}
-        // onTouchEnd={e => {
-        //   if (supportsTouch) {
-        //     setIsDown(false);
-        //   }
-        // }}
-        // onTouchMove={e => {
-        //   if (supportsTouch) {
-        //     const x =
-        //       e.nativeEvent.touches[0].clientX -
-        //       slideBtnMenu.current.offsetLeft;
-        //     const walk = (x - startX) * 2;
-        //     slideBtnMenu.current.scrollLeft = scrollLeft - walk;
-        //   }
-        // }}
       >
         <div
           className={

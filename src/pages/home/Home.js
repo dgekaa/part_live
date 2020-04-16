@@ -12,7 +12,7 @@ import "./home.css";
 
 import QUERY from "../../query";
 
-const Home = props => {
+const Home = (props) => {
   const [DATA, setDATA] = useState([]);
   const [companyData, setCompanyData] = useState([]);
 
@@ -30,25 +30,25 @@ const Home = props => {
           schedules {id day start_time end_time}
           categories {id name}
         }
-      }`
+      }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setIsLoading(false);
         setCompanyData(data.data.places);
         setDATA(data.data.places);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  ERR");
       });
   }, []);
 
-  const clickedType = type => {
+  const clickedType = (type) => {
     if (type) {
       const filteredData = DATA.filter(
-        el => el.categories[0].name.toUpperCase() === type.toUpperCase()
+        (el) => el.categories[0].name.toUpperCase() === type.toUpperCase()
       );
       setCompanyData(filteredData);
     } else {
@@ -81,7 +81,7 @@ const Home = props => {
   !windowWidth && setWindowWidth(window.innerWidth);
 
   useEffect(() => {
-    window.onresize = function(e) {
+    window.onresize = function (e) {
       setWindowWidth(e.target.innerWidth);
       hideSideMenu();
     };
@@ -89,7 +89,7 @@ const Home = props => {
 
   return (
     <div
-      onClick={e => {
+      onClick={(e) => {
         if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
           hideSideMenu();
         }
@@ -102,11 +102,11 @@ const Home = props => {
               ? isShowMenu
                 ? {
                     animation: "toLeftFixed 0.3s ease",
-                    left: "-200px"
+                    left: "-200px",
                   }
                 : {
                     animation: "toRightFixed 0.3s ease",
-                    left: "0px"
+                    left: "0px",
                   }
               : {}
           }
@@ -124,11 +124,11 @@ const Home = props => {
                 ? {
                     animation: "toLeft 0.3s ease",
                     position: "relative",
-                    right: "200px"
+                    right: "200px",
                   }
                 : {
                     animation: "toRight 0.3s ease",
-                    position: "relative"
+                    position: "relative",
                   }
               : {}
           }
@@ -137,7 +137,7 @@ const Home = props => {
             <CompanyNav
               currentPage="/home"
               toSlideFixedNav={isShowMenu}
-              clickedType={type => {
+              clickedType={(type) => {
                 clickedType(type);
               }}
             />
@@ -161,11 +161,11 @@ const Home = props => {
               ? isShowMenu
                 ? {
                     animation: "toLeftFixed 0.3s ease",
-                    left: "-200px"
+                    left: "-200px",
                   }
                 : {
                     animation: "toRightFixed 0.3s ease",
-                    left: "0px"
+                    left: "0px",
                   }
               : {}
           }

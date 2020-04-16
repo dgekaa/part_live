@@ -9,9 +9,9 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { EN_SHORT_DAY_OF_WEEK } from "../../constants";
+import { EN_SHORT_DAY_OF_WEEK, EN_SHORT_TO_RU_SHORT } from "../../constants";
+import { numberDayNow } from "../../calculateTime";
 
-import {} from "@mobiscroll/react-lite";
 import "@mobiscroll/react-lite/dist/css/mobiscroll.min.css";
 
 import "./admin.css";
@@ -167,11 +167,11 @@ const Admin = (props) => {
     }
   };
 
-  useEffect(() => {
-    if (localStorage.getItem("uniqueCompanyType")) {
-      localStorage.setItem("uniqueCompanyType", "");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem("uniqueCompanyType")) {
+  //     localStorage.setItem("uniqueCompanyType", "");
+  //   }
+  // }, []);
 
   const refreshData = () => {
     QUERY({
@@ -202,13 +202,13 @@ const Admin = (props) => {
       });
   };
 
-  const setAsDayOf = () => {
+  const setAsDayOf = (id) => {
     if (cookies.origin_data) {
       QUERY(
         {
           query: `mutation {
             deleteSchedule(
-              id:"${clickedTime.id}"
+              id:"${id || clickedTime.id}"
             ){id day start_time end_time}
           }`,
         },
@@ -261,8 +261,7 @@ const Admin = (props) => {
         .catch((err) => console.log(err, "  *******ERR"));
     }
   };
-  //https://partycamera.org/klever/index.m3u8
-  // http://partycamera.org:80/maxshow/preview.mp4
+
   const createStream = (name) => {
     if (cookies.origin_data) {
       QUERY(
@@ -515,354 +514,804 @@ const Admin = (props) => {
     return timeObject;
   };
 
+  const [leftMenuSettings, setLeftMenuSettings] = useState([
+    {
+      name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
+      img: "barIcon.png",
+      altImg: "profile",
+      clicked: true,
+    },
+    {
+      name: "ГРАФИК РАБОТЫ",
+      img: "clocklite.png",
+      altImg: "work",
+      clicked: false,
+    },
+    {
+      name: "ГРАФИК ТРАНСЛЯЦИЙ",
+      img: "video-camera.png",
+      altImg: "camera",
+      clicked: false,
+    },
+    {
+      name: "СТРИМ",
+      img: "streaming.png",
+      altImg: "stream",
+      clicked: false,
+    },
+  ]);
+
+  const [nameOfCompany, setNameOfCompany] = useState("");
+  const [pseudonimOfCompany, setPseudonimOfCompany] = useState("");
+  const [typeOfCompany, setTypeOfCompany] = useState("");
+  const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
+  const [descOfCompany, setDescOfCompany] = useState("");
+
+  const updatePlaceData = () => {
+    if (cookies.origin_data) {
+      QUERY(
+        {
+          query: `mutation {
+            updatePlace(
+              input:{
+                id:"${props.match.params.id}"
+                name:"${nameOfCompany || DATA.name}"
+                description:"${descOfCompany || DATA.description}"
+                categories:{
+                  disconnect:"${DATA.categories[0].id}" 
+                connect:"${typeOfCompanyId || DATA.categories[0].id}"}
+                
+              }
+            ){id}
+          }`,
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            console.log(typeOfCompanyId, "typeOfCompanyId");
+            console.log("SUCCESS");
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch((err) => console.log(err, "  *******ERR"));
+    }
+  };
+
+  document.body.style.background = "#fff";
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {
     return (
-      <div
-        onClick={(e) => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-            hideSideMenu();
-          }
-        }}
-      >
+      <div>
         <div
-          className="Admin"
-          style={
-            isShowMenu
-              ? {
-                  animation: "toLeft 0.3s ease",
-                  position: "relative",
-                  right: "200px",
-                }
-              : {
-                  animation: "toRight 0.3s ease",
-                  position: "relative",
-                }
-          }
           onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
             }
           }}
         >
-          <Header
-            logo
-            burger
-            arrow
-            toSlideFixedHeader={isShowMenu}
-            showSlideSideMenu={showSlideSideMenu}
-            showSideMenu={showSideMenu}
-          />
-          {isLoading && <Loader />}
-          {!isLoading && (
-            <div className="adminContent">
-              {!!DATA.streams && DATA.streams[0] && (
-                <ReactHLS
-                  url={DATA.streams[0].url}
-                  controls={true}
-                  hlsConfig={{}}
-                  videoProps={{
-                    autoPlay: true,
-                    crossOrigin: "anonymous",
-                    preload: "metadata",
-                  }}
-                />
-              )}
-              <div className="adminMenuContainer">
-                <div className="menuBlockWrap profile">
-                  <div
-                    className="menuBlock"
-                    onClick={(e) => {
-                      accordionHandler(e);
-                    }}
-                  >
-                    Профиль заведения
-                    <span className="rotateArrow"></span>
-                  </div>
-                  <div className="drDownWrap">
-                    <div className="uploadFileContainer">
-                      <h3>Загрузка изображения профиля</h3>
-                      <div className="uploadFile">
-                        <input
-                          type="file"
-                          ref={fileInput}
-                          style={{ display: "none" }}
-                          onChange={selectFile}
-                        />
-                        <div
-                          className="pickFileBtn"
-                          onClick={() => {
-                            fileInput.current.click();
-                          }}
-                        >
-                          <p className="chooseImg"> Выбрать изображение</p>
-                        </div>
-
-                        <div className="uploadFileBtn" onClick={uploadFile}>
-                          Загрузить
-                        </div>
-                      </div>
-                      <p className="fileName">
-                        Название:{" "}
-                        {selectedFile
-                          ? selectedFile.name
-                          : "Изображение отсутствует "}
-                      </p>
-                    </div>
-                    <div className="pickAddress">
-                      <h3>Выбрать адрес заведения</h3>
-                      <p className="curAddress">
-                        {DATA.address || "Адрес не задан"}
-                      </p>
-                      <p
-                        onClick={() => {
-                          togglePopupGoogleMap();
-                        }}
-                        className="chooseAddressBtn"
-                      >
-                        Выбрать адрес
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="menuBlockWrap workSchedule">
-                  <div
-                    className="menuBlock"
-                    onClick={(e) => {
-                      accordionHandler(e);
-                    }}
-                  >
-                    График работы
-                    <span className="rotateArrow"></span>
-                  </div>
-                  <div className="drDownWrap">
-                    <table>
-                      <tbody>
-                        {DATA.schedules &&
-                          EN_SHORT_DAY_OF_WEEK.map((el, i) => {
-                            const oneDay = SetNewTimeObject(DATA.schedules)[
-                              el.day
-                            ];
-                            return (
-                              <tr key={i}>
-                                <td>{el.day}</td>
-                                <td
-                                  onClick={() => {
-                                    if (oneDay && oneDay.id) {
-                                      setIsEmptyTime(false); //не пустое время
-                                      setEnumWeekName(""); //день недели для отправки запроса
-                                      setStartRealTimeInPicker(
-                                        oneDay.start_time
-                                      );
-                                      setEndRealTimeInPicker(oneDay.end_time);
-                                      togglePopupDatePicker();
-                                      setClickedTime(oneDay); //объект для отправки запроса
-                                      setIsSetWorkTimeDPick(true);
-                                    } else {
-                                      setIsEmptyTime(true);
-                                      setEnumWeekName(el.day);
-                                      setStartRealTimeInPicker("00:00");
-                                      setEndRealTimeInPicker("00:00");
-                                      togglePopupDatePicker();
-                                      setIsSetWorkTimeDPick(true);
-                                    }
-                                  }}
-                                >
-                                  {oneDay && oneDay.id
-                                    ? oneDay.start_time +
-                                      " - " +
-                                      oneDay.end_time
-                                    : "Выходной"}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div className="menuBlockWrap streamSchedule">
-                  <div
-                    className="menuBlock"
-                    onClick={(e) => {
-                      accordionHandler(e);
-                    }}
-                  >
-                    График трансляций
-                    <span className="rotateArrow"></span>
-                  </div>
-                  <div className="drDownWrap">
-                    <div className="chooseStreamAddress">
-                      <input
-                        className="streamAddress"
-                        placeholder={
-                          (DATA.streams &&
-                            DATA.streams[0] &&
-                            DATA.streams[0].url &&
-                            DATA.streams[0].url) ||
-                          "Введите адрес стрима"
-                        }
-                        value={streamAddressData}
-                        onInput={(e) => {
-                          setStreamAddressData(e.target.value);
-                        }}
-                      />
-                      <div
-                        onClick={() => {
-                          if (streamAddressData) {
-                            if (!DATA.streams[0]) {
-                              createStream(streamAddressData);
-                            } else {
-                              updateStream(streamAddressData);
-                            }
-                          } else {
-                            alert("Заполните поле");
-                          }
-                        }}
-                      >
-                        Сохранить
-                      </div>
-                    </div>
-                    <table>
-                      <tbody>
-                        {DATA.streams &&
-                          EN_SHORT_DAY_OF_WEEK.map((el, i) => {
-                            const oneDay = SetNewTimeObject(
-                              DATA.streams[0] ? DATA.streams[0].schedules : []
-                            )[el.day];
-                            return (
-                              <tr key={i}>
-                                <td>{el.day}</td>
-                                <td
-                                  onClick={() => {
-                                    if (!DATA.streams[0]) {
-                                      alert("Стрим еще не создан");
-                                    } else {
-                                      if (oneDay && oneDay.id) {
-                                        setIsEmptyTime(false); //не пустое время
-                                        setEnumWeekName("");
-                                        setStartRealTimeInPicker(
-                                          oneDay.start_time
-                                        );
-                                        setEndRealTimeInPicker(oneDay.end_time);
-                                        togglePopupDatePicker();
-                                        setClickedTime(oneDay);
-                                        setIsSetWorkTimeDPick(false);
-                                      } else {
-                                        setIsEmptyTime(true); //пустое время
-                                        setEnumWeekName(el.day);
-                                        setStartRealTimeInPicker("00:00");
-                                        setEndRealTimeInPicker("00:00");
-                                        togglePopupDatePicker();
-                                        setIsSetWorkTimeDPick(false);
-                                      }
-                                    }
-                                  }}
-                                >
-                                  {oneDay && oneDay.id
-                                    ? oneDay.start_time +
-                                      " - " +
-                                      oneDay.end_time
-                                    : "Выходной"}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div className="menuBlockWrap address">
-                  <div
-                    className="menuBlock"
-                    onClick={(e) => {
-                      accordionHandler(e);
-                    }}
-                  >
-                    Адрес заведения
-                    <span className="rotateArrow"></span>
-                  </div>
-                  <div className="drDownWrap">В разработке</div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        <BottomMenu
-          style={{ borderTop: "1px solid #ECECEC" }}
-          toSlideFixedBottomMenu={isShowMenu}
-        />
-        <SlideSideMenu isShowMenu={isShowMenu} />
-        {showPopupDatePicker && (
-          <Popup
-            togglePopup={togglePopupDatePicker}
-            wrpaStyle={{ alignItems: "flex-end" }}
-          >
-            <div className="popupWrapper">
-              <span
-                className="closePopupBtn"
-                onClick={togglePopupDatePicker}
-              ></span>
-              <div className="TimePickerContainer">
-                <TimePicker
-                  realTimeInPicker={startRealTimeInPicker}
-                  timePickerName="!!!!"
-                  setTime={setStartTime}
-                />
-                <span className="space"></span>
-
-                <TimePicker
-                  realTimeInPicker={endRealTimeInPicker}
-                  timePickerName="!!!!"
-                  setTime={setEndTime}
-                />
-              </div>
-              <p
-                className="makeAsDayOff"
-                onClick={() => {
-                  setAsDayOf();
-                  togglePopupDatePicker();
-                }}
-              >
-                Сделать выходным
-              </p>
-              <div
-                className="saveBtn"
-                onClick={() => {
-                  togglePopupDatePicker();
-                  isSetWorkTimeDPick && setWorkTimeOfOneDay();
-                  !isSetWorkTimeDPick && setStreamTimeOfOneDay();
-                }}
-              >
-                Сохранить
-              </div>
-            </div>
-          </Popup>
-        )}
-        {showPopupGoogleMap && (
-          <Popup
-            togglePopup={togglePopupGoogleMap}
-            style={{
-              width: "100%",
-              height: "100%",
+          <div
+            className="Admin"
+            style={
+              isShowMenu
+                ? {
+                    animation: "toLeft 0.3s ease",
+                    position: "relative",
+                    right: "200px",
+                  }
+                : {
+                    animation: "toRight 0.3s ease",
+                    position: "relative",
+                  }
+            }
+            onClick={(e) => {
+              if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+                hideSideMenu();
+              }
             }}
           >
-            <GoogleMap
-              initialCenterMap={
-                DATA.coordinates
-                  ? {
-                      lat: Number(DATA.coordinates.split(",")[0]),
-                      lng: Number(DATA.coordinates.split(",")[1]),
-                    }
-                  : null
-              }
-              togglePopupGoogleMap={togglePopupGoogleMap}
-              chooseNewAddress={chooseNewAddress}
-              isNewAddress
+            <Header
+              logo
+              burger
+              arrow
+              toSlideFixedHeader={isShowMenu}
+              showSlideSideMenu={showSlideSideMenu}
+              showSideMenu={showSideMenu}
             />
-          </Popup>
-        )}
+            {isLoading && <Loader />}
+            {!isLoading && (
+              <div className="adminWrapper">
+                {/* __________________DESCTOP__________________ */}
+                <div className="leftAdminMenuDesctop">
+                  <div className="leftAdminMenu">
+                    <ul>
+                      {leftMenuSettings.map((el, id) => {
+                        return (
+                          <li
+                            key={id}
+                            className={
+                              el.clicked
+                                ? "clickedLeftAdminBtn"
+                                : "LeftAdminBtn"
+                            }
+                            onClick={() => {
+                              setLeftMenuSettings((prev) => {
+                                let newArr = [...prev];
+                                newArr.forEach((el) => (el.clicked = false));
+                                newArr[id] = {
+                                  ...newArr[id],
+                                  clicked: true,
+                                };
+
+                                return newArr;
+                              });
+                            }}
+                          >
+                            {el.img && (
+                              <img
+                                alt={el.altImg}
+                                src={`${process.env.PUBLIC_URL}/img/${el.img}`}
+                                className="eyeCompanyBlock"
+                              />
+                            )}
+                            {el.name}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+                <div className="adminContentDesctop">
+                  {leftMenuSettings.map((el, i) => {
+                    if (el.clicked && i === 0) {
+                      return (
+                        <div key={i}>
+                          <div className="profilePhotoDesc">
+                            <div className="photo">
+                              <p>Загрузить фото</p>
+                              <span>250 X 250</span>
+                            </div>
+                            <p className="changePhoto">Сменить фото профиля</p>
+                          </div>
+                          <div className="profileDataDesc">
+                            <div className="inputBlockWrap">
+                              <p>Название заведения:</p>
+                              <input
+                                type="text"
+                                placeholder={DATA.name}
+                                value={nameOfCompany}
+                                onChange={(e) => {
+                                  setNameOfCompany(e.target.value);
+                                }}
+                              />
+                            </div>
+                            <div className="inputBlockWrap">
+                              <p>Псевдоним:</p>
+                              <input
+                                type="text"
+                                placeholder={DATA.name}
+                                value={pseudonimOfCompany}
+                                onChange={(e) => {
+                                  setPseudonimOfCompany(e.target.value);
+                                }}
+                              />
+                            </div>
+                            <div className="bigInputBlockWrap">
+                              <p>Категория:</p>
+                              <div>
+                                {localStorage.getItem("uniqueCompanyType") &&
+                                  JSON.parse(
+                                    localStorage.getItem("uniqueCompanyType")
+                                  ).map((el, i) => {
+                                    return (
+                                      <span
+                                        key={i}
+                                        style={
+                                          typeOfCompany &&
+                                          typeOfCompany === el.name
+                                            ? {
+                                                background: "#e32a6c",
+                                                color: "#fff",
+                                              }
+                                            : !typeOfCompany &&
+                                              DATA.categories &&
+                                              DATA.categories[0].name ===
+                                                el.name
+                                            ? {
+                                                background: "#e32a6c",
+                                                color: "#fff",
+                                              }
+                                            : {}
+                                        }
+                                        className="categoryBtn"
+                                        onClick={() => {
+                                          setTypeOfCompany(el.name);
+                                          setTypeOfCompanyId(el.id);
+                                        }}
+                                      >
+                                        {el.name}
+                                      </span>
+                                    );
+                                  })}
+                              </div>
+                            </div>
+                            <div className="inputBlockWrap">
+                              <p className="addressText">Адрес заведения:</p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  height: "140px",
+                                }}
+                              >
+                                <input type="text" value={DATA.address} />
+                                <p
+                                  className="chooseAddressDesc"
+                                  onClick={() => {
+                                    togglePopupGoogleMap();
+                                  }}
+                                >
+                                  ВЫБРАТЬ АДРЕС НА КАРТЕ
+                                </p>
+                              </div>
+                            </div>
+                            <div className="inputBlockWrap">
+                              <p>Описание:</p>
+                              <textarea
+                                className="descTextarea"
+                                maxLength={100}
+                                placeholder={DATA.description}
+                                value={descOfCompany}
+                                onChange={(e) => {
+                                  setDescOfCompany(e.target.value);
+                                }}
+                              />
+                            </div>
+                            <p
+                              className="saveBtnProfile"
+                              onClick={() => {
+                                updatePlaceData();
+                              }}
+                            >
+                              СОХРАНИТЬ
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    }
+                    if (el.clicked && i === 1) {
+                      return (
+                        <div className="workTimeTableWrap">
+                          <h3>ГРАФИК РАБОТЫ</h3>
+                          <table className="tableWorkDesc">
+                            <tbody>
+                              {DATA.schedules &&
+                                EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                                  // console.log(
+                                  //   el,
+                                  //   i,
+                                  //   "__________________________",
+                                  //   numberDayNow
+                                  // );
+                                  const oneDay = SetNewTimeObject(
+                                    DATA.schedules
+                                  )[el.day];
+                                  return (
+                                    <tr key={i}>
+                                      <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
+
+                                      <td
+                                        style={
+                                          numberDayNow === i
+                                            ? {
+                                                fontWeight: "bold",
+                                              }
+                                            : {}
+                                        }
+                                        className="timeTd"
+                                        onClick={() => {
+                                          if (oneDay && oneDay.id) {
+                                            setIsEmptyTime(false); //не пустое время
+                                            setEnumWeekName(""); //день недели для отправки запроса
+                                            setStartRealTimeInPicker(
+                                              oneDay.start_time
+                                            );
+                                            setEndRealTimeInPicker(
+                                              oneDay.end_time
+                                            );
+                                            togglePopupDatePicker();
+                                            setClickedTime(oneDay); //объект для отправки запроса
+                                            setIsSetWorkTimeDPick(true);
+                                          } else {
+                                            setIsEmptyTime(true);
+                                            setEnumWeekName(el.day);
+                                            setStartRealTimeInPicker("00:00");
+                                            setEndRealTimeInPicker("00:00");
+                                            togglePopupDatePicker();
+                                            setIsSetWorkTimeDPick(true);
+                                          }
+                                        }}
+                                      >
+                                        {oneDay && oneDay.id
+                                          ? oneDay.start_time +
+                                            " - " +
+                                            oneDay.end_time
+                                          : "Выходной"}
+                                      </td>
+                                      <td
+                                        className="doAsDayOfTd"
+                                        onClick={() => {
+                                          setAsDayOf(oneDay.id);
+                                        }}
+                                      >
+                                        {oneDay && oneDay.id
+                                          ? "Сделать выходным"
+                                          : ""}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                            </tbody>
+                          </table>
+                        </div>
+                      );
+                    }
+                    if (el.clicked && i === 2) {
+                      return (
+                        <div className="workTimeTableWrap">
+                          <h3>ГРАФИК ТРАНСЛЯЦИЙ</h3>
+                          <table className="tableWorkDesc">
+                            <tbody>
+                              {DATA.streams &&
+                                EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                                  const oneDay = SetNewTimeObject(
+                                    DATA.streams[0]
+                                      ? DATA.streams[0].schedules
+                                      : []
+                                  )[el.day];
+                                  return (
+                                    <tr key={i}>
+                                      <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
+                                      <td
+                                        style={
+                                          numberDayNow === i
+                                            ? {
+                                                fontWeight: "bold",
+                                              }
+                                            : {}
+                                        }
+                                        className="timeTd"
+                                        onClick={() => {
+                                          if (!DATA.streams[0]) {
+                                            alert("Стрим еще не создан");
+                                          } else {
+                                            if (oneDay && oneDay.id) {
+                                              setIsEmptyTime(false); //не пустое время
+                                              setEnumWeekName("");
+                                              setStartRealTimeInPicker(
+                                                oneDay.start_time
+                                              );
+                                              setEndRealTimeInPicker(
+                                                oneDay.end_time
+                                              );
+                                              togglePopupDatePicker();
+                                              setClickedTime(oneDay);
+                                              setIsSetWorkTimeDPick(false);
+                                            } else {
+                                              setIsEmptyTime(true); //пустое время
+                                              setEnumWeekName(el.day);
+                                              setStartRealTimeInPicker("00:00");
+                                              setEndRealTimeInPicker("00:00");
+                                              togglePopupDatePicker();
+                                              setIsSetWorkTimeDPick(false);
+                                            }
+                                          }
+                                        }}
+                                      >
+                                        {oneDay && oneDay.id
+                                          ? oneDay.start_time +
+                                            " - " +
+                                            oneDay.end_time
+                                          : "Выходной"}
+                                      </td>
+                                      <td
+                                        className="doAsDayOfTd"
+                                        onClick={() => {
+                                          setAsDayOf(oneDay.id);
+                                        }}
+                                      >
+                                        {oneDay && oneDay.id
+                                          ? "Сделать выходным"
+                                          : ""}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                            </tbody>
+                          </table>
+                        </div>
+                      );
+                    }
+                    if (el.clicked && i === 3) {
+                      return (
+                        <div className="streamAdminBlock">
+                          <h3>СТРИМ</h3>
+                          {!!DATA.streams && DATA.streams[0] && (
+                            <div className="videoWrapAdminDesctop">
+                              <ReactHLS
+                                url={DATA.streams[0].url}
+                                controls={true}
+                                videoProps={{
+                                  autoPlay: true,
+                                  crossOrigin: "anonymous",
+                                  preload: "metadata",
+                                }}
+                              />
+                            </div>
+                          )}
+                          <div className="chooseStreamAddressDesc">
+                            <div className="cameraAddressWrapper">
+                              <span className="cameraAddresLable">
+                                Адрес камеры:
+                              </span>
+                              <input
+                                className="streamAddress"
+                                placeholder={
+                                  (DATA.streams &&
+                                    DATA.streams[0] &&
+                                    DATA.streams[0].url &&
+                                    DATA.streams[0].url) ||
+                                  "Введите адрес стрима"
+                                }
+                                value={streamAddressData}
+                                onInput={(e) => {
+                                  setStreamAddressData(e.target.value);
+                                }}
+                              />
+                            </div>
+                            <div
+                              className="chooseStreamAddressSaveBtn"
+                              onClick={() => {
+                                if (streamAddressData) {
+                                  if (!DATA.streams[0]) {
+                                    createStream(streamAddressData);
+                                  } else {
+                                    updateStream(streamAddressData);
+                                  }
+                                } else {
+                                  alert("Заполните поле");
+                                }
+                              }}
+                            >
+                              Сохранить
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+                {/* __________________MOBILE__________________ */}
+                <div className="adminContentMobile">
+                  {!!DATA.streams && DATA.streams[0] && (
+                    <div className="videoWrapAdminMobile">
+                      <ReactHLS
+                        url={DATA.streams[0].url}
+                        controls={true}
+                        videoProps={{
+                          autoPlay: true,
+                          crossOrigin: "anonymous",
+                          preload: "metadata",
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="adminMenuContainer">
+                    <div className="menuBlockWrap profile">
+                      <div
+                        className="menuBlock"
+                        onClick={(e) => {
+                          accordionHandler(e);
+                        }}
+                      >
+                        Профиль заведения
+                        <span className="rotateArrow"></span>
+                      </div>
+                      <div className="drDownWrap">
+                        <div className="uploadFileContainer">
+                          <h3>Загрузка изображения профиля</h3>
+                          <div className="uploadFile">
+                            <input
+                              type="file"
+                              ref={fileInput}
+                              style={{ display: "none" }}
+                              onChange={selectFile}
+                            />
+                            <div
+                              className="pickFileBtn"
+                              onClick={() => {
+                                fileInput.current.click();
+                              }}
+                            >
+                              <p className="chooseImg"> Выбрать изображение</p>
+                            </div>
+
+                            <div className="uploadFileBtn" onClick={uploadFile}>
+                              Загрузить
+                            </div>
+                          </div>
+                          <p className="fileName">
+                            Название:{" "}
+                            {selectedFile
+                              ? selectedFile.name
+                              : "Изображение отсутствует "}
+                          </p>
+                        </div>
+                        <div className="pickAddress">
+                          <h3>Выбрать адрес заведения</h3>
+                          <p className="curAddress">
+                            {DATA.address || "Адрес не задан"}
+                          </p>
+                          <p
+                            onClick={() => {
+                              togglePopupGoogleMap();
+                            }}
+                            className="chooseAddressBtn"
+                          >
+                            Выбрать адрес
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="menuBlockWrap workSchedule">
+                      <div
+                        className="menuBlock"
+                        onClick={(e) => {
+                          accordionHandler(e);
+                        }}
+                      >
+                        График работы
+                        <span className="rotateArrow"></span>
+                      </div>
+                      <div className="drDownWrap">
+                        <table>
+                          <tbody>
+                            {DATA.schedules &&
+                              EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                                const oneDay = SetNewTimeObject(DATA.schedules)[
+                                  el.day
+                                ];
+                                return (
+                                  <tr key={i}>
+                                    <td>{el.day}</td>
+                                    <td
+                                      onClick={() => {
+                                        if (oneDay && oneDay.id) {
+                                          setIsEmptyTime(false); //не пустое время
+                                          setEnumWeekName(""); //день недели для отправки запроса
+                                          setStartRealTimeInPicker(
+                                            oneDay.start_time
+                                          );
+                                          setEndRealTimeInPicker(
+                                            oneDay.end_time
+                                          );
+                                          togglePopupDatePicker();
+                                          setClickedTime(oneDay); //объект для отправки запроса
+                                          setIsSetWorkTimeDPick(true);
+                                        } else {
+                                          setIsEmptyTime(true);
+                                          setEnumWeekName(el.day);
+                                          setStartRealTimeInPicker("00:00");
+                                          setEndRealTimeInPicker("00:00");
+                                          togglePopupDatePicker();
+                                          setIsSetWorkTimeDPick(true);
+                                        }
+                                      }}
+                                    >
+                                      {oneDay && oneDay.id
+                                        ? oneDay.start_time +
+                                          " - " +
+                                          oneDay.end_time
+                                        : "Выходной"}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div className="menuBlockWrap streamSchedule">
+                      <div
+                        className="menuBlock"
+                        onClick={(e) => {
+                          accordionHandler(e);
+                        }}
+                      >
+                        График трансляций
+                        <span className="rotateArrow"></span>
+                      </div>
+                      <div className="drDownWrap">
+                        <div className="chooseStreamAddress">
+                          <input
+                            className="streamAddress"
+                            placeholder={
+                              (DATA.streams &&
+                                DATA.streams[0] &&
+                                DATA.streams[0].url &&
+                                DATA.streams[0].url) ||
+                              "Введите адрес стрима"
+                            }
+                            value={streamAddressData}
+                            onInput={(e) => {
+                              setStreamAddressData(e.target.value);
+                            }}
+                          />
+                          <div
+                            className="chooseStreamAddressSaveBtn"
+                            onClick={() => {
+                              if (streamAddressData) {
+                                if (!DATA.streams[0]) {
+                                  createStream(streamAddressData);
+                                } else {
+                                  updateStream(streamAddressData);
+                                }
+                              } else {
+                                alert("Заполните поле");
+                              }
+                            }}
+                          >
+                            Сохранить
+                          </div>
+                        </div>
+                        <table>
+                          <tbody>
+                            {DATA.streams &&
+                              EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                                const oneDay = SetNewTimeObject(
+                                  DATA.streams[0]
+                                    ? DATA.streams[0].schedules
+                                    : []
+                                )[el.day];
+                                return (
+                                  <tr key={i}>
+                                    <td>{el.day}</td>
+                                    <td
+                                      onClick={() => {
+                                        if (!DATA.streams[0]) {
+                                          alert("Стрим еще не создан");
+                                        } else {
+                                          if (oneDay && oneDay.id) {
+                                            setIsEmptyTime(false); //не пустое время
+                                            setEnumWeekName("");
+                                            setStartRealTimeInPicker(
+                                              oneDay.start_time
+                                            );
+                                            setEndRealTimeInPicker(
+                                              oneDay.end_time
+                                            );
+                                            togglePopupDatePicker();
+                                            setClickedTime(oneDay);
+                                            setIsSetWorkTimeDPick(false);
+                                          } else {
+                                            setIsEmptyTime(true); //пустое время
+                                            setEnumWeekName(el.day);
+                                            setStartRealTimeInPicker("00:00");
+                                            setEndRealTimeInPicker("00:00");
+                                            togglePopupDatePicker();
+                                            setIsSetWorkTimeDPick(false);
+                                          }
+                                        }
+                                      }}
+                                    >
+                                      {oneDay && oneDay.id
+                                        ? oneDay.start_time +
+                                          " - " +
+                                          oneDay.end_time
+                                        : "Выходной"}
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div className="menuBlockWrap address">
+                      <div
+                        className="menuBlock"
+                        onClick={(e) => {
+                          accordionHandler(e);
+                        }}
+                      >
+                        Адрес заведения
+                        <span className="rotateArrow"></span>
+                      </div>
+                      <div className="drDownWrap">В разработке</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <BottomMenu
+            style={{ borderTop: "1px solid #ECECEC" }}
+            toSlideFixedBottomMenu={isShowMenu}
+          />
+          <SlideSideMenu isShowMenu={isShowMenu} />
+          {showPopupDatePicker && (
+            <Popup
+              togglePopup={togglePopupDatePicker}
+              wrpaStyle={{ alignItems: "flex-end" }}
+            >
+              <div className="popupWrapper">
+                <span
+                  className="closePopupBtn"
+                  onClick={togglePopupDatePicker}
+                ></span>
+                <div className="TimePickerContainer">
+                  <TimePicker
+                    realTimeInPicker={startRealTimeInPicker}
+                    timePickerName=""
+                    setTime={setStartTime}
+                  />
+                  <span className="space"></span>
+                  <TimePicker
+                    realTimeInPicker={endRealTimeInPicker}
+                    timePickerName=""
+                    setTime={setEndTime}
+                  />
+                </div>
+                <p
+                  className="makeAsDayOffMobile"
+                  onClick={() => {
+                    setAsDayOf();
+                    togglePopupDatePicker();
+                  }}
+                >
+                  Сделать выходным
+                </p>
+                <div
+                  className="saveBtn"
+                  onClick={() => {
+                    togglePopupDatePicker();
+                    isSetWorkTimeDPick && setWorkTimeOfOneDay();
+                    !isSetWorkTimeDPick && setStreamTimeOfOneDay();
+                  }}
+                >
+                  Сохранить
+                </div>
+              </div>
+            </Popup>
+          )}
+          {showPopupGoogleMap && (
+            <Popup
+              togglePopup={togglePopupGoogleMap}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <GoogleMap
+                initialCenterMap={
+                  DATA.coordinates
+                    ? {
+                        lat: Number(DATA.coordinates.split(",")[0]),
+                        lng: Number(DATA.coordinates.split(",")[1]),
+                      }
+                    : null
+                }
+                togglePopupGoogleMap={togglePopupGoogleMap}
+                chooseNewAddress={chooseNewAddress}
+                isNewAddress
+              />
+            </Popup>
+          )}
+        </div>
       </div>
     );
   }
