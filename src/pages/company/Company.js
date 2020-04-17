@@ -16,7 +16,7 @@ import { DAY_OF_WEEK, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 
 import "./company.css";
 
-const Company = props => {
+const Company = (props) => {
   const [showPopup, setShowPopap] = useState(false);
   const [DATA, setDATA] = useState(null);
   const [geoposition, setGeoposition] = useState([0, 0]);
@@ -47,7 +47,7 @@ const Company = props => {
       isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
       setGeoposition([
         +DATA.place.coordinates.split(",")[0],
-        +DATA.place.coordinates.split(",")[1]
+        +DATA.place.coordinates.split(",")[1],
       ]);
     }
   }, [DATA]);
@@ -65,16 +65,16 @@ const Company = props => {
           schedules {day start_time end_time}
           user {id name email}
         }
-      }`
+      }`,
     })
-      .then(res => {
+      .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setIsLoading(false);
         setDATA(data.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err, "  ONE PLACE");
       });
   }, []);
@@ -98,7 +98,7 @@ const Company = props => {
   !windowWidth && setWindowWidth(window.innerWidth);
 
   useEffect(() => {
-    window.onresize = function(e) {
+    window.onresize = function (e) {
       setWindowWidth(e.target.innerWidth);
       hideSideMenu();
     };
@@ -106,7 +106,7 @@ const Company = props => {
 
   if (navigator.geolocation && DATA) {
     navigator.geolocation.getCurrentPosition(
-      pos => {
+      (pos) => {
         setCurDistance(
           getDistanceFromLatLonInKm(
             pos.coords.latitude,
@@ -116,22 +116,22 @@ const Company = props => {
           )
         );
       },
-      err => {
-        console.log(err, " GEOLOCATION ERROR ");
+      (err) => {
+        // console.log(err, " GEOLOCATION ERROR ");
       }
     );
   } else {
     console.log("Геолокация недоступна ");
   }
 
-  const mouseDownHandler = e => {
+  const mouseDownHandler = (e) => {
     setMouseMapCoordinates({
       clientX: e.clientX,
-      clientY: e.clientY
+      clientY: e.clientY,
     });
   };
 
-  const mouseUpHandler = e => {
+  const mouseUpHandler = (e) => {
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
@@ -142,7 +142,7 @@ const Company = props => {
 
   return (
     <div
-      onClick={e => {
+      onClick={(e) => {
         if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
           hideSideMenu();
         }
@@ -157,11 +157,11 @@ const Company = props => {
             ? isShowMenu
               ? {
                   animation: "toLeftFixed 0.3s ease",
-                  left: "-200px"
+                  left: "-200px",
                 }
               : {
                   animation: "toRightFixed 0.3s ease",
-                  left: "0px"
+                  left: "0px",
                 }
             : {}
         }
@@ -177,15 +177,15 @@ const Company = props => {
               ? {
                   animation: "toLeft 0.3s ease",
                   position: "relative",
-                  right: "200px"
+                  right: "200px",
                 }
               : {
                   animation: "toRight 0.3s ease",
-                  position: "relative"
+                  position: "relative",
                 }
             : {}
         }
-        onClick={e => {
+        onClick={(e) => {
           if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
             hideSideMenu();
           }
@@ -205,8 +205,12 @@ const Company = props => {
                     <div className="yesVideo">
                       <ReactHLS
                         url={DATA.place.streams[0].url}
+                        type="application/x-mpegURL"
                         controls={true}
                         autoplay={true}
+                        onErroro={(err) => {
+                          console.log(err, " RRRRR");
+                        }}
                       />
                     </div>
                     <div className="rowCompanyBlockStream">
@@ -320,7 +324,7 @@ const Company = props => {
                                 ),
                                 lng: Number(
                                   DATA.place.coordinates.split(",")[1]
-                                )
+                                ),
                               }
                             : null
                         }
@@ -345,7 +349,7 @@ const Company = props => {
                       DATA.place.coordinates
                         ? {
                             lat: Number(DATA.place.coordinates.split(",")[0]),
-                            lng: Number(DATA.place.coordinates.split(",")[1])
+                            lng: Number(DATA.place.coordinates.split(",")[1]),
                           }
                         : null
                     }
@@ -369,7 +373,7 @@ const Company = props => {
                 DATA.place.coordinates
                   ? {
                       lat: Number(DATA.place.coordinates.split(",")[0]),
-                      lng: Number(DATA.place.coordinates.split(",")[1])
+                      lng: Number(DATA.place.coordinates.split(",")[1]),
                     }
                   : null
               }
@@ -383,11 +387,11 @@ const Company = props => {
             ? isShowMenu
               ? {
                   animation: "toLeftFixed 0.3s ease",
-                  left: "-200px"
+                  left: "-200px",
                 }
               : {
                   animation: "toRightFixed 0.3s ease",
-                  left: "0px"
+                  left: "0px",
                 }
             : {}
         }

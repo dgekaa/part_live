@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import GoogleMap from "../../components/googleMap/GoogleMap";
 
 import { useCookies } from "react-cookie";
-import ReactHLS from "react-hls";
+// import ReactHLS from "react-hls";
+import ReactPlayer from "react-player";
+import ReactAwesomePlayer from "react-awesome-player";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -167,12 +169,6 @@ const Admin = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("uniqueCompanyType")) {
-  //     localStorage.setItem("uniqueCompanyType", "");
-  //   }
-  // }, []);
-
   const refreshData = () => {
     QUERY({
       query: `query {
@@ -261,6 +257,27 @@ const Admin = (props) => {
         .catch((err) => console.log(err, "  *******ERR"));
     }
   };
+
+  const [uniqueCompanyType, setUniqueCompanyType] = useState();
+
+  useEffect(() => {
+    QUERY({
+      query: `query {
+        categories {
+          id name slug
+        }
+      }`,
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setUniqueCompanyType(data.data.categories);
+      })
+      .catch((err) => {
+        console.log(err, "  ERR");
+      });
+  }, []);
 
   const createStream = (name) => {
     if (cookies.origin_data) {
@@ -557,10 +574,13 @@ const Admin = (props) => {
                 id:"${props.match.params.id}"
                 name:"${nameOfCompany || DATA.name}"
                 description:"${descOfCompany || DATA.description}"
-                categories:{
-                  disconnect:"${DATA.categories[0].id}" 
-                connect:"${typeOfCompanyId || DATA.categories[0].id}"}
-                
+                ${
+                  typeOfCompanyId &&
+                  `categories:{
+                    disconnect:"${DATA.categories[0].id}"
+                    connect:"${typeOfCompanyId}"}`
+                }
+               
               }
             ){id}
           }`,
@@ -581,6 +601,91 @@ const Admin = (props) => {
   };
 
   document.body.style.background = "#fff";
+
+  const [file, setFile] = useState("");
+  const fileLoaderInput = useRef(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+
+  const _handleSubmit = (e) => {
+    console.log(e.target, "_handleSubmit ");
+
+    e.preventDefault();
+    // TODO: do something with -> this.state.file
+  };
+
+  const _handleImageChange = (e) => {
+    console.log(e.target.files[0], "_handleImageChange ");
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      setFile(file);
+      setImagePreviewUrl(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  let $imagePreview = null;
+  if (imagePreviewUrl) {
+    $imagePreview = (
+      <img
+        className="previewPhoto"
+        src={imagePreviewUrl}
+        onClick={() => {
+          fileLoaderInput.current.click();
+        }}
+      />
+    );
+  }
+
+  const playerRef = useRef(null);
+  useEffect(() => {
+    setTimeout(() => {
+      console.log(playerRef, " ________________________________");
+    }, 1000);
+  }, []);
+
+  const options = {
+    poster: "",
+
+    sources: [
+      {
+        type: "application/x-mpegURL",
+        src: DATA.streams && DATA.streams[0] && DATA.streams[0].url,
+      },
+    ],
+  };
+
+  const loadeddata = () => {
+    console.log("loadeddata");
+  };
+  const canplay = () => {
+    console.log("canplay");
+  };
+  const canplaythrough = () => {
+    console.log("canplaythrough");
+  };
+  const play = () => {
+    console.log("play");
+  };
+  const pause = () => {
+    console.log("pause");
+  };
+  const waiting = () => {
+    console.log("waiting");
+  };
+  const playing = () => {
+    console.log("playing");
+  };
+  const ended = () => {
+    console.log("ended");
+  };
+  const error = (err) => {
+    console.log(err, "error");
+  };
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -671,11 +776,45 @@ const Admin = (props) => {
                       return (
                         <div key={i}>
                           <div className="profilePhotoDesc">
-                            <div className="photo">
-                              <p>Загрузить фото</p>
-                              <span>250 X 250</span>
+                            {$imagePreview ? (
+                              $imagePreview
+                            ) : (
+                              <div
+                                className="previewPhoto"
+                                onClick={() => {
+                                  fileLoaderInput.current.click();
+                                }}
+                              >
+                                <p>Загрузить фото</p>
+                                <span>250 X 250</span>
+                              </div>
+                            )}
+
+                            <div>
+                              <form onSubmit={_handleSubmit}>
+                                <input
+                                  style={{ display: "none" }}
+                                  ref={fileLoaderInput}
+                                  type="file"
+                                  onChange={_handleImageChange}
+                                />
+                                {/* <div
+                                  className="saveBtnProfile"
+                                  type="submit"
+                                  onClick={_handleSubmit}
+                                >
+                                  Сохранить изображение
+                                </div> */}
+                              </form>
                             </div>
-                            <p className="changePhoto">Сменить фото профиля</p>
+                            <p
+                              className="changePhoto"
+                              onClick={() => {
+                                fileLoaderInput.current.click();
+                              }}
+                            >
+                              Сменить фото профиля
+                            </p>
                           </div>
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
@@ -702,15 +841,16 @@ const Admin = (props) => {
                             </div>
                             <div className="bigInputBlockWrap">
                               <p>Категория:</p>
+
                               <div>
-                                {localStorage.getItem("uniqueCompanyType") &&
-                                  JSON.parse(
-                                    localStorage.getItem("uniqueCompanyType")
-                                  ).map((el, i) => {
+                                {uniqueCompanyType &&
+                                  uniqueCompanyType.map((el, i) => {
                                     return (
                                       <span
                                         key={i}
                                         style={
+                                          el &&
+                                          el.name &&
                                           typeOfCompany &&
                                           typeOfCompany === el.name
                                             ? {
@@ -719,6 +859,9 @@ const Admin = (props) => {
                                               }
                                             : !typeOfCompany &&
                                               DATA.categories &&
+                                              DATA.categories[0] &&
+                                              el &&
+                                              el.name &&
                                               DATA.categories[0].name ===
                                                 el.name
                                             ? {
@@ -764,8 +907,8 @@ const Admin = (props) => {
                               <textarea
                                 className="descTextarea"
                                 maxLength={100}
-                                placeholder={DATA.description}
-                                value={descOfCompany}
+                                // placeholder={DATA.description}
+                                value={descOfCompany || DATA.description}
                                 onChange={(e) => {
                                   setDescOfCompany(e.target.value);
                                 }}
@@ -860,6 +1003,7 @@ const Admin = (props) => {
                         </div>
                       );
                     }
+
                     if (el.clicked && i === 2) {
                       return (
                         <div className="workTimeTableWrap">
@@ -942,15 +1086,31 @@ const Admin = (props) => {
                           <h3>СТРИМ</h3>
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
-                              <ReactHLS
-                                url={DATA.streams[0].url}
+                              <ReactAwesomePlayer
+                                options={options}
+                                loadeddata={loadeddata}
+                                canplay={canplay}
+                                canplaythrough={canplaythrough}
+                                play={play}
+                                pause={pause}
+                                waiting={waiting}
+                                playing={playing}
+                                ended={ended}
+                                error={error}
+                                onError={(err) => console.log(err, "ERRRRRR")}
+                              />
+                              {/* <ReactHLS
+                                ref={playerRef}
+                                autoPlay={false}
                                 controls={true}
+                                url={DATA.streams[0].url}
                                 videoProps={{
-                                  autoPlay: true,
+                                  autoPlay: false,
+                                  type: "application/x-mpegURL",
                                   crossOrigin: "anonymous",
                                   preload: "metadata",
                                 }}
-                              />
+                              /> */}
                             </div>
                           )}
                           <div className="chooseStreamAddressDesc">
@@ -999,15 +1159,30 @@ const Admin = (props) => {
                 <div className="adminContentMobile">
                   {!!DATA.streams && DATA.streams[0] && (
                     <div className="videoWrapAdminMobile">
-                      <ReactHLS
+                      <ReactAwesomePlayer
+                        options={options}
+                        loadeddata={loadeddata}
+                        canplay={canplay}
+                        canplaythrough={canplaythrough}
+                        play={play}
+                        pause={pause}
+                        waiting={waiting}
+                        playing={playing}
+                        ended={ended}
+                        error={error}
+                        onError={(err) => console.log(err, "ERRRRRR")}
+                      />
+                      {/* <ReactHLS
+                      {/* <ReactHLS
                         url={DATA.streams[0].url}
+                        type="application/x-mpegURL"
                         controls={true}
                         videoProps={{
                           autoPlay: true,
                           crossOrigin: "anonymous",
                           preload: "metadata",
                         }}
-                      />
+                      /> */}
                     </div>
                   )}
                   <div className="adminMenuContainer">

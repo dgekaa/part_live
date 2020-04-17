@@ -15,8 +15,13 @@
 .gmnoprint {
   display: none;
 }
+.google-places-autocomplete__input {
+  background-color: #fff;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: 5px;
+}
 .google-places-autocomplete {
-  position: absolute;
   top: 10px;
   left: 10px;
   width: 60%;
@@ -36,23 +41,30 @@
   left: 40px;
   position: absolute;
 }
-.newAddressBtnWrap {
+.inputBtnsWrap {
   position: absolute;
-  top: 10px;
-  right: 10px;
   display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.newAddressBtnWrap {
+  display: flex;
+  margin-top: 10px;
+  margin-left: 20px;
 }
 .chooseNewAddressBtn,
 .cancelNewAddressBtn {
   background-color: #fff;
   margin-right: 10px;
-  padding: 8px;
+  padding: 6px;
   border-radius: 4px;
   width: 150px;
   text-align: center;
   cursor: pointer;
+  font-weight: bold;
 }
-.cancelNewAddressBtn {
+.chooseNewAddressBtn {
   background-color: #e32a6c;
   color: #fff;
 }

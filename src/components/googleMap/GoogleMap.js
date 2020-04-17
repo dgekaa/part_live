@@ -33,21 +33,25 @@ const MapContainer = ({
   const geocoder = new google.maps.Geocoder();
 
   const getStreetFromLatLng = (location) => {
-    geocoder.geocode(
-      {
-        location: location,
-      },
-      (results, status) => {
-        if (status === "OK") {
-          if (results[0]) {
-            setStreetName(results[0].formatted_address);
-            getLatLngFromStreet(results[0].formatted_address);
+    setTimeout(() => {
+      geocoder.geocode(
+        {
+          location: location,
+        },
+        (results, status) => {
+          if (status === "OK") {
+            if (results[0]) {
+              setStreetName(results[0].formatted_address);
+              getLatLngFromStreet(results[0].formatted_address);
+            } else {
+            }
           } else {
+            console.log("!!!!!!!!!!!!!!!");
+            getStreetFromLatLng(location);
           }
-        } else {
         }
-      }
-    );
+      );
+    }, 300);
   };
 
   const getLatLngFromStreet = (street, fromInput) => {
@@ -115,33 +119,33 @@ const MapContainer = ({
       )}
 
       {isNewAddress && (
-        <GooglePlacesAutocomplete
-          onSelect={onPlaceSelected}
-          placeholder="Введите адрес"
-          initialValue={streetName}
-        />
+        <div className="inputBtnsWrap">
+          <GooglePlacesAutocomplete
+            onSelect={onPlaceSelected}
+            placeholder="Введите адрес"
+            initialValue={streetName}
+          />
+
+          <div className="newAddressBtnWrap">
+            <div
+              className="chooseNewAddressBtn"
+              onClick={() => {
+                if (streetName && latLng) {
+                  chooseNewAddress(streetName, latLng);
+                }
+              }}
+            >
+              СОХРАНИТЬ
+            </div>
+            <div className="cancelNewAddressBtn" onClick={togglePopupGoogleMap}>
+              ОТМЕНА
+            </div>
+          </div>
+        </div>
       )}
       {closeBtn && (
         <div className="closeBtn" onClick={togglePopupGoogleMap}>
           &#215;
-        </div>
-      )}
-
-      {isNewAddress && (
-        <div className="newAddressBtnWrap">
-          <div
-            className="chooseNewAddressBtn"
-            onClick={() => {
-              if (streetName && latLng) {
-                chooseNewAddress(streetName, latLng);
-              }
-            }}
-          >
-            Сохранить
-          </div>
-          <div className="cancelNewAddressBtn" onClick={togglePopupGoogleMap}>
-            Отмена
-          </div>
         </div>
       )}
     </div>

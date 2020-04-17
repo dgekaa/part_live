@@ -57,6 +57,13 @@ const Header = ({
   return (
     <div className="headerContainer" style={style}>
       <div className="header">
+        {logo && (
+          <Link to="/home">
+            <p className="party_live">
+              PARTY<span className="live">.LIVE</span>
+            </p>
+          </Link>
+        )}
         {arrow && (
           <div
             className="arrowGoBack"
@@ -64,13 +71,6 @@ const Header = ({
               history.goBack();
             }}
           ></div>
-        )}
-        {logo && (
-          <Link to="/home">
-            <p className="party_live">
-              PARTY<span className="live">.LIVE</span>
-            </p>
-          </Link>
         )}
 
         <div className="rightHeaderMenu">

@@ -4,7 +4,6 @@ import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Loader from "../../components/loader/Loader";
-import ReactHLS from "react-hls";
 
 import QUERY from "../../query";
 
@@ -116,7 +115,9 @@ const EditCompany = () => {
                         </td>
                         <td className="enName">{id}</td>
                         <td className="typeCompany">
-                          {categories[0].name.toLowerCase()}
+                          {categories[0] &&
+                            categories[0].name &&
+                            categories[0].name.toLowerCase()}
                         </td>
                         <td className="enName">
                           {streams[0] && streams[0].preview ? (
@@ -129,7 +130,9 @@ const EditCompany = () => {
                                     ...prev,
                                     [i]: "Err",
                                   }));
-                                  console.log(err.message, "ERRRR", i);
+                                  console.log(err.eventPhase, "ERRRR", i);
+                                  console.log(err.type, "ERRRR", i);
+                                  console.log(err.nativeEvent, "ERRRR", i);
                                 }}
                                 style={{ display: "none" }}
                                 className="companyImg1"
