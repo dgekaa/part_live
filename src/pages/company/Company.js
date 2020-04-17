@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import ReactHLS from "react-hls";
+// import ReactHLS from "react-hls";
 
 import GoogleMap from "../../components/googleMap/GoogleMap";
 import Popup from "../../components/popup/Popup";
@@ -203,14 +203,14 @@ const Company = (props) => {
                 {showStream && (
                   <div>
                     <div className="yesVideo">
-                      <ReactHLS
+                      {/* <ReactHLS
                         url={DATA.place.streams[0].url}
                         type="application/x-mpegURL"
                         controls={true}
                         autoplay={true}
                         onErroro={(err) => {
                           console.log(err, " RRRRR");
-                        }}
+                        }} */}
                       />
                     </div>
                     <div className="rowCompanyBlockStream">
