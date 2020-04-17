@@ -3,7 +3,6 @@ import GoogleMap from "../../components/googleMap/GoogleMap";
 
 import { useCookies } from "react-cookie";
 // import ReactHLS from "react-hls";
-import ReactPlayer from "react-player";
 import ReactAwesomePlayer from "react-awesome-player";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -13,8 +12,6 @@ import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import { EN_SHORT_DAY_OF_WEEK, EN_SHORT_TO_RU_SHORT } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
-
-import "@mobiscroll/react-lite/dist/css/mobiscroll.min.css";
 
 import "./admin.css";
 import { Redirect } from "react-router-dom";
