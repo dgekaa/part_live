@@ -528,38 +528,52 @@ const Admin = (props) => {
     return timeObject;
   };
 
-  const [leftMenuSettings, setLeftMenuSettings] = useState([
-    {
-      name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
-      img: "barIcon.png",
-      altImg: "profile",
-      clicked: true,
-    },
-    {
-      name: "ГРАФИК РАБОТЫ",
-      img: "clocklite.png",
-      altImg: "work",
-      clicked: false,
-    },
-    {
-      name: "ГРАФИК ТРАНСЛЯЦИЙ",
-      img: "video-camera.png",
-      altImg: "camera",
-      clicked: false,
-    },
-    {
-      name: "СТРИМ",
-      img: "streaming.png",
-      altImg: "stream",
-      clicked: false,
-    },
-  ]);
+  const [leftMenuSettings, setLeftMenuSettings] = useState(
+    localStorage.getItem("opened_li_admin")
+      ? JSON.parse(localStorage.getItem("opened_li_admin"))
+      : [
+          {
+            name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
+            img: "barIcon.png",
+            altImg: "profile",
+            clicked: true,
+          },
+          {
+            name: "ГРАФИК РАБОТЫ",
+            img: "clocklite.png",
+            altImg: "work",
+            clicked: false,
+          },
+          {
+            name: "ГРАФИК ТРАНСЛЯЦИЙ",
+            img: "video-camera.png",
+            altImg: "camera",
+            clicked: false,
+          },
+          {
+            name: "СТРИМ",
+            img: "streaming.png",
+            altImg: "stream",
+            clicked: false,
+          },
+        ]
+  );
+
+  useEffect(() => {
+    localStorage.setItem("opened_li_admin", JSON.stringify(leftMenuSettings));
+  }, [leftMenuSettings]);
+
+  const [hoveredBtn, setHoveredBtn] = useState("");
 
   const [nameOfCompany, setNameOfCompany] = useState("");
   const [pseudonimOfCompany, setPseudonimOfCompany] = useState("");
   const [typeOfCompany, setTypeOfCompany] = useState("");
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
+
+  useEffect(() => {
+    DATA.description && setDescOfCompany(DATA.description);
+  }, [DATA.description]);
 
   const updatePlaceData = () => {
     if (cookies.origin_data) {
@@ -839,11 +853,12 @@ const Admin = (props) => {
                             <div className="bigInputBlockWrap">
                               <p>Категория:</p>
 
-                              <div>
+                              <div className="categoryBtnWrap">
                                 {uniqueCompanyType &&
                                   uniqueCompanyType.map((el, i) => {
                                     return (
                                       <span
+                                        className="categoryBtn"
                                         key={i}
                                         style={
                                           el &&
@@ -867,12 +882,56 @@ const Admin = (props) => {
                                               }
                                             : {}
                                         }
-                                        className="categoryBtn"
                                         onClick={() => {
                                           setTypeOfCompany(el.name);
                                           setTypeOfCompanyId(el.id);
                                         }}
+                                        onMouseOver={() => {
+                                          setHoveredBtn(el.name);
+                                        }}
+                                        onMouseOut={() => {
+                                          setHoveredBtn("");
+                                        }}
                                       >
+                                        {typeOfCompany &&
+                                        typeOfCompany === el.name ? (
+                                          <img
+                                            alt="Icon"
+                                            className="сompanyNavImg"
+                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                                            width="30"
+                                            height="30"
+                                          />
+                                        ) : !typeOfCompany &&
+                                          DATA.categories &&
+                                          DATA.categories[0] &&
+                                          DATA.categories[0].name ===
+                                            el.name ? (
+                                          <img
+                                            alt="Icon"
+                                            className="сompanyNavImg"
+                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                                            width="30"
+                                            height="30"
+                                          />
+                                        ) : hoveredBtn === el.name ? (
+                                          <img
+                                            alt="Icon"
+                                            className="сompanyNavImg"
+                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                                            width="30"
+                                            height="30"
+                                          />
+                                        ) : (
+                                          <img
+                                            alt="Icon"
+                                            className="сompanyNavImg"
+                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
+                                            width="30"
+                                            height="30"
+                                          />
+                                        )}
+
                                         {el.name}
                                       </span>
                                     );
@@ -903,9 +962,9 @@ const Admin = (props) => {
                               <p>Описание:</p>
                               <textarea
                                 className="descTextarea"
-                                maxLength={100}
+                                maxLength={300}
                                 // placeholder={DATA.description}
-                                value={descOfCompany || DATA.description}
+                                value={descOfCompany}
                                 onChange={(e) => {
                                   setDescOfCompany(e.target.value);
                                 }}

@@ -30,7 +30,7 @@ const MapComponent = (props) => {
   const [markers, setMarkers] = useState([]);
 
   const mapRef = useRef();
-  const [zoom, setZoom] = useState(11);
+  const [zoom, setZoom] = useState(12);
   const [bounds, setBounds] = useState(null);
   const [windowWidth, setWindowWidth] = useState();
   const [isLoading, setIsLoading] = useState(true);
