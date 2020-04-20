@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import GoogleMap from "../../components/googleMap/GoogleMap";
+import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 
 import { useCookies } from "react-cookie";
-// import ReactHLS from "react-hls";
-import ReactAwesomePlayer from "react-awesome-player";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -12,7 +11,16 @@ import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import { EN_SHORT_DAY_OF_WEEK, EN_SHORT_TO_RU_SHORT } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
+import ReactCrop from "react-image-crop";
+import Dropzone from "react-dropzone";
+import {
+  image64toCanvasRef,
+  extractImageFileExtensionFromBase64,
+  base64StringtoFile,
+  downloadBase64File,
+} from "./EncodeToBase64";
 
+import "./reactCrop.css";
 import "./admin.css";
 import { Redirect } from "react-router-dom";
 
@@ -617,85 +625,110 @@ const Admin = (props) => {
   const fileLoaderInput = useRef(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
-  const _handleSubmit = (e) => {
-    console.log(e.target, "_handleSubmit ");
+  // const _handleSubmit = (e) => {
+  //   console.log(e.target, "_handleSubmit ");
 
-    e.preventDefault();
-    // TODO: do something with -> this.state.file
-  };
+  //   e.preventDefault();
+  //   // TODO: do something with -> this.state.file
+  // };
 
-  const _handleImageChange = (e) => {
-    console.log(e.target.files[0], "_handleImageChange ");
-    e.preventDefault();
+  // const _handleImageChange = (e) => {
+  //   console.log(e.target.files[0], "_handleImageChange ");
+  //   e.preventDefault();
 
-    let reader = new FileReader();
-    let file = e.target.files[0];
+  //   let reader = new FileReader();
+  //   let file = e.target.files[0];
 
-    reader.onloadend = () => {
-      setFile(file);
-      setImagePreviewUrl(reader.result);
-    };
+  //   reader.onloadend = () => {
+  //     setFile(file);
+  //     setImagePreviewUrl(reader.result);
+  //   };
 
-    reader.readAsDataURL(file);
-  };
+  //   reader.readAsDataURL(file);
+  // };
 
-  let $imagePreview = null;
-  if (imagePreviewUrl) {
-    $imagePreview = (
-      <img
-        className="previewPhoto"
-        src={imagePreviewUrl}
-        onClick={() => {
-          fileLoaderInput.current.click();
-        }}
-      />
-    );
-  }
+  const [crop, setCrop] = useState({ aspect: 1 / 1 });
+  const [imgSrc, setImgSrc] = useState(null);
+  const [imgSrcExt, setImgSrcExt] = useState(null);
+  const imagePreviewCanvas = useRef(null);
 
-  const playerRef = useRef(null);
-  useEffect(() => {
-    setTimeout(() => {
-      console.log(playerRef, " ________________________________");
-    }, 1000);
-  }, []);
+  const imageMaxSize = 10000000000;
+  const acceptedFileTypes =
+    "image/x-png, image/png, image/jpg, image/jpeg, image/gif";
+  const acceptedFileTypesArray = acceptedFileTypes
+    .split(",")
+    .map((item) => item.trim());
 
-  const options = {
-    poster: "",
-
-    sources: [
-      {
-        type: "application/x-mpegURL",
-        src: DATA.streams && DATA.streams[0] && DATA.streams[0].url,
-      },
-    ],
+  const onCropComplete = (crop, pixelCrop) => {
+    const canvasRef = imagePreviewCanvas.current;
+    image64toCanvasRef(canvasRef, imgSrc, crop);
   };
 
-  const loadeddata = () => {
-    console.log("loadeddata");
+  const downloadImgFromCanvas = () => {
+    if (imgSrc && imgSrcExt) {
+      const canvasRef = imagePreviewCanvas.current;
+      const imageData64 = canvasRef.toDataURL("image/" + imgSrcExt); //качаем обрезаную картинку
+
+      const myFileName = "preview." + imgSrcExt;
+
+      if (imageData64.length > 8) {
+        downloadBase64File(imageData64, myFileName);
+        handeleClearToDefault();
+      } else {
+        alert("Нужно обрезать изображение");
+      }
+    }
   };
-  const canplay = () => {
-    console.log("canplay");
+
+  const handeleClearToDefault = () => {
+    const canvasRef = imagePreviewCanvas.current;
+    const ctx = canvasRef.getContext("2d");
+    ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
+    setImgSrc(null);
+    setImgSrcExt(null);
   };
-  const canplaythrough = () => {
-    console.log("canplaythrough");
+
+  const verifyFile = (files) => {
+    if (files && files.length > 0) {
+      const currentFile = files[0];
+      const currentFileType = currentFile.type;
+      const currentFileSize = currentFile.size;
+      if (currentFileSize > imageMaxSize) {
+        alert("слишком большой размер файла");
+        return false;
+      }
+      if (!acceptedFileTypesArray.includes(currentFileType)) {
+        alert("поддерживаются только изображения");
+        return false;
+      }
+      return true;
+    }
   };
-  const play = () => {
-    console.log("play");
-  };
-  const pause = () => {
-    console.log("pause");
-  };
-  const waiting = () => {
-    console.log("waiting");
-  };
-  const playing = () => {
-    console.log("playing");
-  };
-  const ended = () => {
-    console.log("ended");
-  };
-  const error = (err) => {
-    console.log(err, "error");
+
+  const handleOnDrop = (files, rejectedFiles) => {
+    if (rejectedFiles && rejectedFiles.length > 0) {
+      console.log(rejectedFiles, "---rejectedFiles");
+      verifyFile(rejectedFiles);
+    }
+    if (files && files.length > 0) {
+      console.log(files, "---files");
+      const isVerified = verifyFile(files);
+      if (isVerified) {
+        // Base64data
+        const currentFile = files[0];
+        const myFileItemReader = new FileReader();
+        myFileItemReader.addEventListener(
+          "load",
+          () => {
+            const myResult = myFileItemReader.result;
+            setImgSrc(myResult);
+            setImgSrcExt(extractImageFileExtensionFromBase64(myResult));
+          },
+          false
+        );
+        myFileItemReader.readAsDataURL(currentFile);
+      }
+    }
   };
 
   if (!Number(cookies.origin_id)) {
@@ -786,47 +819,70 @@ const Admin = (props) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
-                          <div className="profilePhotoDesc">
-                            {$imagePreview ? (
-                              $imagePreview
-                            ) : (
-                              <div
-                                className="previewPhoto"
+                          {imgSrc ? (
+                            <div>
+                              <ReactCrop
+                                src={imgSrc}
+                                crop={crop}
+                                onChange={(newCrop) => setCrop(newCrop)}
+                                onComplete={(crop, pixelCrop) => {
+                                  console.log(crop, "CROP");
+                                  console.log(pixelCrop, "pixelCrop");
+                                  onCropComplete(crop, pixelCrop);
+                                }}
+                                onImageLoaded={(image) =>
+                                  console.log(image, "LOADED")
+                                }
+                              />
+                              <br />
+                              <p
                                 onClick={() => {
-                                  fileLoaderInput.current.click();
+                                  downloadImgFromCanvas();
                                 }}
                               >
-                                <p>Загрузить фото</p>
-                                <span>250 X 250</span>
-                              </div>
-                            )}
-
-                            <div>
-                              <form onSubmit={_handleSubmit}>
-                                <input
-                                  style={{ display: "none" }}
-                                  ref={fileLoaderInput}
-                                  type="file"
-                                  onChange={_handleImageChange}
-                                />
-                                {/* <div
-                                  className="saveBtnProfile"
-                                  type="submit"
-                                  onClick={_handleSubmit}
-                                >
-                                  Сохранить изображение
-                                </div> */}
-                              </form>
+                                Скачать
+                              </p>
+                              <p
+                                onClick={() => {
+                                  handeleClearToDefault();
+                                }}
+                              >
+                                Очистить
+                              </p>
+                              <canvas ref={imagePreviewCanvas}></canvas>
                             </div>
-                            <p
-                              className="changePhoto"
-                              onClick={() => {
-                                fileLoaderInput.current.click();
-                              }}
-                            >
-                              Сменить фото профиля
-                            </p>
-                          </div>
+                          ) : (
+                            <div className="previewPhoto">
+                              <p>Загрузить фото</p>
+                              <p>250 X 250</p>
+                            </div>
+                          )}
+                          <Dropzone
+                            multiple={false}
+                            accept={acceptedFileTypes}
+                            maxSize={imageMaxSize}
+                            onDrop={(acceptedFiles, rejectedFiles) => {
+                              handleOnDrop(acceptedFiles, rejectedFiles);
+                            }}
+                          >
+                            {({ getRootProps, getInputProps }) => (
+                              <section>
+                                <div
+                                  className="changePhotoBlock"
+                                  {...getRootProps()}
+                                >
+                                  <input
+                                    className="changePhotoInput"
+                                    {...getInputProps()}
+                                  />
+                                  <p className="changePhoto">
+                                    Сменить фото профиля
+                                  </p>
+                                </div>
+                              </section>
+                            )}
+                          </Dropzone>
+
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
                               <p>Название заведения:</p>
@@ -1142,31 +1198,13 @@ const Admin = (props) => {
                           <h3>СТРИМ</h3>
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
-                              <ReactAwesomePlayer
-                                options={options}
-                                loadeddata={loadeddata}
-                                canplay={canplay}
-                                canplaythrough={canplaythrough}
-                                play={play}
-                                pause={pause}
-                                waiting={waiting}
-                                playing={playing}
-                                ended={ended}
-                                error={error}
-                                onError={(err) => console.log(err, "ERRRRRR")}
+                              <VideoPlayer
+                                src={
+                                  DATA.streams &&
+                                  DATA.streams[0] &&
+                                  DATA.streams[0].url
+                                }
                               />
-                              {/* <ReactHLS
-                                ref={playerRef}
-                                autoPlay={false}
-                                controls={true}
-                                url={DATA.streams[0].url}
-                                videoProps={{
-                                  autoPlay: false,
-                                  type: "application/x-mpegURL",
-                                  crossOrigin: "anonymous",
-                                  preload: "metadata",
-                                }}
-                              /> */}
                             </div>
                           )}
                           <div className="chooseStreamAddressDesc">
@@ -1215,30 +1253,11 @@ const Admin = (props) => {
                 <div className="adminContentMobile">
                   {!!DATA.streams && DATA.streams[0] && (
                     <div className="videoWrapAdminMobile">
-                      <ReactAwesomePlayer
-                        options={options}
-                        loadeddata={loadeddata}
-                        canplay={canplay}
-                        canplaythrough={canplaythrough}
-                        play={play}
-                        pause={pause}
-                        waiting={waiting}
-                        playing={playing}
-                        ended={ended}
-                        error={error}
-                        onError={(err) => console.log(err, "ERRRRRR")}
+                      <VideoPlayer
+                        src={
+                          DATA.streams && DATA.streams[0] && DATA.streams[0].url
+                        }
                       />
-                      {/* <ReactHLS
-                      {/* <ReactHLS
-                        url={DATA.streams[0].url}
-                        type="application/x-mpegURL"
-                        controls={true}
-                        videoProps={{
-                          autoPlay: true,
-                          crossOrigin: "anonymous",
-                          preload: "metadata",
-                        }}
-                      /> */}
                     </div>
                   )}
                   <div className="adminMenuContainer">

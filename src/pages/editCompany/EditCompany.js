@@ -15,6 +15,16 @@ const EditCompany = () => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [scriptErr, setScriptErr] = useState({});
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  !windowWidth && setWindowWidth(window.innerWidth);
+
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
+
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
     document.body.style.overflow = "visible";
@@ -74,85 +84,93 @@ const EditCompany = () => {
           }
         }}
       >
-        <div
-          className="EditCompany"
+        <Header
           style={
-            isShowMenu
-              ? {
-                  animation: "toLeft 0.3s ease",
-                  position: "relative",
-                  right: "200px",
-                }
-              : {
-                  animation: "toRight 0.3s ease",
-                  position: "relative",
-                }
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px",
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px",
+                  }
+              : {}
           }
-          onClick={(e) => {
-            if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-              hideSideMenu();
+          logo
+          burger
+          arrow
+          isShowMenu={isShowMenu}
+          showSlideSideMenu={showSlideSideMenu}
+          showSideMenu={showSideMenu}
+        />
+        {!isLoading && (
+          <div
+            className="editCompanyContent"
+            style={
+              windowWidth && windowWidth <= 760
+                ? isShowMenu
+                  ? {
+                      animation: "toLeft 0.3s ease",
+                      position: "relative",
+                      right: "200px",
+                    }
+                  : {
+                      animation: "toRight 0.3s ease",
+                      position: "relative",
+                    }
+                : {}
             }
-          }}
-        >
-          <Header
-            logo
-            burger
-            arrow
-            toSlideFixedHeader={isShowMenu}
-            showSlideSideMenu={showSlideSideMenu}
-            showSideMenu={showSideMenu}
-          />
-          {!isLoading && (
-            <div className="editCompanyContent">
-              <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
-              <table>
-                <tbody>
-                  {places.map(({ id, name, categories, streams }, i) => {
-                    return (
-                      <tr key={id}>
-                        <td className="name">
-                          <Link to={`/admin/${id}`}>{name}</Link>
-                        </td>
-                        <td className="enName">{id}</td>
-                        <td className="typeCompany">
-                          {categories[0] &&
-                            categories[0].name &&
-                            categories[0].name.toLowerCase()}
-                        </td>
-                        <td className="enName">
-                          {streams[0] && streams[0].preview ? (
-                            <div>
-                              {(scriptErr[i] && scriptErr[i]) || "Ok"}
-                              <video
-                                type="application/x-mpegURL"
-                                onError={(err) => {
-                                  setScriptErr((prev) => ({
-                                    ...prev,
-                                    [i]: "Err",
-                                  }));
-                                  console.log(err.eventPhase, "ERRRR", i);
-                                  console.log(err.type, "ERRRR", i);
-                                  console.log(err.nativeEvent, "ERRRR", i);
-                                }}
-                                style={{ display: "none" }}
-                                className="companyImg1"
-                                src={streams[0] && streams[0].preview}
-                                autoPlay
-                              />
-                            </div>
-                          ) : (
-                            "-"
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-          {isLoading && <Loader />}
-        </div>
+          >
+            <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
+            <table>
+              <tbody>
+                {places.map(({ id, name, categories, streams }, i) => {
+                  return (
+                    <tr key={id}>
+                      <td className="name">
+                        <Link to={`/admin/${id}`}>{name}</Link>
+                      </td>
+                      <td className="enName">{id}</td>
+                      <td className="typeCompany">
+                        {categories[0] &&
+                          categories[0].name &&
+                          categories[0].name.toLowerCase()}
+                      </td>
+                      <td className="enName">
+                        {streams[0] && streams[0].preview ? (
+                          <div>
+                            {(scriptErr[i] && scriptErr[i]) || "Ok"}
+                            <video
+                              type="application/x-mpegURL"
+                              onError={(err) => {
+                                setScriptErr((prev) => ({
+                                  ...prev,
+                                  [i]: "Err",
+                                }));
+                                console.log(err.eventPhase, "ERRRR", i);
+                                console.log(err.type, "ERRRR", i);
+                                console.log(err.nativeEvent, "ERRRR", i);
+                              }}
+                              style={{ display: "none" }}
+                              className="companyImg1"
+                              src={streams[0] && streams[0].preview}
+                              autoPlay
+                            />
+                          </div>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {isLoading && <Loader />}
 
         <BottomMenu
           style={{ borderTop: "1px solid #ECECEC" }}

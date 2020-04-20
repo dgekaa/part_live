@@ -161,6 +161,10 @@
   border-radius: 5px;
   height: 280px;
 }
+.videoPreview {
+  object-fit: cover;
+}
+/* fill | contain | cover | none | scale-down */
 @media screen and (max-width: 1060px) {
   .SmallCompanyBlock1 {
     height: 350px;

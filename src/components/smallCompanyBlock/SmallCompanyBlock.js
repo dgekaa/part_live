@@ -46,6 +46,7 @@ const SmallCompanyBlock = ({ item }) => {
       <div className="imgContainer1" style={{ background: "#000" }}>
         {!!showStream && item.streams[0] && (
           <video
+            className="videoPreview"
             className="companyImg1"
             src={item.streams[0].preview}
             autoPlay

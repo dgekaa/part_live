@@ -7,7 +7,9 @@ import "./companyNav.css";
 import smoothscroll from "smoothscroll-polyfill";
 
 const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
-  const [uniqueCompanyType, setUniqueCompanyType] = useState([]);
+  const [uniqueCompanyType, setUniqueCompanyType] = useState(
+    JSON.parse(localStorage.getItem("uniqueCompanyType")) || []
+  );
 
   const [isDown, setIsDown] = useState(false);
   const [startX, setStartX] = useState();
@@ -29,7 +31,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         return res.json();
       })
       .then((data) => {
-        setUniqueCompanyType(data.data.categories);
+        setUniqueCompanyType(
+          localStorage.getItem("uniqueCompanyType")
+            ? JSON.parse(localStorage.getItem("uniqueCompanyType"))
+            : data.data.categories
+        );
       })
       .catch((err) => {
         console.log(err, "  ERR");
@@ -148,84 +154,83 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             <p className="allText">Все</p>
           </Link>
         </div>
-        {localStorage.getItem("uniqueCompanyType") &&
-          JSON.parse(localStorage.getItem("uniqueCompanyType")).map((el, i) => {
-            const slideBtn = React.createRef();
-            return (
-              <div
-                ref={slideBtn}
+        {uniqueCompanyType.map((el, i) => {
+          const slideBtn = React.createRef();
+          return (
+            <div
+              ref={slideBtn}
+              className={
+                // clickedTypeLocal === el.name &&
+                localStorage.getItem("filter_type") === el.name
+                  ? "activeBtn companyNavBlock"
+                  : "companyNavBlock"
+              }
+              style={
+                // clickedTypeLocal === el.name &&
+                localStorage.getItem("filter_type") === el.name
+                  ? { background: "#e32a6c" }
+                  : {}
+              }
+              key={i}
+              onClick={(e) => {
+                clickedType(el.name);
+                setClickedTypeLocal(el.name);
+                localStorage.setItem("filter_type", el.name);
+                scrollBtnToCenter(e);
+              }}
+              onMouseOver={() => {
+                setHoveredBtn(el.name);
+              }}
+              onMouseOut={() => {
+                setHoveredBtn("");
+              }}
+            >
+              <Link
                 className={
                   // clickedTypeLocal === el.name &&
                   localStorage.getItem("filter_type") === el.name
-                    ? "activeBtn companyNavBlock"
-                    : "companyNavBlock"
+                    ? "activeBtnText companyNavLink"
+                    : "companyNavLink"
                 }
                 style={
                   // clickedTypeLocal === el.name &&
                   localStorage.getItem("filter_type") === el.name
-                    ? { background: "#e32a6c" }
+                    ? { color: "#fff" }
                     : {}
                 }
-                key={i}
-                onClick={(e) => {
-                  clickedType(el.name);
-                  setClickedTypeLocal(el.name);
-                  localStorage.setItem("filter_type", el.name);
-                  scrollBtnToCenter(e);
-                }}
-                onMouseOver={() => {
-                  setHoveredBtn(el.name);
-                }}
-                onMouseOut={() => {
-                  setHoveredBtn("");
-                }}
+                to={currentPage}
               >
-                <Link
-                  className={
-                    // clickedTypeLocal === el.name &&
-                    localStorage.getItem("filter_type") === el.name
-                      ? "activeBtnText companyNavLink"
-                      : "companyNavLink"
-                  }
-                  style={
-                    // clickedTypeLocal === el.name &&
-                    localStorage.getItem("filter_type") === el.name
-                      ? { color: "#fff" }
-                      : {}
-                  }
-                  to={currentPage}
-                >
-                  {localStorage.getItem("filter_type") === el.name ? (
-                    <img
-                      alt="Icon"
-                      className="сompanyNavImg"
-                      src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
-                      width="30"
-                      height="30"
-                    />
-                  ) : hoveredBtn === el.name ? (
-                    <img
-                      alt="Icon"
-                      className="сompanyNavImg"
-                      src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
-                      width="30"
-                      height="30"
-                    />
-                  ) : (
-                    <img
-                      alt="Icon"
-                      className="сompanyNavImg"
-                      src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
-                      width="30"
-                      height="30"
-                    />
-                  )}
+                {localStorage.getItem("filter_type") === el.name ? (
+                  <img
+                    alt="Icon"
+                    className="сompanyNavImg"
+                    src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                    width="30"
+                    height="30"
+                  />
+                ) : hoveredBtn === el.name ? (
+                  <img
+                    alt="Icon"
+                    className="сompanyNavImg"
+                    src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                    width="30"
+                    height="30"
+                  />
+                ) : (
+                  <img
+                    alt="Icon"
+                    className="сompanyNavImg"
+                    src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
+                    width="30"
+                    height="30"
+                  />
+                )}
 
-                  <p className="сompanyNavText">{el.name}</p>
-                </Link>
-              </div>
-            );
-          })}
+                <p className="сompanyNavText">{el.name}</p>
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
