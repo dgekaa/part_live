@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import smoothscroll from "smoothscroll-polyfill";
 
 import QUERY from "../../query";
+import CustomImg from "../customImg/CustomImg";
 
 import "./companyNav.css";
-import smoothscroll from "smoothscroll-polyfill";
 
 const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const [uniqueCompanyType, setUniqueCompanyType] = useState(
-    JSON.parse(localStorage.getItem("uniqueCompanyType")) || []
+    localStorage.getItem("uniqueCompanyType")
+      ? JSON.parse(localStorage.getItem("uniqueCompanyType"))
+      : []
   );
 
   const [isDown, setIsDown] = useState(false);
@@ -19,17 +22,14 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
 
   const slideBtnMenu = useRef(null);
 
+  const supportsTouch = "ontouchstart" in document.documentElement;
+  smoothscroll.polyfill();
+
   useEffect(() => {
     QUERY({
-      query: `query {
-        categories {
-          id name slug
-        }
-      }`,
+      query: `query {categories {id name slug}}`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setUniqueCompanyType(
           localStorage.getItem("uniqueCompanyType")
@@ -37,9 +37,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             : data.data.categories
         );
       })
-      .catch((err) => {
-        console.log(err, "  ERR");
-      });
+      .catch((err) => console.log(err, "  ERR"));
   }, []);
 
   useEffect(() => {
@@ -55,9 +53,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     }
   }, [uniqueCompanyType]);
 
-  const supportsTouch = "ontouchstart" in document.documentElement;
-  smoothscroll.polyfill();
-
   const scrollBtnToCenter = (e) => {
     e.preventDefault();
     const btnPositionToCenter =
@@ -70,6 +65,14 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
       behavior: "smooth",
     });
+  };
+
+  const isClickedAllBtn = () => {
+    return !clickedTypeLocal && !localStorage.getItem("filter_type");
+  };
+
+  const isClickedTypeBtn = (name) => {
+    return localStorage.getItem("filter_type") === name;
   };
 
   return (
@@ -93,7 +96,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       <div
         className={"сompanyNav"}
         ref={slideBtnMenu}
-        // //BROWSER ===========================================
         onMouseDown={(e) => {
           if (!supportsTouch) {
             setIsDown(true);
@@ -123,15 +125,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       >
         <div
           className={
-            !clickedTypeLocal && !localStorage.getItem("filter_type")
-              ? "activeBtn companyNavBlock"
-              : "companyNavBlock"
+            isClickedAllBtn() ? "activeBtn companyNavBlock" : "companyNavBlock"
           }
-          style={
-            !clickedTypeLocal && !localStorage.getItem("filter_type")
-              ? { background: "#e32a6c" }
-              : {}
-          }
+          style={isClickedAllBtn() ? { background: "#e32a6c" } : {}}
           onClick={(e) => {
             clickedType();
             setClickedTypeLocal();
@@ -140,15 +136,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         >
           <Link
             className={
-              !clickedTypeLocal && !localStorage.getItem("filter_type")
+              isClickedAllBtn()
                 ? "activeBtnText companyNavLink"
                 : "companyNavLink"
             }
-            style={
-              !clickedTypeLocal && !localStorage.getItem("filter_type")
-                ? { color: "#fff" }
-                : {}
-            }
+            style={isClickedAllBtn() ? { color: "#fff" } : {}}
             to={currentPage}
           >
             <p className="allText">Все</p>
@@ -160,17 +152,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             <div
               ref={slideBtn}
               className={
-                // clickedTypeLocal === el.name &&
-                localStorage.getItem("filter_type") === el.name
+                isClickedTypeBtn(el.name)
                   ? "activeBtn companyNavBlock"
                   : "companyNavBlock"
               }
-              style={
-                // clickedTypeLocal === el.name &&
-                localStorage.getItem("filter_type") === el.name
-                  ? { background: "#e32a6c" }
-                  : {}
-              }
+              style={isClickedTypeBtn(el.name) ? { background: "#e32a6c" } : {}}
               key={i}
               onClick={(e) => {
                 clickedType(el.name);
@@ -187,45 +173,40 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             >
               <Link
                 className={
-                  // clickedTypeLocal === el.name &&
-                  localStorage.getItem("filter_type") === el.name
+                  isClickedTypeBtn(el.name)
                     ? "activeBtnText companyNavLink"
                     : "companyNavLink"
                 }
-                style={
-                  // clickedTypeLocal === el.name &&
-                  localStorage.getItem("filter_type") === el.name
-                    ? { color: "#fff" }
-                    : {}
-                }
+                style={isClickedTypeBtn(el.name) ? { color: "#fff" } : {}}
                 to={currentPage}
               >
-                {localStorage.getItem("filter_type") === el.name ? (
-                  <img
+                {isClickedTypeBtn(el.name) ? (
+                  <CustomImg
                     alt="Icon"
                     className="сompanyNavImg"
-                    src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                    name={el.slug}
+                    active
                     width="30"
                     height="30"
                   />
                 ) : hoveredBtn === el.name ? (
-                  <img
+                  <CustomImg
                     alt="Icon"
                     className="сompanyNavImg"
-                    src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
+                    name={el.slug}
+                    active
                     width="30"
                     height="30"
                   />
                 ) : (
-                  <img
+                  <CustomImg
                     alt="Icon"
                     className="сompanyNavImg"
-                    src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
+                    name={el.slug}
                     width="30"
                     height="30"
                   />
                 )}
-
                 <p className="сompanyNavText">{el.name}</p>
               </Link>
             </div>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import "react-google-places-autocomplete/dist/assets/index.css";
 
 import { API_KEY } from "../../constants";
-
-import "react-google-places-autocomplete/dist/assets/index.css";
 
 import { styles } from "./GoogleMapStyles.js";
 import "./googleMap.css";
@@ -24,6 +23,7 @@ const MapContainer = ({
     lat: 53.904241,
     lng: 27.556932,
   }; // Минск
+
   const initialZoom = 12;
 
   const [streetName, setStreetName] = useState("");
@@ -46,7 +46,6 @@ const MapContainer = ({
             } else {
             }
           } else {
-            console.log("!!!!!!!!!!!!!!!");
             getStreetFromLatLng(location);
           }
         }
@@ -70,7 +69,6 @@ const MapContainer = ({
 
   const onReady = (mapProps, map) => {};
   const mapClicked = (mapProps, map, e) => {};
-
   const onDragend = (mapProps, map, e) => {
     getStreetFromLatLng({
       lat: map.center.lat(),
@@ -87,6 +85,7 @@ const MapContainer = ({
   return (
     <div className="MapContainerStyle" style={styleContainerMap}>
       <Map
+        scrollwheel={true}
         className="myMap"
         google={google}
         onReady={onReady}

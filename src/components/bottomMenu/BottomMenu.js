@@ -14,11 +14,6 @@ const BottomMenu = ({ style }) => {
           pathname === "/home" ? { color: "#fff", background: "#e32a6c" } : {}
         }
       >
-        {/* <img
-          alt="Home"
-          src={`${process.env.PUBLIC_URL}/img/menu2.png`}
-          className="homeImg"
-        /> */}
         СПИСОК
       </Link>
       <Link
@@ -27,11 +22,6 @@ const BottomMenu = ({ style }) => {
           pathname === "/map" ? { color: "#fff", background: "#e32a6c" } : {}
         }
       >
-        {/* <img
-          alt="Loc"
-          src={`${process.env.PUBLIC_URL}/img/location1.png`}
-          className="locationImg"
-        /> */}
         КАРТА
       </Link>
     </div>
