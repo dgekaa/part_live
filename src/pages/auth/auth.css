@@ -1,6 +1,11 @@
+.loginWrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
 .Login {
   background: #ffffff;
-  height: 100vh;
+  height: calc(100vh - 65px);
   padding-top: 160px;
   background-color: #e5e5e5;
 }
@@ -116,4 +121,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media screen and (max-width: 760px) {
+  .Login {
+    height: 100vh;
+  }
 }

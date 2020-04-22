@@ -1,124 +1,38 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useCookies } from "react-cookie";
+import ReactCrop from "react-image-crop";
+import Dropzone from "react-dropzone";
+import { Redirect } from "react-router-dom";
+
+import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
 import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
-
-import { useCookies } from "react-cookie";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
+import TimePicker from "./TimePicker";
 import { EN_SHORT_DAY_OF_WEEK, EN_SHORT_TO_RU_SHORT } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
-import ReactCrop from "react-image-crop";
-import Dropzone from "react-dropzone";
 import {
   image64toCanvasRef,
   extractImageFileExtensionFromBase64,
-  base64StringtoFile,
   downloadBase64File,
 } from "./EncodeToBase64";
 
 import "./reactCrop.css";
 import "./admin.css";
-import { Redirect } from "react-router-dom";
-
-const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
-  const [hours, setHours] = useState(realTimeInPicker.split(":")[0]);
-  const [minutes, setMinutes] = useState(realTimeInPicker.split(":")[1]);
-
-  const clickHandlerTop = (e, max) => {
-    e.target.nextSibling.innerText = +e.target.nextSibling.innerText + 1;
-    if (+e.target.nextSibling.innerText === max) {
-      e.target.nextSibling.innerText = 0;
-    }
-    if (+e.target.nextSibling.innerText < 10) {
-      e.target.nextSibling.innerText = "0" + e.target.nextSibling.innerText;
-    }
-    if (max === 24) {
-      setHours(e.target.nextSibling.innerText);
-    } else {
-      setMinutes(e.target.nextSibling.innerText);
-    }
-  };
-
-  const clickHandlerBottom = (e, max) => {
-    if (+e.target.previousSibling.innerText === 0) {
-      e.target.previousSibling.innerText = max;
-    }
-    e.target.previousSibling.innerText =
-      +e.target.previousSibling.innerText - 1;
-
-    if (e.target.previousSibling.innerText < 10) {
-      e.target.previousSibling.innerText =
-        "0" + e.target.previousSibling.innerText;
-    }
-    if (max === 24) {
-      setHours(e.target.previousSibling.innerText);
-    } else {
-      setMinutes(e.target.previousSibling.innerText);
-    }
-  };
-
-  useEffect(() => {
-    setTime(hours, minutes);
-  }, [hours, minutes]);
-
-  return (
-    <div className="timePickerWrap">
-      <p className="timePickerName">{timePickerName}</p>
-      <div className="timePicker">
-        <div className="timePickerHoursWrap">
-          <span
-            className="topArrow"
-            onClick={(e) => {
-              clickHandlerTop(e, 24);
-            }}
-          ></span>
-          <p className="timePickerHours">
-            {realTimeInPicker && realTimeInPicker.split(":")[0]}
-          </p>
-          <span
-            className="bottomArrow"
-            onClick={(e) => {
-              clickHandlerBottom(e, 24);
-            }}
-          ></span>
-        </div>
-        <p className="twoDots">:</p>
-        <div className="timePickerMinutesWrap">
-          <span
-            className="topArrow"
-            onClick={(e) => {
-              clickHandlerTop(e, 60);
-            }}
-          ></span>
-          <p className="timePickerMinutes">
-            {realTimeInPicker && realTimeInPicker.split(":")[1]}
-          </p>
-          <span
-            className="bottomArrow"
-            onClick={(e) => {
-              clickHandlerBottom(e, 60);
-            }}
-          ></span>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Admin = (props) => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [DATA, setDATA] = useState([]);
   const [showPopupDatePicker, setShowPopapDatePicker] = useState(false);
   const [showPopupGoogleMap, setShowPopapGoogleMap] = useState(false);
   const [startTimePicker, setStartTimePicker] = useState("00:00");
   const [endTimePicker, setEndTimePicker] = useState("00:00");
-
   const [startRealTimeInPicker, setStartRealTimeInPicker] = useState();
   const [endRealTimeInPicker, setEndRealTimeInPicker] = useState();
   const [isEmptyTime, setIsEmptyTime] = useState(true);
@@ -126,11 +40,17 @@ const Admin = (props) => {
   const [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false);
   const [streamAddressData, setStreamAddressData] = useState("");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   const [clickedTime, setClickedTime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const fileInput = useRef(null);
-  const [cookies, setCookie, removeCookie] = useCookies([]);
+  const [uniqueCompanyType, setUniqueCompanyType] = useState();
+  const [hoveredBtn, setHoveredBtn] = useState("");
+  const [nameOfCompany, setNameOfCompany] = useState("");
+  const [pseudonimOfCompany, setPseudonimOfCompany] = useState("");
+  const [typeOfCompany, setTypeOfCompany] = useState("");
+  const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
+  const [descOfCompany, setDescOfCompany] = useState("");
+
+  const [cookies] = useCookies([]);
 
   !windowWidth && setWindowWidth(window.innerWidth);
 
@@ -140,10 +60,20 @@ const Admin = (props) => {
     };
   });
 
-  const chooseNewAddress = (streetName, latLng) => {
-    const stringLatLng = "" + latLng.lat + "," + latLng.lng;
-
+  useEffect(() => {
     if (cookies.origin_data) {
+      refreshData();
+    }
+
+    QUERY({ query: `query {categories { id name slug } }` })
+      .then((res) => res.json())
+      .then((data) => setUniqueCompanyType(data.data.categories))
+      .catch((err) => console.log(err, "UNIQUE ADMIN ERR"));
+  }, []);
+
+  const chooseNewAddress = (streetName, latLng) => {
+    if (cookies.origin_data) {
+      const stringLatLng = "" + latLng.lat + "," + latLng.lng;
       QUERY(
         {
           query: `mutation {
@@ -158,9 +88,7 @@ const Admin = (props) => {
         },
         cookies.origin_data
       )
-        .then((res) => {
-          return res.json();
-        })
+        .then((res) => res.json())
         .then((data) => {
           if (!data.errors) {
             togglePopupGoogleMap();
@@ -168,9 +96,7 @@ const Admin = (props) => {
           } else {
           }
         })
-        .catch((err) => {
-          console.log(err, "  *****************ERR");
-        });
+        .catch((err) => console.log(err, "ADMIN UPDATEPLACE ERR"));
     }
   };
 
@@ -179,28 +105,22 @@ const Admin = (props) => {
       query: `query {
       place (id:"${props.match.params.id}") {
         id name address description logo menu actions coordinates
-        streams{url name id preview
-          schedules{id day start_time end_time}
-        }
+        streams{url name id preview schedules{id day start_time end_time}}
         schedules {id day start_time end_time}
         categories {id name}
       }
   }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
           setIsLoading(false);
           setDATA(data.data.place);
         } else {
-          console.log(data.errors, " ERRORS");
+          console.log(data.errors, "REFRESH ERRORS");
         }
       })
-      .catch((err) => {
-        console.log(err, "  *****************ERR");
-      });
+      .catch((err) => console.log(err, "REFRESH ERR"));
   };
 
   const setAsDayOf = (id) => {
@@ -208,27 +128,22 @@ const Admin = (props) => {
       QUERY(
         {
           query: `mutation {
-            deleteSchedule(
-              id:"${id || clickedTime.id}"
-            ){id day start_time end_time}
+            deleteSchedule(id:"${id || clickedTime.id}"){
+              id day start_time end_time
+            }
           }`,
         },
         cookies.origin_data
       )
-        .then((res) => {
-          return res.json();
-        })
+        .then((res) => res.json())
         .then((data) => {
           if (!data.errors) {
             refreshData();
-            console.log(data, " ??????????????????");
           } else {
-            console.log(data.errors, " ERRORS");
+            console.log(data.errors, "DELETESCHEDULE ERRORS");
           }
         })
-        .catch((err) => {
-          console.log(err, "  *****************ERR");
-        });
+        .catch((err) => console.log(err, "  DELETESCHEDULE ERR"));
     }
   };
 
@@ -243,9 +158,7 @@ const Admin = (props) => {
                 url :"https://partycamera.org/${name}/index.m3u8"
                 preview : "http://partycamera.org:80/${name}/preview.mp4"
               }
-            ) {
-              id name url
-              }
+            ) { id name url }
           }`,
         },
         cookies.origin_data
@@ -254,35 +167,13 @@ const Admin = (props) => {
         .then((data) => {
           if (!data.errors) {
             refreshData();
-            console.log(data, "FETCH data");
           } else {
-            console.log(data.errors, " ERRORS");
+            console.log(data.errors, "UPDATESTREAM ERRORS");
           }
         })
-        .catch((err) => console.log(err, "  *******ERR"));
+        .catch((err) => console.log(err, "UPDATESTREAM ERR"));
     }
   };
-
-  const [uniqueCompanyType, setUniqueCompanyType] = useState();
-
-  useEffect(() => {
-    QUERY({
-      query: `query {
-        categories {
-          id name slug
-        }
-      }`,
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setUniqueCompanyType(data.data.categories);
-      })
-      .catch((err) => {
-        console.log(err, "  ERR");
-      });
-  }, []);
 
   const createStream = (name) => {
     if (cookies.origin_data) {
@@ -304,12 +195,11 @@ const Admin = (props) => {
         .then((data) => {
           if (!data.errors) {
             refreshData();
-            console.log(data, "FETCH data");
           } else {
-            console.log(data.errors, " ERRORS");
+            console.log(data.errors, "CREATE STREAM ERRORS");
           }
         })
-        .catch((err) => console.log(err, "  *******ERR"));
+        .catch((err) => console.log(err, "CREATE STREAM ERR"));
     }
   };
 
@@ -344,12 +234,11 @@ const Admin = (props) => {
           .then((data) => {
             if (!data.errors) {
               refreshData();
-              console.log(data, "FETCH data");
             } else {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch((err) => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, " ERR"));
       }
       if (DATA.streams[0] && isEmptyTime) {
         // пустое время стрима и стрим уже существет
@@ -385,10 +274,11 @@ const Admin = (props) => {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch((err) => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, " ERR"));
       }
     }
   };
+
   const setWorkTimeOfOneDay = () => {
     if (cookies.origin_data) {
       if (isEmptyTime) {
@@ -418,7 +308,7 @@ const Admin = (props) => {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch((err) => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, "  ERR"));
       }
 
       if (!isEmptyTime) {
@@ -443,16 +333,10 @@ const Admin = (props) => {
               console.log(data.errors, " ERRORS");
             }
           })
-          .catch((err) => console.log(err, "  *******ERR"));
+          .catch((err) => console.log(err, " ERR"));
       }
     }
   };
-
-  useEffect(() => {
-    if (cookies.origin_data) {
-      refreshData();
-    }
-  }, []);
 
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
@@ -508,19 +392,6 @@ const Admin = (props) => {
     setEndTimePicker("" + h + ":" + m);
   };
 
-  const selectFile = (e) => {
-    setSelectedFile(e.target.files[0]);
-  };
-
-  const uploadFile = (e) => {
-    if (selectedFile) {
-      const fd = new FormData();
-      fd.append("image", selectedFile, selectedFile.name);
-      console.log(selectedFile, "---selecteedFile");
-      console.log(fd, "---------======= fd");
-    }
-  };
-
   const SetNewTimeObject = (data) => {
     const timeObject = {};
     EN_SHORT_DAY_OF_WEEK.forEach((e, i) => {
@@ -542,25 +413,25 @@ const Admin = (props) => {
       : [
           {
             name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
-            img: "barIcon.png",
+            img: "barIcon",
             altImg: "profile",
             clicked: true,
           },
           {
             name: "ГРАФИК РАБОТЫ",
-            img: "clocklite.png",
+            img: "clocklite",
             altImg: "work",
             clicked: false,
           },
           {
             name: "ГРАФИК ТРАНСЛЯЦИЙ",
-            img: "video-camera.png",
+            img: "video-camera",
             altImg: "camera",
             clicked: false,
           },
           {
             name: "СТРИМ",
-            img: "streaming.png",
+            img: "streaming",
             altImg: "stream",
             clicked: false,
           },
@@ -570,14 +441,6 @@ const Admin = (props) => {
   useEffect(() => {
     localStorage.setItem("opened_li_admin", JSON.stringify(leftMenuSettings));
   }, [leftMenuSettings]);
-
-  const [hoveredBtn, setHoveredBtn] = useState("");
-
-  const [nameOfCompany, setNameOfCompany] = useState("");
-  const [pseudonimOfCompany, setPseudonimOfCompany] = useState("");
-  const [typeOfCompany, setTypeOfCompany] = useState("");
-  const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
-  const [descOfCompany, setDescOfCompany] = useState("");
 
   useEffect(() => {
     DATA.description && setDescOfCompany(DATA.description);
@@ -621,34 +484,10 @@ const Admin = (props) => {
 
   document.body.style.background = "#fff";
 
-  const [file, setFile] = useState("");
-  const fileLoaderInput = useRef(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
-
-  // const _handleSubmit = (e) => {
-  //   console.log(e.target, "_handleSubmit ");
-
-  //   e.preventDefault();
-  //   // TODO: do something with -> this.state.file
-  // };
-
-  // const _handleImageChange = (e) => {
-  //   console.log(e.target.files[0], "_handleImageChange ");
-  //   e.preventDefault();
-
-  //   let reader = new FileReader();
-  //   let file = e.target.files[0];
-
-  //   reader.onloadend = () => {
-  //     setFile(file);
-  //     setImagePreviewUrl(reader.result);
-  //   };
-
-  //   reader.readAsDataURL(file);
-  // };
-
   const [crop, setCrop] = useState({ aspect: 1 / 1 });
   const [imgSrc, setImgSrc] = useState(null);
+  const [naturalImageSize, setNaturalImageSize] = useState({});
+  const [currentImageSize, setCurrentImageSize] = useState({});
   const [imgSrcExt, setImgSrcExt] = useState(null);
   const imagePreviewCanvas = useRef(null);
 
@@ -659,9 +498,15 @@ const Admin = (props) => {
     .split(",")
     .map((item) => item.trim());
 
-  const onCropComplete = (crop, pixelCrop) => {
+  const onCropComplete = (crop) => {
     const canvasRef = imagePreviewCanvas.current;
-    image64toCanvasRef(canvasRef, imgSrc, crop);
+    image64toCanvasRef(
+      canvasRef,
+      imgSrc,
+      crop,
+      naturalImageSize,
+      currentImageSize
+    );
   };
 
   const downloadImgFromCanvas = () => {
@@ -711,15 +556,23 @@ const Admin = (props) => {
       verifyFile(rejectedFiles);
     }
     if (files && files.length > 0) {
-      console.log(files, "---files");
       const isVerified = verifyFile(files);
       if (isVerified) {
         // Base64data
         const currentFile = files[0];
         const myFileItemReader = new FileReader();
+
+        myFileItemReader.onloadend = function (theFile) {
+          var image = new Image();
+          image.onload = function () {
+            setNaturalImageSize({ width: this.width, height: this.height });
+          };
+          image.src = theFile.target.result;
+        };
+
         myFileItemReader.addEventListener(
           "load",
-          () => {
+          (theFile) => {
             const myResult = myFileItemReader.result;
             setImgSrc(myResult);
             setImgSrcExt(extractImageFileExtensionFromBase64(myResult));
@@ -729,6 +582,35 @@ const Admin = (props) => {
         myFileItemReader.readAsDataURL(currentFile);
       }
     }
+  };
+
+  const isWorkTimeOrDayOff = (oneDay) => {
+    if (oneDay && oneDay.id) {
+      return oneDay.start_time + " - " + oneDay.end_time;
+    } else {
+      return "Выходной";
+    }
+  };
+
+  const isSetAsDayOff = (oneDay) => {
+    if (oneDay && oneDay.id) {
+      return "Сделать выходным";
+    } else {
+      return "";
+    }
+  };
+
+  const renderCustomTypeImg = (slug, active) => {
+    return (
+      <CustomImg
+        alt="Icon"
+        className="сompanyNavImg"
+        name={slug}
+        active={active ? true : false}
+        width="30"
+        height="30"
+      />
+    );
   };
 
   if (!Number(cookies.origin_id)) {
@@ -758,16 +640,14 @@ const Admin = (props) => {
                   }
             }
             onClick={(e) => {
-              if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+              if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
                 hideSideMenu();
-              }
             }}
           >
             <Header
               logo
               burger
               arrow
-              toSlideFixedHeader={isShowMenu}
               showSlideSideMenu={showSlideSideMenu}
               showSideMenu={showSideMenu}
             />
@@ -795,16 +675,15 @@ const Admin = (props) => {
                                   ...newArr[id],
                                   clicked: true,
                                 };
-
                                 return newArr;
                               });
                             }}
                           >
                             {el.img && (
-                              <img
+                              <CustomImg
                                 alt={el.altImg}
-                                src={`${process.env.PUBLIC_URL}/img/${el.img}`}
                                 className="eyeCompanyBlock"
+                                name={el.img}
                               />
                             )}
                             {el.name}
@@ -820,36 +699,30 @@ const Admin = (props) => {
                       return (
                         <div key={i}>
                           {imgSrc ? (
-                            <div>
+                            <div className="cropWrapper">
                               <ReactCrop
                                 src={imgSrc}
                                 crop={crop}
                                 onChange={(newCrop) => setCrop(newCrop)}
-                                onComplete={(crop, pixelCrop) => {
-                                  console.log(crop, "CROP");
-                                  console.log(pixelCrop, "pixelCrop");
-                                  onCropComplete(crop, pixelCrop);
-                                }}
-                                onImageLoaded={(image) =>
-                                  console.log(image, "LOADED")
+                                onComplete={(crop) => onCropComplete(crop)}
+                                onImageLoaded={({ width, height }) =>
+                                  setCurrentImageSize({
+                                    width,
+                                    height,
+                                  })
                                 }
                               />
                               <br />
-                              <p
-                                onClick={() => {
-                                  downloadImgFromCanvas();
-                                }}
-                              >
+                              {/* <span onClick={downloadImgFromCanvas}>
                                 Скачать
-                              </p>
-                              <p
-                                onClick={() => {
-                                  handeleClearToDefault();
-                                }}
-                              >
+                              </span>
+                              <span onClick={handeleClearToDefault}>
                                 Очистить
-                              </p>
-                              <canvas ref={imagePreviewCanvas}></canvas>
+                              </span> */}
+                              <canvas
+                                className="cropCanvasImage"
+                                ref={imagePreviewCanvas}
+                              ></canvas>
                             </div>
                           ) : (
                             <div className="previewPhoto">
@@ -861,26 +734,28 @@ const Admin = (props) => {
                             multiple={false}
                             accept={acceptedFileTypes}
                             maxSize={imageMaxSize}
-                            onDrop={(acceptedFiles, rejectedFiles) => {
-                              handleOnDrop(acceptedFiles, rejectedFiles);
-                            }}
+                            onDrop={(acceptedFiles, rejectedFiles) =>
+                              handleOnDrop(acceptedFiles, rejectedFiles)
+                            }
                           >
-                            {({ getRootProps, getInputProps }) => (
-                              <section>
-                                <div
-                                  className="changePhotoBlock"
-                                  {...getRootProps()}
-                                >
-                                  <input
-                                    className="changePhotoInput"
-                                    {...getInputProps()}
-                                  />
-                                  <p className="changePhoto">
-                                    Сменить фото профиля
-                                  </p>
-                                </div>
-                              </section>
-                            )}
+                            {({ getRootProps, getInputProps }) => {
+                              return (
+                                <section>
+                                  <div
+                                    className="changePhotoBlock"
+                                    {...getRootProps()}
+                                  >
+                                    <input
+                                      className="changePhotoInput"
+                                      {...getInputProps()}
+                                    />
+                                    <p className="changePhoto">
+                                      Сменить фото профиля
+                                    </p>
+                                  </div>
+                                </section>
+                              );
+                            }}
                           </Dropzone>
 
                           <div className="profileDataDesc">
@@ -890,9 +765,9 @@ const Admin = (props) => {
                                 type="text"
                                 placeholder={DATA.name}
                                 value={nameOfCompany}
-                                onChange={(e) => {
-                                  setNameOfCompany(e.target.value);
-                                }}
+                                onChange={(e) =>
+                                  setNameOfCompany(e.target.value)
+                                }
                               />
                             </div>
                             <div className="inputBlockWrap">
@@ -901,16 +776,15 @@ const Admin = (props) => {
                                 type="text"
                                 placeholder={DATA.name}
                                 value={pseudonimOfCompany}
-                                onChange={(e) => {
-                                  setPseudonimOfCompany(e.target.value);
-                                }}
+                                onChange={(e) =>
+                                  setPseudonimOfCompany(e.target.value)
+                                }
                               />
                             </div>
                             <div className="bigInputBlockWrap">
                               <p>Категория:</p>
-
                               <div className="categoryBtnWrap">
-                                {uniqueCompanyType &&
+                                {!!uniqueCompanyType &&
                                   uniqueCompanyType.map((el, i) => {
                                     return (
                                       <span
@@ -942,52 +816,22 @@ const Admin = (props) => {
                                           setTypeOfCompany(el.name);
                                           setTypeOfCompanyId(el.id);
                                         }}
-                                        onMouseOver={() => {
-                                          setHoveredBtn(el.name);
-                                        }}
-                                        onMouseOut={() => {
-                                          setHoveredBtn("");
-                                        }}
+                                        onMouseOver={() =>
+                                          setHoveredBtn(el.name)
+                                        }
+                                        onMouseOut={() => setHoveredBtn("")}
                                       >
                                         {typeOfCompany &&
-                                        typeOfCompany === el.name ? (
-                                          <img
-                                            alt="Icon"
-                                            className="сompanyNavImg"
-                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
-                                            width="30"
-                                            height="30"
-                                          />
-                                        ) : !typeOfCompany &&
-                                          DATA.categories &&
-                                          DATA.categories[0] &&
-                                          DATA.categories[0].name ===
-                                            el.name ? (
-                                          <img
-                                            alt="Icon"
-                                            className="сompanyNavImg"
-                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
-                                            width="30"
-                                            height="30"
-                                          />
-                                        ) : hoveredBtn === el.name ? (
-                                          <img
-                                            alt="Icon"
-                                            className="сompanyNavImg"
-                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}_w.png`}
-                                            width="30"
-                                            height="30"
-                                          />
-                                        ) : (
-                                          <img
-                                            alt="Icon"
-                                            className="сompanyNavImg"
-                                            src={`${process.env.PUBLIC_URL}/img/${el.slug}.png`}
-                                            width="30"
-                                            height="30"
-                                          />
-                                        )}
-
+                                        typeOfCompany === el.name
+                                          ? renderCustomTypeImg(el.slug, true)
+                                          : !typeOfCompany &&
+                                            DATA.categories &&
+                                            DATA.categories[0] &&
+                                            DATA.categories[0].name === el.name
+                                          ? renderCustomTypeImg(el.slug, true)
+                                          : hoveredBtn === el.name
+                                          ? renderCustomTypeImg(el.slug, true)
+                                          : renderCustomTypeImg(el.slug, false)}
                                         {el.name}
                                       </span>
                                     );
@@ -996,19 +840,11 @@ const Admin = (props) => {
                             </div>
                             <div className="inputBlockWrap">
                               <p className="addressText">Адрес заведения:</p>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  height: "140px",
-                                }}
-                              >
+                              <div className="addressBlockWrapp">
                                 <input type="text" value={DATA.address} />
                                 <p
                                   className="chooseAddressDesc"
-                                  onClick={() => {
-                                    togglePopupGoogleMap();
-                                  }}
+                                  onClick={() => togglePopupGoogleMap()}
                                 >
                                   ВЫБРАТЬ АДРЕС НА КАРТЕ
                                 </p>
@@ -1019,18 +855,15 @@ const Admin = (props) => {
                               <textarea
                                 className="descTextarea"
                                 maxLength={300}
-                                // placeholder={DATA.description}
                                 value={descOfCompany}
-                                onChange={(e) => {
-                                  setDescOfCompany(e.target.value);
-                                }}
+                                onChange={(e) =>
+                                  setDescOfCompany(e.target.value)
+                                }
                               />
                             </div>
                             <p
                               className="saveBtnProfile"
-                              onClick={() => {
-                                updatePlaceData();
-                              }}
+                              onClick={() => updatePlaceData()}
                             >
                               СОХРАНИТЬ
                             </p>
@@ -1046,19 +879,12 @@ const Admin = (props) => {
                             <tbody>
                               {DATA.schedules &&
                                 EN_SHORT_DAY_OF_WEEK.map((el, i) => {
-                                  // console.log(
-                                  //   el,
-                                  //   i,
-                                  //   "__________________________",
-                                  //   numberDayNow
-                                  // );
                                   const oneDay = SetNewTimeObject(
                                     DATA.schedules
                                   )[el.day];
                                   return (
                                     <tr key={i}>
                                       <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
-
                                       <td
                                         style={
                                           numberDayNow === i
@@ -1091,21 +917,13 @@ const Admin = (props) => {
                                           }
                                         }}
                                       >
-                                        {oneDay && oneDay.id
-                                          ? oneDay.start_time +
-                                            " - " +
-                                            oneDay.end_time
-                                          : "Выходной"}
+                                        {isWorkTimeOrDayOff(oneDay)}
                                       </td>
                                       <td
                                         className="doAsDayOfTd"
-                                        onClick={() => {
-                                          setAsDayOf(oneDay.id);
-                                        }}
+                                        onClick={() => setAsDayOf(oneDay.id)}
                                       >
-                                        {oneDay && oneDay.id
-                                          ? "Сделать выходным"
-                                          : ""}
+                                        {isSetAsDayOff(oneDay)}
                                       </td>
                                     </tr>
                                   );
@@ -1168,21 +986,13 @@ const Admin = (props) => {
                                           }
                                         }}
                                       >
-                                        {oneDay && oneDay.id
-                                          ? oneDay.start_time +
-                                            " - " +
-                                            oneDay.end_time
-                                          : "Выходной"}
+                                        {isWorkTimeOrDayOff(oneDay)}
                                       </td>
                                       <td
                                         className="doAsDayOfTd"
-                                        onClick={() => {
-                                          setAsDayOf(oneDay.id);
-                                        }}
+                                        onClick={() => setAsDayOf(oneDay.id)}
                                       >
-                                        {oneDay && oneDay.id
-                                          ? "Сделать выходным"
-                                          : ""}
+                                        {isSetAsDayOff(oneDay)}
                                       </td>
                                     </tr>
                                   );
@@ -1194,7 +1004,7 @@ const Admin = (props) => {
                     }
                     if (el.clicked && i === 3) {
                       return (
-                        <div className="streamAdminBlock">
+                        <div key={i} className="streamAdminBlock">
                           <h3>СТРИМ</h3>
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
@@ -1222,9 +1032,9 @@ const Admin = (props) => {
                                   "Введите адрес стрима"
                                 }
                                 value={streamAddressData}
-                                onInput={(e) => {
-                                  setStreamAddressData(e.target.value);
-                                }}
+                                onInput={(e) =>
+                                  setStreamAddressData(e.target.value)
+                                }
                               />
                             </div>
                             <div
@@ -1264,55 +1074,179 @@ const Admin = (props) => {
                     <div className="menuBlockWrap profile">
                       <div
                         className="menuBlock"
-                        onClick={(e) => {
-                          accordionHandler(e);
-                        }}
+                        onClick={(e) => accordionHandler(e)}
                       >
                         Профиль заведения
                         <span className="rotateArrow"></span>
                       </div>
                       <div className="drDownWrap">
                         <div className="uploadFileContainer">
-                          <h3>Загрузка изображения профиля</h3>
                           <div className="uploadFile">
-                            <input
-                              type="file"
-                              ref={fileInput}
-                              style={{ display: "none" }}
-                              onChange={selectFile}
-                            />
-                            <div
-                              className="pickFileBtn"
-                              onClick={() => {
-                                fileInput.current.click();
-                              }}
+                            {imgSrc ? (
+                              <div className="cropWrapper">
+                                <ReactCrop
+                                  src={imgSrc}
+                                  crop={crop}
+                                  onChange={(newCrop) => setCrop(newCrop)}
+                                  onComplete={(crop) => onCropComplete(crop)}
+                                  onImageLoaded={({ width, height }) =>
+                                    setCurrentImageSize({
+                                      width,
+                                      height,
+                                    })
+                                  }
+                                />
+                                <br />
+                                {/* <span onClick={downloadImgFromCanvas}>
+                                  Скачать
+                                </span>
+                                <span onClick={handeleClearToDefault}>
+                                  Очистить
+                                </span> */}
+                                <canvas
+                                  className="cropCanvasImage"
+                                  ref={imagePreviewCanvas}
+                                ></canvas>
+                              </div>
+                            ) : (
+                              <div className="previewPhoto">
+                                <p>Загрузить фото</p>
+                                <p>250 X 250</p>
+                              </div>
+                            )}
+                            <Dropzone
+                              multiple={false}
+                              accept={acceptedFileTypes}
+                              maxSize={imageMaxSize}
+                              onDrop={(acceptedFiles, rejectedFiles) =>
+                                handleOnDrop(acceptedFiles, rejectedFiles)
+                              }
                             >
-                              <p className="chooseImg"> Выбрать изображение</p>
-                            </div>
-
-                            <div className="uploadFileBtn" onClick={uploadFile}>
-                              Загрузить
+                              {({ getRootProps, getInputProps }) => {
+                                return (
+                                  <section>
+                                    <div
+                                      className="changePhotoBlock"
+                                      {...getRootProps()}
+                                    >
+                                      <input
+                                        className="changePhotoInput"
+                                        {...getInputProps()}
+                                      />
+                                      <p className="changePhoto">
+                                        Сменить фото профиля
+                                      </p>
+                                    </div>
+                                  </section>
+                                );
+                              }}
+                            </Dropzone>
+                          </div>
+                        </div>
+                        {/* ================================================= */}
+                        <div className="profileDataDesc">
+                          <div className="inputBlockWrap">
+                            <p>Название заведения:</p>
+                            <input
+                              type="text"
+                              placeholder={DATA.name}
+                              value={nameOfCompany}
+                              onChange={(e) => setNameOfCompany(e.target.value)}
+                            />
+                          </div>
+                          <div className="inputBlockWrap">
+                            <p>Псевдоним:</p>
+                            <input
+                              type="text"
+                              placeholder={DATA.name}
+                              value={pseudonimOfCompany}
+                              onChange={(e) =>
+                                setPseudonimOfCompany(e.target.value)
+                              }
+                            />
+                          </div>
+                          <div className="bigInputBlockWrap">
+                            <p>Категория:</p>
+                            <div className="categoryBtnWrap">
+                              {!!uniqueCompanyType &&
+                                uniqueCompanyType.map((el, i) => {
+                                  return (
+                                    <span
+                                      className="categoryBtn"
+                                      key={i}
+                                      style={
+                                        el &&
+                                        el.name &&
+                                        typeOfCompany &&
+                                        typeOfCompany === el.name
+                                          ? {
+                                              background: "#e32a6c",
+                                              color: "#fff",
+                                            }
+                                          : !typeOfCompany &&
+                                            DATA.categories &&
+                                            DATA.categories[0] &&
+                                            el &&
+                                            el.name &&
+                                            DATA.categories[0].name === el.name
+                                          ? {
+                                              background: "#e32a6c",
+                                              color: "#fff",
+                                            }
+                                          : {}
+                                      }
+                                      onClick={() => {
+                                        setTypeOfCompany(el.name);
+                                        setTypeOfCompanyId(el.id);
+                                      }}
+                                      onMouseOver={() => setHoveredBtn(el.name)}
+                                      onMouseOut={() => setHoveredBtn("")}
+                                    >
+                                      {typeOfCompany &&
+                                      typeOfCompany === el.name
+                                        ? renderCustomTypeImg(el.slug, true)
+                                        : !typeOfCompany &&
+                                          DATA.categories &&
+                                          DATA.categories[0] &&
+                                          DATA.categories[0].name === el.name
+                                        ? renderCustomTypeImg(el.slug, true)
+                                        : hoveredBtn === el.name
+                                        ? renderCustomTypeImg(el.slug, true)
+                                        : renderCustomTypeImg(el.slug, false)}
+                                      {el.name}
+                                    </span>
+                                  );
+                                })}
                             </div>
                           </div>
-                          <p className="fileName">
-                            Название:{" "}
-                            {selectedFile
-                              ? selectedFile.name
-                              : "Изображение отсутствует "}
-                          </p>
-                        </div>
-                        <div className="pickAddress">
-                          <h3>Выбрать адрес заведения</h3>
-                          <p className="curAddress">
-                            {DATA.address || "Адрес не задан"}
-                          </p>
+                          <div className="inputBlockWrap">
+                            <p className="addressTextMobile">
+                              Адрес заведения:
+                            </p>
+                            <div className="mobileAddresColumn">
+                              <input type="text" value={DATA.address} />
+                              <p
+                                className="chooseAddressDesc"
+                                onClick={() => togglePopupGoogleMap()}
+                              >
+                                ВЫБРАТЬ АДРЕС НА КАРТЕ
+                              </p>
+                            </div>
+                          </div>
+                          <div className="inputBlockWrap">
+                            <p>Описание:</p>
+                            <textarea
+                              className="descTextarea"
+                              maxLength={300}
+                              value={descOfCompany}
+                              onChange={(e) => setDescOfCompany(e.target.value)}
+                            />
+                          </div>
                           <p
-                            onClick={() => {
-                              togglePopupGoogleMap();
-                            }}
-                            className="chooseAddressBtn"
+                            className="saveBtnProfile"
+                            onClick={() => updatePlaceData()}
                           >
-                            Выбрать адрес
+                            СОХРАНИТЬ
                           </p>
                         </div>
                       </div>
@@ -1320,9 +1254,7 @@ const Admin = (props) => {
                     <div className="menuBlockWrap workSchedule">
                       <div
                         className="menuBlock"
-                        onClick={(e) => {
-                          accordionHandler(e);
-                        }}
+                        onClick={(e) => accordionHandler(e)}
                       >
                         График работы
                         <span className="rotateArrow"></span>
@@ -1337,7 +1269,7 @@ const Admin = (props) => {
                                 ];
                                 return (
                                   <tr key={i}>
-                                    <td>{el.day}</td>
+                                    <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
                                     <td
                                       onClick={() => {
                                         if (oneDay && oneDay.id) {
@@ -1362,11 +1294,7 @@ const Admin = (props) => {
                                         }
                                       }}
                                     >
-                                      {oneDay && oneDay.id
-                                        ? oneDay.start_time +
-                                          " - " +
-                                          oneDay.end_time
-                                        : "Выходной"}
+                                      {isWorkTimeOrDayOff(oneDay)}
                                     </td>
                                   </tr>
                                 );
@@ -1378,9 +1306,7 @@ const Admin = (props) => {
                     <div className="menuBlockWrap streamSchedule">
                       <div
                         className="menuBlock"
-                        onClick={(e) => {
-                          accordionHandler(e);
-                        }}
+                        onClick={(e) => accordionHandler(e)}
                       >
                         График трансляций
                         <span className="rotateArrow"></span>
@@ -1397,9 +1323,9 @@ const Admin = (props) => {
                               "Введите адрес стрима"
                             }
                             value={streamAddressData}
-                            onInput={(e) => {
-                              setStreamAddressData(e.target.value);
-                            }}
+                            onInput={(e) =>
+                              setStreamAddressData(e.target.value)
+                            }
                           />
                           <div
                             className="chooseStreamAddressSaveBtn"
@@ -1429,7 +1355,7 @@ const Admin = (props) => {
                                 )[el.day];
                                 return (
                                   <tr key={i}>
-                                    <td>{el.day}</td>
+                                    <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
                                     <td
                                       onClick={() => {
                                         if (!DATA.streams[0]) {
@@ -1458,11 +1384,7 @@ const Admin = (props) => {
                                         }
                                       }}
                                     >
-                                      {oneDay && oneDay.id
-                                        ? oneDay.start_time +
-                                          " - " +
-                                          oneDay.end_time
-                                        : "Выходной"}
+                                      {isWorkTimeOrDayOff(oneDay)}
                                     </td>
                                   </tr>
                                 );
@@ -1471,26 +1393,26 @@ const Admin = (props) => {
                         </table>
                       </div>
                     </div>
-                    <div className="menuBlockWrap address">
-                      <div
-                        className="menuBlock"
-                        onClick={(e) => {
-                          accordionHandler(e);
-                        }}
-                      >
-                        Адрес заведения
-                        <span className="rotateArrow"></span>
-                      </div>
-                      <div className="drDownWrap">В разработке</div>
-                    </div>
                   </div>
                 </div>
               </div>
             )}
           </div>
           <BottomMenu
-            style={{ borderTop: "1px solid #ECECEC" }}
-            toSlideFixedBottomMenu={isShowMenu}
+            borderTop
+            style={
+              windowWidth && windowWidth <= 760
+                ? isShowMenu
+                  ? {
+                      animation: "toLeftFixed 0.3s ease",
+                      left: "-200px",
+                    }
+                  : {
+                      animation: "toRightFixed 0.3s ease",
+                      left: "0px",
+                    }
+                : {}
+            }
           />
           <SlideSideMenu isShowMenu={isShowMenu} />
           {showPopupDatePicker && (

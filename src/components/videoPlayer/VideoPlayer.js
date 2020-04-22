@@ -1,12 +1,10 @@
 import React from "react";
 import ReactAwesomePlayer from "react-awesome-player";
 
-// import "./typeNav.css";
-
 const VideoPlayer = ({ src }) => {
   const options = {
     poster: "",
-
+    fluid: true,
     sources: [
       {
         type: "application/x-mpegURL",
@@ -15,30 +13,14 @@ const VideoPlayer = ({ src }) => {
     ],
   };
 
-  const loadeddata = () => {
-    console.log("loadeddata");
-  };
-  const canplay = () => {
-    console.log("canplay");
-  };
-  const canplaythrough = () => {
-    console.log("canplaythrough");
-  };
-  const play = () => {
-    console.log("play");
-  };
-  const pause = () => {
-    console.log("pause");
-  };
-  const waiting = () => {
-    console.log("waiting");
-  };
-  const playing = () => {
-    console.log("playing");
-  };
-  const ended = () => {
-    console.log("ended");
-  };
+  const loadeddata = () => {};
+  const canplay = () => {};
+  const canplaythrough = () => {};
+  const play = () => {};
+  const pause = () => {};
+  const waiting = () => {};
+  const playing = () => {};
+  const ended = () => {};
   const error = (err) => {
     console.log(err, "error");
   };
@@ -55,7 +37,7 @@ const VideoPlayer = ({ src }) => {
         playing={playing}
         ended={ended}
         error={error}
-        onError={(err) => console.log(err, "ERRRRRR")}
+        onError={(err) => console.log(err, "ERRRRRR video")}
       />
     </div>
   );

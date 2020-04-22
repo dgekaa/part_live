@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
 import Popup from "../../components/popup/Popup";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -8,8 +9,11 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 import Loader from "../../components/loader/Loader";
 import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
-
-import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
+import {
+  isShowStreamNow,
+  isWorkTimeNow,
+  numberDayNow,
+} from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
 import { DAY_OF_WEEK, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
@@ -19,7 +23,6 @@ import "./company.css";
 const Company = (props) => {
   const [showPopup, setShowPopap] = useState(false);
   const [DATA, setDATA] = useState(null);
-  const [geoposition, setGeoposition] = useState([0, 0]);
 
   const [showStream, setShowStream] = useState(false);
   const [nextStreamTime, setNextStreamTime] = useState(false);
@@ -30,10 +33,7 @@ const Company = (props) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isLoading, setIsLoading] = useState(true);
   const [curDistance, setCurDistance] = useState(null);
-
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
-
-  const numberDayNow = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   useEffect(() => {
     if (localStorage.getItem("uniqueCompanyType")) {
@@ -45,10 +45,6 @@ const Company = (props) => {
     if (DATA) {
       isShowStreamNow(DATA.place, setShowStream, setNextStreamTime);
       isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
-      setGeoposition([
-        +DATA.place.coordinates.split(",")[0],
-        +DATA.place.coordinates.split(",")[1],
-      ]);
     }
   }, [DATA]);
 
@@ -57,26 +53,18 @@ const Company = (props) => {
       query: `query {
         place (id: ${props.match.params.id}) {
           id name address description
-          streams{url name id preview
-            schedules{id day start_time end_time}
-          }
-          categories{name slug}
-          coordinates
-          schedules {day start_time end_time}
-          user {id name email}
+          streams{url name id preview schedules{id day start_time end_time}}
+          categories{name slug} coordinates
+          schedules {day start_time end_time} user {id name email}
         }
       }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setIsLoading(false);
         setDATA(data.data);
       })
-      .catch((err) => {
-        console.log(err, "  ONE PLACE");
-      });
+      .catch((err) => console.log(err, "  ONE PLACE"));
   }, []);
 
   const togglePopup = () => {
@@ -116,27 +104,38 @@ const Company = (props) => {
           )
         );
       },
-      (err) => {
-        // console.log(err, " GEOLOCATION ERROR ");
-      }
+      (err) => console.log(err, " GEOLOCATION COMPANY ERROR ")
     );
   } else {
     console.log("Геолокация недоступна ");
   }
 
-  const mouseDownHandler = (e) => {
+  const mouseDownMapHandler = (e) => {
     setMouseMapCoordinates({
       clientX: e.clientX,
       clientY: e.clientY,
     });
   };
 
-  const mouseUpHandler = (e) => {
+  const mouseUpMapHandler = (e) => {
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
       +mouseMapCoordinates.clientY === +e.clientY
     ) {
       togglePopup();
+    }
+  };
+
+  const whenIsTranslation = () => {
+    if (nextStreamTime.start_time) {
+      return (
+        "Трансляция начнется в " +
+        EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
+        " в " +
+        nextStreamTime.start_time
+      );
+    } else if (!nextStreamTime.start_time) {
+      return "Нет предстоящих трансляций";
     }
   };
 
@@ -149,9 +148,6 @@ const Company = (props) => {
       }}
     >
       <Header
-        logo
-        burger
-        arrow
         style={
           windowWidth && windowWidth <= 760
             ? isShowMenu
@@ -165,6 +161,9 @@ const Company = (props) => {
                 }
             : {}
         }
+        logo
+        burger
+        arrow
         isShowMenu={isShowMenu}
         showSlideSideMenu={showSlideSideMenu}
         showSideMenu={showSideMenu}
@@ -191,11 +190,9 @@ const Company = (props) => {
           }
         }}
       >
-        {windowWidth && windowWidth > 760 && (
-          <div className="bigCompanyHeader">
-            <Link to="/home"> &#60; На главную</Link>
-          </div>
-        )}
+        <div className="bigCompanyHeaderDesc">
+          <Link to="/home"> &#60; На главную</Link>
+        </div>
         {DATA && (
           <div className="flex">
             <div className="shadowBlock">
@@ -205,16 +202,16 @@ const Company = (props) => {
                     <div className="yesVideo">
                       <VideoPlayer src={DATA.place.streams[0].url} />
                     </div>
-                    <div className="rowCompanyBlockStream">
-                      <div className="rowCompanyBlockStreem">
-                        <img
+                    <div className="rowCompanyBlockStreamDesc">
+                      <div className="rowCompanyBlockStreamInner">
+                        <CustomImg
                           alt="eye"
-                          src={`${process.env.PUBLIC_URL}/img/eye.png`}
                           className="eyeCompanyBlock"
+                          name={"eye"}
                         />
                         <p className="leftTextCompanyBlock">25 752</p>
                       </div>
-                      <div className="rowCompanyBlockStreem">
+                      <div className="rowCompanyBlockStreamInner">
                         <span className="circle"></span>
                         <p className="leftTextCompanyBlock">255</p>
                       </div>
@@ -222,17 +219,8 @@ const Company = (props) => {
                   </div>
                 )}
                 {!showStream && (
-                  <div className="noVideo">
-                    {nextStreamTime.start_time &&
-                      "Трансляция начнется в " +
-                        EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-                        " в " +
-                        nextStreamTime.start_time}
-
-                    {!nextStreamTime.start_time && "Нет предстоящих трансляций"}
-                  </div>
+                  <div className="noVideo">{whenIsTranslation()}</div>
                 )}
-                <div className="showWatchPeople"></div>
                 <p className="videoDescription">
                   <span>{DATA.place.name}</span> - {DATA.place.description}
                 </p>
@@ -255,11 +243,11 @@ const Company = (props) => {
                     {!curDistance && " 0 km"}
                   </p>
                 </div>
-                <p className="smallOpenedTo">
+                <p className="mobileOpenedTo">
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
                   {!isWork && "Закрыто"}
                 </p>
-                <div className="timeBlocks">
+                <div className="timeBlocksDesc">
                   <div className="timeBlock">
                     <img
                       height="16"
@@ -268,7 +256,8 @@ const Company = (props) => {
                       src={`${process.env.PUBLIC_URL}/img/clock.png`}
                     />
                     <p className="rightTimeBlock">
-                      <span>Время работы:</span> <span>{workTime}</span>
+                      <span>Время работы:</span>
+                      <span>{workTime || "Выходной"}</span>
                     </p>
                   </div>
                   <div className="timeBlock streamTime">
@@ -298,60 +287,54 @@ const Company = (props) => {
                     </p>
                   </div>
                 </div>
-                {windowWidth && windowWidth > 760 && (
-                  <div className="smallMapWrap">
-                    <div
-                      className="smallMap"
-                      onMouseDown={mouseDownHandler}
-                      onMouseUp={mouseUpHandler}
-                    >
-                      <GoogleMap
-                        togglePopupGoogleMap={togglePopup}
-                        styleContainerMap={{ height: "85px" }}
-                        initialCenterMap={
-                          DATA.place.coordinates
-                            ? {
-                                lat: Number(
-                                  DATA.place.coordinates.split(",")[0]
-                                ),
-                                lng: Number(
-                                  DATA.place.coordinates.split(",")[1]
-                                ),
-                              }
-                            : null
-                        }
-                      />
-                    </div>
+
+                <div className="smallMapWrapDesc">
+                  <div
+                    className="smallMap"
+                    onMouseDown={mouseDownMapHandler}
+                    onMouseUp={mouseUpMapHandler}
+                  >
+                    <GoogleMap
+                      togglePopupGoogleMap={togglePopup}
+                      styleContainerMap={{ height: "85px" }}
+                      initialCenterMap={
+                        DATA.place.coordinates
+                          ? {
+                              lat: Number(DATA.place.coordinates.split(",")[0]),
+                              lng: Number(DATA.place.coordinates.split(",")[1]),
+                            }
+                          : null
+                      }
+                    />
                   </div>
-                )}
+                </div>
               </div>
               <div className="type">{DATA.place.categories[0].name}</div>
             </div>
-            {!!windowWidth && windowWidth <= 760 && (
-              <div className="smallMapWrap">
-                <div
-                  className="smallMap"
-                  onMouseDown={mouseDownHandler}
-                  onMouseUp={mouseUpHandler}
-                >
-                  <GoogleMap
-                    togglePopupGoogleMap={togglePopup}
-                    styleContainerMap={{ height: "200px" }}
-                    initialCenterMap={
-                      DATA.place.coordinates
-                        ? {
-                            lat: Number(DATA.place.coordinates.split(",")[0]),
-                            lng: Number(DATA.place.coordinates.split(",")[1]),
-                          }
-                        : null
-                    }
-                  />
-                </div>
-                <p className="smallMapLocation">
-                  {DATA ? DATA.place.address : ""}
-                </p>
+
+            <div className="smallMapWrapMobile">
+              <div
+                className="smallMap"
+                onMouseDown={mouseDownMapHandler}
+                onMouseUp={mouseUpMapHandler}
+              >
+                <GoogleMap
+                  togglePopupGoogleMap={togglePopup}
+                  styleContainerMap={{ height: "200px" }}
+                  initialCenterMap={
+                    DATA.place.coordinates
+                      ? {
+                          lat: Number(DATA.place.coordinates.split(",")[0]),
+                          lng: Number(DATA.place.coordinates.split(",")[1]),
+                        }
+                      : null
+                  }
+                />
               </div>
-            )}
+              <p className="smallMapLocation">
+                {DATA ? DATA.place.address : ""}
+              </p>
+            </div>
           </div>
         )}
         {!DATA && isLoading && <Loader />}

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./smallCompanyBlock.css";
 import { Link } from "react-router-dom";
 
-import { EN_SHORT_TO_RU_LONG, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
+import CustomImg from "../customImg/CustomImg";
+import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
+
+import "./smallCompanyBlock.css";
 
 const SmallCompanyBlock = ({ item }) => {
   const [showStream, setShowStream] = useState(false);
@@ -18,81 +20,80 @@ const SmallCompanyBlock = ({ item }) => {
     isWorkTimeNow(item, setWorkTime, setIsWork);
   }, [item]);
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setCurDistance(
-          getDistanceFromLatLonInKm(
-            pos.coords.latitude,
-            pos.coords.longitude,
-            item.coordinates.split(",")[0],
-            item.coordinates.split(",")[1]
-          )
-        );
-      },
-      (err) => {
-        console.log(err, " GEOLOCATION ERROR ");
-      }
-    );
-  } else {
-    console.log("Геолокация недоступна ");
-  }
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCurDistance(
+            getDistanceFromLatLonInKm(
+              pos.coords.latitude,
+              pos.coords.longitude,
+              item.coordinates.split(",")[0],
+              item.coordinates.split(",")[1]
+            )
+          );
+        },
+        (err) => {
+          console.log(err, " GEOLOCATION ERROR SMALLCOMPANYBLOCK");
+        }
+      );
+    } else {
+      console.log("Геолокация недоступна ");
+    }
+  }, []);
+
+  const whenWillBeTranslation = () => {
+    if (
+      nextStreamTime.start_time &&
+      nextStreamTime.day.toLowerCase() !== "сегодня"
+    ) {
+      return (
+        "Трансляция начнется в " +
+        EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
+        " в " +
+        nextStreamTime.start_time
+      );
+    } else if (
+      nextStreamTime.start_time &&
+      nextStreamTime.day.toLowerCase() === "сегодня"
+    ) {
+      return "Трансляция начнется сегодня в " + nextStreamTime.start_time;
+    } else if (!nextStreamTime.start_time) {
+      return "Нет предстоящих трансляций";
+    }
+  };
 
   return (
     <Link
       to={{ pathname: `/company/${item.id}` }}
-      className="SmallCompanyBlock1"
+      className="SmallCompanyBlock"
     >
-      <div className="imgContainer1" style={{ background: "#000" }}>
+      <div className="imgContainer">
         {!!showStream && item.streams[0] && (
           <video
-            className="videoPreview"
-            className="companyImg1"
+            className="companyImg"
             src={item.streams[0].preview}
             autoPlay
           />
         )}
         {!showStream && (
-          <div
-            className="companyImg1"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <p style={{ color: "#fff", textAlign: "center", padding: "20px" }}>
-              {nextStreamTime.start_time &&
-                nextStreamTime.day.toLowerCase() !== "сегодня" &&
-                "Трансляция начнется в " +
-                  EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-                  " в " +
-                  nextStreamTime.start_time}
-              {nextStreamTime.start_time &&
-                nextStreamTime.day.toLowerCase() === "сегодня" &&
-                "Трансляция начнется сегодня в " + nextStreamTime.start_time}
-
-              {!nextStreamTime.start_time && "Нет предстоящих трансляций"}
-            </p>
+          <div className="companyImg">
+            <p className="noPreviewText">{whenWillBeTranslation()}</p>
           </div>
         )}
       </div>
-      <div className="description1">
-        <div className="topBlockText1">
-          <div className="companyNameWrap1">
-            <p className="companyName1">{item.name}</p>
-            <p className="companyType1">{item.categories[0].name} </p>
+      <div className="description">
+        <div className="topBlockText">
+          <div className="companyNameWrap">
+            <p className="companyName">{item.name}</p>
+            <p className="companyType">{item.categories[0].name} </p>
           </div>
           <p className="companyTitle">"Супер пати всех студентов"</p>
         </div>
-        <div className="bottomBlockText1">
+        <div className="bottomBlockText">
           <div className="rowCompanyBlock">
             <div className="smallRowCompanyBlock">
-              <img
-                alt="eye"
-                src={`${process.env.PUBLIC_URL}/img/eye.png`}
-                className="eyeCompanyBlock"
-              />
+              <CustomImg alt="eye" className="eyeCompanyBlock" name={"eye"} />
               <p className="leftTextCompanyBlock">25 752</p>
             </div>
             <div className="smallRowCompanyBlock">
@@ -103,6 +104,7 @@ const SmallCompanyBlock = ({ item }) => {
           <p className="workTimeText">{workTime}</p>
         </div>
       </div>
+      {/* Mobile */}
       <div className="descriptionMobile">
         <p className="nameOfCompany">{item.name}</p>
         <div className="distanceFirst1 distanceFirstLeft1">
@@ -113,17 +115,12 @@ const SmallCompanyBlock = ({ item }) => {
           </div>
         </div>
         {isWork && (
-          <p className="endTime1">
+          <p className="endTimeMobile">
             Открыто: до
             <span> {workTime.split("-")[1]}</span>
           </p>
         )}
-        {!isWork && (
-          <p className="endTime1">
-            {/* {workTime} */}
-            Закрыто
-          </p>
-        )}
+        {!isWork && <p className="endTimeMobile">Закрыто</p>}
       </div>
     </Link>
   );

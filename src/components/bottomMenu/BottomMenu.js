@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 
 import "./bottomMenu.css";
 
-const BottomMenu = ({ style }) => {
+const BottomMenu = ({ style, borderTop }) => {
   const pathname = window.location.pathname;
 
   return (
-    <div className="BottomMenu" style={style}>
+    <div
+      className="BottomMenu"
+      style={
+        borderTop
+          ? { borderTop: "1px solid #ECECEC", ...style }
+          : { borderTop: "none", ...style }
+      }
+    >
       <Link
         to="/home"
         style={

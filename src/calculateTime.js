@@ -19,7 +19,6 @@ const HtoMs = 3600000,
 
 const currentTimeMS =
   new Date().getHours() * HtoMs + new Date().getMinutes() * MtoMs;
-console.log(numberDayNow, "numberDayNow");
 const curDay = EN_SHORT_DAY_OF_WEEK[numberDayNow].day;
 
 const SetNewTimeObject = (data) => {

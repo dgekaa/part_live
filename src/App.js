@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import { CookiesProvider } from "react-cookie";
 
 import Home from "./pages/home/Home";
 import Map from "./pages/map/Map";
@@ -10,12 +14,6 @@ import Admin from "./pages/admin/Admin";
 import Calendar from "./components/calendar/Calendar";
 
 import "./App.css";
-
-import { BrowserRouter } from "react-router-dom";
-import { Switch, Route, Redirect } from "react-router-dom";
-import { createBrowserHistory } from "history";
-
-import { CookiesProvider } from "react-cookie";
 
 const customHistory = createBrowserHistory();
 

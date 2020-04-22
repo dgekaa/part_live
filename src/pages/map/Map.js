@@ -1,34 +1,31 @@
 import React, { useState, useRef, useEffect } from "react";
 import GooggleMapReact from "google-map-react";
 import useSupercluster from "use-supercluster";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
-
-import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
+import { EN_SHORT_TO_RU_LONG_V_P, API_KEY } from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
-import { API_KEY } from "../../constants";
-
-import { styles } from "../../components/googleMap/GoogleMapStyles";
-import "./map.css";
-
 import TypeNav from "../../components/typeNav/TypeNav";
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
 
+import { styles } from "../../components/googleMap/GoogleMapStyles";
+import "./map.css";
+
 const Marker = ({ children }) => children;
 
-const createMapOptions = (maps) => {
+const createMapOptions = () => {
   return { styles: styles };
 };
 
 const MapComponent = (props) => {
   const [DATA, setDATA] = useState([]);
-
   const [markers, setMarkers] = useState([]);
-
   const mapRef = useRef();
   const [zoom, setZoom] = useState(12);
   const [bounds, setBounds] = useState(null);
@@ -39,25 +36,19 @@ const MapComponent = (props) => {
   useEffect(() => {
     QUERY({
       query: `query{
-        places{id name coordinates
-          streams{url name id preview
-            schedules{id day start_time end_time}
-          }
+          places{id name coordinates
+          streams{url name id preview schedules{id day start_time end_time}}
           schedules{id day start_time end_time}
           categories{id name slug}}
         }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setIsLoading(false);
         setMarkers(data.data.places);
         setDATA(data.data.places);
       })
-      .catch((err) => {
-        console.log(err, "  ERR");
-      });
+      .catch((err) => console.log(err, "MAP  ERR"));
   }, []);
 
   const points = markers.map((el, i) => {
@@ -144,21 +135,17 @@ const MapComponent = (props) => {
           lng: pos.coords.longitude,
         });
       },
-      (err) => {
-        console.log(err, " GEOLOCATION ERROR");
-      }
+      (err) => console.log(err, " GEOLOCATION MAP ERROR")
     );
   } else {
     console.log("Геолокация недоступна");
   }
 
-  const mouseDownHandler = (e) => {
+  const mouseDownHandler = ({ clientX, clientY }) =>
     setMouseMapCoordinates({
-      clientX: e.clientX,
-      clientY: e.clientY,
+      clientX,
+      clientY,
     });
-  };
-
   const mouseUpHandler = (e, data) => {
     if (
       +mouseMapCoordinates.clientX === +e.clientX &&
@@ -171,17 +158,11 @@ const MapComponent = (props) => {
   return (
     <div
       onClick={(e) => {
-        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
           hideSideMenu();
-        }
       }}
     >
       <Header
-        logo
-        arrow
-        burger
-        showSlideSideMenu={showSlideSideMenu}
-        showSideMenu={showSideMenu}
         style={
           windowWidth && windowWidth <= 760
             ? isShowMenu
@@ -195,6 +176,11 @@ const MapComponent = (props) => {
                 }
             : {}
         }
+        logo
+        arrow
+        burger
+        showSlideSideMenu={showSlideSideMenu}
+        showSideMenu={showSideMenu}
       />
       <div className="navContainerMap">
         <CompanyNav
@@ -255,11 +241,12 @@ const MapComponent = (props) => {
           >
             {defaultCenter && (
               <Marker lat={defaultCenter.lat} lng={defaultCenter.lng}>
-                <img
+                <CustomImg
                   alt="me"
-                  style={{ height: "32px", width: "32px" }}
-                  src={`${process.env.PUBLIC_URL}/img/dancer.png`}
                   className="eye"
+                  name={"dancer"}
+                  width="32"
+                  height="32"
                 />
               </Marker>
             )}
@@ -292,18 +279,11 @@ const MapComponent = (props) => {
                 isWork = false,
                 nextStreamTime = "";
 
-              const setShowStream = (time) => {
-                streamTime = time;
-              };
-              const setWorkTime = (time) => {
-                workTime = time;
-              };
-              const setIsWork = (bool) => {
-                isWork = bool;
-              };
-              const setNextStreamTime = (time) => {
-                nextStreamTime = time;
-              };
+              const setShowStream = (time) => (streamTime = time);
+              const setWorkTime = (time) => (workTime = time);
+              const setIsWork = (bool) => (isWork = bool);
+              const setNextStreamTime = (time) => (nextStreamTime = time);
+
               isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
               isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
 
@@ -350,14 +330,14 @@ const MapComponent = (props) => {
                       <div className="mapMarker">
                         {!!streamTime && (
                           <video
-                            className="companyImg1"
+                            className="companyImg"
                             src={cluster.item.streams[0].preview}
                             autoPlay
                           />
                         )}
                         {!streamTime && (
                           <div
-                            className="companyImg1"
+                            className="companyImg"
                             style={{
                               display: "flex",
                               alignItems: "center",

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import React from "react";
+import { useHistory, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+
 import Burger from "../burger/Burger";
-import "./header.css";
 import QUERY from "../../query";
+
+import "./header.css";
 
 const Header = ({
   showSlideSideMenu,
@@ -13,42 +14,28 @@ const Header = ({
   burger,
   arrow,
   logo,
-  toSlideFixedHeader,
 }) => {
   let history = useHistory();
-
-  const [windowWidth, setWindowWidth] = useState();
-
-  window.onresize = function (e) {
-    setWindowWidth(e.target.innerWidth);
-  };
 
   const [cookies, removeCookie] = useCookies([]);
 
   const logout = () => {
     QUERY(
       {
-        query: `mutation {
-        logout{status message}
-      }`,
+        query: `mutation { logout{status message} }`,
       },
       cookies.origin_data
     )
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
-          console.log(data, " LOGOUT");
           removeCookie("origin_data");
           removeCookie("origin_id");
         } else {
           console.log(data.errors, " ERRORS LOGOUT");
         }
       })
-      .catch((err) => {
-        console.log(err, "  *******ERR LOGOUT");
-      });
+      .catch((err) => console.log(err, "  *******ERR LOGOUT"));
 
     removeCookie("origin_data");
     removeCookie("origin_id");
@@ -86,16 +73,12 @@ const Header = ({
           )}
           {!!Number(cookies.origin_id) && (
             <div>
-              <Link to="/editCompany" className="registrBtn">
-                К списку
-              </Link>
-              <Link
-                onClick={() => {
-                  logout();
-                }}
-                to="/login"
-                className="loginBtn"
-              >
+              {Number(cookies.origin_id) === 1 && (
+                <Link to="/editCompany" className="registrBtn">
+                  К списку
+                </Link>
+              )}
+              <Link onClick={logout} to="/login" className="loginBtn">
                 Выход
               </Link>
             </div>

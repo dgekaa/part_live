@@ -1,24 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { Redirect, Link } from "react-router-dom";
+
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Loader from "../../components/loader/Loader";
-
 import QUERY from "../../query";
 
 import "./editCompany.css";
-import { Redirect, Link } from "react-router-dom";
 
 const EditCompany = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [scriptErr, setScriptErr] = useState({});
+  const [cookies] = useCookies([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [places, setPlaces] = useState([]);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   !windowWidth && setWindowWidth(window.innerWidth);
-
   useEffect(() => {
     window.onresize = function (e) {
       setWindowWidth(e.target.innerWidth);
@@ -41,39 +42,27 @@ const EditCompany = () => {
     hideSideMenu();
   };
 
-  const [cookies, setCookie, removeCookie] = useCookies([]);
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [places, setPlaces] = useState([]);
-
   useEffect(() => {
     QUERY({
       query: `query {
             places {id name  categories{name slug} streams{url preview}}
           }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
           setIsLoading(false);
           setPlaces(data.data.places);
         } else {
-          console.log(data.errors, " ERRORS");
+          console.log(data.errors, "EDIT ERROR");
         }
       })
-      .catch((err) => {
-        console.log(err, "  *****************ERR");
-      });
+      .catch((err) => console.log(err, "EDIT ERROR"));
   }, []);
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else if (Number(cookies.origin_id) !== 1) {
-    // Вход под обычным юзером
-    // нужно переходить на /admin/id заведения
     return <Redirect to="/home" />;
   } else {
     return (
@@ -126,46 +115,45 @@ const EditCompany = () => {
             <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
             <table>
               <tbody>
-                {places.map(({ id, name, categories, streams }, i) => {
-                  return (
-                    <tr key={id}>
-                      <td className="name">
-                        <Link to={`/admin/${id}`}>{name}</Link>
-                      </td>
-                      <td className="enName">{id}</td>
-                      <td className="typeCompany">
-                        {categories[0] &&
-                          categories[0].name &&
-                          categories[0].name.toLowerCase()}
-                      </td>
-                      <td className="enName">
-                        {streams[0] && streams[0].preview ? (
-                          <div>
-                            {(scriptErr[i] && scriptErr[i]) || "Ok"}
-                            <video
-                              type="application/x-mpegURL"
-                              onError={(err) => {
-                                setScriptErr((prev) => ({
-                                  ...prev,
-                                  [i]: "Err",
-                                }));
-                                console.log(err.eventPhase, "ERRRR", i);
-                                console.log(err.type, "ERRRR", i);
-                                console.log(err.nativeEvent, "ERRRR", i);
-                              }}
-                              style={{ display: "none" }}
-                              className="companyImg1"
-                              src={streams[0] && streams[0].preview}
-                              autoPlay
-                            />
-                          </div>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                {places &&
+                  places.length &&
+                  places.map(({ id, name, categories, streams }, i) => {
+                    return (
+                      <tr key={id}>
+                        <td className="name">
+                          <Link to={`/admin/${id}`}>{name}</Link>
+                        </td>
+                        <td className="enName">{id}</td>
+                        <td className="typeCompany">
+                          {categories[0] &&
+                            categories[0].name &&
+                            categories[0].name.toLowerCase()}
+                        </td>
+                        <td className="enName">
+                          {streams[0] && streams[0].preview ? (
+                            <div>
+                              {(scriptErr[i] && scriptErr[i]) || "Ok"}
+                              <video
+                                type="application/x-mpegURL"
+                                onError={() => {
+                                  setScriptErr((prev) => ({
+                                    ...prev,
+                                    [i]: "Err",
+                                  }));
+                                }}
+                                style={{ display: "none" }}
+                                className="companyImg"
+                                src={streams[0] && streams[0].preview}
+                                autoPlay
+                              />
+                            </div>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
@@ -173,8 +161,20 @@ const EditCompany = () => {
         {isLoading && <Loader />}
 
         <BottomMenu
-          style={{ borderTop: "1px solid #ECECEC" }}
-          toSlideFixedBottomMenu={isShowMenu}
+          borderTop
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px",
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px",
+                  }
+              : {}
+          }
         />
         <SlideSideMenu isShowMenu={isShowMenu} />
       </div>

@@ -1,5 +1,5 @@
 /* ДЛЯ ПРИМЕРА========================================== */
-.SmallCompanyBlock1 {
+.SmallCompanyBlock {
   -webkit-transition: 0.2s ease all;
   -o-transition: 0.2s ease all;
   transition: 0.2s ease all;
@@ -22,14 +22,23 @@
   -webkit-animation: opacityAnimation 1s ease;
   animation: opacityAnimation 1s ease;
 }
-.companyImg1 {
+.companyImg {
+  object-fit: cover;
   -webkit-transition: 0.2s ease all;
   -o-transition: 0.2s ease all;
   transition: 0.2s ease all;
   height: 100% !important;
   border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.description1 {
+.companyImg .noPreviewText {
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+.description {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -45,7 +54,7 @@
 .descriptionMobile {
   display: none;
 }
-.companyNameWrap1 {
+.companyNameWrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -57,14 +66,14 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
-.companyName1 {
+.companyName {
   font-weight: bold;
   font-size: 18px;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
-.companyType1 {
+.companyType {
   font-weight: bold;
   font-size: 13px;
   color: #e32a6c;
@@ -74,12 +83,12 @@
   font-weight: 300;
   color: #4f4f4f;
 }
-.topBlockText1 {
+.topBlockText {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
 }
-.bottomBlockText1 {
+.bottomBlockText {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -156,36 +165,34 @@
     opacity: 1;
   }
 }
-.imgContainer1 {
+.imgContainer {
+  background: #000;
   overflow: hidden;
   border-radius: 5px;
   height: 280px;
 }
-.videoPreview {
-  object-fit: cover;
-}
-/* fill | contain | cover | none | scale-down */
+
 @media screen and (max-width: 1060px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 350px;
     width: calc(33.3% - 10px);
   }
 }
 @media screen and (max-width: 960px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 320px;
     width: calc(33.3% - 10px);
   }
 }
 @media screen and (max-width: 860px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 290px;
     width: calc(33.3% - 10px);
   }
 }
 
 @media screen and (max-width: 760px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 350px;
     width: calc(50% - 10px);
     display: -webkit-box;
@@ -196,12 +203,12 @@
     background: #fff;
     margin-bottom: 15px;
   }
-  .imgContainer1 {
+  .imgContainer {
     height: 280px;
     overflow: hidden;
     border-radius: 5px;
   }
-  .companyImg1 {
+  .companyImg {
     height: 100% !important;
     background-color: #000;
     border-radius: 5px;
@@ -217,7 +224,7 @@
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
   }
-  .description1 {
+  .description {
     display: none;
   }
   .descriptionMobile {
@@ -236,7 +243,7 @@
     justify-content: center;
     padding: 0 5px;
   }
-  .endTime1 {
+  .endTimeMobile {
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -257,50 +264,50 @@
   }
 }
 @media screen and (max-width: 620px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 310px;
     width: calc(50% - 10px);
   }
-  .imgContainer1 {
+  .imgContainer {
     height: 240px;
     border-radius: 5px;
   }
-  .companyImg1 {
+  .companyImg {
     height: 100% !important;
   }
 }
 @media screen and (max-width: 560px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 290px;
     width: calc(50% - 10px);
   }
-  .imgContainer1 {
+  .imgContainer {
     height: 220px;
     border-radius: 5px;
   }
-  .companyImg1 {
+  .companyImg {
     height: 100% !important;
   }
 }
 @media screen and (max-width: 430px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 240px;
     width: calc(50% - 10px);
   }
-  .imgContainer1 {
+  .imgContainer {
     height: 180px;
     border-radius: 5px;
   }
-  .companyImg1 {
+  .companyImg {
     height: 100% !important;
   }
 }
 @media screen and (max-width: 360px) {
-  .SmallCompanyBlock1 {
+  .SmallCompanyBlock {
     height: 220px;
     width: calc(50% - 10px);
   }
-  .imgContainer1 {
+  .imgContainer {
     height: 160px;
     border-radius: 5px;
   }

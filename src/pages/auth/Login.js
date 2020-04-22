@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
-
 import { Redirect } from "react-router-dom";
+
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
-
 import QUERY from "../../query";
 
 import "./auth.css";
@@ -17,8 +16,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isForgetPass, setIsForgetPass] = useState(false);
   const [allValidationError, setAllValidationError] = useState("");
+
   const loginRef = useRef(null);
   const [cookies, setCookie, removeCookie] = useCookies([]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  !windowWidth && setWindowWidth(window.innerWidth);
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
 
   useEffect(() => {
     if (localStorage.getItem("uniqueCompanyType")) {
@@ -38,23 +46,20 @@ const Login = () => {
     setIsShowMenu(true);
   };
 
+  window.onresize = function (e) {
+    hideSideMenu();
+  };
+
   const userLogin = (email, password) => {
     QUERY({
       query: `mutation {
-        login (input: {
-            username: "${email}",
-            password: "${password}"
-        }) {access_token refresh_token expires_in token_type
-          user {id name email}
-        }
+        login (input: {username: "${email}", password: "${password}"}) 
+        {access_token refresh_token expires_in token_type user {id name email}}
       }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
-          console.log(data, " LOGIN");
           setCookie("origin_data", data.data.login.access_token);
           setCookie("origin_id", data.data.login.user.id);
 
@@ -63,7 +68,7 @@ const Login = () => {
           }
 
           setAllValidationError("");
-          setIsLogin(true);
+          setIsLogin(data.data.login.user.id);
         } else {
           removeCookie("origin_data");
           removeCookie("origin_id");
@@ -75,7 +80,7 @@ const Login = () => {
               "0 0 1px 1px rgb(255, 54, 54)";
           }
           setIsLogin(false);
-          console.log(data.errors[0], "------------------ERR");
+          console.log(data.errors[0], "LOGIN ERR");
         }
       })
       .catch((err) => {
@@ -83,19 +88,36 @@ const Login = () => {
         removeCookie("origin_id");
 
         setIsLogin(false);
-        console.log(err, "  *****************ERR");
+        console.log(err, "LOGIN ERR");
       });
   };
 
-  if (isLogin || Number(cookies.origin_id) === 1) {
+  if (Number(isLogin) === 1 || Number(cookies.origin_id) === 1) {
     return <Redirect to="/editCompany" />;
+  } else if (
+    Number(isLogin) ||
+    (Number(cookies.origin_id) && Number(cookies.origin_id) !== 1)
+  ) {
+    return "Обычный юзер";
   } else {
     return (
-      <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
+      <div className="loginWrapper">
         <Header
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px",
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px",
+                  }
+              : {}
+          }
           logo
           burger
-          toSlideFixedHeader={isShowMenu}
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
@@ -133,29 +155,25 @@ const Login = () => {
                 name="email"
                 placeholder="email"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
+                onChange={(e) => setEmail(e.target.value)}
               />
               {!isForgetPass && (
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="password"
-                  value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                />
+                <>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <input type="submit" value="ВОЙТИ" />
+                </>
               )}
-              {!isForgetPass && <input type="submit" value="ВОЙТИ" />}
               {isForgetPass && <p className="btnSubmit">ОТПРАВИТЬ</p>}
             </form>
             <p
               className="forgetPass"
-              onClick={() => {
-                setIsForgetPass((prev) => !prev);
-              }}
+              onClick={() => setIsForgetPass((prev) => !prev)}
             >
               {!isForgetPass ? "  Забыли пароль?" : " Уже есть аккаунт?"}
               <span className="errorField">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import TypeNav from "../../components/typeNav/TypeNav";
@@ -7,15 +7,13 @@ import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 import Loader from "../../components/loader/Loader";
+import QUERY from "../../query";
 
 import "./home.css";
 
-import QUERY from "../../query";
-
-const Home = (props) => {
+const Home = () => {
   const [DATA, setDATA] = useState([]);
   const [companyData, setCompanyData] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
   const [windowWidth, setWindowWidth] = useState();
 
@@ -24,25 +22,19 @@ const Home = (props) => {
       query: `query {
         places {
           id name address description logo menu actions coordinates
-          streams{url name id preview
-            schedules{id day start_time end_time}
-          }
+          streams{url name id preview schedules{id day start_time end_time}}
           schedules {id day start_time end_time}
           categories {id name}
         }
       }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setIsLoading(false);
         setCompanyData(data.data.places);
         setDATA(data.data.places);
       })
-      .catch((err) => {
-        console.log(err, "  ERR");
-      });
+      .catch((err) => console.log(err, "HOME DATA ERR"));
   }, []);
 
   const clickedType = (type) => {
@@ -137,9 +129,7 @@ const Home = (props) => {
             <CompanyNav
               currentPage="/home"
               toSlideFixedNav={isShowMenu}
-              clickedType={(type) => {
-                clickedType(type);
-              }}
+              clickedType={(type) => clickedType(type)}
             />
             <TypeNav />
           </div>

@@ -11,7 +11,6 @@ export function base64StringtoFile(base64String, filename) {
   return new File([u8arr], filename, { type: mime });
 }
 
-// Download a Base64-encoded file
 export function downloadBase64File(base64Data, filename) {
   var element = document.createElement("a");
   element.setAttribute("href", base64Data);
@@ -22,7 +21,6 @@ export function downloadBase64File(base64Data, filename) {
   document.body.removeChild(element);
 }
 
-// Extract an Base64 Image's File Extension
 export function extractImageFileExtensionFromBase64(base64Data) {
   return base64Data.substring(
     "data:image/".length,
@@ -30,25 +28,33 @@ export function extractImageFileExtensionFromBase64(base64Data) {
   );
 }
 
-// Base64 Image to Canvas with a Crop
-export function image64toCanvasRef(canvasRef, image64, pixelCrop) {
+export function image64toCanvasRef(
+  canvasRef,
+  image64,
+  pixelCrop,
+  naturalSize,
+  currentSize
+) {
+  const widthDifference = (naturalSize.width / currentSize.width).toFixed(2);
+  const heightDifference = (naturalSize.height / currentSize.height).toFixed(2);
+
   const canvas = canvasRef;
-  canvas.width = pixelCrop.width;
-  canvas.height = pixelCrop.height;
+  canvas.width = pixelCrop.width * heightDifference;
+  canvas.height = pixelCrop.height * widthDifference;
   const ctx = canvas.getContext("2d");
   const image = new Image();
   image.src = image64;
   image.onload = function () {
     ctx.drawImage(
       image,
-      pixelCrop.x,
-      pixelCrop.y,
-      pixelCrop.width,
-      pixelCrop.height,
+      pixelCrop.x * widthDifference,
+      pixelCrop.y * heightDifference,
+      pixelCrop.width * widthDifference,
+      pixelCrop.height * heightDifference,
       0,
       0,
-      pixelCrop.width,
-      pixelCrop.height
+      pixelCrop.width * widthDifference,
+      pixelCrop.height * heightDifference
     );
   };
 }

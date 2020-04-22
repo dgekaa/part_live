@@ -164,12 +164,8 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                 localStorage.setItem("filter_type", el.name);
                 scrollBtnToCenter(e);
               }}
-              onMouseOver={() => {
-                setHoveredBtn(el.name);
-              }}
-              onMouseOut={() => {
-                setHoveredBtn("");
-              }}
+              onMouseOver={() => setHoveredBtn(el.name)}
+              onMouseOut={() => setHoveredBtn("")}
             >
               <Link
                 className={

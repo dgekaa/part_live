@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import "./slideSideMenu.css";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+
 import QUERY from "../../query";
+
+import "./slideSideMenu.css";
 
 const SlideSideMenu = ({ isShowMenu }) => {
   const [shomMenu, setShowMenu] = useState(false);
@@ -21,15 +23,11 @@ const SlideSideMenu = ({ isShowMenu }) => {
   const logout = () => {
     QUERY(
       {
-        query: `mutation {
-        logout{status message}
-      }`,
+        query: `mutation {logout{status message}}`,
       },
       cookies.origin_data
     )
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
           console.log(data, " LOGOUT");
@@ -39,9 +37,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
           console.log(data.errors, " ERRORS LOGOUT");
         }
       })
-      .catch((err) => {
-        console.log(err, "  *******ERR LOGOUT");
-      });
+      .catch((err) => console.log(err, "  *******ERR LOGOUT"));
 
     removeCookie("origin_data");
     removeCookie("origin_id");
@@ -68,19 +64,18 @@ const SlideSideMenu = ({ isShowMenu }) => {
             <Link to="/map">Карта</Link>
           </li>
           <li>
+            {console.log(
+              Number(cookies.origin_id),
+              "Number(cookies.origin_id)"
+            )}
             {Number(cookies.origin_id) === 1 && (
-              <Link to="/editCompany">График</Link>
+              <Link to="/editCompany">К списку</Link>
             )}
           </li>
           <li>
             {!Number(cookies.origin_id) && <Link to="/login">Вход</Link>}
             {!!Number(cookies.origin_id) && (
-              <Link
-                onClick={() => {
-                  logout();
-                }}
-                to="/login"
-              >
+              <Link onClick={logout} to="/login">
                 Выход
               </Link>
             )}

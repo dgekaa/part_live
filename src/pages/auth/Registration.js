@@ -1,15 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
-
 import QUERY from "../../query";
-import { useCookies } from "react-cookie";
+
 import "./auth.css";
 
 const Registration = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  !windowWidth && setWindowWidth(window.innerWidth);
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
 
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
@@ -27,7 +36,6 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-
   const [isSuccess, setIsSuccess] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies([]);
   const [allValidationError, setAllValidationError] = useState(null);
@@ -43,7 +51,6 @@ const Registration = () => {
 
   useEffect(() => {
     if (allValidationError) {
-      console.log(allValidationError, ":ASDA");
       const nameFirstErrInput = Object.keys(allValidationError)[0].split(
         "."
       )[1];
@@ -58,32 +65,29 @@ const Registration = () => {
       setOneValidationError(
         allValidationError[`input.${nameFirstErrInput}`][0]
       );
-
-      // register.current.children;
     }
   }, [allValidationError]);
 
+  window.onresize = function (e) {
+    hideSideMenu();
+  };
+
   const registration = () => {
-    console.log(name, "-", email, "-", password, "-", rePassword);
     QUERY({
       query: `mutation {
         register (input: {
-          name: "${name}",
-            email: "${email}",
-            password: "${password}"
-            password_confirmation: "${rePassword}"
-        }) {status
+          name: "${name}", email: "${email}",
+          password: "${password}" password_confirmation: "${rePassword}"
+        }) {
+          status
           tokens{access_token refresh_token expires_in token_type
-             user{id name email }
+          user{id name email }
          }}
       }`,
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
-          console.log(data.data.register, " DATA REGISTRATION");
           setCookie("origin_data", data.data.register.tokens.access_token);
           setCookie("origin_id", data.data.register.tokens.user.id);
 
@@ -95,11 +99,8 @@ const Registration = () => {
         } else {
           removeCookie("origin_data");
           removeCookie("origin_id");
-
           setAllValidationError(data.errors[0].extensions.validation);
-
-          console.log(data.errors[0].extensions.validation, "=====validation");
-          console.log(data.errors, "------------------ERR");
+          console.log(data.errors, "REGISER ERR");
         }
       })
       .catch((err) => {
@@ -109,15 +110,27 @@ const Registration = () => {
       });
   };
 
-  if (Number(cookies.origin_id)) {
+  if (!!Number(cookies.origin_id)) {
     return <Redirect to="/home" />;
   } else {
     return (
       <div>
         <Header
+          style={
+            windowWidth && windowWidth <= 760
+              ? isShowMenu
+                ? {
+                    animation: "toLeftFixed 0.3s ease",
+                    left: "-200px",
+                  }
+                : {
+                    animation: "toRightFixed 0.3s ease",
+                    left: "0px",
+                  }
+              : {}
+          }
           logo
           burger
-          toSlideFixedHeader={isShowMenu}
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
@@ -157,36 +170,28 @@ const Registration = () => {
                     name="name"
                     placeholder="Имя"
                     value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
+                    onChange={(e) => setName(e.target.value)}
                   />
                   <input
                     type="text"
                     name="email"
                     placeholder="E-mail"
                     value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <input
                     type="password"
                     name="password"
                     placeholder="Пароль"
                     value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <input
                     type="password"
                     name="re_password"
                     placeholder="Повтор пароля"
                     value={rePassword}
-                    onChange={(e) => {
-                      setRePassword(e.target.value);
-                    }}
+                    onChange={(e) => setRePassword(e.target.value)}
                   />
                   <input type="submit" value="Зарегистрироваться" />
                 </form>
