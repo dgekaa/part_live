@@ -472,7 +472,6 @@ const Admin = (props) => {
         .then((res) => res.json())
         .then((data) => {
           if (!data.errors) {
-            console.log(typeOfCompanyId, "typeOfCompanyId");
             console.log("SUCCESS");
           } else {
             console.log(data.errors, " ERRORS");

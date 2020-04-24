@@ -86,7 +86,9 @@ const SmallCompanyBlock = ({ item }) => {
         <div className="topBlockText">
           <div className="companyNameWrap">
             <p className="companyName">{item.name}</p>
-            <p className="companyType">{item.categories[0].name} </p>
+            <p className="companyType">
+              {item.categories && item.categories[0] && item.categories[0].name}{" "}
+            </p>
           </div>
           <p className="companyTitle">"Супер пати всех студентов"</p>
         </div>
@@ -111,7 +113,9 @@ const SmallCompanyBlock = ({ item }) => {
           <div className="distanceAndType">
             {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
             {!curDistance && " 0 km."}
-            <span>{item.categories[0].name}</span>
+            <span>
+              {item.categories && item.categories[0] && item.categories[0].name}
+            </span>
           </div>
         </div>
         {isWork && (
