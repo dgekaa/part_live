@@ -82,9 +82,11 @@ const MapComponent = (props) => {
 
   const clickedType = (type) => {
     if (type) {
-      const filteredData = DATA.filter(
-        (el) => el.categories[0].name.toUpperCase() === type.toUpperCase()
-      );
+      const filteredData = DATA.filter((el) => {
+        if (el.categories && el.categories[0]) {
+          return el.categories[0].name.toUpperCase() === type.toUpperCase();
+        }
+      });
       setMarkers(filteredData);
     } else {
       setMarkers(DATA);
