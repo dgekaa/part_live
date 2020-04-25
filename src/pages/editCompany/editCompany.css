@@ -3,14 +3,14 @@
   margin: 0 auto;
   padding-top: 60px;
 }
+
 .editCompanyContent h3 {
   font-weight: bold;
   font-size: 20px;
   margin-bottom: 40px;
 }
 .editCompanyContent table {
-  width: 60%;
-  min-width: 600px;
+  width: 80%;
 }
 .editCompanyContent tr {
   display: flex;
@@ -18,7 +18,6 @@
 .editCompanyContent td {
   padding: 4px;
   display: flex;
-
   flex: 1;
 }
 .editCompanyContent td:first-of-type {
@@ -46,5 +45,41 @@
 @media screen and (max-width: 1000px) {
   .editCompanyContent {
     margin: 0 25px;
+  }
+}
+@media screen and (max-width: 760px) {
+  .editCompanyContent {
+    margin: 0;
+    /* padding: 0 5px; */
+    display: block;
+    padding-top: 60px;
+    width: 100vw;
+  }
+  .editCompanyContent h3 {
+    padding: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  .editCompanyContent table {
+    display: flex;
+    flex: 1;
+    width: 100vw;
+  }
+  .editCompanyContent tr {
+    width: 100vw;
+  }
+  .editCompanyContent td {
+    display: inline-block;
+    margin: 5px 0;
+  }
+  .editCompanyContent .name {
+    width: 100px;
+    min-width: 100px;
+  }
+  .editCompanyContent .enName {
+  }
+  .editCompanyContent .typeCompany {
+    min-width: 100px;
   }
 }

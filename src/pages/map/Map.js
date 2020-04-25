@@ -58,7 +58,7 @@ const MapComponent = (props) => {
       properties: {
         cluster: false,
         crimeId: i,
-        category: el.categories[0].name,
+        category: el.categories[0] && el.categories[0].name,
       },
       geometry: {
         type: "Point",

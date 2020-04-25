@@ -160,7 +160,7 @@ const EditCompany = () => {
         )}
         {isLoading && <Loader />}
 
-        <BottomMenu
+        {/* <BottomMenu
           borderTop
           style={
             windowWidth && windowWidth <= 760
@@ -175,7 +175,7 @@ const EditCompany = () => {
                   }
               : {}
           }
-        />
+        /> */}
         <SlideSideMenu isShowMenu={isShowMenu} />
       </div>
     );

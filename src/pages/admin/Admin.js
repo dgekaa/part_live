@@ -1397,7 +1397,7 @@ const Admin = (props) => {
               </div>
             )}
           </div>
-          <BottomMenu
+          {/* <BottomMenu
             borderTop
             style={
               windowWidth && windowWidth <= 760
@@ -1412,7 +1412,7 @@ const Admin = (props) => {
                     }
                 : {}
             }
-          />
+          /> */}
           <SlideSideMenu isShowMenu={isShowMenu} />
           {showPopupDatePicker && (
             <Popup
