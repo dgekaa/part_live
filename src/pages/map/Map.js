@@ -32,6 +32,7 @@ const MapComponent = (props) => {
   const [windowWidth, setWindowWidth] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
+  const [previewError, setPreviewError] = useState(false);
 
   useEffect(() => {
     QUERY({
@@ -321,29 +322,22 @@ const MapComponent = (props) => {
                   >
                     <div className="mapMarkerWrap">
                       <div className="mapMarker">
-                        {!!streamTime && (
-                          <video
-                            className="companyImg"
-                            src={cluster.item.streams[0].preview}
-                            autoPlay
-                          />
-                        )}
+                        {!!streamTime &&
+                          (!previewError ? (
+                            <video
+                              className="companyImg"
+                              src={cluster.item.streams[0].preview}
+                              autoPlay
+                              onError={(err) => setPreviewError(err)}
+                            />
+                          ) : (
+                            <div className="companyImg mapNoTranslationWrap">
+                              <p className="mapNoTranslationText">ERR</p>
+                            </div>
+                          ))}
                         {!streamTime && (
-                          <div
-                            className="companyImg"
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <p
-                              style={{
-                                color: "#fff",
-                                textAlign: "center",
-                                padding: "3px",
-                              }}
-                            >
+                          <div className="companyImg mapNoTranslationWrap">
+                            <p className="mapNoTranslationText">
                               {nextStreamTime.start_time &&
                                 "Начало трансляции в " +
                                   EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +

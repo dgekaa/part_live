@@ -22,10 +22,20 @@
   left: -38px;
   cursor: pointer;
   width: 100px;
-  /* height: 200px; */
   background-color: transparent;
   border-radius: 5px;
   overflow: hidden;
+}
+.mapNoTranslationWrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mapNoTranslationText {
+  color: #fff;
+  text-align: center;
+  padding: 3px;
 }
 .GooggleMapReact {
   height: 100%;

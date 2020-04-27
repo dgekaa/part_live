@@ -14,6 +14,7 @@ const SmallCompanyBlock = ({ item }) => {
   const [isWork, setIsWork] = useState(false);
   const [curDistance, setCurDistance] = useState(null);
   const [nextStreamTime, setNextStreamTime] = useState(false);
+  const [previewError, setPreviewError] = useState(false);
 
   useEffect(() => {
     isShowStreamNow(item, setShowStream, setNextStreamTime);
@@ -69,13 +70,20 @@ const SmallCompanyBlock = ({ item }) => {
       className="SmallCompanyBlock"
     >
       <div className="imgContainer">
-        {!!showStream && item.streams[0] && (
-          <video
-            className="companyImg"
-            src={item.streams[0].preview}
-            autoPlay
-          />
-        )}
+        {!!showStream &&
+          item.streams[0] &&
+          (!previewError ? (
+            <video
+              className="companyImg"
+              src={item.streams[0].preview}
+              autoPlay
+              onError={(err) => setPreviewError(err)}
+            />
+          ) : (
+            <div className="companyImg">
+              <p className="noPreviewText">ERR</p>
+            </div>
+          ))}
         {!showStream && (
           <div className="companyImg">
             <p className="noPreviewText">{whenWillBeTranslation()}</p>

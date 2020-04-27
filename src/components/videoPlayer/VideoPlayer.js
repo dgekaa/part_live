@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import ReactAwesomePlayer from "react-awesome-player";
 
 const VideoPlayer = ({ src }) => {
@@ -13,6 +13,12 @@ const VideoPlayer = ({ src }) => {
     ],
   };
 
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    videoRef.current.video.style.height = "100%";
+  }, []);
+
   const loadeddata = () => {};
   const canplay = () => {};
   const canplaythrough = () => {};
@@ -21,12 +27,12 @@ const VideoPlayer = ({ src }) => {
   const waiting = () => {};
   const playing = () => {};
   const ended = () => {};
-  const error = (err) => {
-    console.log(err, "error");
-  };
+  const error = (err) => console.log(err, "stream error");
+
   return (
     <div>
       <ReactAwesomePlayer
+        ref={videoRef}
         options={options}
         loadeddata={loadeddata}
         canplay={canplay}

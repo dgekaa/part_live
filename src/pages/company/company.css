@@ -32,6 +32,9 @@
 .yesVideo .react-awesome-player-container #vjs_video_3 {
   height: 100%;
 }
+.yesVideo .react-awesome-player-container:first-child {
+  height: 100%;
+}
 
 .rowCompanyBlockStreamDesc {
   display: -webkit-box;

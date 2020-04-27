@@ -4,6 +4,7 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import "react-google-places-autocomplete/dist/assets/index.css";
 
 import { API_KEY } from "../../constants";
+import CustomImg from "../customImg/CustomImg";
 
 import { styles } from "./GoogleMapStyles.js";
 import "./googleMap.css";
@@ -110,13 +111,8 @@ const MapContainer = ({
       </Map>
 
       {isNewAddress && (
-        <img
-          className="pointPosition"
-          alt="!"
-          src={`${process.env.PUBLIC_URL}/img/location.png`}
-        />
+        <CustomImg alt="!" className="pointPosition" name={"location"} />
       )}
-
       {isNewAddress && (
         <div className="inputBtnsWrap">
           <GooglePlacesAutocomplete
@@ -124,7 +120,6 @@ const MapContainer = ({
             placeholder="Введите адрес"
             initialValue={streetName}
           />
-
           <div className="newAddressBtnWrap">
             <div
               className="chooseNewAddressBtn"

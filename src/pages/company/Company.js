@@ -242,11 +242,11 @@ const Company = (props) => {
                 </p>
                 <div className="timeBlocksDesc">
                   <div className="timeBlock">
-                    <img
+                    <CustomImg
+                      alt="clock"
+                      name={"clock"}
                       height="16"
                       width="16"
-                      alt="clock"
-                      src={`${process.env.PUBLIC_URL}/img/clock.png`}
                     />
                     <p className="rightTimeBlock">
                       <span>Время работы:</span>
@@ -254,11 +254,11 @@ const Company = (props) => {
                     </p>
                   </div>
                   <div className="timeBlock streamTime">
-                    <img
+                    <CustomImg
+                      alt="camera"
+                      name={"camera"}
                       height="16"
                       width="16"
-                      alt="camera"
-                      src={`${process.env.PUBLIC_URL}/img/camera.png`}
                     />
                     <p className="rightTimeBlock">
                       <span> Стрим:</span>
@@ -268,11 +268,11 @@ const Company = (props) => {
                     </p>
                   </div>
                   <div className="timeBlock">
-                    <img
+                    <CustomImg
                       alt="location"
+                      name={"location1"}
                       height="16"
                       width="16"
-                      src={`${process.env.PUBLIC_URL}/img/location.png`}
                     />
                     <p className="rightTimeBlock">
                       <span>Адрес: </span>
