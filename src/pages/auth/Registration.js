@@ -12,14 +12,6 @@ const Registration = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  !windowWidth && setWindowWidth(window.innerWidth);
-  useEffect(() => {
-    window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
-    };
-  });
-
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
     document.body.style.overflow = "visible";
@@ -116,19 +108,7 @@ const Registration = () => {
     return (
       <div>
         <Header
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
+          isShowMenu={isShowMenu}
           logo
           burger
           showSlideSideMenu={showSlideSideMenu}

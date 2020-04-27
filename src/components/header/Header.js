@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -10,7 +10,7 @@ import "./header.css";
 const Header = ({
   showSlideSideMenu,
   showSideMenu,
-  style,
+  isShowMenu,
   burger,
   arrow,
   logo,
@@ -18,6 +18,8 @@ const Header = ({
   let history = useHistory();
 
   const [cookies, removeCookie] = useCookies([]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const logout = () => {
     QUERY(
@@ -35,14 +37,39 @@ const Header = ({
           console.log(data.errors, " ERRORS LOGOUT");
         }
       })
-      .catch((err) => console.log(err, "  *******ERR LOGOUT"));
+      .catch((err) => console.log(err, " ERR LOGOUT"));
 
     removeCookie("origin_data");
     removeCookie("origin_id");
   };
 
+  !windowWidth && setWindowWidth(window.innerWidth);
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
+
+  const getStyle = () => {
+    if (windowWidth && windowWidth <= 760) {
+      if (isShowMenu) {
+        return {
+          animation: "toLeftFixed 0.3s ease",
+          left: "-200px",
+        };
+      } else {
+        return {
+          animation: "toRightFixed 0.3s ease",
+          left: "0px",
+        };
+      }
+    } else {
+      return {};
+    }
+  };
+
   return (
-    <div className="headerContainer" style={style}>
+    <div className="headerContainer" style={{ ...getStyle() }}>
       <div className="header">
         {logo && (
           <Link to="/home">

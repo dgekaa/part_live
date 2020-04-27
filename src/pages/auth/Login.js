@@ -20,14 +20,6 @@ const Login = () => {
   const loginRef = useRef(null);
   const [cookies, setCookie, removeCookie] = useCookies([]);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  !windowWidth && setWindowWidth(window.innerWidth);
-  useEffect(() => {
-    window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
-    };
-  });
-
   useEffect(() => {
     if (localStorage.getItem("uniqueCompanyType")) {
       localStorage.setItem("uniqueCompanyType", "");
@@ -103,19 +95,7 @@ const Login = () => {
     return (
       <div className="loginWrapper">
         <Header
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
+          isShowMenu={isShowMenu}
           logo
           burger
           showSlideSideMenu={showSlideSideMenu}

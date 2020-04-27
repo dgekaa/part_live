@@ -81,6 +81,25 @@ const Home = () => {
     };
   });
 
+  const getStyle = () => {
+    if (windowWidth && windowWidth <= 760) {
+      if (isShowMenu) {
+        return {
+          animation: "toLeft 0.3s ease",
+          position: "relative",
+          right: "200px",
+        };
+      } else {
+        return {
+          animation: "toRight 0.3s ease",
+          position: "relative",
+        };
+      }
+    } else {
+      return {};
+    }
+  };
+
   return (
     <div
       onClick={(e) => {
@@ -91,42 +110,14 @@ const Home = () => {
     >
       <div>
         <Header
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
+          isShowMenu={isShowMenu}
           logo
           burger
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
 
-        <div
-          className="homeContentWrap"
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeft 0.3s ease",
-                    position: "relative",
-                    right: "200px",
-                  }
-                : {
-                    animation: "toRight 0.3s ease",
-                    position: "relative",
-                  }
-              : {}
-          }
-        >
+        <div className="homeContentWrap" style={{ ...getStyle() }}>
           <div className="navContainer">
             <CompanyNav
               currentPage="/home"
@@ -147,21 +138,7 @@ const Home = () => {
           </div>
         </div>
 
-        <BottomMenu
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
-        />
+        <BottomMenu isShowMenu={isShowMenu} />
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

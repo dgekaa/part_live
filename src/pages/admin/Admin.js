@@ -39,7 +39,6 @@ const Admin = (props) => {
   const [enumWeekName, setEnumWeekName] = useState("");
   const [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false);
   const [streamAddressData, setStreamAddressData] = useState("");
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [clickedTime, setClickedTime] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [uniqueCompanyType, setUniqueCompanyType] = useState();
@@ -51,14 +50,6 @@ const Admin = (props) => {
   const [descOfCompany, setDescOfCompany] = useState("");
 
   const [cookies] = useCookies([]);
-
-  !windowWidth && setWindowWidth(window.innerWidth);
-
-  useEffect(() => {
-    window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
-    };
-  });
 
   useEffect(() => {
     if (cookies.origin_data) {
@@ -644,6 +635,7 @@ const Admin = (props) => {
             }}
           >
             <Header
+              isShowMenu={isShowMenu}
               logo
               burger
               arrow
@@ -1397,22 +1389,7 @@ const Admin = (props) => {
               </div>
             )}
           </div>
-          {/* <BottomMenu
-            borderTop
-            style={
-              windowWidth && windowWidth <= 760
-                ? isShowMenu
-                  ? {
-                      animation: "toLeftFixed 0.3s ease",
-                      left: "-200px",
-                    }
-                  : {
-                      animation: "toRightFixed 0.3s ease",
-                      left: "0px",
-                    }
-                : {}
-            }
-          /> */}
+
           <SlideSideMenu isShowMenu={isShowMenu} />
           {showPopupDatePicker && (
             <Popup

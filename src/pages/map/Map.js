@@ -157,6 +157,24 @@ const MapComponent = (props) => {
     }
   };
 
+  const getStyle = () => {
+    if (windowWidth && windowWidth <= 760) {
+      if (isShowMenu) {
+        return {
+          animation: "toLeftFixed 0.3s ease",
+          left: "-200px",
+        };
+      } else {
+        return {
+          animation: "toRightFixed 0.3s ease",
+          left: "0px",
+        };
+      }
+    } else {
+      return {};
+    }
+  };
+
   return (
     <div
       onClick={(e) => {
@@ -165,19 +183,7 @@ const MapComponent = (props) => {
       }}
     >
       <Header
-        style={
-          windowWidth && windowWidth <= 760
-            ? isShowMenu
-              ? {
-                  animation: "toLeftFixed 0.3s ease",
-                  left: "-200px",
-                }
-              : {
-                  animation: "toRightFixed 0.3s ease",
-                  left: "0px",
-                }
-            : {}
-        }
+        isShowMenu={isShowMenu}
         logo
         arrow
         burger
@@ -195,22 +201,7 @@ const MapComponent = (props) => {
       </div>
       {isLoading && <Loader />}
       {!isLoading && (
-        <div
-          className="mapContainer"
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
-        >
+        <div className="mapContainer" style={{ ...getStyle() }}>
           <GooggleMapReact
             options={createMapOptions}
             style={{
@@ -382,21 +373,7 @@ const MapComponent = (props) => {
         </div>
       )}
 
-      <BottomMenu
-        style={
-          windowWidth && windowWidth <= 760
-            ? isShowMenu
-              ? {
-                  animation: "toLeftFixed 0.3s ease",
-                  left: "-200px",
-                }
-              : {
-                  animation: "toRightFixed 0.3s ease",
-                  left: "0px",
-                }
-            : {}
-        }
-      />
+      <BottomMenu isShowMenu={isShowMenu} />
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>
   );

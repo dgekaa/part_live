@@ -60,6 +60,25 @@ const EditCompany = () => {
       .catch((err) => console.log(err, "EDIT ERROR"));
   }, []);
 
+  const getStyle = () => {
+    if (windowWidth && windowWidth <= 760) {
+      if (isShowMenu) {
+        return {
+          animation: "toLeft 0.3s ease",
+          position: "relative",
+          right: "200px",
+        };
+      } else {
+        return {
+          animation: "toRight 0.3s ease",
+          position: "relative",
+        };
+      }
+    } else {
+      return {};
+    }
+  };
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else if (Number(cookies.origin_id) !== 1) {
@@ -74,44 +93,15 @@ const EditCompany = () => {
         }}
       >
         <Header
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
+          isShowMenu={isShowMenu}
           logo
           burger
           arrow
-          isShowMenu={isShowMenu}
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
         {!isLoading && (
-          <div
-            className="editCompanyContent"
-            style={
-              windowWidth && windowWidth <= 760
-                ? isShowMenu
-                  ? {
-                      animation: "toLeft 0.3s ease",
-                      position: "relative",
-                      right: "200px",
-                    }
-                  : {
-                      animation: "toRight 0.3s ease",
-                      position: "relative",
-                    }
-                : {}
-            }
-          >
+          <div className="editCompanyContent" style={{ ...getStyle() }}>
             <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
             <table>
               <tbody>
@@ -159,23 +149,6 @@ const EditCompany = () => {
           </div>
         )}
         {isLoading && <Loader />}
-
-        {/* <BottomMenu
-          borderTop
-          style={
-            windowWidth && windowWidth <= 760
-              ? isShowMenu
-                ? {
-                    animation: "toLeftFixed 0.3s ease",
-                    left: "-200px",
-                  }
-                : {
-                    animation: "toRightFixed 0.3s ease",
-                    left: "0px",
-                  }
-              : {}
-          }
-        /> */}
         <SlideSideMenu isShowMenu={isShowMenu} />
       </div>
     );
