@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
 
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -84,6 +85,11 @@ const Login = () => {
       });
   };
 
+  const animateProps = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 300 },
+  });
+
   if (Number(isLogin) === 1 || Number(cookies.origin_id) === 1) {
     return <Redirect to="/editCompany" />;
   } else if (
@@ -101,25 +107,14 @@ const Login = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <div
+        <animated.div
           className="Login"
           onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
             }
           }}
-          style={
-            isShowMenu
-              ? {
-                  animation: "toLeft 0.3s ease",
-                  position: "relative",
-                  right: "200px",
-                }
-              : {
-                  animation: "toRight 0.3s ease",
-                  position: "relative",
-                }
-          }
+          style={animateProps}
         >
           <div className="authBlock">
             <h4>{!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}</h4>
@@ -162,7 +157,7 @@ const Login = () => {
             </p>
           </div>
           <SlideSideMenu isShowMenu={isShowMenu} />
-        </div>
+        </animated.div>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import smoothscroll from "smoothscroll-polyfill";
+import { useSpring, animated } from "react-spring";
 
 import QUERY from "../../query";
 import CustomImg from "../customImg/CustomImg";
@@ -75,23 +76,20 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     return localStorage.getItem("filter_type") === name;
   };
 
+  const animateProps = useSpring({
+    left: toSlideFixedNav ? -200 : 0,
+    config: {
+      duration: 300,
+    },
+  });
+
   return (
-    <div
+    <animated.div
       className="overflowClass"
-      style={
-        ({
-          ...style,
-        },
-        toSlideFixedNav
-          ? {
-              animation: "toLeftFixed 0.3s ease",
-              left: "-200px",
-            }
-          : {
-              animation: "toRightFixed 0.3s ease",
-              left: "0px",
-            })
-      }
+      style={{
+        ...style,
+        ...animateProps,
+      }}
     >
       <div
         className={"сompanyNav"}
@@ -209,7 +207,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           );
         })}
       </div>
-    </div>
+    </animated.div>
   );
 };
 

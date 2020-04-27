@@ -7,9 +7,7 @@ const Burger = ({ showSlideSideMenu, showSideMenu }) => {
     <span
       className={showSlideSideMenu ? "activeburger" : "burger"}
       onClick={() => {
-        if (!showSlideSideMenu) {
-          showSideMenu();
-        }
+        if (!showSlideSideMenu) showSideMenu();
       }}
     >
       <span></span>

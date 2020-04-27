@@ -2,9 +2,6 @@
   padding-top: 50px;
   max-width: 1000px;
   margin: 0 auto;
-  -webkit-transition: 0.3s ease all;
-  -o-transition: 0.3s ease all;
-  transition: 0.3s ease all;
 }
 
 .navContainer {
@@ -42,11 +39,9 @@
     background-color: #eef1f6;
   }
   .homeContentWrap {
+    position: relative;
     padding-top: 100px;
     width: 100%;
-    -webkit-transition: 0.3s ease all;
-    -o-transition: 0.3s ease all;
-    transition: 0.3s ease all;
     padding-bottom: 65px;
   }
   .homeContent {
@@ -60,39 +55,5 @@
   .navContainer {
     height: 0;
     margin: 0;
-  }
-}
-
-@-webkit-keyframes toLeft {
-  0% {
-    right: 0px;
-  }
-  100% {
-    right: 200px;
-  }
-}
-
-@keyframes toLeft {
-  0% {
-    right: 0px;
-  }
-  100% {
-    right: 200px;
-  }
-}
-@-webkit-keyframes toRight {
-  0% {
-    right: 200px;
-  }
-  100% {
-    right: 0px;
-  }
-}
-@keyframes toRight {
-  0% {
-    right: 200px;
-  }
-  100% {
-    right: 0px;
   }
 }

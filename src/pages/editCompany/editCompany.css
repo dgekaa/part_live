@@ -50,7 +50,7 @@
 @media screen and (max-width: 760px) {
   .editCompanyContent {
     margin: 0;
-    /* padding: 0 5px; */
+    position: relative;
     display: block;
     padding-top: 60px;
     width: 100vw;

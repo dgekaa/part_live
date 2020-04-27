@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSpring, animated } from "react-spring";
 
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import TypeNav from "../../components/typeNav/TypeNav";
@@ -81,31 +82,16 @@ const Home = () => {
     };
   });
 
-  const getStyle = () => {
-    if (windowWidth && windowWidth <= 760) {
-      if (isShowMenu) {
-        return {
-          animation: "toLeft 0.3s ease",
-          position: "relative",
-          right: "200px",
-        };
-      } else {
-        return {
-          animation: "toRight 0.3s ease",
-          position: "relative",
-        };
-      }
-    } else {
-      return {};
-    }
-  };
+  const animateProps = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 300 },
+  });
 
   return (
     <div
       onClick={(e) => {
-        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
           hideSideMenu();
-        }
       }}
     >
       <div>
@@ -116,8 +102,7 @@ const Home = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-
-        <div className="homeContentWrap" style={{ ...getStyle() }}>
+        <animated.div className="homeContentWrap" style={animateProps}>
           <div className="navContainer">
             <CompanyNav
               currentPage="/home"
@@ -136,7 +121,7 @@ const Home = () => {
               <div className="noOneCompany">Нет заведений</div>
             )}
           </div>
-        </div>
+        </animated.div>
 
         <BottomMenu isShowMenu={isShowMenu} />
       </div>

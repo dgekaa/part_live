@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect, Link } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
 
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
-import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 
@@ -60,24 +60,10 @@ const EditCompany = () => {
       .catch((err) => console.log(err, "EDIT ERROR"));
   }, []);
 
-  const getStyle = () => {
-    if (windowWidth && windowWidth <= 760) {
-      if (isShowMenu) {
-        return {
-          animation: "toLeft 0.3s ease",
-          position: "relative",
-          right: "200px",
-        };
-      } else {
-        return {
-          animation: "toRight 0.3s ease",
-          position: "relative",
-        };
-      }
-    } else {
-      return {};
-    }
-  };
+  const animateProps = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 300 },
+  });
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -87,9 +73,8 @@ const EditCompany = () => {
     return (
       <div
         onClick={(e) => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
             hideSideMenu();
-          }
         }}
       >
         <Header
@@ -101,7 +86,7 @@ const EditCompany = () => {
           showSideMenu={showSideMenu}
         />
         {!isLoading && (
-          <div className="editCompanyContent" style={{ ...getStyle() }}>
+          <animated.div className="editCompanyContent" style={animateProps}>
             <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
             <table>
               <tbody>
@@ -146,7 +131,7 @@ const EditCompany = () => {
                   })}
               </tbody>
             </table>
-          </div>
+          </animated.div>
         )}
         {isLoading && <Loader />}
         <SlideSideMenu isShowMenu={isShowMenu} />

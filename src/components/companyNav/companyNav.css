@@ -136,36 +136,3 @@
     padding-bottom: 17px;
   }
 }
-@-webkit-keyframes toLeftFixed {
-  0% {
-    left: 0px;
-  }
-  100% {
-    left: -200px;
-  }
-}
-
-@keyframes toLeftFixed {
-  0% {
-    left: 0px;
-  }
-  100% {
-    left: -200px;
-  }
-}
-@-webkit-keyframes toRightFixed {
-  0% {
-    left: -200px;
-  }
-  100% {
-    left: 0px;
-  }
-}
-@keyframes toRightFixed {
-  0% {
-    left: -200px;
-  }
-  100% {
-    left: 0px;
-  }
-}

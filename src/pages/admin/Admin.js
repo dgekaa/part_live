@@ -3,13 +3,13 @@ import { useCookies } from "react-cookie";
 import ReactCrop from "react-image-crop";
 import Dropzone from "react-dropzone";
 import { Redirect } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
 import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
-import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
@@ -603,6 +603,11 @@ const Admin = (props) => {
     );
   };
 
+  const animateProps = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 300 },
+  });
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {
@@ -615,20 +620,9 @@ const Admin = (props) => {
             }
           }}
         >
-          <div
+          <animated.div
             className="Admin"
-            style={
-              isShowMenu
-                ? {
-                    animation: "toLeft 0.3s ease",
-                    position: "relative",
-                    right: "200px",
-                  }
-                : {
-                    animation: "toRight 0.3s ease",
-                    position: "relative",
-                  }
-            }
+            style={animateProps}
             onClick={(e) => {
               if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
                 hideSideMenu();
@@ -1388,7 +1382,7 @@ const Admin = (props) => {
                 </div>
               </div>
             )}
-          </div>
+          </animated.div>
 
           <SlideSideMenu isShowMenu={isShowMenu} />
           {showPopupDatePicker && (

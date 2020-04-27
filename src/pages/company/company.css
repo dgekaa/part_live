@@ -2,9 +2,6 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 20px;
-  -webkit-transition: 0.3s ease all;
-  -o-transition: 0.3s ease all;
-  transition: 0.3s ease all;
 }
 .videoBlock {
   -webkit-box-flex: 5;
@@ -261,11 +258,9 @@
     transition: 0.3s ease all;
   }
   .Company {
-    -webkit-transition: 0.3s ease all;
-    -o-transition: 0.3s ease all;
-    transition: 0.3s ease all;
     padding: 0;
     margin-bottom: 100px;
+    position: relative;
   }
   .videoBlock {
     padding-right: 0px;
@@ -345,38 +340,7 @@
     display: none;
   }
 }
-@-webkit-keyframes toLeft {
-  0% {
-    right: 0px;
-  }
-  100% {
-    right: 200px;
-  }
-}
-@keyframes toLeft {
-  0% {
-    right: 0px;
-  }
-  100% {
-    right: 200px;
-  }
-}
-@-webkit-keyframes toRight {
-  0% {
-    right: 200px;
-  }
-  100% {
-    right: 0px;
-  }
-}
-@keyframes toRight {
-  0% {
-    right: 200px;
-  }
-  100% {
-    right: 0px;
-  }
-}
+
 @media screen and (max-width: 620px) {
   .video {
     height: 300px;

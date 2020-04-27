@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useSpring, animated } from "react-spring";
 
 import Burger from "../burger/Burger";
 import QUERY from "../../query";
@@ -50,26 +51,15 @@ const Header = ({
     };
   });
 
-  const getStyle = () => {
-    if (windowWidth && windowWidth <= 760) {
-      if (isShowMenu) {
-        return {
-          animation: "toLeftFixed 0.3s ease",
-          left: "-200px",
-        };
-      } else {
-        return {
-          animation: "toRightFixed 0.3s ease",
-          left: "0px",
-        };
-      }
-    } else {
-      return {};
-    }
-  };
+  const animateProps = useSpring({
+    left: isShowMenu ? -200 : 0,
+    config: {
+      duration: 300,
+    },
+  });
 
   return (
-    <div className="headerContainer" style={{ ...getStyle() }}>
+    <animated.div className="headerContainer" style={animateProps}>
       <div className="header">
         {logo && (
           <Link to="/home">
@@ -111,7 +101,6 @@ const Header = ({
             </div>
           )}
         </div>
-
         {burger && (
           <Burger
             showSlideSideMenu={showSlideSideMenu}
@@ -119,7 +108,7 @@ const Header = ({
           />
         )}
       </div>
-    </div>
+    </animated.div>
   );
 };
 

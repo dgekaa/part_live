@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useSpring, animated } from "react-spring";
 
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -102,6 +103,11 @@ const Registration = () => {
       });
   };
 
+  const animateProps = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 300 },
+  });
+
   if (!!Number(cookies.origin_id)) {
     return <Redirect to="/home" />;
   } else {
@@ -114,25 +120,14 @@ const Registration = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <div
+        <animated.div
           className="Login"
           onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
             }
           }}
-          style={
-            isShowMenu
-              ? {
-                  animation: "toLeft 0.3s ease",
-                  position: "relative",
-                  right: "200px",
-                }
-              : {
-                  animation: "toRight 0.3s ease",
-                  position: "relative",
-                }
-          }
+          style={animateProps}
         >
           <div className="authBlock">
             {!isSuccess && (
@@ -192,7 +187,7 @@ const Registration = () => {
             )}
           </div>
           <SlideSideMenu isShowMenu={isShowMenu} />
-        </div>
+        </animated.div>
       </div>
     );
   }

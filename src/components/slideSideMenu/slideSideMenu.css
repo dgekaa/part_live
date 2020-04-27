@@ -24,35 +24,3 @@
   padding-left: 20px;
   list-style-type: none;
 }
-@-webkit-keyframes on {
-  0% {
-    right: -200px;
-  }
-  100% {
-    right: 0;
-  }
-}
-@keyframes on {
-  0% {
-    right: -200px;
-  }
-  100% {
-    right: 0;
-  }
-}
-@-webkit-keyframes off {
-  0% {
-    right: 0px;
-  }
-  100% {
-    right: -200px;
-  }
-}
-@keyframes off {
-  0% {
-    right: 0px;
-  }
-  100% {
-    right: -200px;
-  }
-}

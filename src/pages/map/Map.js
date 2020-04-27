@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import GooggleMapReact from "google-map-react";
 import useSupercluster from "use-supercluster";
 import { Link } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -158,23 +159,10 @@ const MapComponent = (props) => {
     }
   };
 
-  const getStyle = () => {
-    if (windowWidth && windowWidth <= 760) {
-      if (isShowMenu) {
-        return {
-          animation: "toLeftFixed 0.3s ease",
-          left: "-200px",
-        };
-      } else {
-        return {
-          animation: "toRightFixed 0.3s ease",
-          left: "0px",
-        };
-      }
-    } else {
-      return {};
-    }
-  };
+  const animateProps = useSpring({
+    left: isShowMenu ? -200 : 0,
+    config: { duration: 300 },
+  });
 
   return (
     <div
@@ -202,7 +190,7 @@ const MapComponent = (props) => {
       </div>
       {isLoading && <Loader />}
       {!isLoading && (
-        <div className="mapContainer" style={{ ...getStyle() }}>
+        <animated.div className="mapContainer" style={animateProps}>
           <GooggleMapReact
             options={createMapOptions}
             style={{
@@ -364,7 +352,7 @@ const MapComponent = (props) => {
               );
             })}
           </GooggleMapReact>
-        </div>
+        </animated.div>
       )}
 
       <BottomMenu isShowMenu={isShowMenu} />

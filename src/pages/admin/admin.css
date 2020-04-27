@@ -677,6 +677,9 @@
   display: none;
 }
 @media screen and (max-width: 760px) {
+  .Admin {
+    position: relative;
+  }
   .adminContentMobile .uploadFile {
     display: flex;
     flex-direction: column;

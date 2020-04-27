@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSpring, animated } from "react-spring";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
@@ -139,24 +140,10 @@ const Company = (props) => {
     }
   };
 
-  const getStyle = () => {
-    if (windowWidth && windowWidth <= 760) {
-      if (isShowMenu) {
-        return {
-          animation: "toLeft 0.3s ease",
-          position: "relative",
-          right: "200px",
-        };
-      } else {
-        return {
-          animation: "toRight 0.3s ease",
-          position: "relative",
-        };
-      }
-    } else {
-      return {};
-    }
-  };
+  const animateProps = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 300 },
+  });
 
   return (
     <div
@@ -174,13 +161,12 @@ const Company = (props) => {
         showSlideSideMenu={showSlideSideMenu}
         showSideMenu={showSideMenu}
       />
-      <div
+      <animated.div
         className="Company"
-        style={{ ...getStyle() }}
+        style={animateProps}
         onClick={(e) => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
             hideSideMenu();
-          }
         }}
       >
         <div className="bigCompanyHeaderDesc">
@@ -348,7 +334,7 @@ const Company = (props) => {
             />
           </Popup>
         )}
-      </div>
+      </animated.div>
       <BottomMenu isShowMenu={isShowMenu} />
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useSpring, animated } from "react-spring";
 
 import QUERY from "../../query";
 
@@ -14,7 +15,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
     if (!isShowMenu) {
       setTimeout(() => {
         setShowMenu(false);
-      }, 300);
+      }, 500);
     } else {
       setShowMenu(true);
     }
@@ -43,19 +44,17 @@ const SlideSideMenu = ({ isShowMenu }) => {
     removeCookie("origin_id");
   };
 
+  const animateProps = useSpring({
+    right: isShowMenu ? 0 : -200,
+    config: { duration: 300 },
+  });
+
   return (
     <div
       className="SlideSideMenuWrap"
       style={shomMenu ? { display: "block" } : { display: "none" }}
     >
-      <div
-        className="SlideSideMenu"
-        style={
-          isShowMenu
-            ? { animation: "on 0.25s ease", right: 0 }
-            : { animation: "off 0.25s ease", right: "-200px" }
-        }
-      >
+      <animated.div className="SlideSideMenu" style={animateProps}>
         <ul className="sideMenuUl">
           <li className="sideMenuLi">
             <Link to="/home">Главная</Link>
@@ -86,7 +85,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
             )}
           </li>
         </ul>
-      </div>
+      </animated.div>
     </div>
   );
 };
