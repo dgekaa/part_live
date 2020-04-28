@@ -22,6 +22,10 @@
   -webkit-animation: opacityAnimation 1s ease;
   animation: opacityAnimation 1s ease;
 }
+.SmallCompanyBlock:hover {
+  transform: scale(1.02);
+  box-shadow: 2px 2px 7px 4px #e5e5e5;
+}
 .companyImg {
   object-fit: cover;
   -webkit-transition: 0.2s ease all;

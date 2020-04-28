@@ -208,7 +208,9 @@ const Company = (props) => {
                 <div className="mobileDescription">
                   <h3>
                     <span className="mobileCompanyType">
-                      {DATA.place.categories[0].name} "
+                      {DATA.place.categories[0] &&
+                        DATA.place.categories[0].name}{" "}
+                      "
                     </span>
                     {DATA.place.name}
                     <span className="mobileCompanyType">"</span>
@@ -288,7 +290,9 @@ const Company = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="type">{DATA.place.categories[0].name}</div>
+              <div className="type">
+                {DATA.place.categories[0] && DATA.place.categories[0].name}
+              </div>
             </div>
 
             <div className="smallMapWrapMobile">

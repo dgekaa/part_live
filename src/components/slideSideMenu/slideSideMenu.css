@@ -19,6 +19,14 @@
   padding-top: 50px;
   z-index: 3;
 }
+.SlideSideMenu li a {
+  display: block;
+  width: 100%;
+  transition: 0.3s ease all;
+}
+.SlideSideMenu li a:hover {
+  color: rgb(227, 42, 108);
+}
 .sideMenuUl {
   line-height: 30px;
   padding-left: 20px;

@@ -11,6 +11,8 @@ const SlideSideMenu = ({ isShowMenu }) => {
   const [shomMenu, setShowMenu] = useState(false);
   const [cookies, removeCookie] = useCookies([]);
 
+  const pathname = window.location.pathname;
+
   useEffect(() => {
     if (!isShowMenu) {
       setTimeout(() => {
@@ -57,22 +59,40 @@ const SlideSideMenu = ({ isShowMenu }) => {
       <animated.div className="SlideSideMenu" style={animateProps}>
         <ul className="sideMenuUl">
           <li className="sideMenuLi">
-            <Link to="/home">Главная</Link>
+            <Link
+              to="/home"
+              style={pathname === "/home" ? { color: "#e32a6c" } : {}}
+            >
+              Главная
+            </Link>
           </li>
           <li>
-            <Link to="/map">Карта</Link>
+            <Link
+              to="/map"
+              style={pathname === "/map" ? { color: "#e32a6c" } : {}}
+            >
+              Карта
+            </Link>
           </li>
           <li>
-            {console.log(
-              Number(cookies.origin_id),
-              "Number(cookies.origin_id)"
-            )}
             {Number(cookies.origin_id) === 1 && (
-              <Link to="/editCompany">К списку</Link>
+              <Link
+                to="/editCompany"
+                style={pathname === "/editCompany" ? { color: "#e32a6c" } : {}}
+              >
+                К списку
+              </Link>
             )}
           </li>
           <li>
-            {!Number(cookies.origin_id) && <Link to="/login">Вход</Link>}
+            {!Number(cookies.origin_id) && (
+              <Link
+                to="/login"
+                style={pathname === "/login" ? { color: "#e32a6c" } : {}}
+              >
+                Вход
+              </Link>
+            )}
             {!!Number(cookies.origin_id) && (
               <Link onClick={logout} to="/login">
                 Выход
@@ -81,7 +101,12 @@ const SlideSideMenu = ({ isShowMenu }) => {
           </li>
           <li>
             {!Number(cookies.origin_id) && (
-              <Link to="/registration">Регистрация</Link>
+              <Link
+                to="/registration"
+                style={pathname === "/registration" ? { color: "#e32a6c" } : {}}
+              >
+                Регистрация
+              </Link>
             )}
           </li>
         </ul>

@@ -91,7 +91,15 @@ const Header = ({
           {!!Number(cookies.origin_id) && (
             <div>
               {Number(cookies.origin_id) === 1 && (
-                <Link to="/editCompany" className="registrBtn">
+                <Link
+                  to="/editCompany"
+                  className="registrBtn"
+                  style={
+                    window.location.pathname === "/editCompany"
+                      ? { color: "#e32a6c" }
+                      : {}
+                  }
+                >
                   К списку
                 </Link>
               )}

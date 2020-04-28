@@ -31,6 +31,7 @@
   -ms-flex-align: center;
   align-items: center;
   min-width: 110px;
+  max-width: 150px;
   height: 54px;
   border: 2px solid #c4c4c4;
   cursor: pointer;
@@ -96,6 +97,9 @@
     display: flex;
     align-items: center;
   }
+  .сompanyNav:active {
+    cursor: grabbing;
+  }
   .companyNavBlock {
     min-width: 75px;
     height: 30px;
@@ -108,12 +112,18 @@
     padding-bottom: 2px;
     margin-left: 10px;
   }
+  .companyNavBlock:active {
+    cursor: grabbing;
+  }
   .companyNavBlock:last-of-type {
     border-right: none;
     border-radius: 10px;
   }
   .companyNavBlock:first-of-type {
     border-radius: 10px;
+  }
+  .сompanyNavText:active {
+    cursor: grabbing;
   }
   .сompanyNavText,
   .allText {
@@ -129,6 +139,9 @@
   }
   .companyNavLink img {
     display: none;
+  }
+  .companyNavLink:active {
+    cursor: grabbing;
   }
 }
 @media screen and (max-device-width: 760px) {
