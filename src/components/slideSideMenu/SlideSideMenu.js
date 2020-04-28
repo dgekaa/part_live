@@ -48,7 +48,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
 
   const animateProps = useSpring({
     right: isShowMenu ? 0 : -200,
-    config: { duration: 300 },
+    config: { duration: 100 },
   });
 
   return (

@@ -87,7 +87,7 @@ const Login = () => {
 
   const animateProps = useSpring({
     right: isShowMenu ? 200 : 0,
-    config: { duration: 300 },
+    config: { duration: 100 },
   });
 
   if (Number(isLogin) === 1 || Number(cookies.origin_id) === 1) {
