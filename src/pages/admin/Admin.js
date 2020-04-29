@@ -55,6 +55,7 @@ const Admin = (props) => {
   const [typeOfCompany, setTypeOfCompany] = useState("");
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
+  const [currentImage, setCurrentImage] = useState(null);
 
   const [cookies] = useCookies([]);
 
@@ -499,6 +500,7 @@ const Admin = (props) => {
 
   const onCropComplete = (crop) => {
     const canvasRef = imagePreviewCanvas.current;
+
     image64toCanvasRef(
       canvasRef,
       imgSrc,
@@ -508,16 +510,32 @@ const Admin = (props) => {
     );
   };
 
+  function submitBlob() {
+    const formData = new FormData();
+    formData.append("image", currentImage);
+
+    fetch("/api/places/9/image", {
+      method: "POST",
+      body: formData,
+      headers: {
+        Authorization: "Bearer " + cookies.origin_data,
+      },
+    })
+      .then((res) => console.log(res, "FFFFFFFFFFFf"))
+      .catch((err) => console.log(err, "ERRRRR!!!"));
+  }
+
   const downloadImgFromCanvas = () => {
     if (imgSrc && imgSrcExt) {
       const canvasRef = imagePreviewCanvas.current;
-      const imageData64 = canvasRef.toDataURL("image/" + imgSrcExt); //качаем обрезаную картинку
+      const imageData64 = canvasRef.toDataURL("image/" + imgSrcExt);
 
       const myFileName = "preview." + imgSrcExt;
 
       if (imageData64.length > 8) {
         downloadBase64File(imageData64, myFileName);
         handeleClearToDefault();
+        submitBlob();
       } else {
         alert("Нужно обрезать изображение");
       }
@@ -535,6 +553,8 @@ const Admin = (props) => {
   const verifyFile = (files) => {
     if (files && files.length > 0) {
       const currentFile = files[0];
+
+      setCurrentImage(currentFile);
       const currentFileType = currentFile.type;
       const currentFileSize = currentFile.size;
       if (currentFileSize > imageMaxSize) {
@@ -707,12 +727,12 @@ const Admin = (props) => {
                                 }
                               />
                               <br />
-                              {/* <span onClick={downloadImgFromCanvas}>
+                              <span onClick={downloadImgFromCanvas}>
                                 Скачать
                               </span>
                               <span onClick={handeleClearToDefault}>
                                 Очистить
-                              </span> */}
+                              </span>
                               <canvas
                                 className="cropCanvasImage"
                                 ref={imagePreviewCanvas}
@@ -724,6 +744,19 @@ const Admin = (props) => {
                               <p>250 X 250</p>
                             </div>
                           )}
+                          {/* !!!!!!!!!!!!!!!!!!!!!!
+                          <input
+                            type="file"
+                            onChange={(data) => {
+                              let reader = new FileReader();
+                              let file = data.target.files[0];
+                              console.log(file, "ssss");
+                              reader.onloadend = () => {
+                                submitBlob(reader.result);
+                              };
+                              submitBlob(reader.result);
+                            }}
+                          /> */}
                           <Dropzone
                             multiple={false}
                             accept={acceptedFileTypes}
@@ -751,7 +784,6 @@ const Admin = (props) => {
                               );
                             }}
                           </Dropzone>
-
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
                               <p>Название заведения:</p>
