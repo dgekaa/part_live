@@ -327,11 +327,17 @@ const MapComponent = (props) => {
                           <div className="companyImg mapNoTranslationWrap">
                             <p className="mapNoTranslationText">
                               {nextStreamTime.start_time &&
+                                nextStreamTime.day.toLowerCase() !==
+                                  "сегодня" &&
                                 "Начало трансляции в " +
                                   EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
                                   " в " +
                                   nextStreamTime.start_time}
-
+                              {nextStreamTime.start_time &&
+                                nextStreamTime.day.toLowerCase() ===
+                                  "сегодня" &&
+                                "Трансляция начнется сегодня в " +
+                                  nextStreamTime.start_time}
                               {!nextStreamTime.start_time &&
                                 "Нет предстоящих трансляций"}
                             </p>

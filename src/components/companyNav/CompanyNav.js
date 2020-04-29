@@ -148,6 +148,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           const slideBtn = React.createRef();
           return (
             <div
+              key={i}
               ref={slideBtn}
               className={
                 isClickedTypeBtn(el.name)
@@ -155,7 +156,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                   : "companyNavBlock"
               }
               style={isClickedTypeBtn(el.name) ? { background: "#e32a6c" } : {}}
-              key={i}
               onClick={(e) => {
                 clickedType(el.name);
                 setClickedTypeLocal(el.name);

@@ -25,6 +25,13 @@ import {
 import "./reactCrop.css";
 import "./admin.css";
 
+const descriptionLengthWrap = {
+  display: "flex",
+  flexDirection: "column",
+  fontSize: "10px",
+  marginTop: "10px",
+};
+
 const Admin = (props) => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
@@ -437,6 +444,8 @@ const Admin = (props) => {
     DATA.description && setDescOfCompany(DATA.description);
   }, [DATA.description]);
 
+  const descOfCompanyLimit = 300;
+
   const updatePlaceData = () => {
     if (cookies.origin_data) {
       QUERY(
@@ -837,14 +846,33 @@ const Admin = (props) => {
                             </div>
                             <div className="inputBlockWrap">
                               <p>Описание:</p>
-                              <textarea
-                                className="descTextarea"
-                                maxLength={300}
-                                value={descOfCompany}
-                                onChange={(e) =>
-                                  setDescOfCompany(e.target.value)
-                                }
-                              />
+                              <div style={descriptionLengthWrap}>
+                                <span
+                                  style={
+                                    descOfCompany.length === descOfCompanyLimit
+                                      ? {
+                                          color: "red",
+                                          paddingLeft: "10px",
+                                          textAlign: "end",
+                                        }
+                                      : {
+                                          color: "green",
+                                          paddingLeft: "10px",
+                                          textAlign: "end",
+                                        }
+                                  }
+                                >
+                                  {descOfCompany.length} / {descOfCompanyLimit}
+                                </span>
+                                <textarea
+                                  className="descTextarea"
+                                  maxLength={descOfCompanyLimit}
+                                  value={descOfCompany}
+                                  onChange={(e) =>
+                                    setDescOfCompany(e.target.value)
+                                  }
+                                />
+                              </div>
                             </div>
                             <p
                               className="saveBtnProfile"
@@ -858,7 +886,7 @@ const Admin = (props) => {
                     }
                     if (el.clicked && i === 1) {
                       return (
-                        <div className="workTimeTableWrap">
+                        <div key={i} className="workTimeTableWrap">
                           <h3>ГРАФИК РАБОТЫ</h3>
                           <table className="tableWorkDesc">
                             <tbody>
@@ -1222,7 +1250,7 @@ const Admin = (props) => {
                             <p>Описание:</p>
                             <textarea
                               className="descTextarea"
-                              maxLength={300}
+                              maxLength={descOfCompanyLimit}
                               value={descOfCompany}
                               onChange={(e) => setDescOfCompany(e.target.value)}
                             />

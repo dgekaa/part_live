@@ -166,8 +166,7 @@
   color: #4f4f4f;
   font-size: 16px;
 }
-.profileDataDesc .inputBlockWrap input,
-.profileDataDesc .inputBlockWrap textarea {
+.profileDataDesc .inputBlockWrap input {
   display: flex;
   flex: 2;
   height: 60px;
@@ -178,6 +177,7 @@
   font-weight: bold;
   padding: 0 10px;
 }
+
 .profileDataDesc .inputBlockWrap input:active,
 .profileDataDesc .inputBlockWrap input:hover,
 .profileDataDesc .inputBlockWrap input:focus,
@@ -191,13 +191,20 @@
 .profileDataDesc .inputBlockWrap .descTextarea {
   outline: none;
   overflow: hidden;
-  /* resize: none; */
-  min-height: 60px;
-  max-height: 150px;
-  margin-top: 10px;
+  resize: vertical;
+
+  min-height: 100px;
+  max-height: 500px;
+
   font-size: 14px !important;
   font-weight: normal !important;
   color: #4f4f4f;
+  flex: 2;
+  opacity: none;
+  border: none;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 .bigInputBlockWrap {
   /* height: 60px; */

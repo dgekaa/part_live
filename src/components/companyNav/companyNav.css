@@ -41,9 +41,10 @@
 .companyNavBlock:hover {
   background-color: #e32a6c;
 }
-.companyNavLink:hover {
+.companyNavBlock:hover .companyNavLink {
   color: #fff;
 }
+
 .companyNavLink {
   display: flex;
   justify-content: center;
