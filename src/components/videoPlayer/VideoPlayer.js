@@ -1,9 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import ReactAwesomePlayer from "react-awesome-player";
 
-const VideoPlayer = ({ src }) => {
+// <video
+// className="companyImg"
+// src={item.streams[0].preview}
+// autoPlay
+// onError={(err) => setPreviewError(err)}
+// />http://partycamera.org:80/klever/preview.mp4
+
+const VideoPlayer = ({ src, autoplay, onErr, muted, preview }) => {
   const options = {
+    autoplay: autoplay,
+    muted: muted,
     poster: "",
+
     fluid: true,
     sources: [
       {
@@ -14,9 +24,9 @@ const VideoPlayer = ({ src }) => {
   };
 
   const videoRef = useRef(null);
-
   useEffect(() => {
     videoRef.current.video.style.height = "100%";
+    console.log(videoRef.current, "CURRENT");
   }, []);
 
   const loadeddata = () => {};
@@ -25,9 +35,9 @@ const VideoPlayer = ({ src }) => {
   const play = () => {};
   const pause = () => {};
   const waiting = () => {};
-  const playing = () => {};
+  const playing = () => onErr && onErr(false);
   const ended = () => {};
-  const error = (err) => console.log(err, "stream error");
+  const error = () => onErr && onErr("Ошибка");
 
   return (
     <div>
@@ -43,7 +53,7 @@ const VideoPlayer = ({ src }) => {
         playing={playing}
         ended={ended}
         error={error}
-        onError={(err) => console.log(err, "ERRRRRR video")}
+        onError={() => onErr && onErr("Ошибка")}
       />
     </div>
   );

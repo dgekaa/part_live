@@ -179,7 +179,10 @@ const Company = (props) => {
                 {showStream && (
                   <div>
                     <div className="yesVideo">
-                      <VideoPlayer src={DATA.place.streams[0].url} />
+                      <VideoPlayer
+                        preview={DATA.place.streams[0].preview}
+                        src={DATA.place.streams[0].url}
+                      />
                     </div>
                     <div className="rowCompanyBlockStreamDesc">
                       <div className="rowCompanyBlockStreamInner">

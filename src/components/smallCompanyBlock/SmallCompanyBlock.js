@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 
 import CustomImg from "../customImg/CustomImg";
 import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
@@ -15,6 +16,7 @@ const SmallCompanyBlock = ({ item }) => {
   const [curDistance, setCurDistance] = useState(null);
   const [nextStreamTime, setNextStreamTime] = useState(false);
   const [previewError, setPreviewError] = useState(false);
+  const [videoError, setVideoError] = useState(null);
 
   useEffect(() => {
     isShowStreamNow(item, setShowStream, setNextStreamTime);
@@ -64,6 +66,34 @@ const SmallCompanyBlock = ({ item }) => {
     }
   };
 
+  const videoErrorHandler = (data) => {
+    console.log(data, "-------- LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLl", item.name);
+    setVideoError(data);
+  };
+
+  const showIsVideoErr = () => {
+    if (item.streams && item.streams[0] && item.streams[0].url && videoError) {
+      return (
+        <span style={{ color: "red", fontSize: "10px", fontWeight: "bold" }}>
+          Err
+        </span>
+      );
+    } else if (
+      item.streams &&
+      item.streams[0] &&
+      item.streams[0].url &&
+      !videoError
+    ) {
+      return (
+        <span style={{ color: "green", fontSize: "10px", fontWeight: "bold" }}>
+          Ok
+        </span>
+      );
+    } else {
+      return <span style={{ color: "transparent" }}>.</span>;
+    }
+  };
+
   return (
     <Link
       to={{ pathname: `/company/${item.id}` }}
@@ -99,6 +129,16 @@ const SmallCompanyBlock = ({ item }) => {
             </p>
           </div>
           <p className="companyTitle">"Супер пати всех студентов"</p>
+          {showIsVideoErr()}
+        </div>
+
+        <div style={{ display: "none" }}>
+          <VideoPlayer
+            muted={true}
+            autoplay={true}
+            onErr={videoErrorHandler}
+            src={item.streams && item.streams[0] && item.streams[0].url}
+          />
         </div>
         <div className="bottomBlockText">
           <div className="rowCompanyBlock">

@@ -6,8 +6,8 @@ const QUERY = (body, origin_data) => {
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
-        Authorization: origin_data ? "Bearer " + origin_data : ""
-      }
+        Authorization: origin_data ? "Bearer " + origin_data : "",
+      },
     })
   );
 };

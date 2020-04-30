@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie";
 import ReactCrop from "react-image-crop";
 import Dropzone from "react-dropzone";
 import { Redirect } from "react-router-dom";
+import { createUploadLink } from "apollo-upload-client";
 import { useSpring, animated } from "react-spring";
 
 import CustomImg from "../../components/customImg/CustomImg";
@@ -510,19 +511,23 @@ const Admin = (props) => {
     );
   };
 
-  function submitBlob() {
+  function submitImage() {
     const formData = new FormData();
-    formData.append("image", currentImage);
+    formData.append("file", currentImage);
 
-    fetch("/api/places/9/image", {
+    fetch("http://194.87.95.37/graphql", {
       method: "POST",
-      body: formData,
+      mode: "cors",
+      body: JSON.stringify(formData),
       headers: {
-        Authorization: "Bearer " + cookies.origin_data,
+        "Content-Type": "application/json",
+        Authorization: cookies.origin_data
+          ? "Bearer " + cookies.origin_data
+          : "",
       },
     })
-      .then((res) => console.log(res, "FFFFFFFFFFFf"))
-      .catch((err) => console.log(err, "ERRRRR!!!"));
+      .then((res) => console.log(res, "RES"))
+      .catch((err) => console.log(err, " ERR"));
   }
 
   const downloadImgFromCanvas = () => {
@@ -535,7 +540,7 @@ const Admin = (props) => {
       if (imageData64.length > 8) {
         downloadBase64File(imageData64, myFileName);
         handeleClearToDefault();
-        submitBlob();
+        submitImage();
       } else {
         alert("Нужно обрезать изображение");
       }
@@ -744,19 +749,6 @@ const Admin = (props) => {
                               <p>250 X 250</p>
                             </div>
                           )}
-                          {/* !!!!!!!!!!!!!!!!!!!!!!
-                          <input
-                            type="file"
-                            onChange={(data) => {
-                              let reader = new FileReader();
-                              let file = data.target.files[0];
-                              console.log(file, "ssss");
-                              reader.onloadend = () => {
-                                submitBlob(reader.result);
-                              };
-                              submitBlob(reader.result);
-                            }}
-                          /> */}
                           <Dropzone
                             multiple={false}
                             accept={acceptedFileTypes}
