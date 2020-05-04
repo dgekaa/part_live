@@ -3,8 +3,9 @@ import { useCookies } from "react-cookie";
 import ReactCrop from "react-image-crop";
 import Dropzone from "react-dropzone";
 import { Redirect } from "react-router-dom";
-import { createUploadLink } from "apollo-upload-client";
 import { useSpring, animated } from "react-spring";
+import styled from "styled-components";
+import Switch from "react-switch";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
@@ -15,7 +16,12 @@ import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import TimePicker from "./TimePicker";
-import { EN_SHORT_DAY_OF_WEEK, EN_SHORT_TO_RU_SHORT } from "../../constants";
+import {
+  EN_SHORT_TO_NUMBER,
+  EN_SHORT_DAY_OF_WEEK,
+  EN_SHORT_TO_RU_SHORT,
+  SHORT_DAY_OF_WEEK,
+} from "../../constants";
 import { numberDayNow } from "../../calculateTime";
 import {
   image64toCanvasRef,
@@ -26,12 +32,42 @@ import {
 import "./reactCrop.css";
 import "./admin.css";
 
-const descriptionLengthWrap = {
-  display: "flex",
-  flexDirection: "column",
-  fontSize: "10px",
-  marginTop: "10px",
-};
+const DescriptionWrap = styled.div`
+  display: flex;
+  flex-direction: column !important;
+  font-size: 10px;
+  margin-top: 10px;
+`;
+
+const LengthofDesc = styled.span`
+  padding-left: 10px;
+  text-align: end;
+  color: ${(props) =>
+    props.descOfCompany.length === props.descOfCompanyLimit ? "red" : "green"};
+`;
+
+const DisableStream = styled.span`
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  div {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const Gray16px = styled.span`
+  font-size: 16px;
+  color: #6f6f6f;
+`;
+
+const Black18px = styled.span`
+  font-size: 18px;
+  color: #000;
+`;
 
 const Admin = (props) => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
@@ -57,6 +93,7 @@ const Admin = (props) => {
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
   const [currentImage, setCurrentImage] = useState(null);
+  const [switchChecked, setSwitchChecked] = useState(null);
 
   const [cookies] = useCookies([]);
 
@@ -70,6 +107,14 @@ const Admin = (props) => {
       .then((data) => setUniqueCompanyType(data.data.categories))
       .catch((err) => console.log(err, "UNIQUE ADMIN ERR"));
   }, []);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  !windowWidth && setWindowWidth(window.innerWidth);
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
 
   const chooseNewAddress = (streetName, latLng) => {
     if (cookies.origin_data) {
@@ -280,6 +325,8 @@ const Admin = (props) => {
   };
 
   const setWorkTimeOfOneDay = () => {
+    console.log("-----------------------");
+    console.log(cookies.origin_data, "-----------------------");
     if (cookies.origin_data) {
       if (isEmptyTime) {
         //СОЗДАТЬ время работы заведения
@@ -642,6 +689,14 @@ const Admin = (props) => {
     config: { duration: 100 },
   });
 
+  const tomorrowFromDay = (day) => {
+    if (day === 6) {
+      return 0;
+    } else {
+      return day + 1;
+    }
+  };
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {
@@ -870,24 +925,14 @@ const Admin = (props) => {
                             </div>
                             <div className="inputBlockWrap">
                               <p>Описание:</p>
-                              <div style={descriptionLengthWrap}>
-                                <span
-                                  style={
-                                    descOfCompany.length === descOfCompanyLimit
-                                      ? {
-                                          color: "red",
-                                          paddingLeft: "10px",
-                                          textAlign: "end",
-                                        }
-                                      : {
-                                          color: "green",
-                                          paddingLeft: "10px",
-                                          textAlign: "end",
-                                        }
-                                  }
+                              <DescriptionWrap>
+                                <LengthofDesc
+                                  descOfCompany={descOfCompany}
+                                  descOfCompanyLimit={descOfCompanyLimit}
                                 >
                                   {descOfCompany.length} / {descOfCompanyLimit}
-                                </span>
+                                </LengthofDesc>
+
                                 <textarea
                                   className="descTextarea"
                                   maxLength={descOfCompanyLimit}
@@ -896,7 +941,7 @@ const Admin = (props) => {
                                     setDescOfCompany(e.target.value)
                                   }
                                 />
-                              </div>
+                              </DescriptionWrap>
                             </div>
                             <p
                               className="saveBtnProfile"
@@ -921,7 +966,22 @@ const Admin = (props) => {
                                   )[el.day];
                                   return (
                                     <tr key={i}>
-                                      <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
+                                      <td>
+                                        {EN_SHORT_TO_RU_SHORT[el.day]}
+                                        {oneDay.start_time &&
+                                          (oneDay.start_time.split(":")[0] *
+                                            3600 +
+                                            oneDay.start_time.split(":")[1] *
+                                              60 <=
+                                          oneDay.end_time.split(":")[0] * 3600 +
+                                            oneDay.end_time.split(":")[1] * 60
+                                            ? ""
+                                            : `-${
+                                                SHORT_DAY_OF_WEEK[
+                                                  tomorrowFromDay(i)
+                                                ]
+                                              }`)}
+                                      </td>
                                       <td
                                         style={
                                           numberDayNow === i
@@ -986,7 +1046,22 @@ const Admin = (props) => {
                                   )[el.day];
                                   return (
                                     <tr key={i}>
-                                      <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
+                                      <td>
+                                        {EN_SHORT_TO_RU_SHORT[el.day]}
+                                        {oneDay.start_time &&
+                                          (oneDay.start_time.split(":")[0] *
+                                            3600 +
+                                            oneDay.start_time.split(":")[1] *
+                                              60 <=
+                                          oneDay.end_time.split(":")[0] * 3600 +
+                                            oneDay.end_time.split(":")[1] * 60
+                                            ? ""
+                                            : `-${
+                                                SHORT_DAY_OF_WEEK[
+                                                  tomorrowFromDay(i)
+                                                ]
+                                              }`)}
+                                      </td>
                                       <td
                                         style={
                                           numberDayNow === i
@@ -1046,6 +1121,11 @@ const Admin = (props) => {
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
                               <VideoPlayer
+                                preview={
+                                  DATA.streams &&
+                                  DATA.streams[0] &&
+                                  DATA.streams[0].preview
+                                }
                                 src={
                                   DATA.streams &&
                                   DATA.streams[0] &&
@@ -1054,6 +1134,20 @@ const Admin = (props) => {
                               />
                             </div>
                           )}
+                          <DisableStream>
+                            <div>
+                              <Black18px>Отключить стрим</Black18px>
+                              <Gray16px>Выключить до следующего дня</Gray16px>
+                            </div>
+                            <Switch
+                              onChange={setSwitchChecked}
+                              checked={switchChecked}
+                              onColor="#e32a6c"
+                              offColor="#999"
+                              uncheckedIcon={false}
+                              checkedIcon={false}
+                            />
+                          </DisableStream>
                           <div className="chooseStreamAddressDesc">
                             <div className="cameraAddressWrapper">
                               <span className="cameraAddresLable">
@@ -1101,9 +1195,8 @@ const Admin = (props) => {
                   {!!DATA.streams && DATA.streams[0] && (
                     <div className="videoWrapAdminMobile">
                       <VideoPlayer
-                        src={
-                          DATA.streams && DATA.streams[0] && DATA.streams[0].url
-                        }
+                        preview={DATA.streams[0].preview}
+                        src={DATA.streams[0].url}
                       />
                     </div>
                   )}
@@ -1440,7 +1533,8 @@ const Admin = (props) => {
           {showPopupDatePicker && (
             <Popup
               togglePopup={togglePopupDatePicker}
-              wrpaStyle={{ alignItems: "flex-end" }}
+              wrpaStyle={windowWidth <= 760 ? { alignItems: "flex-end" } : {}}
+              style={windowWidth <= 760 ? {} : { borderRadius: "5px" }}
             >
               <div className="popupWrapper">
                 <span
@@ -1450,13 +1544,30 @@ const Admin = (props) => {
                 <div className="TimePickerContainer">
                   <TimePicker
                     realTimeInPicker={startRealTimeInPicker}
-                    timePickerName=""
+                    timePickerName={
+                      EN_SHORT_TO_RU_SHORT[enumWeekName] ||
+                      EN_SHORT_TO_RU_SHORT[clickedTime.day]
+                    }
                     setTime={setStartTime}
                   />
                   <span className="space"></span>
                   <TimePicker
                     realTimeInPicker={endRealTimeInPicker}
-                    timePickerName=""
+                    timePickerName={
+                      startTimePicker.split(":")[0] * 3600 +
+                        startTimePicker.split(":")[1] * 60 <=
+                      endTimePicker.split(":")[0] * 3600 +
+                        endTimePicker.split(":")[1] * 60
+                        ? EN_SHORT_TO_RU_SHORT[enumWeekName] ||
+                          EN_SHORT_TO_RU_SHORT[clickedTime.day]
+                        : SHORT_DAY_OF_WEEK[
+                            tomorrowFromDay(
+                              EN_SHORT_TO_NUMBER[
+                                enumWeekName || clickedTime.day
+                              ]
+                            )
+                          ]
+                    }
                     setTime={setEndTime}
                   />
                 </div>

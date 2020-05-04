@@ -21,6 +21,16 @@ export const EN_SHORT_TO_RU_LONG = {
   Sat: "суббота",
   Sun: "воскресенье",
 };
+
+export const EN_SHORT_TO_NUMBER = {
+  Mon: 0,
+  Tue: 1,
+  Wed: 2,
+  Thu: 3,
+  Fri: 4,
+  Sat: 5,
+  Sun: 6,
+};
 export const EN_SHORT_TO_RU_LONG_V_P = {
   Mon: "понедельник",
   Tue: "вторник",

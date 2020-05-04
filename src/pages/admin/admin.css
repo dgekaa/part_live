@@ -141,6 +141,7 @@
 .profileDataDesc .inputBlockWrap .saveBtn {
   width: 200px;
 }
+
 .saveBtnProfile {
   color: #fff;
   font-weight: bold;
@@ -391,33 +392,15 @@
 }
 
 .popupWrapper {
+  border-radius: 5px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100vw;
-  height: calc(100vh - 100px);
+
   padding: 20px;
 }
-.closePopupBtn {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  top: 115px;
-  right: 10px;
-  position: absolute;
-  cursor: pointer;
-}
-.closePopupBtn::before {
-  content: "";
-  width: 30px;
-  height: 2px;
-  position: absolute;
-  z-index: 5;
-  right: 0px;
-  top: 9px;
-  transform: rotate(45deg);
-  background-color: #000;
-}
+
 .uploadFile {
   display: flex;
   justify-content: space-between;
@@ -474,6 +457,20 @@
 .pickFileBtn:hover {
   background-color: #eee;
 }
+.closePopupBtn {
+  display: none;
+}
+.closePopupBtn::before {
+  content: "";
+  width: 30px;
+  height: 2px;
+  position: absolute;
+  z-index: 5;
+  right: 0px;
+  top: 9px;
+  transform: rotate(45deg);
+  background-color: #000;
+}
 .closePopupBtn::after {
   content: "";
   width: 30px;
@@ -484,6 +481,14 @@
   z-index: 5;
   transform: rotate(-45deg);
   background-color: #000;
+}
+.closePopupBtn:hover::before {
+  background: #e32a6c;
+  transition: 0.3s ease all;
+}
+.closePopupBtn:hover::after {
+  background: #e32a6c;
+  transition: 0.3s ease all;
 }
 .cameraAddressWrapper {
   width: 80%;
@@ -522,8 +527,6 @@
   border: none;
   border-bottom: 1px solid #e5e5e5;
   border-radius: 0;
-}
-.chooseStreamAddressDesc input {
 }
 
 .chooseStreamAddress .chooseStreamAddressSaveBtn {
@@ -572,8 +575,11 @@
   height: 45px;
   line-height: 45px;
 }
-.timePickerWrap {
+.saveBtn:hover {
+  opacity: 0.8;
+  transition: 0.3s ease all;
 }
+
 .TimePickerContainer {
   display: flex;
   flex-direction: row;
@@ -658,6 +664,18 @@
   border-radius: 2px;
   transform: rotate(-45deg);
 }
+.topArrow:hover::after {
+  background-color: #e32a6c;
+}
+.topArrow:hover::before {
+  background-color: #e32a6c;
+}
+.bottomArrow:hover::after {
+  background-color: #e32a6c;
+}
+.bottomArrow:hover::before {
+  background-color: #e32a6c;
+}
 .bottomArrow::after {
   content: "";
   width: 15px;
@@ -684,6 +702,24 @@
   display: none;
 }
 @media screen and (max-width: 760px) {
+  .closePopupBtn {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    top: 115px;
+    right: 10px;
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .popupWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100vw;
+    height: calc(100vh - 100px);
+    padding: 20px;
+  }
   .Admin {
     position: relative;
   }

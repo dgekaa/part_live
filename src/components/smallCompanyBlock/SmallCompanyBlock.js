@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 
+import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 import CustomImg from "../customImg/CustomImg";
 import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
@@ -67,7 +67,7 @@ const SmallCompanyBlock = ({ item }) => {
   };
 
   const videoErrorHandler = (data) => {
-    console.log(data, "-------- LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLl", item.name);
+    console.log(data, "WWWWWWWWWWWWWWWWWWWWWWWWWWWw");
     setVideoError(data);
   };
 

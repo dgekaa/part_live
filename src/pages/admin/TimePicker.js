@@ -57,9 +57,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
           </p>
           <span
             className="bottomArrow"
-            onClick={(e) => {
-              clickHandlerBottom(e, 24);
-            }}
+            onClick={(e) => clickHandlerBottom(e, 24)}
           ></span>
         </div>
         <p className="twoDots">:</p>
