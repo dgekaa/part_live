@@ -1,5 +1,4 @@
 const QUERY = (body, origin_data) => {
-  console.log(origin_data, "_____________________origin_data !!!!!!!!!!!");
   return Promise.resolve(
     fetch("http://194.87.95.37/graphql", {
       method: "POST",
