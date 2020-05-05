@@ -44,6 +44,10 @@ const LengthofDesc = styled.span`
   text-align: end;
   color: ${(props) =>
     props.descOfCompany.length === props.descOfCompanyLimit ? "red" : "green"};
+  @media (max-width: 760px) {
+    width: 100%;
+    font-size: 10px;
+  }
 `;
 
 const DisableStream = styled.span`
@@ -799,7 +803,12 @@ const Admin = (props) => {
                               ></canvas>
                             </div>
                           ) : (
-                            <div className="previewPhoto">
+                            <div
+                              className="previewPhoto"
+                              onClick={() =>
+                                document.querySelector(".previewRef").click()
+                              }
+                            >
                               <p>Загрузить фото</p>
                               <p>250 X 250</p>
                             </div>
@@ -816,7 +825,7 @@ const Admin = (props) => {
                               return (
                                 <section>
                                   <div
-                                    className="changePhotoBlock"
+                                    className="changePhotoBlock previewRef"
                                     {...getRootProps()}
                                   >
                                     <input
@@ -1239,7 +1248,12 @@ const Admin = (props) => {
                                 ></canvas>
                               </div>
                             ) : (
-                              <div className="previewPhoto">
+                              <div
+                                className="previewPhoto"
+                                onClick={() =>
+                                  document.querySelector(".previewRef").click()
+                                }
+                              >
                                 <p>Загрузить фото</p>
                                 <p>250 X 250</p>
                               </div>
@@ -1260,7 +1274,7 @@ const Admin = (props) => {
                                       {...getRootProps()}
                                     >
                                       <input
-                                        className="changePhotoInput"
+                                        className="changePhotoInput previewRef"
                                         {...getInputProps()}
                                       />
                                       <p className="changePhoto">
@@ -1365,6 +1379,12 @@ const Admin = (props) => {
                           </div>
                           <div className="inputBlockWrap">
                             <p>Описание:</p>
+                            <LengthofDesc
+                              descOfCompany={descOfCompany}
+                              descOfCompanyLimit={descOfCompanyLimit}
+                            >
+                              {descOfCompany.length} / {descOfCompanyLimit}
+                            </LengthofDesc>
                             <textarea
                               className="descTextarea"
                               maxLength={descOfCompanyLimit}

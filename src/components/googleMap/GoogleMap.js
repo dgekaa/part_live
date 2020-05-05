@@ -96,6 +96,13 @@ const MapContainer = ({
         initialCenter={initialCenter}
         center={toCenter}
         styles={styles}
+        zoomControl={false}
+        mapTypeControl={false}
+        scaleControl={false}
+        streetViewControl={false}
+        panControl={false}
+        rotateControl={false}
+        fullscreenControl={false}
       >
         <Marker
           onClick={onMarkerClick}
