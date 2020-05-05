@@ -14,11 +14,11 @@ const LoadingContainer = (props) => <div></div>;
 const MapContainer = ({
   google,
   togglePopupGoogleMap,
-  initialCenterMap, //изначальный центр карты или центр минска
-  chooseNewAddress, //выбор адреса (street latLng)
-  isNewAddress, //функционал для выбора адреса
+  initialCenterMap,
+  chooseNewAddress,
+  isNewAddress,
   styleContainerMap,
-  closeBtn, //крестик
+  closeBtn,
 }) => {
   const initialCenter = initialCenterMap || {
     lat: 53.904241,
@@ -86,6 +86,7 @@ const MapContainer = ({
   return (
     <div className="MapContainerStyle" style={styleContainerMap}>
       <Map
+        gestureHandling="greedy" //убрал свайп карты двумя пальцами
         scrollwheel={true}
         className="myMap"
         google={google}
