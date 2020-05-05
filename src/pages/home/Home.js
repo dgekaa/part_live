@@ -16,7 +16,6 @@ const Home = () => {
   const [DATA, setDATA] = useState([]);
   const [companyData, setCompanyData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [windowWidth, setWindowWidth] = useState();
 
   useEffect(() => {
     QUERY({
@@ -73,11 +72,8 @@ const Home = () => {
     setIsShowMenu(true);
   };
 
-  !windowWidth && setWindowWidth(window.innerWidth);
-
   useEffect(() => {
     window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
       hideSideMenu();
     };
   });
