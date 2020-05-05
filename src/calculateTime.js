@@ -74,8 +74,8 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
       // идет видео за вчерашний день ещe
       setShowStream(true);
     } else if (
-      startTodayStreamMS > endTodayStreamMS &&
-      currentTimeMS > startTodayStreamMS
+      startTodayStreamMS >= endTodayStreamMS &&
+      currentTimeMS >= startTodayStreamMS
     ) {
       // если видео началось сегодня и закончилось завтра
       setShowStream(true);
