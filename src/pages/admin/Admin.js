@@ -543,7 +543,7 @@ const Admin = (props) => {
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [aspect, setAspect] = useState(1 / 1);
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(1.5);
   const [imgSrc, setImgSrc] = useState(null);
   const [naturalImageSize, setNaturalImageSize] = useState({});
   const [currentImageSize, setCurrentImageSize] = useState({});
@@ -1296,6 +1296,9 @@ const Admin = (props) => {
                                     containerStyle: {
                                       maxHeight: "250px",
                                     },
+                                    mediaStyle: {
+                                      maxHeight: "250px",
+                                    },
                                   }}
                                   image={imgSrc}
                                   crop={crop}
@@ -1320,12 +1323,12 @@ const Admin = (props) => {
                                   }}
                                 />
                                 <br />
-                                <span onClick={downloadImgFromCanvas}>
+                                {/* <span onClick={downloadImgFromCanvas}>
                                   Скачать
                                 </span>
                                 <span onClick={handeleClearToDefault}>
                                   Очистить
-                                </span>
+                                </span> */}
                                 <canvas
                                   className="cropCanvasImage"
                                   ref={imagePreviewCanvas}
