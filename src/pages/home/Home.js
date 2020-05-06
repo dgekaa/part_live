@@ -30,28 +30,31 @@ const Home = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        const left = [],
-          middle = [],
-          right = [];
-        data.data.places.forEach((el, i) => {
-          if (el.streams && el.streams[0] && el.streams[0].url) {
-            fetch(el.streams[0].url)
-              .then((res) => {
-                if (res.ok) {
-                  left.push(el);
-                } else {
-                  middle.push(el);
-                }
-                setIsLoading(false);
+        setIsLoading(false);
+        setCompanyData(data.data.places);
+        setDATA(data.data.places);
+        // const left = [],
+        //   middle = [],
+        //   right = [];
+        // data.data.places.forEach((el, i) => {
+        //   if (el.streams && el.streams[0] && el.streams[0].url) {
+        //     fetch(el.streams[0].url)
+        //       .then((res) => {
+        //         if (res.ok) {
+        //           left.push(el);
+        //         } else {
+        //           middle.push(el);
+        //         }
+        //         setIsLoading(false);
 
-                setCompanyData([...left, ...middle, ...right]);
-                setDATA([...left, ...middle, ...right]);
-              })
-              .catch((err) => console.log(err, "video status err"));
-          } else {
-            right.push(el);
-          }
-        });
+        //         setCompanyData([...left, ...middle, ...right]);
+        //         setDATA([...left, ...middle, ...right]);
+        //       })
+        //       .catch((err) => console.log(err, "video status err"));
+        //   } else {
+        //     right.push(el);
+        //   }
+        // });
       })
       .catch((err) => console.log(err, "HOME DATA ERR"));
   }, []);

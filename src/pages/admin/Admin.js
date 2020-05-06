@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
-import ReactCrop from "react-image-crop";
+import Cropper from "react-easy-crop";
 import Dropzone from "react-dropzone";
 import { Redirect } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
@@ -29,7 +29,6 @@ import {
   downloadBase64File,
 } from "./EncodeToBase64";
 
-import "./reactCrop.css";
 import "./admin.css";
 
 const MobileAdminMenuTitle = styled.p`
@@ -542,7 +541,9 @@ const Admin = (props) => {
 
   document.body.style.background = "#fff";
 
-  const [crop, setCrop] = useState({ aspect: 1 / 1, width: 100 });
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [aspect, setAspect] = useState(1 / 1);
+  const [zoom, setZoom] = useState(1);
   const [imgSrc, setImgSrc] = useState(null);
   const [naturalImageSize, setNaturalImageSize] = useState({});
   const [currentImageSize, setCurrentImageSize] = useState({});
@@ -568,24 +569,24 @@ const Admin = (props) => {
     );
   };
 
-  function submitImage() {
-    const formData = new FormData();
-    formData.append("file", currentImage);
+  // function submitImage() {
+  //   const formData = new FormData();
+  //   formData.append("file", currentImage);
 
-    fetch("http://194.87.95.37/graphql", {
-      method: "POST",
-      mode: "cors",
-      body: JSON.stringify(formData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: cookies.origin_data
-          ? "Bearer " + cookies.origin_data
-          : "",
-      },
-    })
-      .then((res) => console.log(res, "RES"))
-      .catch((err) => console.log(err, " ERR"));
-  }
+  //   fetch("http://194.87.95.37/graphql", {
+  //     method: "POST",
+  //     mode: "cors",
+  //     body: JSON.stringify(formData),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: cookies.origin_data
+  //         ? "Bearer " + cookies.origin_data
+  //         : "",
+  //     },
+  //   })
+  //     .then((res) => console.log(res, "RES"))
+  //     .catch((err) => console.log(err, " ERR"));
+  // }
 
   const downloadImgFromCanvas = () => {
     if (imgSrc && imgSrcExt) {
@@ -597,7 +598,7 @@ const Admin = (props) => {
       if (imageData64.length > 8) {
         downloadBase64File(imageData64, myFileName);
         handeleClearToDefault();
-        submitImage();
+        // submitImage();
       } else {
         alert("Нужно обрезать изображение");
       }
@@ -689,7 +690,7 @@ const Admin = (props) => {
             {oneDay.start_time}{" "}
             <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
             {oneDay.end_time}
-            <span className="dayOfWeekGray"> {nextDay()}</span>
+            <span> {nextDay()}</span>
           </p>
         );
       }
@@ -731,10 +732,6 @@ const Admin = (props) => {
       return day + 1;
     }
   };
-
-  useEffect(() => {
-    console.log(crop, "CROP");
-  }, [crop]);
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -812,35 +809,59 @@ const Admin = (props) => {
                       return (
                         <div key={i}>
                           {imgSrc ? (
-                            <div className="cropWrapper">
-                              <ReactCrop
-                                src={imgSrc}
-                                crop={crop}
-                                onChange={(newCrop) => {
-                                  if (!newCrop.width || !newCrop.height) {
-                                  } else {
-                                    setCrop(newCrop);
-                                  }
+                            <div>
+                              <div
+                                className="cropWrapper"
+                                style={{
+                                  position: "relative",
+                                  height: "250px",
+                                  background: "#fff",
                                 }}
-                                onComplete={(crop) => onCropComplete(crop)}
-                                onImageLoaded={({ width, height }) => {
-                                  setCurrentImageSize({
-                                    width,
-                                    height,
-                                  });
-                                }}
-                              />
-                              <br />
-                              <span onClick={downloadImgFromCanvas}>
+                              >
+                                <Cropper
+                                  style={{
+                                    containerStyle: {
+                                      background: "#fff",
+                                      maxWidth: "250px",
+                                      maxHeight: "250px",
+                                    },
+                                  }}
+                                  image={imgSrc}
+                                  crop={crop}
+                                  zoom={zoom}
+                                  onZoomChange={setZoom}
+                                  aspect={aspect}
+                                  onCropChange={setCrop}
+                                  onCropComplete={(
+                                    croppedArea,
+                                    croppedAreaPixels
+                                  ) => {
+                                    onCropComplete(croppedAreaPixels);
+                                  }}
+                                  onMediaLoaded={({
+                                    naturalWidth,
+                                    naturalHeight,
+                                  }) => {
+                                    setCurrentImageSize({
+                                      width: naturalWidth,
+                                      height: naturalHeight,
+                                    });
+                                  }}
+                                />
+                                <canvas
+                                  className="cropCanvasImage"
+                                  ref={imagePreviewCanvas}
+                                ></canvas>
+                              </div>
+                              {/* <span
+                                onClick={downloadImgFromCanvas}
+                                style={{ position: "relative", top: "-280px" }}
+                              >
                                 Скачать
                               </span>
                               <span onClick={handeleClearToDefault}>
                                 Очистить
-                              </span>
-                              <canvas
-                                className="cropCanvasImage"
-                                ref={imagePreviewCanvas}
-                              ></canvas>
+                              </span> */}
                             </div>
                           ) : (
                             <div
@@ -1262,31 +1283,49 @@ const Admin = (props) => {
                         <div className="uploadFileContainer">
                           <div className="uploadFile">
                             {imgSrc ? (
-                              <div className="cropWrapper">
-                                <ReactCrop
-                                  src={imgSrc}
-                                  crop={crop}
-                                  onChange={(newCrop) => {
-                                    if (!newCrop.width || !newCrop.height) {
-                                    } else {
-                                      setCrop(newCrop);
-                                    }
+                              <div
+                                className="cropWrapper"
+                                style={{
+                                  position: "relative",
+                                  height: "250px",
+                                  background: "#fff",
+                                }}
+                              >
+                                <Cropper
+                                  style={{
+                                    containerStyle: {
+                                      maxHeight: "250px",
+                                    },
                                   }}
-                                  onComplete={(crop) => onCropComplete(crop)}
-                                  onImageLoaded={({ width, height }) =>
+                                  image={imgSrc}
+                                  crop={crop}
+                                  zoom={zoom}
+                                  onZoomChange={setZoom}
+                                  aspect={aspect}
+                                  onCropChange={setCrop}
+                                  onCropComplete={(
+                                    croppedArea,
+                                    croppedAreaPixels
+                                  ) => {
+                                    onCropComplete(croppedAreaPixels);
+                                  }}
+                                  onMediaLoaded={({
+                                    naturalWidth,
+                                    naturalHeight,
+                                  }) => {
                                     setCurrentImageSize({
-                                      width,
-                                      height,
-                                    })
-                                  }
+                                      width: naturalWidth,
+                                      height: naturalHeight,
+                                    });
+                                  }}
                                 />
                                 <br />
-                                {/* <span onClick={downloadImgFromCanvas}>
+                                <span onClick={downloadImgFromCanvas}>
                                   Скачать
                                 </span>
                                 <span onClick={handeleClearToDefault}>
                                   Очистить
-                                </span> */}
+                                </span>
                                 <canvas
                                   className="cropCanvasImage"
                                   ref={imagePreviewCanvas}
