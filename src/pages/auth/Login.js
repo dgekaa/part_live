@@ -136,6 +136,7 @@ const Login = () => {
               {!isForgetPass && (
                 <>
                   <input
+                    autocomplete="current-password"
                     type="password"
                     name="password"
                     placeholder="password"
