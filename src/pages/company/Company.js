@@ -128,13 +128,21 @@ const Company = (props) => {
   };
 
   const whenIsTranslation = () => {
-    if (nextStreamTime.start_time) {
+    if (
+      nextStreamTime.start_time &&
+      nextStreamTime.day.toLowerCase() !== "сегодня"
+    ) {
       return (
         "Трансляция начнется в " +
         EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
         " в " +
         nextStreamTime.start_time
       );
+    } else if (
+      nextStreamTime.start_time &&
+      nextStreamTime.day.toLowerCase() === "сегодня"
+    ) {
+      return "Трансляция начнется сегодня в " + nextStreamTime.start_time;
     } else if (!nextStreamTime.start_time) {
       return "Нет предстоящих трансляций";
     }

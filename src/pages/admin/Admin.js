@@ -536,7 +536,7 @@ const Admin = (props) => {
 
   document.body.style.background = "#fff";
 
-  const [crop, setCrop] = useState({ aspect: 1 / 1 });
+  const [crop, setCrop] = useState({ aspect: 1 / 1, width: 100 });
   const [imgSrc, setImgSrc] = useState(null);
   const [naturalImageSize, setNaturalImageSize] = useState({});
   const [currentImageSize, setCurrentImageSize] = useState({});
@@ -701,6 +701,10 @@ const Admin = (props) => {
     }
   };
 
+  useEffect(() => {
+    console.log(crop, "CROP");
+  }, [crop]);
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {
@@ -781,14 +785,19 @@ const Admin = (props) => {
                               <ReactCrop
                                 src={imgSrc}
                                 crop={crop}
-                                onChange={(newCrop) => setCrop(newCrop)}
+                                onChange={(newCrop) => {
+                                  if (!newCrop.width || !newCrop.height) {
+                                  } else {
+                                    setCrop(newCrop);
+                                  }
+                                }}
                                 onComplete={(crop) => onCropComplete(crop)}
-                                onImageLoaded={({ width, height }) =>
+                                onImageLoaded={({ width, height }) => {
                                   setCurrentImageSize({
                                     width,
                                     height,
-                                  })
-                                }
+                                  });
+                                }}
                               />
                               <br />
                               <span onClick={downloadImgFromCanvas}>
@@ -1226,7 +1235,12 @@ const Admin = (props) => {
                                 <ReactCrop
                                   src={imgSrc}
                                   crop={crop}
-                                  onChange={(newCrop) => setCrop(newCrop)}
+                                  onChange={(newCrop) => {
+                                    if (!newCrop.width || !newCrop.height) {
+                                    } else {
+                                      setCrop(newCrop);
+                                    }
+                                  }}
                                   onComplete={(crop) => onCropComplete(crop)}
                                   onImageLoaded={({ width, height }) =>
                                     setCurrentImageSize({

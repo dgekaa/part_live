@@ -55,7 +55,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   }, [uniqueCompanyType]);
 
   const scrollBtnToCenter = (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     const btnPositionToCenter =
       slideBtnMenu.current.offsetWidth / 2 -
       (e.currentTarget.offsetLeft -
@@ -68,6 +68,25 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     });
   };
 
+  const firstScrollBtnToCenter = () => {
+    if (localStorage.getItem("uniqueCompanyType")) {
+      document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
+        if (isClickedTypeBtn(el.innerText)) {
+          const btnPositionToCenter =
+            slideBtnMenu.current.offsetWidth / 2 -
+            (el.offsetLeft -
+              slideBtnMenu.current.scrollLeft +
+              el.offsetWidth / 2);
+
+          slideBtnMenu.current.scrollTo({
+            behavior: "smooth",
+            left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
+          });
+        }
+      });
+    }
+  };
+
   const isClickedAllBtn = () => {
     return !clickedTypeLocal && !localStorage.getItem("filter_type");
   };
@@ -75,6 +94,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const isClickedTypeBtn = (name) => {
     return localStorage.getItem("filter_type") === name;
   };
+
+  useEffect(() => {
+    firstScrollBtnToCenter();
+  }, []);
 
   const animateProps = useSpring({
     left: toSlideFixedNav ? -200 : 0,
