@@ -381,8 +381,9 @@ textarea {
 }
 .workSchedule table tr td,
 .streamSchedule table tr td {
+  font-weight: bold;
   text-align: center;
-  border: 1px solid #eee;
+  border: 1px solid #bdbdbd;
   padding: 8px 10px;
   font-size: 16px;
 }
@@ -832,6 +833,16 @@ textarea {
     padding: 30px 0;
     text-align: center;
     cursor: pointer;
+  }
+  .dayOfWeekScheduleMobile {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  .dayOfWeekGray {
+    font-size: 14px;
+    color: #909090;
+    text-transform: lowercase;
   }
 }
 @media screen and (max-width: 560px) {

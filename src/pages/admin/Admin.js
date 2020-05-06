@@ -32,6 +32,12 @@ import {
 import "./reactCrop.css";
 import "./admin.css";
 
+const MobileAdminMenuTitle = styled.p`
+  font-size: 17px;
+  text-align: center;
+  padding-top: 20px;
+`;
+
 const DescriptionWrap = styled.div`
   display: flex;
   flex-direction: column !important;
@@ -39,7 +45,7 @@ const DescriptionWrap = styled.div`
   margin-top: 10px;
 `;
 
-const LengthofDesc = styled.span`
+const LengthofDescription = styled.span`
   padding-left: 10px;
   text-align: end;
   color: ${(props) =>
@@ -659,9 +665,34 @@ const Admin = (props) => {
     }
   };
 
-  const isWorkTimeOrDayOff = (oneDay) => {
+  const isWorkTimeOrDayOff = (oneDay, i) => {
+    const nextDay = () => " (" + SHORT_DAY_OF_WEEK[tomorrowFromDay(i)] + ") ";
+    const thisDay = () => " (" + SHORT_DAY_OF_WEEK[i] + ") ";
+
     if (oneDay && oneDay.id) {
-      return oneDay.start_time + " - " + oneDay.end_time;
+      if (
+        oneDay.start_time.split(":")[0] * 3600 +
+          oneDay.start_time.split(":")[1] * 60 <=
+        oneDay.end_time.split(":")[0] * 3600 +
+          oneDay.end_time.split(":")[1] * 60
+      ) {
+        return (
+          <p>
+            {oneDay.start_time}{" "}
+            <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
+            {oneDay.end_time} <span className="dayOfWeekGray">{thisDay()}</span>
+          </p>
+        );
+      } else {
+        return (
+          <p>
+            {oneDay.start_time}{" "}
+            <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
+            {oneDay.end_time}
+            <span className="dayOfWeekGray"> {nextDay()}</span>
+          </p>
+        );
+      }
     } else {
       return "Выходной";
     }
@@ -944,12 +975,12 @@ const Admin = (props) => {
                             <div className="inputBlockWrap">
                               <p>Описание:</p>
                               <DescriptionWrap>
-                                <LengthofDesc
+                                <LengthofDescription
                                   descOfCompany={descOfCompany}
                                   descOfCompanyLimit={descOfCompanyLimit}
                                 >
                                   {descOfCompany.length} / {descOfCompanyLimit}
-                                </LengthofDesc>
+                                </LengthofDescription>
 
                                 <textarea
                                   className="descTextarea"
@@ -1032,7 +1063,7 @@ const Admin = (props) => {
                                           }
                                         }}
                                       >
-                                        {isWorkTimeOrDayOff(oneDay)}
+                                        {isWorkTimeOrDayOff(oneDay, i)}
                                       </td>
                                       <td
                                         className="doAsDayOfTd"
@@ -1116,7 +1147,7 @@ const Admin = (props) => {
                                           }
                                         }}
                                       >
-                                        {isWorkTimeOrDayOff(oneDay)}
+                                        {isWorkTimeOrDayOff(oneDay, i)}
                                       </td>
                                       <td
                                         className="doAsDayOfTd"
@@ -1393,12 +1424,12 @@ const Admin = (props) => {
                           </div>
                           <div className="inputBlockWrap">
                             <p>Описание:</p>
-                            <LengthofDesc
+                            <LengthofDescription
                               descOfCompany={descOfCompany}
                               descOfCompanyLimit={descOfCompanyLimit}
                             >
                               {descOfCompany.length} / {descOfCompanyLimit}
-                            </LengthofDesc>
+                            </LengthofDescription>
                             <textarea
                               className="descTextarea"
                               maxLength={descOfCompanyLimit}
@@ -1420,10 +1451,12 @@ const Admin = (props) => {
                         className="menuBlock"
                         onClick={(e) => accordionHandler(e)}
                       >
-                        График работы
-                        <span className="rotateArrow"></span>
+                        График работы<span className="rotateArrow"></span>
                       </div>
                       <div className="drDownWrap">
+                        <MobileAdminMenuTitle>
+                          График работы
+                        </MobileAdminMenuTitle>
                         <table>
                           <tbody>
                             {DATA.schedules &&
@@ -1433,7 +1466,9 @@ const Admin = (props) => {
                                 ];
                                 return (
                                   <tr key={i}>
-                                    <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
+                                    <td className="dayOfWeekScheduleMobile">
+                                      {EN_SHORT_TO_RU_SHORT[el.day]}
+                                    </td>
                                     <td
                                       onClick={() => {
                                         if (oneDay && oneDay.id) {
@@ -1458,7 +1493,7 @@ const Admin = (props) => {
                                         }
                                       }}
                                     >
-                                      {isWorkTimeOrDayOff(oneDay)}
+                                      {isWorkTimeOrDayOff(oneDay, i)}
                                     </td>
                                   </tr>
                                 );
@@ -1508,6 +1543,9 @@ const Admin = (props) => {
                             Сохранить
                           </div>
                         </div>
+                        <MobileAdminMenuTitle>
+                          График трансляций
+                        </MobileAdminMenuTitle>
                         <table>
                           <tbody>
                             {DATA.streams &&
@@ -1519,7 +1557,9 @@ const Admin = (props) => {
                                 )[el.day];
                                 return (
                                   <tr key={i}>
-                                    <td>{EN_SHORT_TO_RU_SHORT[el.day]}</td>
+                                    <td className="dayOfWeekScheduleMobile">
+                                      {EN_SHORT_TO_RU_SHORT[el.day]}
+                                    </td>
                                     <td
                                       onClick={() => {
                                         if (!DATA.streams[0]) {
@@ -1548,7 +1588,7 @@ const Admin = (props) => {
                                         }
                                       }}
                                     >
-                                      {isWorkTimeOrDayOff(oneDay)}
+                                      {isWorkTimeOrDayOff(oneDay, i)}
                                     </td>
                                   </tr>
                                 );

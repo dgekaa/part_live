@@ -98,16 +98,21 @@ const EditCompany = () => {
                         <td className="name">
                           <Link to={`/admin/${id}`}>{name}</Link>
                         </td>
-                        <td className="enName">{id}</td>
                         <td className="typeCompany">
                           {categories[0] &&
                             categories[0].name &&
                             categories[0].name.toLowerCase()}
                         </td>
-                        <td className="enName">
+                        <td className="errStyle">
                           {streams[0] && streams[0].preview ? (
                             <div>
-                              {(scriptErr[i] && scriptErr[i]) || "Ok"}
+                              {scriptErr[i] && scriptErr[i] ? (
+                                <span style={{ color: "red" }}>
+                                  {scriptErr[i] && scriptErr[i]}
+                                </span>
+                              ) : (
+                                <span style={{ color: "green" }}>Ok</span>
+                              )}
                               <video
                                 type="application/x-mpegURL"
                                 onError={() => {

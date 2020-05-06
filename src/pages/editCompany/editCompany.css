@@ -24,14 +24,14 @@
   flex: 1.5;
 }
 .editCompanyContent .name {
-  font-weight: 500;
+  font-weight: bold;
   font-size: 18px;
 }
 .editCompanyContent .name a {
   display: block;
   width: 100%;
 }
-.editCompanyContent .enName {
+.editCompanyContent .errStyle {
   font-weight: 500;
   font-size: 18px;
   color: #aeaeae;
@@ -49,17 +49,19 @@
 }
 @media screen and (max-width: 760px) {
   .editCompanyContent {
+    overflow: hidden;
     margin: 0;
     position: relative;
     display: block;
     padding-top: 60px;
-    width: 100vw;
+    /* width: 100vw; */
   }
   .editCompanyContent h3 {
     padding: 5px;
     font-weight: bold;
     font-size: 18px;
     margin-bottom: 15px;
+    text-align: center;
   }
   .editCompanyContent table {
     display: flex;
@@ -67,19 +69,38 @@
     width: 100vw;
   }
   .editCompanyContent tr {
+    display: flex;
     width: 100vw;
+    border-bottom: 1px solid #eaeaea;
+    padding: 0 15px;
   }
   .editCompanyContent td {
+    display: flex;
+    height: 50px;
+    line-height: 45px;
+    font-weight: bold;
     display: inline-block;
-    margin: 5px 0;
   }
   .editCompanyContent .name {
-    width: 100px;
-    min-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    display: flex;
+    flex: 2 !important;
   }
-  .editCompanyContent .enName {
+  .editCompanyContent .errStyle {
+    display: flex;
+    justify-content: center;
+    flex: 1.3 !important;
+    font-weight: bold;
   }
-  .editCompanyContent .typeCompany {
-    min-width: 100px;
+
+  .editCompanyContent table tr .typeCompany {
+    display: flex;
+    text-transform: capitalize;
+    justify-content: center;
+    font-weight: bold;
+    flex: 1.3 !important;
   }
 }
