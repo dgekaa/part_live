@@ -119,7 +119,7 @@ const Login = () => {
           <div className="authBlock">
             <h4>{!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}</h4>
             <form
-              // autocomplete="on"
+              autocomplete="on"
               ref={loginRef}
               onSubmit={(e) => {
                 e.preventDefault();
