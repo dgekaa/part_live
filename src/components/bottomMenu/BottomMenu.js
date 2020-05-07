@@ -19,7 +19,7 @@ const BottomMenu = ({ isShowMenu }) => {
   const animateProps = useSpring({
     left: isShowMenu ? -200 : 0,
     config: {
-      duration: 100,
+      duration: 200,
     },
   });
 

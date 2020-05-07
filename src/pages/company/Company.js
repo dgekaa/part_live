@@ -150,7 +150,7 @@ const Company = (props) => {
 
   const animateProps = useSpring({
     right: isShowMenu ? 200 : 0,
-    config: { duration: 100 },
+    config: { duration: 200 },
   });
 
   return (

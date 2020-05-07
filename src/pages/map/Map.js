@@ -161,7 +161,7 @@ const MapComponent = (props) => {
 
   const animateProps = useSpring({
     left: isShowMenu ? -200 : 0,
-    config: { duration: 100 },
+    config: { duration: 200 },
   });
 
   return (

@@ -102,7 +102,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const animateProps = useSpring({
     left: toSlideFixedNav ? -200 : 0,
     config: {
-      duration: 100,
+      duration: 200,
     },
   });
 
