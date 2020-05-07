@@ -818,6 +818,7 @@ const Admin = (props) => {
                     </ul>
                   </div>
                 </div>
+
                 <div className="adminContentDesctop">
                   {leftMenuSettings.map((el, i) => {
                     if (el.clicked && i === 0) {
@@ -1277,15 +1278,26 @@ const Admin = (props) => {
                 </div>
                 {/* __________________MOBILE__________________ */}
                 <div className="adminContentMobile">
-                  {!!DATA.streams && DATA.streams[0] && (
-                    <div className="videoWrapAdminMobile">
-                      <VideoPlayer
-                        preview={DATA.streams[0].preview}
-                        src={DATA.streams[0].url}
-                      />
-                    </div>
-                  )}
                   <div className="adminMenuContainer">
+                    <div className="menuBlockWrap ">
+                      <div
+                        className="menuBlock"
+                        onClick={(e) => accordionHandler(e)}
+                      >
+                        Стрим<span className="rotateArrow"></span>
+                      </div>
+                      <div className="drDownWrapPaddingOff">
+                        <MobileAdminMenuTitle>Стрим</MobileAdminMenuTitle>
+                        {!!DATA.streams && DATA.streams[0] && (
+                          <div className="videoWrapAdminMobile">
+                            <VideoPlayer
+                              preview={DATA.streams[0].preview}
+                              src={DATA.streams[0].url}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     <div className="menuBlockWrap profile">
                       <div
                         className="menuBlock"
@@ -1295,6 +1307,10 @@ const Admin = (props) => {
                         <span className="rotateArrow"></span>
                       </div>
                       <div className="drDownWrap">
+                        <MobileAdminMenuTitle>
+                          Профиль заведения
+                        </MobileAdminMenuTitle>
+
                         <div className="uploadFileContainer">
                           <div className="uploadFile">
                             {imgSrc ? (

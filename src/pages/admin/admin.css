@@ -819,6 +819,7 @@ textarea {
   }
   .videoWrapAdminMobile {
     display: block;
+    margin-top: 15px;
   }
   .leftAdminMenuDesctop {
     display: none;
