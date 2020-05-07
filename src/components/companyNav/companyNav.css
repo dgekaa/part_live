@@ -63,14 +63,14 @@
   border-radius: 5px 0 0 5px;
 }
 .allText {
-  font-weight: bold;
-  font-size: 12px;
+  font-weight: 700;
+  font-size: 13px;
   text-transform: uppercase;
 }
 .сompanyNavText {
   margin-top: 3px;
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 12px;
   text-transform: uppercase;
 }
@@ -129,9 +129,8 @@
   .сompanyNavText,
   .allText {
     text-transform: none;
-    font-family: Roboto, Arial, Helvetica, sans-serif;
     font-style: normal;
-    font-weight: normal !important;
+    font-weight: 400 !important;
     font-size: 12px;
     letter-spacing: 0.05em;
   }

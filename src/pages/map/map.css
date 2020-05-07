@@ -65,7 +65,7 @@
 .openedTo {
   display: block;
   font-size: 9px;
-  font-weight: normal;
+  font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
   line-height: 13px;
@@ -100,7 +100,7 @@
   border-radius: 50%;
 }
 .clusterMarker p {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 16px;
   color: #ffffff;
 }

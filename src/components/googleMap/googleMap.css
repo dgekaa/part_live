@@ -62,7 +62,7 @@
   width: 150px;
   text-align: center;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
 }
 .chooseNewAddressBtn {
   background-color: #e32a6c;

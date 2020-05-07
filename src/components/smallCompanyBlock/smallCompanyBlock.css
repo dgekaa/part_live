@@ -70,14 +70,14 @@
   justify-content: space-between;
 }
 .companyName {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 18px;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 .companyType {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 13px;
   color: #e32a6c;
 }
@@ -107,11 +107,11 @@
   margin-top: 20px;
 }
 .leftTextCompanyBlock {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 12px;
 }
 .workTimeText {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 12px;
 }
 .circle {
@@ -218,7 +218,7 @@
   }
   .nameOfCompany {
     font-style: normal;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 14px;
     line-height: 16px;
     letter-spacing: 0.05em;
@@ -248,7 +248,7 @@
   }
   .endTimeMobile {
     font-style: normal;
-    font-weight: normal;
+    font-weight: 400;
     font-size: 12px;
     line-height: 14px;
     letter-spacing: 0.05em;
@@ -258,7 +258,7 @@
   }
   .distanceFirst1 {
     font-style: normal;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 12px;
     line-height: 14px;
     letter-spacing: 0.05em;

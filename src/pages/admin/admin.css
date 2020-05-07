@@ -22,7 +22,7 @@ textarea {
 }
 .leftAdminMenuDesctop .leftAdminMenu .LeftAdminBtn {
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 700;
   height: 54px;
   cursor: pointer;
   display: flex;
@@ -31,7 +31,7 @@ textarea {
 }
 .leftAdminMenuDesctop .leftAdminMenu .clickedLeftAdminBtn {
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 700;
   height: 54px;
   cursor: pointer;
   display: flex;
@@ -100,7 +100,7 @@ textarea {
 }
 .changePhoto {
   color: #e32a6c;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 18px;
   width: 250px;
   cursor: pointer;
@@ -133,7 +133,7 @@ textarea {
 }
 .profileDataDesc .inputBlockWrap .chooseAddressDesc {
   color: #fff;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 14px;
   background-color: #e32a6c;
   border-radius: 5px;
@@ -155,7 +155,7 @@ textarea {
 
 .saveBtnProfile {
   color: #fff;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 14px;
   background-color: #e32a6c;
   border-radius: 5px;
@@ -186,7 +186,7 @@ textarea {
   opacity: none;
   border-bottom: 1px solid #e5e5e5;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   padding: 0 10px;
 }
 
@@ -204,12 +204,10 @@ textarea {
   outline: none;
   overflow: hidden;
   resize: vertical;
-
   min-height: 100px;
   max-height: 500px;
-
   font-size: 14px !important;
-  font-weight: normal !important;
+  font-weight: 400 !important;
   color: #4f4f4f;
   flex: 2;
   opacity: none;
@@ -255,14 +253,11 @@ textarea {
   justify-content: center;
   cursor: pointer;
   margin-top: 15px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 8px;
   text-transform: uppercase;
 }
-/* .uploadPictureContainer {
-  background: red;
-  width: 500px !important;
-} */
+
 .bigInputBlockWrap .categoryBtn:hover {
   background-color: #e32a6c;
   color: #fff;
@@ -374,6 +369,12 @@ textarea {
   max-height: 0px;
   padding: 0px 20px;
 }
+.drDownWrapPaddingOff {
+  transition: 0.4s ease all;
+  overflow: hidden;
+  max-height: 0px;
+  padding: 0 !important;
+}
 .workSchedule table,
 .streamSchedule table {
   margin: 20px 0;
@@ -382,15 +383,16 @@ textarea {
 }
 .workSchedule table tr td,
 .streamSchedule table tr td {
-  font-weight: bold;
+  font-weight: 400;
   text-align: center;
-  border: 1px solid #bdbdbd;
+  border-bottom: 1px solid #eaeaea;
+  border-top: 1px solid #eaeaea;
   padding: 8px 10px;
   font-size: 16px;
 }
 .workSchedule table tr td:first-of-type,
 .streamSchedule table tr td:first-of-type {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 13px;
 }
 .workSchedule table tr td:last-of-type,
@@ -435,9 +437,9 @@ textarea {
 }
 .uploadFileContainer h3,
 .pickAddress h3 {
-  font-weight: normal;
+  font-weight: 400;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
 }
 .curAddress {
   border-bottom: 1px solid #eee;
@@ -450,7 +452,7 @@ textarea {
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
   padding: 5px;
   text-align: center;
   text-transform: inherit;
@@ -526,7 +528,7 @@ textarea {
   flex-direction: column;
 }
 .chooseStreamAddressDesc .cameraAddresLable {
-  font-weight: normal;
+  font-weight: 400;
   font-size: 16px;
   color: #4f4f4f;
   background-color: #fff;
@@ -577,7 +579,7 @@ textarea {
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 700;
   margin-top: 40px;
   font-size: 16px;
   text-align: center;
@@ -612,7 +614,7 @@ textarea {
 .timePickerName {
   text-align: center;
   padding-bottom: 15px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 16px;
   color: #909090;
 }
@@ -633,7 +635,7 @@ textarea {
 }
 .timePickerHours,
 .timePickerMinutes {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 24px;
   line-height: 28px;
   padding: 10px 0;
@@ -642,7 +644,7 @@ textarea {
 .twoDots {
   display: flex;
   width: 10px;
-  font-weight: bold;
+  font-weight: 700;
   align-self: center;
   justify-content: center;
 }
@@ -836,7 +838,7 @@ textarea {
     cursor: pointer;
   }
   .dayOfWeekScheduleMobile {
-    font-weight: bold;
+    font-weight: 400;
     text-transform: uppercase;
     font-size: 14px;
   }

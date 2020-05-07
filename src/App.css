@@ -3,10 +3,10 @@
   padding: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-family: Roboto, sans-serif;
 }
 a {
   text-decoration: none;
   color: #000;
-  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-family: Roboto, sans-serif;
 }

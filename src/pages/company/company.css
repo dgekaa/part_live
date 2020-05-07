@@ -76,7 +76,7 @@
   color: #4f4f4f;
 }
 .videoDescription span {
-  font-weight: bold;
+  font-weight: 700;
 }
 .desc {
   -webkit-box-flex: 5;
@@ -89,7 +89,7 @@
   justify-content: space-between;
 }
 .desc h3 {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 30px;
   line-height: 35px;
 }
@@ -108,7 +108,7 @@
   background: #36cc33;
   border-radius: 5px;
   color: #fff;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 10px;
   line-height: 22px;
 }
@@ -148,7 +148,7 @@
 }
 .type {
   color: #e32a6c;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 18px;
   line-height: 21px;
   padding-left: 30px;
@@ -285,7 +285,7 @@
     font-size: 18px;
     line-height: 16px;
     letter-spacing: 0.05em;
-    font-weight: normal;
+    font-weight: 400;
     color: #000000;
     padding-bottom: 5px;
   }
@@ -293,7 +293,7 @@
     display: block;
     font-size: 11px;
     line-height: 14px;
-    font-weight: bold;
+    font-weight: 700;
     letter-spacing: 0.05em;
     color: #219704;
     height: 25px;
@@ -301,7 +301,7 @@
   }
   .distance {
     display: block;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 12px;
     line-height: 14px;
     letter-spacing: 0.05em;

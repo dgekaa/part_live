@@ -23,7 +23,7 @@
 }
 .party_live {
   display: inline-block;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 24px;
   letter-spacing: 0.05em;
   -webkit-transition: 0.3s ease all;

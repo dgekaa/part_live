@@ -32,9 +32,11 @@ import {
 import "./admin.css";
 
 const MobileAdminMenuTitle = styled.p`
-  font-size: 17px;
   text-align: center;
   padding-top: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  text-transform: uppercase;
 `;
 
 const DescriptionWrap = styled.div`
@@ -667,8 +669,20 @@ const Admin = (props) => {
   };
 
   const isWorkTimeOrDayOff = (oneDay, i) => {
-    const nextDay = () => " (" + SHORT_DAY_OF_WEEK[tomorrowFromDay(i)] + ") ";
-    const thisDay = () => " (" + SHORT_DAY_OF_WEEK[i] + ") ";
+    const nextDay = () => {
+      if (i) {
+        return " (" + SHORT_DAY_OF_WEEK[tomorrowFromDay(i)] + ") ";
+      } else {
+        return "";
+      }
+    };
+    const thisDay = () => {
+      if (i) {
+        return " (" + SHORT_DAY_OF_WEEK[i] + ") ";
+      } else {
+        return "";
+      }
+    };
 
     if (oneDay && oneDay.id) {
       if (
@@ -679,17 +693,18 @@ const Admin = (props) => {
       ) {
         return (
           <p>
-            {oneDay.start_time}{" "}
+            {oneDay.start_time.replace(":", ".")}{" "}
             <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
-            {oneDay.end_time} <span className="dayOfWeekGray">{thisDay()}</span>
+            {oneDay.end_time.replace(":", ".")}{" "}
+            <span className="dayOfWeekGray">{thisDay()}</span>
           </p>
         );
       } else {
         return (
           <p>
-            {oneDay.start_time}{" "}
+            {oneDay.start_time.replace(":", ".")}{" "}
             <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
-            {oneDay.end_time}
+            {oneDay.end_time.replace(":", ".")}
             <span> {nextDay()}</span>
           </p>
         );
@@ -1056,7 +1071,7 @@ const Admin = (props) => {
                                         style={
                                           numberDayNow === i
                                             ? {
-                                                fontWeight: "bold",
+                                                fontWeight: "700",
                                               }
                                             : {}
                                         }
@@ -1495,7 +1510,7 @@ const Admin = (props) => {
                       >
                         График работы<span className="rotateArrow"></span>
                       </div>
-                      <div className="drDownWrap">
+                      <div className="drDownWrapPaddingOff">
                         <MobileAdminMenuTitle>
                           График работы
                         </MobileAdminMenuTitle>
@@ -1508,10 +1523,27 @@ const Admin = (props) => {
                                 ];
                                 return (
                                   <tr key={i}>
-                                    <td className="dayOfWeekScheduleMobile">
+                                    <td
+                                      className="dayOfWeekScheduleMobile"
+                                      style={
+                                        numberDayNow === i
+                                          ? {
+                                              color: "#E32A6C",
+                                              fontWeight: "700",
+                                            }
+                                          : { fontWeight: "400" }
+                                      }
+                                    >
                                       {EN_SHORT_TO_RU_SHORT[el.day]}
                                     </td>
                                     <td
+                                      style={
+                                        numberDayNow === i
+                                          ? {
+                                              fontWeight: "700",
+                                            }
+                                          : {}
+                                      }
                                       onClick={() => {
                                         if (oneDay && oneDay.id) {
                                           setIsEmptyTime(false); //не пустое время
@@ -1535,7 +1567,7 @@ const Admin = (props) => {
                                         }
                                       }}
                                     >
-                                      {isWorkTimeOrDayOff(oneDay, i)}
+                                      {isWorkTimeOrDayOff(oneDay)}
                                     </td>
                                   </tr>
                                 );
@@ -1552,7 +1584,7 @@ const Admin = (props) => {
                         График трансляций
                         <span className="rotateArrow"></span>
                       </div>
-                      <div className="drDownWrap">
+                      <div className="drDownWrapPaddingOff">
                         <div className="chooseStreamAddress">
                           <input
                             className="streamAddress"
@@ -1599,10 +1631,27 @@ const Admin = (props) => {
                                 )[el.day];
                                 return (
                                   <tr key={i}>
-                                    <td className="dayOfWeekScheduleMobile">
+                                    <td
+                                      className="dayOfWeekScheduleMobile"
+                                      style={
+                                        numberDayNow === i
+                                          ? {
+                                              color: "#E32A6C",
+                                              fontWeight: "700",
+                                            }
+                                          : { fontWeight: "400" }
+                                      }
+                                    >
                                       {EN_SHORT_TO_RU_SHORT[el.day]}
                                     </td>
                                     <td
+                                      style={
+                                        numberDayNow === i
+                                          ? {
+                                              fontWeight: "700",
+                                            }
+                                          : {}
+                                      }
                                       onClick={() => {
                                         if (!DATA.streams[0]) {
                                           alert("Стрим еще не создан");
@@ -1630,7 +1679,7 @@ const Admin = (props) => {
                                         }
                                       }}
                                     >
-                                      {isWorkTimeOrDayOff(oneDay, i)}
+                                      {isWorkTimeOrDayOff(oneDay)}
                                     </td>
                                   </tr>
                                 );
