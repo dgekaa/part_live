@@ -127,7 +127,7 @@ const Login = () => {
               }}
             >
               <input
-                autocomplete="email"
+                autocomplete="username"
                 type="email"
                 name="email"
                 placeholder="email"
