@@ -127,7 +127,7 @@ const Login = () => {
               }}
             >
               <input
-                // autocomplete="username"
+                autocomplete="email"
                 type="text"
                 name="email"
                 placeholder="email"
@@ -137,7 +137,7 @@ const Login = () => {
               {!isForgetPass && (
                 <>
                   <input
-                    // autocomplete="current-password"
+                    autocomplete="current-password"
                     type="password"
                     name="password"
                     placeholder="password"
