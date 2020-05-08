@@ -28,8 +28,10 @@ import {
   extractImageFileExtensionFromBase64,
   downloadBase64File,
 } from "./EncodeToBase64";
+import SideBar from "./Sidebar";
 
 import "./admin.css";
+import "./sidebar.css";
 
 const MobileAdminMenuTitle = styled.p`
   text-align: center;
@@ -412,17 +414,6 @@ const Admin = (props) => {
     hideSideMenu();
   };
 
-  const accordionHandler = (e) => {
-    if (e.target.nextSibling.style.maxHeight) {
-      e.target.nextSibling.style.maxHeight = null;
-      e.target.firstElementChild.style.transform = "rotate(0deg)";
-    } else {
-      e.target.nextSibling.style.maxHeight =
-        e.target.nextSibling.scrollHeight + "px";
-      e.target.firstElementChild.style.transform = "rotate(180deg)";
-    }
-  };
-
   const togglePopupDatePicker = () => {
     showPopupDatePicker
       ? setShowPopapDatePicker(false)
@@ -746,6 +737,18 @@ const Admin = (props) => {
     } else {
       return day + 1;
     }
+  };
+
+  const [streamOpen, setStreamOpen] = useState(false);
+  const [profileOpen, setPprofileOpen] = useState(false);
+  const [workScheduleOpen, setWorkScheduleOpen] = useState(false);
+  const [streamScheduleOpen, setStreamScheduleOpen] = useState(false);
+
+  const closeAllSidebar = () => {
+    setStreamOpen(false);
+    setPprofileOpen(false);
+    setWorkScheduleOpen(false);
+    setStreamScheduleOpen(false);
   };
 
   if (!Number(cookies.origin_id)) {
@@ -1282,426 +1285,499 @@ const Admin = (props) => {
                     <div className="menuBlockWrap ">
                       <div
                         className="menuBlock"
-                        onClick={(e) => accordionHandler(e)}
+                        onClick={(e) => setStreamOpen(true)}
                       >
                         Стрим<span className="rotateArrow"></span>
                       </div>
-                      <div className="drDownWrapPaddingOff">
-                        <MobileAdminMenuTitle>Стрим</MobileAdminMenuTitle>
-                        {!!DATA.streams && DATA.streams[0] && (
+                      {!!DATA.streams && DATA.streams[0] && (
+                        <SideBar
+                          isOpen={streamOpen}
+                          right
+                          pageWrapId={"page-wrap"}
+                          outerContainerId={"App"}
+                          width={"100%"}
+                        >
+                          <span
+                            className="closeSidebarBtn"
+                            onClick={() => closeAllSidebar()}
+                          >
+                            &#10006;
+                          </span>
+                          <MobileAdminMenuTitle>Стрим</MobileAdminMenuTitle>
                           <div className="videoWrapAdminMobile">
                             <VideoPlayer
                               preview={DATA.streams[0].preview}
                               src={DATA.streams[0].url}
                             />
                           </div>
-                        )}
-                      </div>
+                        </SideBar>
+                      )}
                     </div>
                     <div className="menuBlockWrap profile">
                       <div
                         className="menuBlock"
-                        onClick={(e) => accordionHandler(e)}
+                        onClick={(e) => setPprofileOpen(true)}
                       >
                         Профиль заведения
                         <span className="rotateArrow"></span>
                       </div>
                       <div className="drDownWrap">
-                        <MobileAdminMenuTitle>
-                          Профиль заведения
-                        </MobileAdminMenuTitle>
+                        <SideBar
+                          isOpen={profileOpen}
+                          right
+                          pageWrapId={"page-wrap"}
+                          outerContainerId={"App"}
+                          width={"100%"}
+                        >
+                          <span
+                            className="closeSidebarBtn"
+                            onClick={() => closeAllSidebar()}
+                          >
+                            &#10006;
+                          </span>
+                          <MobileAdminMenuTitle>
+                            Профиль заведения
+                          </MobileAdminMenuTitle>
 
-                        <div className="uploadFileContainer">
-                          <div className="uploadFile">
-                            {imgSrc ? (
-                              <div
-                                className="cropWrapper"
-                                style={{
-                                  position: "relative",
-                                  height: "250px",
-                                  background: "#fff",
-                                }}
-                              >
-                                <Cropper
+                          <div className="uploadFileContainer">
+                            <div className="uploadFile">
+                              {imgSrc ? (
+                                <div
+                                  className="cropWrapper"
                                   style={{
-                                    containerStyle: {
-                                      maxHeight: "250px",
-                                    },
-                                    mediaStyle: {
-                                      maxHeight: "250px",
-                                    },
+                                    position: "relative",
+                                    height: "250px",
+                                    background: "#fff",
                                   }}
-                                  image={imgSrc}
-                                  crop={crop}
-                                  zoom={zoom}
-                                  onZoomChange={setZoom}
-                                  aspect={aspect}
-                                  onCropChange={setCrop}
-                                  onCropComplete={(
-                                    croppedArea,
-                                    croppedAreaPixels
-                                  ) => {
-                                    onCropComplete(croppedAreaPixels);
-                                  }}
-                                  onMediaLoaded={({
-                                    naturalWidth,
-                                    naturalHeight,
-                                  }) => {
-                                    setCurrentImageSize({
-                                      width: naturalWidth,
-                                      height: naturalHeight,
-                                    });
-                                  }}
-                                />
-                                <br />
-                                {/* <span onClick={downloadImgFromCanvas}>
+                                >
+                                  <Cropper
+                                    style={{
+                                      containerStyle: {
+                                        maxHeight: "250px",
+                                      },
+                                      mediaStyle: {
+                                        maxHeight: "250px",
+                                      },
+                                    }}
+                                    image={imgSrc}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    onZoomChange={setZoom}
+                                    aspect={aspect}
+                                    onCropChange={setCrop}
+                                    onCropComplete={(
+                                      croppedArea,
+                                      croppedAreaPixels
+                                    ) => {
+                                      onCropComplete(croppedAreaPixels);
+                                    }}
+                                    onMediaLoaded={({
+                                      naturalWidth,
+                                      naturalHeight,
+                                    }) => {
+                                      setCurrentImageSize({
+                                        width: naturalWidth,
+                                        height: naturalHeight,
+                                      });
+                                    }}
+                                  />
+                                  <br />
+                                  {/* <span onClick={downloadImgFromCanvas}>
                                   Скачать
                                 </span>
                                 <span onClick={handeleClearToDefault}>
                                   Очистить
                                 </span> */}
-                                <canvas
-                                  className="cropCanvasImage"
-                                  ref={imagePreviewCanvas}
-                                ></canvas>
-                              </div>
-                            ) : (
-                              <div
-                                className="previewPhoto"
-                                onClick={() =>
-                                  document.querySelector(".previewRef").click()
+                                  <canvas
+                                    className="cropCanvasImage"
+                                    ref={imagePreviewCanvas}
+                                  ></canvas>
+                                </div>
+                              ) : (
+                                <div
+                                  className="previewPhoto"
+                                  onClick={() =>
+                                    document
+                                      .querySelector(".previewRef")
+                                      .click()
+                                  }
+                                >
+                                  <p>Загрузить фото</p>
+                                  <p>250 X 250</p>
+                                </div>
+                              )}
+                              <Dropzone
+                                multiple={false}
+                                accept={acceptedFileTypes}
+                                maxSize={imageMaxSize}
+                                onDrop={(acceptedFiles, rejectedFiles) =>
+                                  handleOnDrop(acceptedFiles, rejectedFiles)
                                 }
                               >
-                                <p>Загрузить фото</p>
-                                <p>250 X 250</p>
-                              </div>
-                            )}
-                            <Dropzone
-                              multiple={false}
-                              accept={acceptedFileTypes}
-                              maxSize={imageMaxSize}
-                              onDrop={(acceptedFiles, rejectedFiles) =>
-                                handleOnDrop(acceptedFiles, rejectedFiles)
-                              }
-                            >
-                              {({ getRootProps, getInputProps }) => {
-                                return (
-                                  <section>
-                                    <div
-                                      className="changePhotoBlock"
-                                      {...getRootProps()}
-                                    >
-                                      <input
-                                        className="changePhotoInput previewRef"
-                                        {...getInputProps()}
-                                      />
-                                      <p className="changePhoto">
-                                        Сменить фото профиля
-                                      </p>
-                                    </div>
-                                  </section>
-                                );
-                              }}
-                            </Dropzone>
-                          </div>
-                        </div>
-                        {/* ================================================= */}
-                        <div className="profileDataDesc">
-                          <div className="inputBlockWrap">
-                            <p>Название заведения:</p>
-                            <input
-                              type="text"
-                              placeholder={DATA.name}
-                              value={nameOfCompany}
-                              onChange={(e) => setNameOfCompany(e.target.value)}
-                            />
-                          </div>
-                          <div className="inputBlockWrap">
-                            <p>Псевдоним:</p>
-                            <input
-                              type="text"
-                              placeholder={DATA.name}
-                              value={pseudonimOfCompany}
-                              onChange={(e) =>
-                                setPseudonimOfCompany(e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="bigInputBlockWrap">
-                            <p>Категория:</p>
-                            <div className="categoryBtnWrap">
-                              {!!uniqueCompanyType &&
-                                uniqueCompanyType.map((el, i) => {
+                                {({ getRootProps, getInputProps }) => {
                                   return (
-                                    <span
-                                      className="categoryBtn"
-                                      key={i}
-                                      style={
-                                        el &&
-                                        el.name &&
-                                        typeOfCompany &&
+                                    <section>
+                                      <div
+                                        className="changePhotoBlock"
+                                        {...getRootProps()}
+                                      >
+                                        <input
+                                          className="changePhotoInput previewRef"
+                                          {...getInputProps()}
+                                        />
+                                        <p className="changePhoto">
+                                          Сменить фото профиля
+                                        </p>
+                                      </div>
+                                    </section>
+                                  );
+                                }}
+                              </Dropzone>
+                            </div>
+                          </div>
+                          {/* ================================================= */}
+                          <div className="profileDataDesc">
+                            <div className="inputBlockWrap">
+                              <p>Название заведения:</p>
+                              <input
+                                type="text"
+                                placeholder={DATA.name}
+                                value={nameOfCompany}
+                                onChange={(e) =>
+                                  setNameOfCompany(e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="inputBlockWrap">
+                              <p>Псевдоним:</p>
+                              <input
+                                type="text"
+                                placeholder={DATA.name}
+                                value={pseudonimOfCompany}
+                                onChange={(e) =>
+                                  setPseudonimOfCompany(e.target.value)
+                                }
+                              />
+                            </div>
+                            <div className="bigInputBlockWrap">
+                              <p>Категория:</p>
+                              <div className="categoryBtnWrap">
+                                {!!uniqueCompanyType &&
+                                  uniqueCompanyType.map((el, i) => {
+                                    return (
+                                      <span
+                                        className="categoryBtn"
+                                        key={i}
+                                        style={
+                                          el &&
+                                          el.name &&
+                                          typeOfCompany &&
+                                          typeOfCompany === el.name
+                                            ? {
+                                                background: "#e32a6c",
+                                                color: "#fff",
+                                              }
+                                            : !typeOfCompany &&
+                                              DATA.categories &&
+                                              DATA.categories[0] &&
+                                              el &&
+                                              el.name &&
+                                              DATA.categories[0].name ===
+                                                el.name
+                                            ? {
+                                                background: "#e32a6c",
+                                                color: "#fff",
+                                              }
+                                            : {}
+                                        }
+                                        onClick={() => {
+                                          setTypeOfCompany(el.name);
+                                          setTypeOfCompanyId(el.id);
+                                        }}
+                                        onMouseOver={() =>
+                                          setHoveredBtn(el.name)
+                                        }
+                                        onMouseOut={() => setHoveredBtn("")}
+                                      >
+                                        {typeOfCompany &&
                                         typeOfCompany === el.name
-                                          ? {
-                                              background: "#e32a6c",
-                                              color: "#fff",
-                                            }
+                                          ? renderCustomTypeImg(el.slug, true)
                                           : !typeOfCompany &&
                                             DATA.categories &&
                                             DATA.categories[0] &&
-                                            el &&
-                                            el.name &&
                                             DATA.categories[0].name === el.name
-                                          ? {
-                                              background: "#e32a6c",
-                                              color: "#fff",
-                                            }
-                                          : {}
-                                      }
-                                      onClick={() => {
-                                        setTypeOfCompany(el.name);
-                                        setTypeOfCompanyId(el.id);
-                                      }}
-                                      onMouseOver={() => setHoveredBtn(el.name)}
-                                      onMouseOut={() => setHoveredBtn("")}
-                                    >
-                                      {typeOfCompany &&
-                                      typeOfCompany === el.name
-                                        ? renderCustomTypeImg(el.slug, true)
-                                        : !typeOfCompany &&
-                                          DATA.categories &&
-                                          DATA.categories[0] &&
-                                          DATA.categories[0].name === el.name
-                                        ? renderCustomTypeImg(el.slug, true)
-                                        : hoveredBtn === el.name
-                                        ? renderCustomTypeImg(el.slug, true)
-                                        : renderCustomTypeImg(el.slug, false)}
-                                      {el.name}
-                                    </span>
-                                  );
-                                })}
+                                          ? renderCustomTypeImg(el.slug, true)
+                                          : hoveredBtn === el.name
+                                          ? renderCustomTypeImg(el.slug, true)
+                                          : renderCustomTypeImg(el.slug, false)}
+                                        {el.name}
+                                      </span>
+                                    );
+                                  })}
+                              </div>
                             </div>
-                          </div>
-                          <div className="inputBlockWrap">
-                            <p className="addressTextMobile">
-                              Адрес заведения:
-                            </p>
-                            <div className="mobileAddresColumn">
-                              <input type="text" value={DATA.address} />
-                              <p
-                                className="chooseAddressDesc"
-                                onClick={() => togglePopupGoogleMap()}
-                              >
-                                ВЫБРАТЬ АДРЕС НА КАРТЕ
+                            <div className="inputBlockWrap">
+                              <p className="addressTextMobile">
+                                Адрес заведения:
                               </p>
+                              <div className="mobileAddresColumn">
+                                <input type="text" value={DATA.address} />
+                                <p
+                                  className="chooseAddressDesc"
+                                  onClick={() => togglePopupGoogleMap()}
+                                >
+                                  ВЫБРАТЬ АДРЕС НА КАРТЕ
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                          <div className="inputBlockWrap">
-                            <p>Описание:</p>
-                            <LengthofDescription
-                              descOfCompany={descOfCompany}
-                              descOfCompanyLimit={descOfCompanyLimit}
+                            <div className="inputBlockWrap">
+                              <p>Описание:</p>
+                              <LengthofDescription
+                                descOfCompany={descOfCompany}
+                                descOfCompanyLimit={descOfCompanyLimit}
+                              >
+                                {descOfCompany.length} / {descOfCompanyLimit}
+                              </LengthofDescription>
+                              <textarea
+                                className="descTextarea"
+                                maxLength={descOfCompanyLimit}
+                                value={descOfCompany}
+                                onChange={(e) =>
+                                  setDescOfCompany(e.target.value)
+                                }
+                              />
+                            </div>
+                            <p
+                              className="saveBtnProfile"
+                              onClick={() => updatePlaceData()}
                             >
-                              {descOfCompany.length} / {descOfCompanyLimit}
-                            </LengthofDescription>
-                            <textarea
-                              className="descTextarea"
-                              maxLength={descOfCompanyLimit}
-                              value={descOfCompany}
-                              onChange={(e) => setDescOfCompany(e.target.value)}
-                            />
+                              СОХРАНИТЬ
+                            </p>
                           </div>
-                          <p
-                            className="saveBtnProfile"
-                            onClick={() => updatePlaceData()}
-                          >
-                            СОХРАНИТЬ
-                          </p>
-                        </div>
+                        </SideBar>
                       </div>
                     </div>
                     <div className="menuBlockWrap workSchedule">
                       <div
                         className="menuBlock"
-                        onClick={(e) => accordionHandler(e)}
+                        onClick={(e) => setWorkScheduleOpen(true)}
                       >
                         График работы<span className="rotateArrow"></span>
                       </div>
                       <div className="drDownWrapPaddingOff">
-                        <MobileAdminMenuTitle>
-                          График работы
-                        </MobileAdminMenuTitle>
-                        <table>
-                          <tbody>
-                            {DATA.schedules &&
-                              EN_SHORT_DAY_OF_WEEK.map((el, i) => {
-                                const oneDay = SetNewTimeObject(DATA.schedules)[
-                                  el.day
-                                ];
-                                return (
-                                  <tr key={i}>
-                                    <td
-                                      className="dayOfWeekScheduleMobile"
-                                      style={
-                                        numberDayNow === i
-                                          ? {
-                                              color: "#E32A6C",
-                                              fontWeight: "700",
+                        <SideBar
+                          isOpen={workScheduleOpen}
+                          right
+                          pageWrapId={"page-wrap"}
+                          outerContainerId={"App"}
+                          width={"100%"}
+                        >
+                          <div>
+                            <span
+                              className="closeSidebarBtn"
+                              onClick={() => closeAllSidebar()}
+                            >
+                              &#10006;
+                            </span>
+                            <MobileAdminMenuTitle>
+                              График работы
+                            </MobileAdminMenuTitle>
+                            <div>
+                              <table>
+                                <tbody>
+                                  {DATA.schedules &&
+                                    EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                                      const oneDay = SetNewTimeObject(
+                                        DATA.schedules
+                                      )[el.day];
+                                      return (
+                                        <tr key={i}>
+                                          <td
+                                            className="dayOfWeekScheduleMobile"
+                                            style={
+                                              numberDayNow === i
+                                                ? {
+                                                    color: "#E32A6C",
+                                                    fontWeight: "700",
+                                                  }
+                                                : { fontWeight: "400" }
                                             }
-                                          : { fontWeight: "400" }
-                                      }
-                                    >
-                                      {EN_SHORT_TO_RU_SHORT[el.day]}
-                                    </td>
-                                    <td
-                                      style={
-                                        numberDayNow === i
-                                          ? {
-                                              fontWeight: "700",
+                                          >
+                                            {EN_SHORT_TO_RU_SHORT[el.day]}
+                                          </td>
+                                          <td
+                                            style={
+                                              numberDayNow === i
+                                                ? {
+                                                    fontWeight: "700",
+                                                  }
+                                                : {}
                                             }
-                                          : {}
-                                      }
-                                      onClick={() => {
-                                        if (oneDay && oneDay.id) {
-                                          setIsEmptyTime(false); //не пустое время
-                                          setEnumWeekName(""); //день недели для отправки запроса
-                                          setStartRealTimeInPicker(
-                                            oneDay.start_time
-                                          );
-                                          setEndRealTimeInPicker(
-                                            oneDay.end_time
-                                          );
-                                          togglePopupDatePicker();
-                                          setClickedTime(oneDay); //объект для отправки запроса
-                                          setIsSetWorkTimeDPick(true);
-                                        } else {
-                                          setIsEmptyTime(true);
-                                          setEnumWeekName(el.day);
-                                          setStartRealTimeInPicker("00:00");
-                                          setEndRealTimeInPicker("00:00");
-                                          togglePopupDatePicker();
-                                          setIsSetWorkTimeDPick(true);
-                                        }
-                                      }}
-                                    >
-                                      {isWorkTimeOrDayOff(oneDay)}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                          </tbody>
-                        </table>
+                                            onClick={() => {
+                                              if (oneDay && oneDay.id) {
+                                                setIsEmptyTime(false); //не пустое время
+                                                setEnumWeekName(""); //день недели для отправки запроса
+                                                setStartRealTimeInPicker(
+                                                  oneDay.start_time
+                                                );
+                                                setEndRealTimeInPicker(
+                                                  oneDay.end_time
+                                                );
+                                                togglePopupDatePicker();
+                                                setClickedTime(oneDay); //объект для отправки запроса
+                                                setIsSetWorkTimeDPick(true);
+                                              } else {
+                                                setIsEmptyTime(true);
+                                                setEnumWeekName(el.day);
+                                                setStartRealTimeInPicker(
+                                                  "00:00"
+                                                );
+                                                setEndRealTimeInPicker("00:00");
+                                                togglePopupDatePicker();
+                                                setIsSetWorkTimeDPick(true);
+                                              }
+                                            }}
+                                          >
+                                            {isWorkTimeOrDayOff(oneDay)}
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </SideBar>
                       </div>
                     </div>
                     <div className="menuBlockWrap streamSchedule">
                       <div
                         className="menuBlock"
-                        onClick={(e) => accordionHandler(e)}
+                        onClick={(e) => setStreamScheduleOpen(true)}
                       >
                         График трансляций
                         <span className="rotateArrow"></span>
                       </div>
                       <div className="drDownWrapPaddingOff">
-                        <div className="chooseStreamAddress">
-                          <input
-                            className="streamAddress"
-                            placeholder={
-                              (DATA.streams &&
-                                DATA.streams[0] &&
-                                DATA.streams[0].url &&
-                                DATA.streams[0].url) ||
-                              "Введите адрес стрима"
-                            }
-                            value={streamAddressData}
-                            onInput={(e) =>
-                              setStreamAddressData(e.target.value)
-                            }
-                          />
-                          <div
-                            className="chooseStreamAddressSaveBtn"
-                            onClick={() => {
-                              if (streamAddressData) {
-                                if (!DATA.streams[0]) {
-                                  createStream(streamAddressData);
-                                } else {
-                                  updateStream(streamAddressData);
+                        <SideBar
+                          isOpen={streamScheduleOpen}
+                          right
+                          pageWrapId={"page-wrap"}
+                          outerContainerId={"App"}
+                          width={"100%"}
+                        >
+                          <div>
+                            <span
+                              className="closeSidebarBtn"
+                              onClick={() => closeAllSidebar()}
+                            >
+                              &#10006;
+                            </span>
+                            <div className="chooseStreamAddress">
+                              <input
+                                className="streamAddress"
+                                placeholder={
+                                  (DATA.streams &&
+                                    DATA.streams[0] &&
+                                    DATA.streams[0].url &&
+                                    DATA.streams[0].url) ||
+                                  "Введите адрес стрима"
                                 }
-                              } else {
-                                alert("Заполните поле");
-                              }
-                            }}
-                          >
-                            Сохранить
-                          </div>
-                        </div>
-                        <MobileAdminMenuTitle>
-                          График трансляций
-                        </MobileAdminMenuTitle>
-                        <table>
-                          <tbody>
-                            {DATA.streams &&
-                              EN_SHORT_DAY_OF_WEEK.map((el, i) => {
-                                const oneDay = SetNewTimeObject(
-                                  DATA.streams[0]
-                                    ? DATA.streams[0].schedules
-                                    : []
-                                )[el.day];
-                                return (
-                                  <tr key={i}>
-                                    <td
-                                      className="dayOfWeekScheduleMobile"
-                                      style={
-                                        numberDayNow === i
-                                          ? {
-                                              color: "#E32A6C",
-                                              fontWeight: "700",
-                                            }
-                                          : { fontWeight: "400" }
-                                      }
-                                    >
-                                      {EN_SHORT_TO_RU_SHORT[el.day]}
-                                    </td>
-                                    <td
-                                      style={
-                                        numberDayNow === i
-                                          ? {
-                                              fontWeight: "700",
-                                            }
-                                          : {}
-                                      }
-                                      onClick={() => {
-                                        if (!DATA.streams[0]) {
-                                          alert("Стрим еще не создан");
-                                        } else {
-                                          if (oneDay && oneDay.id) {
-                                            setIsEmptyTime(false); //не пустое время
-                                            setEnumWeekName("");
-                                            setStartRealTimeInPicker(
-                                              oneDay.start_time
-                                            );
-                                            setEndRealTimeInPicker(
-                                              oneDay.end_time
-                                            );
-                                            togglePopupDatePicker();
-                                            setClickedTime(oneDay);
-                                            setIsSetWorkTimeDPick(false);
-                                          } else {
-                                            setIsEmptyTime(true); //пустое время
-                                            setEnumWeekName(el.day);
-                                            setStartRealTimeInPicker("00:00");
-                                            setEndRealTimeInPicker("00:00");
-                                            togglePopupDatePicker();
-                                            setIsSetWorkTimeDPick(false);
+                                value={streamAddressData}
+                                onInput={(e) =>
+                                  setStreamAddressData(e.target.value)
+                                }
+                              />
+                              <div
+                                className="chooseStreamAddressSaveBtn"
+                                onClick={() => {
+                                  if (streamAddressData) {
+                                    if (!DATA.streams[0]) {
+                                      createStream(streamAddressData);
+                                    } else {
+                                      updateStream(streamAddressData);
+                                    }
+                                  } else {
+                                    alert("Заполните поле");
+                                  }
+                                }}
+                              >
+                                Сохранить
+                              </div>
+                            </div>
+                            <MobileAdminMenuTitle>
+                              График трансляций
+                            </MobileAdminMenuTitle>
+                            <table>
+                              <tbody>
+                                {DATA.streams &&
+                                  EN_SHORT_DAY_OF_WEEK.map((el, i) => {
+                                    const oneDay = SetNewTimeObject(
+                                      DATA.streams[0]
+                                        ? DATA.streams[0].schedules
+                                        : []
+                                    )[el.day];
+                                    return (
+                                      <tr key={i}>
+                                        <td
+                                          className="dayOfWeekScheduleMobile"
+                                          style={
+                                            numberDayNow === i
+                                              ? {
+                                                  color: "#E32A6C",
+                                                  fontWeight: "700",
+                                                }
+                                              : { fontWeight: "400" }
                                           }
-                                        }
-                                      }}
-                                    >
-                                      {isWorkTimeOrDayOff(oneDay)}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                          </tbody>
-                        </table>
+                                        >
+                                          {EN_SHORT_TO_RU_SHORT[el.day]}
+                                        </td>
+                                        <td
+                                          style={
+                                            numberDayNow === i
+                                              ? {
+                                                  fontWeight: "700",
+                                                }
+                                              : {}
+                                          }
+                                          onClick={() => {
+                                            if (!DATA.streams[0]) {
+                                              alert("Стрим еще не создан");
+                                            } else {
+                                              if (oneDay && oneDay.id) {
+                                                setIsEmptyTime(false); //не пустое время
+                                                setEnumWeekName("");
+                                                setStartRealTimeInPicker(
+                                                  oneDay.start_time
+                                                );
+                                                setEndRealTimeInPicker(
+                                                  oneDay.end_time
+                                                );
+                                                togglePopupDatePicker();
+                                                setClickedTime(oneDay);
+                                                setIsSetWorkTimeDPick(false);
+                                              } else {
+                                                setIsEmptyTime(true); //пустое время
+                                                setEnumWeekName(el.day);
+                                                setStartRealTimeInPicker(
+                                                  "00:00"
+                                                );
+                                                setEndRealTimeInPicker("00:00");
+                                                togglePopupDatePicker();
+                                                setIsSetWorkTimeDPick(false);
+                                              }
+                                            }
+                                          }}
+                                        >
+                                          {isWorkTimeOrDayOff(oneDay)}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </SideBar>
                       </div>
                     </div>
                   </div>

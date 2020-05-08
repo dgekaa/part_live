@@ -266,6 +266,9 @@ textarea {
   width: 100%;
   border-spacing: 0;
 }
+/* .tableWorkDesc tbody {
+  width: 100%;
+} */
 .workTimeTableWrap .tableWorkDesc tr {
   display: flex;
   width: 80%;
@@ -336,8 +339,6 @@ textarea {
   background-color: #eee;
 }
 .rotateArrow {
-  transition: 0.4s ease all;
-  transform: rotate(0deg);
   width: 20px;
   height: 20px;
   position: absolute;
@@ -350,8 +351,8 @@ textarea {
   height: 2px;
   position: absolute;
   right: 0;
-  top: 10px;
-  transform: rotate(135deg);
+  top: 6px;
+  transform: rotate(45deg);
   background-color: #bdbdbd;
 }
 .adminMenuContainer .rotateArrow::after {
@@ -359,8 +360,9 @@ textarea {
   width: 12px;
   height: 2px;
   position: absolute;
-  top: 10px;
-  transform: rotate(45deg);
+  top: 14px;
+  right: 0px;
+  transform: rotate(135deg);
   background-color: #bdbdbd;
 }
 .drDownWrap {
@@ -371,8 +373,6 @@ textarea {
 }
 .drDownWrapPaddingOff {
   transition: 0.4s ease all;
-  overflow: hidden;
-  max-height: 0px;
   padding: 0 !important;
 }
 .workSchedule table,
@@ -519,6 +519,9 @@ textarea {
   flex: 1;
   height: 30px;
 }
+.chooseStreamAddress {
+  padding: 0 15px;
+}
 .chooseStreamAddress,
 .chooseStreamAddressDesc {
   margin-top: 15px;
@@ -544,6 +547,9 @@ textarea {
 }
 
 .chooseStreamAddress .chooseStreamAddressSaveBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   border: 1px solid #eee;
   height: 40px;
@@ -716,6 +722,24 @@ textarea {
   display: none;
 }
 @media screen and (max-width: 760px) {
+  .closeSidebarBtn {
+    position: fixed;
+    text-align: center;
+    line-height: 40px;
+    top: 10px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .closeSidebarBtn:hover {
+    background-color: #eee;
+    transition: 0.3s ease background-color;
+  }
+  .closeSidebarBtn:active {
+    transform: scale(0.8);
+  }
   .closePopupBtn {
     display: inline-block;
     width: 30px;
@@ -742,9 +766,11 @@ textarea {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    padding: 0 15px;
   }
   .adminContentMobile .profileDataDesc {
     margin-top: 0;
+    padding: 0 15px;
   }
   .adminContentMobile .inputBlockWrap {
     flex-direction: column;
@@ -786,6 +812,7 @@ textarea {
     height: 60px !important;
     padding: 10px;
   }
+
   .adminContentMobile
     .adminMenuContainer
     .menuBlockWrap

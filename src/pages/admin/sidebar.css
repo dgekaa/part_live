@@ -1,0 +1,72 @@
+html,
+body {
+  margin: 0;
+}
+.bm-menu-wrap {
+  width: 100vw;
+  top: 0;
+}
+#App {
+  height: 100vh;
+}
+
+#page-wrap {
+  overflow: auto;
+}
+
+/* Individual item */
+.bm-item {
+  display: inline-block;
+  outline: none;
+  border: none;
+  color: #000;
+  /* Our sidebar item styling */
+  /* text-decoration: none; */
+  margin-bottom: 10px;
+  /* color: #d1d1d1; */
+  /* transition: color 0.2s; */
+}
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+  display: none;
+}
+
+.bm-burger-bars {
+  /* background: #373a47; */
+}
+
+/* Position and sizing of clickable cross button */
+.bm-cross-button {
+  display: none;
+}
+
+/* Color/shape of close button cross */
+.bm-cross {
+  /* background: #bdc3c7; */
+}
+
+/* General sidebar styles */
+.bm-menu {
+  background: #fff;
+  padding: 2.5em 0;
+  font-size: 1.15em;
+}
+
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+  /* fill: #373a47; */
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+  /* color: #b8b7ad; */
+}
+
+/* Styling of overlay */
+.bm-overlay {
+  top: 0;
+  left: 0;
+  /* background: rgba(0, 0, 0, 0.3); */
+  background: #fff !important;
+}
