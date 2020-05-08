@@ -66,10 +66,19 @@ const SmallCompanyBlock = ({ item }) => {
     }
   };
 
-  const videoErrorHandler = (data) => {
-    console.log(data, "WWWWWWWWWWWWWWWWWWWWWWWWWWWw");
-    setVideoError(data);
-  };
+  useEffect(() => {
+    item.streams &&
+      item.streams[0] &&
+      item.streams[0].url &&
+      fetch(item.streams[0].url)
+        .then((res) => {
+          console.log(res.statusText, "RRRRRRRRRRRRRR");
+          res.statusText.toLowerCase() === "ok"
+            ? setVideoError(false)
+            : setVideoError("err");
+        })
+        .catch((err) => setVideoError("err"));
+  }, []);
 
   const showIsVideoErr = () => {
     if (item.streams && item.streams[0] && item.streams[0].url && videoError) {
@@ -132,14 +141,6 @@ const SmallCompanyBlock = ({ item }) => {
           {showIsVideoErr()}
         </div>
 
-        <div style={{ display: "none" }}>
-          <VideoPlayer
-            muted={true}
-            autoplay={true}
-            onErr={videoErrorHandler}
-            src={item.streams && item.streams[0] && item.streams[0].url}
-          />
-        </div>
         <div className="bottomBlockText">
           <div className="rowCompanyBlock">
             <div className="smallRowCompanyBlock">

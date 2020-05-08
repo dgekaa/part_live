@@ -3,7 +3,7 @@ import ReactAwesomePlayer from "react-awesome-player";
 
 import "./videoPlayer.css";
 
-const VideoPlayer = ({ src, autoplay, onErr, muted, preview }) => {
+const VideoPlayer = ({ src, autoplay, muted, preview }) => {
   const [isPlay, setIsPlay] = useState(false);
   const [isVideoErr, setIsVideoErr] = useState(false);
 
@@ -34,12 +34,12 @@ const VideoPlayer = ({ src, autoplay, onErr, muted, preview }) => {
   const playing = () => {
     setIsPlay(true);
     videoRef.current.player.play();
-    onErr && onErr(false);
+    // onErr && onErr(false);
   };
 
   const error = () => {
     setIsVideoErr("Ошибка");
-    onErr && onErr("Ошибка");
+    // onErr && onErr("Ошибка");
   };
 
   return (
