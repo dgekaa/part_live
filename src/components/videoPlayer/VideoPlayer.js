@@ -15,7 +15,7 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
     children: [
       // disablePlayBtn ? "" : "bigPlayButton",
       // "controlBar",
-      "PosterImage",
+      // "PosterImage",
       // "PictureInPictureToggle",
       // "LoadingSpinner",
     ],
