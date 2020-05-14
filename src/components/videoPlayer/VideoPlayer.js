@@ -31,7 +31,17 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
 
   useEffect(() => {
     videoRef.current.video.style.height = "100%";
+    console.log(videoRef.current, "@@@@@@1111111111111@");
+    // document.querySelector(".vjs-big-play-button").style.zIndex = 100;
   }, []);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     // console.log(videoRef.current.player.bigPlayButton, "?????????????????");
+  //   }, 0);
+
+  //   // document.querySelector(".vjs-big-play-button").style.zIndex = 100;
+  // }, [videoRef]);
 
   // const play = () => {
   //   setIsPlay(true);
