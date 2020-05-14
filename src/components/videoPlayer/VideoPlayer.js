@@ -16,6 +16,7 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
       disablePlayBtn ? "" : "bigPlayButton",
       "controlBar",
       "PosterImage",
+      "LoadingSpinner",
     ],
     sources: [
       {

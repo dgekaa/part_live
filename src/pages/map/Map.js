@@ -316,7 +316,7 @@ const MapComponent = (props) => {
                               disablePlayBtn
                               className="companyImg"
                               preview={cluster.item.streams[0].preview}
-                              src={cluster.item.streams[0].url}
+                              // src={cluster.item.streams[0].url}
                               autoPlay={true}
                             />
                           ) : (

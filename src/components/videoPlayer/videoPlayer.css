@@ -1,10 +1,11 @@
 .vjs-big-play-button,
+.vjs-loading-spinner,
 .vjs-icon-placeholder,
 .vjs-loading-spinner,
 .vjs-control-text,
 .vjs-icon-placeholder:before {
-  z-index: 4 !important;
+  z-index: 100 !important;
 }
 .vjs-loading-spinner {
-  z-index: 4 !important;
+  z-index: 1000;
 }
