@@ -214,7 +214,7 @@ const Admin = (props) => {
               input:{
                 id:"${DATA.streams[0].id}"
                 url :"https://partycamera.org/${name}/index.m3u8"
-                preview : "http://partycamera.org:80/${name}/preview.mp4"
+                preview : "http://partycamera.org/${name}/preview.jpg"
               }
             ) { id name url }
           }`,

@@ -1,23 +1,33 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactAwesomePlayer from "react-awesome-player";
 
 import "./videoPlayer.css";
 
-const VideoPlayer = ({ src, autoplay, muted, preview }) => {
-  const [isPlay, setIsPlay] = useState(false);
+const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
+  // const [isPlay, setIsPlay] = useState(false);
   const [isVideoErr, setIsVideoErr] = useState(false);
 
   const options = {
     autoplay: autoplay,
     muted: muted,
-    poster: "",
+    poster: preview,
     fluid: true,
+    children: [
+      disablePlayBtn ? "" : "bigPlayButton",
+      "controlBar",
+      "PosterImage",
+    ],
     sources: [
       {
         type: "application/x-mpegURL",
         src: src,
       },
     ],
+    // children: {
+    //   controlBar: {
+    //     fullscreenToggle: false
+    //   }
+    // }
   };
 
   const videoRef = useRef(null);
@@ -26,29 +36,33 @@ const VideoPlayer = ({ src, autoplay, muted, preview }) => {
     videoRef.current.video.style.height = "100%";
   }, []);
 
-  const play = () => {
-    setIsPlay(true);
-    videoRef.current.player.play();
-  };
+  // const play = () => {
+  //   setIsPlay(true);
+  //   videoRef.current.player.play();
+  // };
 
-  const playing = () => {
-    setIsPlay(true);
-    videoRef.current.player.play();
-    // onErr && onErr(false);
-  };
+  // const playing = () => {
+  // setIsPlay(true);
+  // videoRef.current.player.play();
+  // };
 
   const error = () => {
     setIsVideoErr("Ошибка");
-    // onErr && onErr("Ошибка");
   };
+
+  // const pause = () => {
+  // setIsPlay(false);
+  // videoRef.current.player.pause();
+  // };
 
   return (
     <div
       style={{
         position: "relative",
+        height: "100%",
       }}
     >
-      {!isPlay && !isVideoErr && (
+      {/* {!isPlay && !isVideoErr && (
         <video
           style={{
             width: "100%",
@@ -61,14 +75,15 @@ const VideoPlayer = ({ src, autoplay, muted, preview }) => {
           src={preview}
           autoPlay
         />
-      )}
+      )} */}
       {!isVideoErr ? (
         <ReactAwesomePlayer
           ref={videoRef}
           options={options}
-          play={play}
-          playing={playing}
+          // play={play}
+          // playing={playing}
           error={error}
+          // pause={pause}
         />
       ) : (
         <p

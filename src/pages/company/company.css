@@ -20,8 +20,11 @@
   /* align-items: center;
   justify-content: center; */
 }
+.react-awesome-player-container {
+  height: 100% !important;
+}
 .yesVideo .react-awesome-player-container {
-  height: 300px !important;
+  height: 100% !important;
   /* margin-top: 50px; */
   display: flex;
   align-items: center;

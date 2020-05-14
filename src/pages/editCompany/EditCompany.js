@@ -93,6 +93,16 @@ const EditCompany = () => {
                 {places &&
                   places.length &&
                   places.map(({ id, name, categories, streams }, i) => {
+                    if (streams[0]) {
+                      fetch(streams[0].url).then((res) => {
+                        if (!res.ok) {
+                          setScriptErr((prev) => ({
+                            ...prev,
+                            [i]: "Err",
+                          }));
+                        }
+                      });
+                    }
                     return (
                       <tr key={id}>
                         <td className="name">
@@ -115,15 +125,10 @@ const EditCompany = () => {
                               )}
                               <video
                                 type="application/x-mpegURL"
-                                onError={() => {
-                                  setScriptErr((prev) => ({
-                                    ...prev,
-                                    [i]: "Err",
-                                  }));
-                                }}
+                                onError={(err) => {}}
                                 style={{ display: "none" }}
                                 className="companyImg"
-                                src={streams[0] && streams[0].preview}
+                                src={streams[0] && streams[0].url}
                                 autoPlay
                               />
                             </div>

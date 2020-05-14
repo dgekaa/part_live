@@ -72,7 +72,9 @@ const SmallCompanyBlock = ({ item }) => {
       item.streams[0].url &&
       fetch(item.streams[0].url)
         .then((res) => {
-          console.log(res.statusText, "RRRRRRRRRRRRRR");
+          console.log(res.status, "status");
+          console.log(res.statusText, "statusText");
+          console.log(res.url, "url");
           res.statusText.toLowerCase() === "ok"
             ? setVideoError(false)
             : setVideoError("err");
@@ -112,13 +114,20 @@ const SmallCompanyBlock = ({ item }) => {
         {!!showStream &&
           item.streams[0] &&
           (!previewError ? (
-            <video
+            <VideoPlayer
+              disablePlayBtn
               className="companyImg"
-              src={item.streams[0].preview}
-              autoPlay
-              onError={(err) => setPreviewError(err)}
+              preview={item.streams[0].preview}
+              src={item.streams[0].url}
+              autoPlay={true}
             />
           ) : (
+            // <video
+            //   className="companyImg"
+            //   src={item.streams[0].preview}
+            //   autoPlay
+            //   onError={(err) => setPreviewError(err)}
+            // />
             <div className="companyImg">
               <p className="noPreviewText">ERR</p>
             </div>
