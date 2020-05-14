@@ -12,12 +12,13 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
     muted: muted,
     poster: preview,
     fluid: true,
-    // children: [
-    //   disablePlayBtn ? "" : "bigPlayButton",
-    //   "controlBar",
-    //   "PosterImage",
-    //   "LoadingSpinner",
-    // ],
+    children: [
+      // disablePlayBtn ? "" : "bigPlayButton",
+      // "controlBar",
+      "PosterImage",
+      // "PictureInPictureToggle",
+      // "LoadingSpinner",
+    ],
     sources: [
       {
         type: "application/x-mpegURL",
