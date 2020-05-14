@@ -12,12 +12,12 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
     muted: muted,
     poster: preview,
     fluid: true,
-    children: [
-      disablePlayBtn ? "" : "bigPlayButton",
-      "controlBar",
-      "PosterImage",
-      "LoadingSpinner",
-    ],
+    // children: [
+    //   disablePlayBtn ? "" : "bigPlayButton",
+    //   "controlBar",
+    //   "PosterImage",
+    //   "LoadingSpinner",
+    // ],
     sources: [
       {
         type: "application/x-mpegURL",
@@ -59,14 +59,6 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
         width: "100%",
       }}
     >
-      <p
-        onClick={() => {
-          videoRef.current.player.play();
-        }}
-        style={{ color: "#fff" }}
-      >
-        sssssssssssssssss
-      </p>
       {/* {!isPlay && !isVideoErr && (
         <video
           style={{

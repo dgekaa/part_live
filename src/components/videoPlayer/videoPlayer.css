@@ -4,8 +4,8 @@
 .vjs-loading-spinner,
 .vjs-control-text,
 .vjs-icon-placeholder:before {
-  z-index: 100 !important;
+  z-index: -1 !important;
 }
 .vjs-loading-spinner {
-  z-index: 1000;
+  z-index: -1 !important;
 }
