@@ -24,11 +24,6 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
         src: src,
       },
     ],
-    // children: {
-    //   controlBar: {
-    //     fullscreenToggle: false
-    //   }
-    // }
   };
 
   const videoRef = useRef(null);
@@ -62,6 +57,9 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
         position: "relative",
         height: "100%",
         width: "100%",
+      }}
+      onClick={() => {
+        videoRef.current.player.play();
       }}
     >
       {/* {!isPlay && !isVideoErr && (
