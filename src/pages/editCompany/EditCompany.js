@@ -123,14 +123,6 @@ const EditCompany = () => {
                               ) : (
                                 <span style={{ color: "green" }}>Ok</span>
                               )}
-                              <video
-                                type="application/x-mpegURL"
-                                onError={(err) => {}}
-                                style={{ display: "none" }}
-                                className="companyImg"
-                                src={streams[0] && streams[0].url}
-                                autoPlay
-                              />
                             </div>
                           ) : (
                             "-"
