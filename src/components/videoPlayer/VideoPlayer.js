@@ -58,10 +58,15 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
         height: "100%",
         width: "100%",
       }}
-      onClick={() => {
-        videoRef.current.player.play();
-      }}
     >
+      <p
+        onClick={() => {
+          videoRef.current.player.play();
+        }}
+        style={{ color: "#fff" }}
+      >
+        sssssssssssssssss
+      </p>
       {/* {!isPlay && !isVideoErr && (
         <video
           style={{
