@@ -108,8 +108,18 @@ const SmallCompanyBlock = ({ item }) => {
   return (
     <Link
       to={{ pathname: `/company/${item.id}` }}
+      style={{ position: "relative" }}
       className="SmallCompanyBlock"
     >
+      <div
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          zIndex: 999,
+          opacity: 0,
+        }}
+      ></div>
       <div className="imgContainer">
         {!!showStream &&
           item.streams[0] &&
