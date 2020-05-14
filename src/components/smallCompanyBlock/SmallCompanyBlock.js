@@ -118,7 +118,7 @@ const SmallCompanyBlock = ({ item }) => {
               disablePlayBtn
               className="companyImg"
               preview={item.streams[0].preview}
-              src={item.streams[0].url}
+              // src={item.streams[0].url}
               autoPlay={true}
             />
           ) : (

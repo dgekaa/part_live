@@ -3,6 +3,7 @@ import GooggleMapReact from "google-map-react";
 import useSupercluster from "use-supercluster";
 import { Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
+import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -268,7 +269,6 @@ const MapComponent = (props) => {
 
               isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
               isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
-
               return (
                 <Marker
                   key={cluster.properties.crimeId}
@@ -312,13 +312,20 @@ const MapComponent = (props) => {
                       <div className="mapMarker">
                         {!!streamTime &&
                           (!previewError ? (
-                            <video
+                            <VideoPlayer
+                              disablePlayBtn
                               className="companyImg"
-                              src={cluster.item.streams[0].preview}
-                              autoPlay
-                              onError={(err) => setPreviewError(err)}
+                              preview={cluster.item.streams[0].preview}
+                              src={cluster.item.streams[0].url}
+                              autoPlay={true}
                             />
                           ) : (
+                            // <video
+                            //   className="companyImg"
+                            //   src={cluster.item.streams[0].url}
+                            //   autoPlay
+                            //   onError={(err) => setPreviewError(err)}
+                            // />
                             <div className="companyImg mapNoTranslationWrap">
                               <p className="mapNoTranslationText">ERR</p>
                             </div>

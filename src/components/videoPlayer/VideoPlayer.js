@@ -60,6 +60,7 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
       style={{
         position: "relative",
         height: "100%",
+        width: "100%",
       }}
     >
       {/* {!isPlay && !isVideoErr && (
