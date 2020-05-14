@@ -6,6 +6,6 @@
 .vjs-icon-placeholder:before {
   z-index: -1 !important;
 }
-.vjs-loading-spinner {
-  z-index: -1 !important;
+.vjs-error-display {
+  display: none !important;
 }
