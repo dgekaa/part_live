@@ -84,6 +84,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
             behavior: "smooth",
           });
+          return;
         }
       });
     }
@@ -94,7 +95,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
-    alert(localStorage.getItem("filter_type") === name);
     return localStorage.getItem("filter_type") === name;
   };
 
