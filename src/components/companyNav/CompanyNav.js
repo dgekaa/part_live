@@ -94,11 +94,8 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
-    alert(localStorage.getItem("filter_type") + "   QQQ");
-    alert(name + "   WWW");
-    return (
-      localStorage.getItem("filter_type").toLowerCase() === name.toLowerCase()
-    );
+    alert(localStorage.getItem("filter_type") === name);
+    return localStorage.getItem("filter_type") === name;
   };
 
   useEffect(() => {
