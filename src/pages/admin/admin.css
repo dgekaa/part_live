@@ -779,6 +779,7 @@ textarea {
   cursor: pointer;
   transition: 0.3s ease all;
   box-sizing: border-box;
+  line-height: 40px;
 }
 .chooseAddressHoveredDesc:hover {
   color: #e32a6c !important;
