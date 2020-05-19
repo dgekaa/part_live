@@ -469,24 +469,28 @@ const Admin = (props) => {
             img: "barIcon",
             altImg: "profile",
             clicked: true,
+            class: "barIconClass",
           },
           {
             name: "ГРАФИК РАБОТЫ",
             img: "clocklite",
             altImg: "work",
             clicked: false,
+            class: "clockliteClass",
           },
           {
             name: "ГРАФИК ТРАНСЛЯЦИЙ",
             img: "video-camera",
             altImg: "camera",
             clicked: false,
+            class: "videoCameraClass",
           },
           {
             name: "СТРИМ",
             img: "streaming",
             altImg: "stream",
             clicked: false,
+            class: "streamingClass",
           },
         ]
   );
@@ -814,11 +818,19 @@ const Admin = (props) => {
                             }}
                           >
                             {el.img && (
-                              <CustomImg
-                                alt={el.altImg}
-                                className="leftMenuImg"
-                                name={el.img}
-                              />
+                              <div
+                                style={{
+                                  width: "30px",
+                                  height: "30px",
+                                  marginRight: "16px",
+                                }}
+                              >
+                                <CustomImg
+                                  className={el.class}
+                                  alt={el.altImg}
+                                  name={el.img}
+                                />
+                              </div>
                             )}
                             {el.name}
                           </li>
@@ -1076,12 +1088,14 @@ const Admin = (props) => {
                               </p>
                               <div className="addressBlockWrapp">
                                 <input type="text" value={DATA.address} />
-                                <p
-                                  className="chooseAddressHoveredDesc"
-                                  onClick={() => togglePopupGoogleMap()}
-                                >
-                                  ВЫБРАТЬ АДРЕС НА КАРТЕ
-                                </p>
+                                <div>
+                                  <span
+                                    className="chooseAddressHoveredDesc"
+                                    onClick={() => togglePopupGoogleMap()}
+                                  >
+                                    ВЫБРАТЬ АДРЕС НА КАРТЕ
+                                  </span>
+                                </div>
                               </div>
                             </div>
 
