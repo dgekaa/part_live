@@ -17,34 +17,44 @@ textarea {
   flex: 1.5;
   padding: 10px;
 }
+/* .leftMenuImg {
+  width: 30px;
+  height: 30px;
+} */
 .leftAdminMenuDesctop .leftAdminMenu {
   position: fixed;
 }
 .leftAdminMenuDesctop .leftAdminMenu .LeftAdminBtn {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   height: 54px;
   cursor: pointer;
   display: flex;
   align-items: center;
   color: #000;
+  letter-spacing: 1px;
 }
 .leftAdminMenuDesctop .leftAdminMenu .clickedLeftAdminBtn {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   height: 54px;
   cursor: pointer;
   display: flex;
   align-items: center;
   color: #e32a6c;
+  letter-spacing: 1px;
 }
 .leftAdminMenuDesctop .leftAdminMenu li img {
   width: 30px;
   height: 30px;
-  margin-right: 10px;
+  margin-right: 16px;
 }
 .leftAdminMenuDesctop .leftAdminMenu li:hover {
   color: #e32a6c;
+}
+.blockNameDesc {
+  font-weight: 500 !important;
+  font-size: 16px !important;
 }
 .adminContentMobile {
   display: none;
@@ -60,7 +70,16 @@ textarea {
 .cropCanvasImage {
   display: none;
 }
-
+.uploadPhotoTextDesctop {
+  font-size: 22px;
+  font-weight: 500;
+  color: #aeaeae;
+}
+.uploadPhotoSizeTextDesctop {
+  font-weight: 500;
+  font-size: 18px;
+  color: #aeaeae;
+}
 .previewPhoto {
   display: flex;
   height: 250px;
@@ -73,7 +92,9 @@ textarea {
   flex-direction: column;
   cursor: pointer;
 }
-
+.previewPhoto:hover {
+  border: 2px solid #e32a6c;
+}
 .ReactCrop__image {
   max-height: 300px;
 }
@@ -99,17 +120,18 @@ textarea {
   border: none;
 }
 .changePhoto {
-  color: #e32a6c;
-  font-weight: 700;
-  font-size: 18px;
+  color: #4f4f4f;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 12px;
   width: 250px;
   cursor: pointer;
   text-align: center;
-  padding-top: 5px;
-  transition: 0.3s ease all;
+  padding-top: 12px;
+  transition: 0.3s ease color;
 }
 .changePhoto:hover {
-  opacity: 0.7;
+  color: #e32a6c;
 }
 .profileDataDesc {
   justify-content: space-between;
@@ -122,7 +144,7 @@ textarea {
 .inputBlockWrap .addressBlockWrapp {
   display: flex;
   flex-direction: column;
-  height: 140px;
+  height: 135px;
 }
 .inputBlockWrap .inputInnerBlock {
   display: flex;
@@ -186,8 +208,9 @@ textarea {
   opacity: none;
   border-bottom: 1px solid #e5e5e5;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 400;
   padding: 0 10px;
+  color: #4f4f4f;
 }
 
 .profileDataDesc .inputBlockWrap input:active,
@@ -203,7 +226,7 @@ textarea {
 .profileDataDesc .inputBlockWrap .descTextarea {
   outline: none;
   overflow: hidden;
-  resize: vertical;
+  resize: none;
   min-height: 100px;
   max-height: 500px;
   font-size: 14px !important;
@@ -242,8 +265,8 @@ textarea {
 }
 .bigInputBlockWrap .categoryBtnWrap .categoryBtn {
   display: flex;
-  height: 35px;
-  width: 83px;
+  height: 40px;
+  width: 110px;
   flex-wrap: wrap;
   padding: 0 5px;
   border-radius: 5px;
@@ -265,10 +288,9 @@ textarea {
 .tableWorkDesc {
   width: 100%;
   border-spacing: 0;
+  font-size: 16px;
 }
-/* .tableWorkDesc tbody {
-  width: 100%;
-} */
+
 .workTimeTableWrap .tableWorkDesc tr {
   display: flex;
   width: 80%;
@@ -279,6 +301,9 @@ textarea {
   margin: 0;
   padding: 10px 15px;
   flex: 1;
+}
+.workTimeTableWrap .tableWorkDesc tr td:first-of-type {
+  text-transform: uppercase;
 }
 .workTimeTableWrap .tableWorkDesc tr .timeTd {
   cursor: pointer;
@@ -293,6 +318,10 @@ textarea {
   transition: 0.3s ease all;
   cursor: pointer;
   flex: 3;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 400;
+  line-height: 25px;
 }
 .workTimeTableWrap .tableWorkDesc tr .doAsDayOfTd:hover {
   color: #000;
@@ -721,6 +750,28 @@ textarea {
 .makeAsDayOffMobile {
   display: none;
 }
+.chooseAddressHoveredDesc {
+  width: 244px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 14px;
+  background: #ffffff;
+  border: 2px solid #c4c4c4;
+  box-sizing: border-box;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  color: #4f4f4f;
+  cursor: pointer;
+  transition: 0.3s ease all;
+  box-sizing: border-box;
+}
+.chooseAddressHoveredDesc:hover {
+  color: #e32a6c !important;
+  border: 2px solid #e32a6c;
+}
 @media screen and (max-width: 760px) {
   .closeSidebarBtn {
     position: fixed;
@@ -768,6 +819,7 @@ textarea {
     width: 100%;
     padding: 0 15px;
   }
+
   .adminContentMobile .profileDataDesc {
     margin-top: 0;
     padding: 0 15px;

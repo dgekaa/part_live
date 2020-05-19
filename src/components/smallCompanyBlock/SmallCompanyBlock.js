@@ -121,6 +121,7 @@ const SmallCompanyBlock = ({ item }) => {
         }}
       ></div>
       <div className="imgContainer">
+        {console.log(item, "RRRRRRRRRRRRRRRRRRRRr")}
         {!!showStream &&
           item.streams[0] &&
           (!previewError ? (
@@ -132,12 +133,6 @@ const SmallCompanyBlock = ({ item }) => {
               autoPlay={true}
             />
           ) : (
-            // <video
-            //   className="companyImg"
-            //   src={item.streams[0].preview}
-            //   autoPlay
-            //   onError={(err) => setPreviewError(err)}
-            // />
             <div className="companyImg">
               <p className="noPreviewText">ERR</p>
             </div>

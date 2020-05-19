@@ -46,10 +46,14 @@ const DescriptionWrap = styled.div`
   flex-direction: column !important;
   font-size: 10px;
   margin-top: 10px;
+  width: ${(props) => props.width && props.width};
+  height: ${(props) => props.height && props.height};
 `;
 
 const LengthofDescription = styled.span`
   padding-left: 10px;
+  font-weight: 500;
+  font-size: 11px;
   text-align: end;
   color: ${(props) =>
     props.descOfCompany.length === props.descOfCompanyLimit ? "red" : "green"};
@@ -660,20 +664,20 @@ const Admin = (props) => {
   };
 
   const isWorkTimeOrDayOff = (oneDay, i) => {
-    const nextDay = () => {
-      if (i) {
-        return " (" + SHORT_DAY_OF_WEEK[tomorrowFromDay(i)] + ") ";
-      } else {
-        return "";
-      }
-    };
-    const thisDay = () => {
-      if (i) {
-        return " (" + SHORT_DAY_OF_WEEK[i] + ") ";
-      } else {
-        return "";
-      }
-    };
+    // const nextDay = () => {
+    //   if (i) {
+    //     return " (" + SHORT_DAY_OF_WEEK[tomorrowFromDay(i)] + ") ";
+    //   } else {
+    //     return "";
+    //   }
+    // };
+    // const thisDay = () => {
+    //   if (i) {
+    //     return " (" + SHORT_DAY_OF_WEEK[i] + ") ";
+    //   } else {
+    //     return "";
+    //   }
+    // };
 
     if (oneDay && oneDay.id) {
       if (
@@ -684,19 +688,21 @@ const Admin = (props) => {
       ) {
         return (
           <p>
-            {oneDay.start_time.replace(":", ".")}{" "}
-            <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
+            {oneDay.start_time.replace(":", ".")}
+            {" - "}
+            {/* <span className="dayOfWeekGray">{thisDay()}</span> -{" "} */}
             {oneDay.end_time.replace(":", ".")}{" "}
-            <span className="dayOfWeekGray">{thisDay()}</span>
+            {/* <span className="dayOfWeekGray">{thisDay()}</span> */}
           </p>
         );
       } else {
         return (
           <p>
-            {oneDay.start_time.replace(":", ".")}{" "}
-            <span className="dayOfWeekGray">{thisDay()}</span> -{" "}
+            {oneDay.start_time.replace(":", ".")}
+            {" - "}
+            {/* <span className="dayOfWeekGray">{thisDay()}</span> -{" "} */}
             {oneDay.end_time.replace(":", ".")}
-            <span> {nextDay()}</span>
+            {/* <span> {nextDay()}</span> */}
           </p>
         );
       }
@@ -810,7 +816,7 @@ const Admin = (props) => {
                             {el.img && (
                               <CustomImg
                                 alt={el.altImg}
-                                className="eyeCompanyBlock"
+                                className="leftMenuImg"
                                 name={el.img}
                               />
                             )}
@@ -827,52 +833,59 @@ const Admin = (props) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
-                          {imgSrc ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                            }}
+                          >
                             <div>
-                              <div
-                                className="cropWrapper"
-                                style={{
-                                  position: "relative",
-                                  height: "250px",
-                                  background: "#fff",
-                                }}
-                              >
-                                <Cropper
-                                  style={{
-                                    containerStyle: {
+                              {imgSrc ? (
+                                <div>
+                                  <div
+                                    className="cropWrapper"
+                                    style={{
+                                      position: "relative",
+                                      height: "250px",
                                       background: "#fff",
-                                      maxWidth: "250px",
-                                      maxHeight: "250px",
-                                    },
-                                  }}
-                                  image={imgSrc}
-                                  crop={crop}
-                                  zoom={zoom}
-                                  onZoomChange={setZoom}
-                                  aspect={aspect}
-                                  onCropChange={setCrop}
-                                  onCropComplete={(
-                                    croppedArea,
-                                    croppedAreaPixels
-                                  ) => {
-                                    onCropComplete(croppedAreaPixels);
-                                  }}
-                                  onMediaLoaded={({
-                                    naturalWidth,
-                                    naturalHeight,
-                                  }) => {
-                                    setCurrentImageSize({
-                                      width: naturalWidth,
-                                      height: naturalHeight,
-                                    });
-                                  }}
-                                />
-                                <canvas
-                                  className="cropCanvasImage"
-                                  ref={imagePreviewCanvas}
-                                ></canvas>
-                              </div>
-                              {/* <span
+                                    }}
+                                  >
+                                    <Cropper
+                                      style={{
+                                        containerStyle: {
+                                          background: "#fff",
+                                          maxWidth: "250px",
+                                          maxHeight: "250px",
+                                        },
+                                      }}
+                                      image={imgSrc}
+                                      crop={crop}
+                                      zoom={zoom}
+                                      onZoomChange={setZoom}
+                                      aspect={aspect}
+                                      onCropChange={setCrop}
+                                      onCropComplete={(
+                                        croppedArea,
+                                        croppedAreaPixels
+                                      ) => {
+                                        onCropComplete(croppedAreaPixels);
+                                      }}
+                                      onMediaLoaded={({
+                                        naturalWidth,
+                                        naturalHeight,
+                                      }) => {
+                                        setCurrentImageSize({
+                                          width: naturalWidth,
+                                          height: naturalHeight,
+                                        });
+                                      }}
+                                    />
+                                    <canvas
+                                      className="cropCanvasImage"
+                                      ref={imagePreviewCanvas}
+                                    ></canvas>
+                                  </div>
+                                  {/* <span
                                 onClick={downloadImgFromCanvas}
                                 style={{ position: "relative", top: "-280px" }}
                               >
@@ -881,48 +894,105 @@ const Admin = (props) => {
                               <span onClick={handeleClearToDefault}>
                                 Очистить
                               </span> */}
+                                </div>
+                              ) : (
+                                <div
+                                  className="previewPhoto"
+                                  onClick={() =>
+                                    document
+                                      .querySelector(".previewRef")
+                                      .click()
+                                  }
+                                >
+                                  <p className="uploadPhotoTextDesctop">
+                                    Загрузить фото
+                                  </p>
+                                  <p className="uploadPhotoSizeTextDesctop">
+                                    250 X 250
+                                  </p>
+                                </div>
+                              )}
+                              <Dropzone
+                                multiple={false}
+                                accept={acceptedFileTypes}
+                                maxSize={imageMaxSize}
+                                onDrop={(acceptedFiles, rejectedFiles) =>
+                                  handleOnDrop(acceptedFiles, rejectedFiles)
+                                }
+                              >
+                                {({ getRootProps, getInputProps }) => {
+                                  return (
+                                    <section>
+                                      <div
+                                        className="changePhotoBlock previewRef"
+                                        {...getRootProps()}
+                                      >
+                                        <input
+                                          className="changePhotoInput"
+                                          {...getInputProps()}
+                                        />
+                                        <p className="changePhoto">
+                                          Изменить фото профиля
+                                        </p>
+                                      </div>
+                                    </section>
+                                  );
+                                }}
+                              </Dropzone>
                             </div>
-                          ) : (
                             <div
-                              className="previewPhoto"
-                              onClick={() =>
-                                document.querySelector(".previewRef").click()
-                              }
+                              className="profileDataDesc"
+                              style={{
+                                width: "100%",
+                                height: "250px",
+                                margin: 0,
+                                paddingLeft: "29px",
+                              }}
                             >
-                              <p>Загрузить фото</p>
-                              <p>250 X 250</p>
-                            </div>
-                          )}
-                          <Dropzone
-                            multiple={false}
-                            accept={acceptedFileTypes}
-                            maxSize={imageMaxSize}
-                            onDrop={(acceptedFiles, rejectedFiles) =>
-                              handleOnDrop(acceptedFiles, rejectedFiles)
-                            }
-                          >
-                            {({ getRootProps, getInputProps }) => {
-                              return (
-                                <section>
-                                  <div
-                                    className="changePhotoBlock previewRef"
-                                    {...getRootProps()}
+                              <div
+                                className="inputBlockWrap"
+                                style={{
+                                  flexDirection: "column",
+                                  alignItems: "flex-start",
+                                }}
+                              >
+                                <p
+                                  style={{
+                                    fontWeight: "500",
+                                    fontSize: "16px",
+                                  }}
+                                >
+                                  Описание:
+                                </p>
+                                <DescriptionWrap
+                                  width={"100%"}
+                                  height={"230px"}
+                                >
+                                  <textarea
+                                    className="descTextarea"
+                                    style={{ padding: "0 5px" }}
+                                    maxLength={descOfCompanyLimit}
+                                    value={descOfCompany}
+                                    onChange={(e) =>
+                                      setDescOfCompany(e.target.value)
+                                    }
+                                  />
+                                  <LengthofDescription
+                                    descOfCompany={descOfCompany}
+                                    descOfCompanyLimit={descOfCompanyLimit}
                                   >
-                                    <input
-                                      className="changePhotoInput"
-                                      {...getInputProps()}
-                                    />
-                                    <p className="changePhoto">
-                                      Сменить фото профиля
-                                    </p>
-                                  </div>
-                                </section>
-                              );
-                            }}
-                          </Dropzone>
+                                    {descOfCompany.length} /{" "}
+                                    {descOfCompanyLimit}
+                                  </LengthofDescription>
+                                </DescriptionWrap>
+                              </div>
+                            </div>
+                          </div>
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
-                              <p>Название заведения:</p>
+                              <p className="blockNameDesc">
+                                Название заведения:
+                              </p>
                               <input
                                 type="text"
                                 placeholder={DATA.name}
@@ -933,7 +1003,7 @@ const Admin = (props) => {
                               />
                             </div>
                             <div className="inputBlockWrap">
-                              <p>Псевдоним:</p>
+                              <p className="blockNameDesc">Псевдоним:</p>
                               <input
                                 type="text"
                                 placeholder={DATA.name}
@@ -944,7 +1014,7 @@ const Admin = (props) => {
                               />
                             </div>
                             <div className="bigInputBlockWrap">
-                              <p>Категория:</p>
+                              <p className="blockNameDesc">Категория:</p>
                               <div className="categoryBtnWrap">
                                 {!!uniqueCompanyType &&
                                   uniqueCompanyType.map((el, i) => {
@@ -1001,37 +1071,20 @@ const Admin = (props) => {
                               </div>
                             </div>
                             <div className="inputBlockWrap">
-                              <p className="addressText">Адрес заведения:</p>
+                              <p className="addressText blockNameDesc">
+                                Адрес заведения:
+                              </p>
                               <div className="addressBlockWrapp">
                                 <input type="text" value={DATA.address} />
                                 <p
-                                  className="chooseAddressDesc"
+                                  className="chooseAddressHoveredDesc"
                                   onClick={() => togglePopupGoogleMap()}
                                 >
                                   ВЫБРАТЬ АДРЕС НА КАРТЕ
                                 </p>
                               </div>
                             </div>
-                            <div className="inputBlockWrap">
-                              <p>Описание:</p>
-                              <DescriptionWrap>
-                                <LengthofDescription
-                                  descOfCompany={descOfCompany}
-                                  descOfCompanyLimit={descOfCompanyLimit}
-                                >
-                                  {descOfCompany.length} / {descOfCompanyLimit}
-                                </LengthofDescription>
 
-                                <textarea
-                                  className="descTextarea"
-                                  maxLength={descOfCompanyLimit}
-                                  value={descOfCompany}
-                                  onChange={(e) =>
-                                    setDescOfCompany(e.target.value)
-                                  }
-                                />
-                              </DescriptionWrap>
-                            </div>
                             <p
                               className="saveBtnProfile"
                               onClick={() => updatePlaceData()}
@@ -1055,7 +1108,16 @@ const Admin = (props) => {
                                   )[el.day];
                                   return (
                                     <tr key={i}>
-                                      <td>
+                                      <td
+                                        style={
+                                          numberDayNow === i
+                                            ? {
+                                                fontWeight: "700",
+                                                color: "#e32a6c",
+                                              }
+                                            : {}
+                                        }
+                                      >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
                                         {oneDay.start_time &&
                                           (oneDay.start_time.split(":")[0] *
@@ -1106,6 +1168,13 @@ const Admin = (props) => {
                                         {isWorkTimeOrDayOff(oneDay, i)}
                                       </td>
                                       <td
+                                        style={
+                                          numberDayNow === i
+                                            ? {
+                                                fontWeight: "700",
+                                              }
+                                            : {}
+                                        }
                                         className="doAsDayOfTd"
                                         onClick={() => setAsDayOf(oneDay.id)}
                                       >
@@ -1135,7 +1204,16 @@ const Admin = (props) => {
                                   )[el.day];
                                   return (
                                     <tr key={i}>
-                                      <td>
+                                      <td
+                                        style={
+                                          numberDayNow === i
+                                            ? {
+                                                fontWeight: "700",
+                                                color: "#E32A6C",
+                                              }
+                                            : {}
+                                        }
+                                      >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
                                         {oneDay.start_time &&
                                           (oneDay.start_time.split(":")[0] *
@@ -1155,7 +1233,7 @@ const Admin = (props) => {
                                         style={
                                           numberDayNow === i
                                             ? {
-                                                fontWeight: "bold",
+                                                fontWeight: "700",
                                               }
                                             : {}
                                         }
@@ -1190,6 +1268,13 @@ const Admin = (props) => {
                                         {isWorkTimeOrDayOff(oneDay, i)}
                                       </td>
                                       <td
+                                        style={
+                                          numberDayNow === i
+                                            ? {
+                                                fontWeight: "700",
+                                              }
+                                            : {}
+                                        }
                                         className="doAsDayOfTd"
                                         onClick={() => setAsDayOf(oneDay.id)}
                                       >

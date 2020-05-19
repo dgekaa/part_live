@@ -73,7 +73,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
         console.log(el, "ELLLLL");
         // if (isClickedTypeBtn(el.innerText)) {
-        // alert("111111");
         const btnPositionToCenter =
           slideBtnMenu.current.offsetWidth / 2 -
           (el.offsetLeft -
@@ -84,7 +83,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
           behavior: "smooth",
         });
-        //   return;
         // }
       });
     }

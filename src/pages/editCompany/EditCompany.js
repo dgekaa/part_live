@@ -104,17 +104,20 @@ const EditCompany = () => {
                       });
                     }
                     return (
-                      <tr key={id}>
+                      <tr key={id} className="editCompanyRow">
                         <td className="name">
                           <Link to={`/admin/${id}`}>{name}</Link>
                         </td>
                         <td className="typeCompany">
                           {categories[0] &&
-                            categories[0].name &&
-                            categories[0].name.toLowerCase()}
+                            categories[0].slug &&
+                            categories[0].slug.toLowerCase()}
                         </td>
                         <td className="errStyle">
-                          {streams[0] && streams[0].preview ? (
+                          {categories[0] &&
+                            categories[0].name &&
+                            categories[0].name.toLowerCase()}
+                          {/* {streams[0] && streams[0].preview ? (
                             <div>
                               {scriptErr[i] && scriptErr[i] ? (
                                 <span style={{ color: "red" }}>
@@ -126,7 +129,7 @@ const EditCompany = () => {
                             </div>
                           ) : (
                             "-"
-                          )}
+                          )} */}
                         </td>
                       </tr>
                     );

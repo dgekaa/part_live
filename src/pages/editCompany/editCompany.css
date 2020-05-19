@@ -3,14 +3,17 @@
   margin: 0 auto;
   padding-top: 60px;
 }
-
+.editCompanyRow {
+  border-top: 1px solid #eaeaea;
+}
 .editCompanyContent h3 {
   font-weight: 700;
-  font-size: 20px;
+  font-size: 24px;
   margin-bottom: 40px;
 }
 .editCompanyContent table {
   width: 80%;
+  border-bottom: 1px solid #eaeaea;
 }
 .editCompanyContent tr {
   display: flex;
@@ -24,12 +27,17 @@
   flex: 1.5;
 }
 .editCompanyContent .name {
-  font-weight: 700;
+  font-weight: 400;
   font-size: 18px;
 }
+
 .editCompanyContent .name a {
   display: block;
   width: 100%;
+  transition: 0.3s ease color;
+}
+.editCompanyContent .name a:hover {
+  color: #e32a6c;
 }
 .editCompanyContent .errStyle {
   font-weight: 500;
@@ -37,9 +45,9 @@
   color: #aeaeae;
 }
 .editCompanyContent .typeCompany {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 18px;
-  color: #e32a6c;
+  color: #aeaeae;
 }
 
 @media screen and (max-width: 1000px) {
