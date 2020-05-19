@@ -108,88 +108,137 @@ const SmallCompanyBlock = ({ item }) => {
   return (
     <Link
       to={{ pathname: `/company/${item.id}` }}
-      style={{ position: "relative" }}
-      className="SmallCompanyBlock"
+      className="SmallCompanyBlockNewDesign"
+      style={
+        item.streams && item.streams[0] && item.streams[0].preview
+          ? { backgroundImage: `url(${item.streams[0].preview})` }
+          : {}
+      }
     >
-      <div
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          zIndex: 999,
-          opacity: 0,
-        }}
-      ></div>
-      <div className="imgContainer">
-        {console.log(item, "RRRRRRRRRRRRRRRRRRRRr")}
-        {!!showStream &&
-          item.streams[0] &&
-          (!previewError ? (
-            <VideoPlayer
-              disablePlayBtn
-              className="companyImg"
-              preview={item.streams[0].preview}
-              // src={item.streams[0].url}
-              autoPlay={true}
-            />
-          ) : (
-            <div className="companyImg">
-              <p className="noPreviewText">ERR</p>
-            </div>
-          ))}
-        {!showStream && (
-          <div className="companyImg">
-            <p className="noPreviewText">{whenWillBeTranslation()}</p>
+      <div className="gradientWrapperNewDesign">
+        <div className="descriptionNewDesign">
+          <div className="topBlockTextNewDesign">
+            <p className="companyNameNewDesign">{item.name}</p>
+
+            <p className="companyTitle">"Супер пати всех студентов"</p>
           </div>
-        )}
-      </div>
-      <div className="description">
-        <div className="topBlockText">
-          <div className="companyNameWrap">
-            <p className="companyName">{item.name}</p>
+          <div className="bottomBlockText">
+            <div className="rowCompanyBlock"></div>
+            <p className="workTimeText">{workTime}</p>
             <p className="companyType">
-              {item.categories && item.categories[0] && item.categories[0].name}{" "}
+              {item.categories && item.categories[0] && item.categories[0].name}
             </p>
           </div>
-          <p className="companyTitle">"Супер пати всех студентов"</p>
-          {showIsVideoErr()}
         </div>
-
-        <div className="bottomBlockText">
-          <div className="rowCompanyBlock">
-            <div className="smallRowCompanyBlock">
-              <CustomImg alt="eye" className="eyeCompanyBlock" name={"eye"} />
-              <p className="leftTextCompanyBlock">25 752</p>
-            </div>
-            <div className="smallRowCompanyBlock">
-              <span className="circle"></span>
-              <p className="leftTextCompanyBlock">255</p>
+        {/* Mobile */}
+        {/* <div className="descriptionMobile">
+          <p className="nameOfCompany">{item.name}</p>
+          <div className="distanceFirst1 distanceFirstLeft1">
+            <div className="distanceAndType">
+              {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
+              {!curDistance && " 0 km."}
+              <span>
+                {item.categories &&
+                  item.categories[0] &&
+                  item.categories[0].name}
+              </span>
             </div>
           </div>
-          <p className="workTimeText">{workTime}</p>
-        </div>
-      </div>
-      {/* Mobile */}
-      <div className="descriptionMobile">
-        <p className="nameOfCompany">{item.name}</p>
-        <div className="distanceFirst1 distanceFirstLeft1">
-          <div className="distanceAndType">
-            {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
-            {!curDistance && " 0 km."}
-            <span>
-              {item.categories && item.categories[0] && item.categories[0].name}
-            </span>
-          </div>
-        </div>
-        {isWork && (
-          <p className="endTimeMobile">
-            Открыто: до
-            <span> {workTime.split("-")[1]}</span>
-          </p>
-        )}
-        {!isWork && <p className="endTimeMobile">Закрыто</p>}
+          {isWork && (
+            <p className="endTimeMobile">
+              Открыто: до
+              <span> {workTime.split("-")[1]}</span>
+            </p>
+          )}
+          {!isWork && <p className="endTimeMobile">Закрыто</p>}
+        </div> */}
       </div>
     </Link>
+    // <Link
+    //   to={{ pathname: `/company/${item.id}` }}
+    //   style={{ position: "relative" }}
+    //   className="SmallCompanyBlock"
+    // >
+    //   <div
+    //     style={{
+    //       position: "absolute",
+    //       width: "100%",
+    //       height: "100%",
+    //       zIndex: 999,
+    //       opacity: 0,
+    //     }}
+    //   ></div>
+    //   <div className="imgContainer">
+    //     {!!showStream &&
+    //       item.streams[0] &&
+    //       (!previewError ? (
+    //         <VideoPlayer
+    //           disablePlayBtn
+    //           className="companyImg"
+    //           preview={item.streams[0].preview}
+    //           // src={item.streams[0].url}
+    //           autoPlay={true}
+    //         />
+    //       ) : (
+    //         <div className="companyImg">
+    //           <p className="noPreviewText">ERR</p>
+    //         </div>
+    //       ))}
+
+    //     {!showStream && (
+    //       <div className="companyImg">
+    //         <p className="noPreviewText">{whenWillBeTranslation()}</p>
+    //       </div>
+    //     )}
+    //   </div>
+
+    // <div className="description">
+    //   <div className="topBlockText">
+    //     <div className="companyNameWrap">
+    //       <p className="companyName">{item.name}</p>
+    //       <p className="companyType">
+    //         {item.categories && item.categories[0] && item.categories[0].name}{" "}
+    //       </p>
+    //     </div>
+    //     <p className="companyTitle">"Супер пати всех студентов"</p>
+    //     {showIsVideoErr()}
+    //   </div>
+
+    //     <div className="bottomBlockText">
+    //       <div className="rowCompanyBlock">
+    //         <div className="smallRowCompanyBlock">
+    //           <CustomImg alt="eye" className="eyeCompanyBlock" name={"eye"} />
+    //           <p className="leftTextCompanyBlock">25 752</p>
+    //         </div>
+    //         <div className="smallRowCompanyBlock">
+    //           <span className="circle"></span>
+    //           <p className="leftTextCompanyBlock">255</p>
+    //         </div>
+    //       </div>
+    //       <p className="workTimeText">{workTime}</p>
+    //     </div>
+    //   </div>
+    //   {/* Mobile */}
+    //   <div className="descriptionMobile">
+    //     <p className="nameOfCompany">{item.name}</p>
+    //     <div className="distanceFirst1 distanceFirstLeft1">
+    //       <div className="distanceAndType">
+    //         {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
+    //         {!curDistance && " 0 km."}
+    //         <span>
+    //           {item.categories && item.categories[0] && item.categories[0].name}
+    //         </span>
+    //       </div>
+    //     </div>
+    //     {isWork && (
+    //       <p className="endTimeMobile">
+    //         Открыто: до
+    //         <span> {workTime.split("-")[1]}</span>
+    //       </p>
+    //     )}
+    //     {!isWork && <p className="endTimeMobile">Закрыто</p>}
+    //   </div>
+    // </Link>
   );
 };
 

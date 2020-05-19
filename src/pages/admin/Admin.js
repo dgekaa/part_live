@@ -982,7 +982,9 @@ const Admin = (props) => {
                                 >
                                   <textarea
                                     className="descTextarea"
-                                    style={{ padding: "0 5px" }}
+                                    style={{
+                                      padding: "0 5px",
+                                    }}
                                     maxLength={descOfCompanyLimit}
                                     value={descOfCompany}
                                     onChange={(e) =>
@@ -1076,6 +1078,12 @@ const Admin = (props) => {
                                           : hoveredBtn === el.name
                                           ? renderCustomTypeImg(el.slug, true)
                                           : renderCustomTypeImg(el.slug, false)}
+                                        <span
+                                          style={{
+                                            display: "inline-block",
+                                            width: "5px",
+                                          }}
+                                        ></span>
                                         {el.name}
                                       </span>
                                     );

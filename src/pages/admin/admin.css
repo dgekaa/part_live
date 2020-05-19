@@ -240,8 +240,8 @@ textarea {
   resize: none;
   min-height: 100px;
   max-height: 500px;
-  font-size: 14px !important;
-  font-weight: 400 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   color: #4f4f4f;
   flex: 2;
   opacity: none;
@@ -250,6 +250,7 @@ textarea {
   padding: 0 10px;
   box-sizing: border-box;
   line-height: 24px;
+  letter-spacing: 0.5px;
 }
 .bigInputBlockWrap {
   /* height: 60px; */

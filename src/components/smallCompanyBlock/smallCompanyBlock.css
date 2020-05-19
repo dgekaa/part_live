@@ -1,4 +1,43 @@
 /* ДЛЯ ПРИМЕРА========================================== */
+.SmallCompanyBlockNewDesign {
+  width: 240px;
+  height: 234px;
+  overflow: hidden;
+  border-radius: 10px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+  margin: 10px;
+}
+.gradientWrapperNewDesign {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(196, 196, 196, 0) 0%, #000000 100%);
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+}
+.descriptionNewDesign {
+  display: flex;
+  width: 100%;
+  height: 64px;
+  flex-direction: column;
+  background-color: gold;
+}
+.topBlockTextNewDesign {
+  width: 100%;
+  background-color: pink;
+}
+.companyNameNewDesign {
+  color: #fff;
+}
+/* ----------------------------------------------------------- */
 .SmallCompanyBlock {
   -webkit-transition: 0.2s ease all;
   -o-transition: 0.2s ease all;
