@@ -79,8 +79,8 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               el.offsetWidth / 2);
 
           slideBtnMenu.current.scrollTo({
-            behavior: "smooth",
             left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
+            // behavior: "smooth",
           });
         }
       });
