@@ -69,14 +69,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const firstScrollBtnToCenter = () => {
-    alert("44444");
-
     if (localStorage.getItem("uniqueCompanyType")) {
-      alert("333333");
-
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
-        alert("222222");
-
+        console.log(el, "ELLLLL");
+        alert(el.innerText, "el.innerText");
         if (isClickedTypeBtn(el.innerText)) {
           alert("111111");
           const btnPositionToCenter =
@@ -99,7 +95,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
-    return localStorage.getItem("filter_type") === name;
+    return (
+      localStorage.getItem("filter_type").toLowerCase() === name.toLowerCase()
+    );
   };
 
   useEffect(() => {
