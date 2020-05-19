@@ -72,7 +72,6 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     if (localStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
         console.log(el, "ELLLLL");
-        alert(el.innerText, "el.innerText");
         if (isClickedTypeBtn(el.innerText)) {
           alert("111111");
           const btnPositionToCenter =
@@ -95,6 +94,8 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
+    alert(localStorage.getItem("filter_type"), "QQQ");
+    alert(name, "WWW");
     return (
       localStorage.getItem("filter_type").toLowerCase() === name.toLowerCase()
     );
