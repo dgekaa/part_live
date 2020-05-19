@@ -69,9 +69,16 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const firstScrollBtnToCenter = () => {
+    alert("44444");
+
     if (localStorage.getItem("uniqueCompanyType")) {
+      alert("333333");
+
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
+        alert("222222");
+
         if (isClickedTypeBtn(el.innerText)) {
+          alert("111111");
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
@@ -96,9 +103,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      firstScrollBtnToCenter();
-    }, 1000);
+    firstScrollBtnToCenter();
   }, []);
 
   const animateProps = useSpring({
