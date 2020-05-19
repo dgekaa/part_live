@@ -72,20 +72,20 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     if (localStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
         console.log(el, "ELLLLL");
-        if (isClickedTypeBtn(el.innerText)) {
-          alert("111111");
-          const btnPositionToCenter =
-            slideBtnMenu.current.offsetWidth / 2 -
-            (el.offsetLeft -
-              slideBtnMenu.current.scrollLeft +
-              el.offsetWidth / 2);
+        // if (isClickedTypeBtn(el.innerText)) {
+        // alert("111111");
+        const btnPositionToCenter =
+          slideBtnMenu.current.offsetWidth / 2 -
+          (el.offsetLeft -
+            slideBtnMenu.current.scrollLeft +
+            el.offsetWidth / 2);
 
-          slideBtnMenu.current.scrollTo({
-            left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
-            behavior: "smooth",
-          });
-          return;
-        }
+        slideBtnMenu.current.scrollTo({
+          left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
+          behavior: "smooth",
+        });
+        //   return;
+        // }
       });
     }
   };
