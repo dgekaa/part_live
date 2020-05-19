@@ -55,6 +55,7 @@ textarea {
 .blockNameDesc {
   font-weight: 500 !important;
   font-size: 16px !important;
+  color: #000;
 }
 .adminContentMobile {
   display: none;
@@ -85,7 +86,7 @@ textarea {
   height: 250px;
   width: 250px;
   background-color: #f2f2f7;
-  border-radius: 5px;
+  border-radius: 10px;
   color: #aeaeae;
   justify-content: center;
   align-items: center;
@@ -197,8 +198,7 @@ textarea {
 .profileDataDesc .inputBlockWrap p {
   display: flex;
   flex: 1.2;
-  color: #4f4f4f;
-  font-size: 16px;
+  font-size: 14px;
 }
 .profileDataDesc .inputBlockWrap input {
   display: flex;
@@ -249,7 +249,6 @@ textarea {
   padding-top: 25px;
   display: flex;
   flex: 1.2;
-  color: #4f4f4f;
   font-size: 16px;
 }
 .profileDataDesc div {
@@ -754,7 +753,7 @@ textarea {
   width: 244px;
   height: 40px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 14px !important;
   background: #ffffff;
   border: 2px solid #c4c4c4;
   box-sizing: border-box;
