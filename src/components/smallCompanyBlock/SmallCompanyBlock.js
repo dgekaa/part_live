@@ -119,13 +119,14 @@ const SmallCompanyBlock = ({ item }) => {
         <div className="descriptionNewDesign">
           <div className="topBlockTextNewDesign">
             <p className="companyNameNewDesign">{item.name}</p>
-
-            <p className="companyTitle">"Супер пати всех студентов"</p>
+            <p className="companyTitleNewDesign">Супер пати всех студентов</p>
           </div>
-          <div className="bottomBlockText">
-            <div className="rowCompanyBlock"></div>
-            <p className="workTimeText">{workTime}</p>
-            <p className="companyType">
+          <div className="bottomBlockTextNewDesign">
+            <div className="workTimeIsOpenedNewDesign">
+              <p className="workTimeTextNewDesign">{workTime}</p>
+              <p className="isOpenedNewDesign">Открыто</p>
+            </div>
+            <p className="companyTypeNewDesign">
               {item.categories && item.categories[0] && item.categories[0].name}
             </p>
           </div>
