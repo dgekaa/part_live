@@ -8,7 +8,8 @@
   background-size: cover;
   background-position: center;
   background-color: #000;
-  margin: 10px;
+  margin: 5px;
+  transition: 0.2s ease all;
 }
 .gradientWrapperNewDesign {
   position: absolute;
@@ -43,13 +44,16 @@
   color: #fff;
   font-size: 13px;
   line-height: 15px;
-  padding-top: 2px;
+  padding-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .bottomBlockTextNewDesign {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-top: 5px;
+  padding-top: 6px;
 }
 .workTimeIsOpenedNewDesign {
   display: flex;
@@ -67,7 +71,7 @@
   font-size: 9px;
   text-transform: uppercase;
   color: #36cc33;
-  line-height: 13px;
+  line-height: 14px;
 }
 .companyTypeNewDesign {
   font-weight: 700;
@@ -75,6 +79,27 @@
   line-height: 14px;
   text-transform: uppercase;
   color: #ff0960;
+}
+.noTranslationNewDesign {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #f2f2f7;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.noTranslationTextNewDesign {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: #aeaeae;
 }
 
 /* ----------------------------------------------------------- */
@@ -252,13 +277,35 @@
   overflow: hidden;
   border-radius: 5px;
   height: 280px;
-  /* display: flex; */
-  /* flex: 1; */
-  /* justify-content: center;
-  align-items: center;  */
 }
 
-@media screen and (max-width: 1060px) {
+@media screen and (max-width: 760px) {
+  .SmallCompanyBlockNewDesign {
+    width: calc(33% - 10px);
+  }
+}
+@media screen and (max-width: 650px) {
+  .SmallCompanyBlockNewDesign {
+    width: calc(50% - 10px);
+  }
+}
+@media screen and (max-width: 460px) {
+  .SmallCompanyBlockNewDesign {
+    height: 200px;
+  }
+}
+@media screen and (max-width: 460px) {
+  .SmallCompanyBlockNewDesign {
+    height: 200px;
+  }
+}
+@media screen and (max-width: 380px) {
+  .SmallCompanyBlockNewDesign {
+    width: calc(100% - 10px);
+    height: 250px;
+  }
+}
+/* @media screen and (max-width: 1060px) {
   .SmallCompanyBlock {
     height: 350px;
     width: calc(33.3% - 10px);
@@ -274,10 +321,10 @@
   .SmallCompanyBlock {
     height: 290px;
     width: calc(33.3% - 10px);
-  }
-}
+  } */
+/* } */
 
-@media screen and (max-width: 760px) {
+/* @media screen and (max-width: 760px) {
   .SmallCompanyBlock {
     height: 350px;
     width: calc(50% - 10px);
@@ -397,4 +444,4 @@
     height: 160px;
     border-radius: 5px;
   }
-}
+} */

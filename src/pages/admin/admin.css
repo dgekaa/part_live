@@ -10,12 +10,12 @@ textarea {
 
 .adminWrapper {
   display: flex;
-  max-width: 1000px;
+  width: 1000px;
   margin: 0 auto;
 }
 .leftAdminMenuDesctop {
   flex: 1.5;
-  padding: 10px;
+  padding: 10px 10px 10px 0;
 }
 .barIconClass {
   width: 30px;

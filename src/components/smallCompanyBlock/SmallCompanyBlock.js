@@ -51,7 +51,7 @@ const SmallCompanyBlock = ({ item }) => {
       nextStreamTime.day.toLowerCase() !== "сегодня"
     ) {
       return (
-        "Трансляция начнется в " +
+        "Начало трансляции:" +
         EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
         " в " +
         nextStreamTime.start_time
@@ -60,7 +60,7 @@ const SmallCompanyBlock = ({ item }) => {
       nextStreamTime.start_time &&
       nextStreamTime.day.toLowerCase() === "сегодня"
     ) {
-      return "Трансляция начнется сегодня в " + nextStreamTime.start_time;
+      return "Начало трансляции: сегодня в " + nextStreamTime.start_time;
     } else if (!nextStreamTime.start_time) {
       return "Нет предстоящих трансляций";
     }
@@ -110,50 +110,45 @@ const SmallCompanyBlock = ({ item }) => {
       to={{ pathname: `/company/${item.id}` }}
       className="SmallCompanyBlockNewDesign"
       style={
-        item.streams && item.streams[0] && item.streams[0].preview
+        item.streams && item.streams[0] && item.streams[0].preview && showStream
           ? { backgroundImage: `url(${item.streams[0].preview})` }
           : {}
       }
     >
-      <div className="gradientWrapperNewDesign">
-        <div className="descriptionNewDesign">
-          <div className="topBlockTextNewDesign">
-            <p className="companyNameNewDesign">{item.name}</p>
-            <p className="companyTitleNewDesign">Супер пати всех студентов</p>
-          </div>
-          <div className="bottomBlockTextNewDesign">
-            <div className="workTimeIsOpenedNewDesign">
-              <p className="workTimeTextNewDesign">{workTime}</p>
-              <p className="isOpenedNewDesign">Открыто</p>
-            </div>
-            <p className="companyTypeNewDesign">
-              {item.categories && item.categories[0] && item.categories[0].name}
-            </p>
-          </div>
+      {!showStream && (
+        <div className="noTranslationNewDesign">
+          <p className="noTranslationTextNewDesign">
+            {whenWillBeTranslation()}
+          </p>
         </div>
-        {/* Mobile */}
-        {/* <div className="descriptionMobile">
-          <p className="nameOfCompany">{item.name}</p>
-          <div className="distanceFirst1 distanceFirstLeft1">
-            <div className="distanceAndType">
-              {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
-              {!curDistance && " 0 km."}
-              <span>
+      )}
+      {showStream && (
+        <div className="gradientWrapperNewDesign">
+          <div className="descriptionNewDesign">
+            <div className="topBlockTextNewDesign">
+              <p className="companyNameNewDesign">{item.name}</p>
+              <p className="companyTitleNewDesign">Супер пати всех студентов</p>
+            </div>
+            <div className="bottomBlockTextNewDesign">
+              <div className="workTimeIsOpenedNewDesign">
+                {workTime && (
+                  <p className="workTimeTextNewDesign">{workTime}</p>
+                )}
+                {isWork ? (
+                  <p className="isOpenedNewDesign">открыто</p>
+                ) : (
+                  <p className="isOpenedNewDesign">Закрыто</p>
+                )}
+              </div>
+              <p className="companyTypeNewDesign">
                 {item.categories &&
                   item.categories[0] &&
                   item.categories[0].name}
-              </span>
+              </p>
             </div>
           </div>
-          {isWork && (
-            <p className="endTimeMobile">
-              Открыто: до
-              <span> {workTime.split("-")[1]}</span>
-            </p>
-          )}
-          {!isWork && <p className="endTimeMobile">Закрыто</p>}
-        </div> */}
-      </div>
+        </div>
+      )}
     </Link>
     // <Link
     //   to={{ pathname: `/company/${item.id}` }}

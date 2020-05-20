@@ -1,7 +1,6 @@
 .Company {
-  max-width: 1000px;
+  width: 1000px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 .videoBlock {
   -webkit-box-flex: 5;
@@ -215,12 +214,16 @@
 }
 
 @media screen and (max-width: 760px) {
+  .Company {
+    width: 100%;
+    margin: 0 auto;
+  }
   .smallMapWrapDesc {
     display: none;
   }
   .smallMapWrapMobile {
     height: 200px;
-    width: 100%;
+    /* width: 100%; */
     display: block;
     opacity: 1;
     background-color: #fff;

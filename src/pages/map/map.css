@@ -1,7 +1,7 @@
 .navContainerMap {
   position: relative;
   display: flex;
-  max-width: 950px;
+  width: 1000px;
   margin: 0 auto;
   justify-content: space-between;
   top: 50px;
@@ -104,12 +104,12 @@
   font-size: 16px;
   color: #ffffff;
 }
-@media screen and (max-width: 1020px) {
+/* @media screen and (max-width: 1020px) {
   .navContainerMap {
     padding: 0 25px;
     transition: 0.2s ease all;
   }
-}
+} */
 @media screen and (max-width: 760px) {
   .navContainerMap {
     justify-content: center;

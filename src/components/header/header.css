@@ -9,8 +9,7 @@
 }
 .header {
   margin: 0 auto;
-  padding: 0 25px;
-  max-width: 1000px;
+  width: 1000px;
   height: 65px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -65,6 +64,7 @@
     left: 0;
     height: 48px;
     background-color: #fff;
+    display: flex;
   }
   .header {
     -webkit-box-pack: center;
