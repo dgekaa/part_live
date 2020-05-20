@@ -6,8 +6,17 @@ import CustomImg from "../customImg/CustomImg";
 import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
+import styled from "styled-components";
 
 import "./smallCompanyBlock.css";
+
+const IsOpenedNewDesign = styled.p`
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #36cc33;
+  line-height: 14px;
+`;
 
 const SmallCompanyBlock = ({ item }) => {
   const [showStream, setShowStream] = useState(false);
@@ -22,6 +31,14 @@ const SmallCompanyBlock = ({ item }) => {
     isShowStreamNow(item, setShowStream, setNextStreamTime);
     isWorkTimeNow(item, setWorkTime, setIsWork);
   }, [item]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  !windowWidth && setWindowWidth(window.innerWidth);
+  useEffect(() => {
+    window.onresize = function (e) {
+      setWindowWidth(e.target.innerWidth);
+    };
+  });
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -135,9 +152,13 @@ const SmallCompanyBlock = ({ item }) => {
                   <p className="workTimeTextNewDesign">{workTime}</p>
                 )}
                 {isWork ? (
-                  <p className="isOpenedNewDesign">открыто</p>
+                  <IsOpenedNewDesign>
+                    {windowWidth <= 380 ? "ОТКР" : "ОТКРЫТО"}
+                  </IsOpenedNewDesign>
                 ) : (
-                  <p className="isOpenedNewDesign">Закрыто</p>
+                  <IsOpenedNewDesign>
+                    {windowWidth <= 380 ? "ЗАКР" : "ЗАКРЫТО"}
+                  </IsOpenedNewDesign>
                 )}
               </div>
               <p className="companyTypeNewDesign">
