@@ -342,8 +342,6 @@ const Admin = (props) => {
   };
 
   const setWorkTimeOfOneDay = () => {
-    console.log("-----------------------");
-    console.log(cookies.origin_data, "-----------------------");
     if (cookies.origin_data) {
       if (isEmptyTime) {
         //СОЗДАТЬ время работы заведения
@@ -503,6 +501,10 @@ const Admin = (props) => {
     DATA.description && setDescOfCompany(DATA.description);
   }, [DATA.description]);
 
+  useEffect(() => {
+    DATA.name && setNameOfCompany(DATA.name);
+  }, [DATA.name]);
+
   const descOfCompanyLimit = 300;
 
   const updatePlaceData = () => {
@@ -516,10 +518,12 @@ const Admin = (props) => {
                 name:"${nameOfCompany || DATA.name}"
                 description:"${descOfCompany || DATA.description}"
                 ${
-                  typeOfCompanyId &&
-                  `categories:{
+                  typeOfCompanyId && typeOfCompanyId !== DATA.categories[0].id
+                    ? `categories:{
                     disconnect:"${DATA.categories[0].id}"
-                    connect:"${typeOfCompanyId}"}`
+                    connect:"${typeOfCompanyId}"
+                  }`
+                    : `categories:{}`
                 }
                
               }
@@ -748,6 +752,32 @@ const Admin = (props) => {
       return day + 1;
     }
   };
+
+  const [validationErr, setValidationErr] = useState({});
+
+  const checkValidationError = () => {
+    if (nameOfCompany.length < 1) {
+      setValidationErr({
+        nameOfCompany: "обязательно для заполнения",
+      });
+      return false;
+    } else if (
+      pseudonimOfCompany &&
+      !pseudonimOfCompany.match("^[a-zA-Z0-9]+$")
+    ) {
+      setValidationErr({
+        pseudonimOfCompany: "только латиница и цифры",
+      });
+      return false;
+    } else {
+      setValidationErr((prev) => ({}));
+      return true;
+    }
+  };
+
+  useEffect(() => {
+    // console.log(validationErr, "validationErr");
+  }, [validationErr]);
 
   const [streamOpen, setStreamOpen] = useState(false);
   const [profileOpen, setPprofileOpen] = useState(false);
@@ -1014,16 +1044,29 @@ const Admin = (props) => {
                                 onChange={(e) =>
                                   setNameOfCompany(e.target.value)
                                 }
+                                style={
+                                  validationErr["nameOfCompany"]
+                                    ? { borderBottom: "1px solid red" }
+                                    : {}
+                                }
                               />
                             </div>
                             <div className="inputBlockWrap">
                               <p className="blockNameDesc">Псевдоним:</p>
                               <input
+                                pattern="^[a-zA-Z0-9]+$"
                                 type="text"
                                 placeholder={DATA.name}
                                 value={pseudonimOfCompany}
                                 onChange={(e) =>
-                                  setPseudonimOfCompany(e.target.value)
+                                  setPseudonimOfCompany(
+                                    e.target.value.toLowerCase()
+                                  )
+                                }
+                                style={
+                                  validationErr["pseudonimOfCompany"]
+                                    ? { borderBottom: "1px solid red" }
+                                    : {}
                                 }
                               />
                             </div>
@@ -1095,7 +1138,11 @@ const Admin = (props) => {
                                 Адрес заведения:
                               </p>
                               <div className="addressBlockWrapp">
-                                <input type="text" value={DATA.address} />
+                                <input
+                                  disabled
+                                  type="text"
+                                  value={DATA.address}
+                                />
                                 <div>
                                   <span
                                     className="chooseAddressHoveredDesc"
@@ -1106,13 +1153,42 @@ const Admin = (props) => {
                                 </div>
                               </div>
                             </div>
-
-                            <p
-                              className="saveBtnProfile"
-                              onClick={() => updatePlaceData()}
-                            >
-                              СОХРАНИТЬ
-                            </p>
+                            <div>
+                              <p
+                                style={{ marginRight: "20px" }}
+                                className="saveBtnProfile"
+                                onClick={() => {
+                                  checkValidationError() && updatePlaceData();
+                                }}
+                              >
+                                СОХРАНИТЬ
+                              </p>
+                              <p
+                                className="saveBtnProfile"
+                                onClick={() => {
+                                  // cancelSave()
+                                  setNameOfCompany(DATA.name);
+                                  // setPseudonimOfCompany("");
+                                  console.log(
+                                    DATA.categories[0].id,
+                                    "DATA.categories[0].id"
+                                  );
+                                  setTypeOfCompany(
+                                    DATA.categories &&
+                                      DATA.categories[0] &&
+                                      DATA.categories[0].name
+                                  );
+                                  setTypeOfCompanyId(
+                                    DATA.categories &&
+                                      DATA.categories[0] &&
+                                      DATA.categories[0].id
+                                  );
+                                  setDescOfCompany(DATA.description);
+                                }}
+                              >
+                                ОТМЕНА
+                              </p>
+                            </div>
                           </div>
                         </div>
                       );
@@ -1553,6 +1629,11 @@ const Admin = (props) => {
                                 onChange={(e) =>
                                   setNameOfCompany(e.target.value)
                                 }
+                                style={
+                                  validationErr["nameOfCompany"]
+                                    ? { borderBottom: "1px solid red" }
+                                    : {}
+                                }
                               />
                             </div>
                             <div className="inputBlockWrap">
@@ -1562,7 +1643,14 @@ const Admin = (props) => {
                                 placeholder={DATA.name}
                                 value={pseudonimOfCompany}
                                 onChange={(e) =>
-                                  setPseudonimOfCompany(e.target.value)
+                                  setPseudonimOfCompany(
+                                    e.target.value.toLowerCase()
+                                  )
+                                }
+                                style={
+                                  validationErr["pseudonimOfCompany"]
+                                    ? { borderBottom: "1px solid red" }
+                                    : {}
                                 }
                               />
                             </div>
@@ -1654,12 +1742,38 @@ const Admin = (props) => {
                                 }
                               />
                             </div>
-                            <p
-                              className="saveBtnProfile"
-                              onClick={() => updatePlaceData()}
-                            >
-                              СОХРАНИТЬ
-                            </p>
+                            <div>
+                              <p
+                                style={{ marginRight: "20px" }}
+                                className="saveBtnProfile"
+                                onClick={() => {
+                                  checkValidationError() && updatePlaceData();
+                                }}
+                              >
+                                СОХРАНИТЬ
+                              </p>
+                              <p
+                                className="saveBtnProfile"
+                                onClick={() => {
+                                  //  cancelSave()
+                                  setNameOfCompany(DATA.name);
+                                  // setPseudonimOfCompany("");
+                                  setTypeOfCompany(
+                                    DATA.categories &&
+                                      DATA.categories[0] &&
+                                      DATA.categories[0].name
+                                  );
+                                  setTypeOfCompanyId(
+                                    DATA.categories &&
+                                      DATA.categories[0] &&
+                                      DATA.categories[0].id
+                                  );
+                                  setDescOfCompany(DATA.description);
+                                }}
+                              >
+                                ОТМЕНА
+                              </p>
+                            </div>
                           </div>
                         </SideBar>
                       </div>

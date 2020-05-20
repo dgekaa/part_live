@@ -223,6 +223,12 @@ textarea {
   padding: 0 10px;
   color: #4f4f4f;
 }
+.profileDataDesc .inputBlockWrap input::placeholder {
+  color: #eee;
+}
+.profileDataDesc .inputBlockWrap input:disabled {
+  background-color: #fff;
+}
 
 .profileDataDesc .inputBlockWrap input:active,
 .profileDataDesc .inputBlockWrap input:hover,
