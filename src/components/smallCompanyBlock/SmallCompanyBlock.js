@@ -139,37 +139,53 @@ const SmallCompanyBlock = ({ item }) => {
           </p>
         </div>
       )}
-      {showStream && (
-        <div className="gradientWrapperNewDesign">
-          <div className="descriptionNewDesign">
-            <div className="topBlockTextNewDesign">
-              <p className="companyNameNewDesign">{item.name}</p>
-              <p className="companyTitleNewDesign">Супер пати всех студентов</p>
+
+      <div
+        className={
+          showStream ? "gradientWrapperNewDesign" : "noGradientWrapperNewDesign"
+        }
+      >
+        <div className="descriptionNewDesign">
+          <div className="topBlockTextNewDesign">
+            <p
+              style={showStream ? { color: "#fff" } : { color: "#919191" }}
+              className="companyNameNewDesign"
+            >
+              {item.name}
+            </p>
+            <p
+              style={showStream ? { color: "#fff" } : { color: "#919191" }}
+              className="companyTitleNewDesign"
+            >
+              Супер пати всех студентов
+            </p>
+          </div>
+          <div className="bottomBlockTextNewDesign">
+            <div className="workTimeIsOpenedNewDesign">
+              {workTime && (
+                <p
+                  style={showStream ? { color: "#fff" } : { color: "#919191" }}
+                  className="workTimeTextNewDesign"
+                >
+                  {workTime}
+                </p>
+              )}
+              {isWork ? (
+                <IsOpenedNewDesign>
+                  {windowWidth <= 380 && workTime ? "ОТКР" : "ОТКРЫТО"}
+                </IsOpenedNewDesign>
+              ) : (
+                <IsOpenedNewDesign>
+                  {windowWidth <= 380 && workTime ? "ЗАКР" : "ЗАКРЫТО"}
+                </IsOpenedNewDesign>
+              )}
             </div>
-            <div className="bottomBlockTextNewDesign">
-              <div className="workTimeIsOpenedNewDesign">
-                {workTime && (
-                  <p className="workTimeTextNewDesign">{workTime}</p>
-                )}
-                {isWork ? (
-                  <IsOpenedNewDesign>
-                    {windowWidth <= 380 && workTime ? "ОТКР" : "ОТКРЫТО"}
-                  </IsOpenedNewDesign>
-                ) : (
-                  <IsOpenedNewDesign>
-                    {windowWidth <= 380 && workTime ? "ЗАКР" : "ЗАКРЫТО"}
-                  </IsOpenedNewDesign>
-                )}
-              </div>
-              <p className="companyTypeNewDesign">
-                {item.categories &&
-                  item.categories[0] &&
-                  item.categories[0].name}
-              </p>
-            </div>
+            <p className="companyTypeNewDesign">
+              {item.categories && item.categories[0] && item.categories[0].name}
+            </p>
           </div>
         </div>
-      )}
+      </div>
     </Link>
     // <Link
     //   to={{ pathname: `/company/${item.id}` }}
