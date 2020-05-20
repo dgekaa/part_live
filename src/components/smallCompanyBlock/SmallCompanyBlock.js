@@ -153,11 +153,11 @@ const SmallCompanyBlock = ({ item }) => {
                 )}
                 {isWork ? (
                   <IsOpenedNewDesign>
-                    {windowWidth <= 380 ? "ОТКР" : "ОТКРЫТО"}
+                    {windowWidth <= 380 && workTime ? "ОТКР" : "ОТКРЫТО"}
                   </IsOpenedNewDesign>
                 ) : (
                   <IsOpenedNewDesign>
-                    {windowWidth <= 380 ? "ЗАКР" : "ЗАКРЫТО"}
+                    {windowWidth <= 380 && workTime ? "ЗАКР" : "ЗАКРЫТО"}
                   </IsOpenedNewDesign>
                 )}
               </div>
