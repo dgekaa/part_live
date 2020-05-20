@@ -272,24 +272,26 @@ textarea {
 }
 
 .bigInputBlockWrap .categoryBtnWrap .сompanyNavImg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  margin-right: 11px;
+  margin-left: 19px;
 }
 .bigInputBlockWrap .categoryBtnWrap .categoryBtn {
   display: flex;
   height: 40px;
-  width: 110px;
+  width: 125px;
   flex-wrap: wrap;
-  padding: 0 5px;
+  padding: 0px;
   border-radius: 5px;
   border: 2px solid #c4c4c4;
   margin-right: 18px;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   cursor: pointer;
   margin-top: 15px;
   font-weight: 700;
-  font-size: 8px;
+  font-size: 12px;
   text-transform: uppercase;
 }
 
