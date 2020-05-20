@@ -762,15 +762,15 @@ const Admin = (props) => {
       });
       return false;
     } else if (
-      pseudonimOfCompany &&
-      !pseudonimOfCompany.match("^[a-zA-Z0-9]+$")
+      (pseudonimOfCompany && !pseudonimOfCompany.match("^[a-zA-Z0-9]+$")) ||
+      pseudonimOfCompany.length < 1
     ) {
       setValidationErr({
-        pseudonimOfCompany: "только латиница и цифры",
+        pseudonimOfCompany: "только латиница и цифры и поле не пустое",
       });
       return false;
     } else {
-      setValidationErr((prev) => ({}));
+      setValidationErr({});
       return true;
     }
   };
@@ -1034,8 +1034,16 @@ const Admin = (props) => {
                           </div>
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
-                              <p className="blockNameDesc">
+                              <p
+                                className="blockNameDesc"
+                                style={
+                                  validationErr["nameOfCompany"]
+                                    ? { color: "red" }
+                                    : {}
+                                }
+                              >
                                 Название заведения:
+                                <span style={{ color: "red" }}>*</span>
                               </p>
                               <input
                                 type="text"
@@ -1044,15 +1052,20 @@ const Admin = (props) => {
                                 onChange={(e) =>
                                   setNameOfCompany(e.target.value)
                                 }
-                                style={
-                                  validationErr["nameOfCompany"]
-                                    ? { borderBottom: "1px solid red" }
-                                    : {}
-                                }
                               />
                             </div>
                             <div className="inputBlockWrap">
-                              <p className="blockNameDesc">Псевдоним:</p>
+                              <p
+                                className="blockNameDesc"
+                                style={
+                                  validationErr["pseudonimOfCompany"]
+                                    ? { color: "red" }
+                                    : {}
+                                }
+                              >
+                                Псевдоним:
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
                               <input
                                 pattern="^[a-zA-Z0-9]+$"
                                 type="text"
@@ -1062,11 +1075,6 @@ const Admin = (props) => {
                                   setPseudonimOfCompany(
                                     e.target.value.toLowerCase()
                                   )
-                                }
-                                style={
-                                  validationErr["pseudonimOfCompany"]
-                                    ? { borderBottom: "1px solid red" }
-                                    : {}
                                 }
                               />
                             </div>
@@ -1167,6 +1175,7 @@ const Admin = (props) => {
                                 className="saveBtnProfile"
                                 onClick={() => {
                                   // cancelSave()
+                                  setValidationErr({});
                                   setNameOfCompany(DATA.name);
                                   // setPseudonimOfCompany("");
                                   console.log(
@@ -1621,7 +1630,16 @@ const Admin = (props) => {
                           {/* ================================================= */}
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
-                              <p>Название заведения:</p>
+                              <p
+                                style={
+                                  validationErr["nameOfCompany"]
+                                    ? { color: "red" }
+                                    : {}
+                                }
+                              >
+                                Название заведения:
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
                               <input
                                 type="text"
                                 placeholder={DATA.name}
@@ -1629,15 +1647,19 @@ const Admin = (props) => {
                                 onChange={(e) =>
                                   setNameOfCompany(e.target.value)
                                 }
-                                style={
-                                  validationErr["nameOfCompany"]
-                                    ? { borderBottom: "1px solid red" }
-                                    : {}
-                                }
                               />
                             </div>
                             <div className="inputBlockWrap">
-                              <p>Псевдоним:</p>
+                              <p
+                                style={
+                                  validationErr["pseudonimOfCompany"]
+                                    ? { color: "red" }
+                                    : {}
+                                }
+                              >
+                                Псевдоним:
+                                <span style={{ color: "red" }}>*</span>
+                              </p>
                               <input
                                 type="text"
                                 placeholder={DATA.name}
@@ -1646,11 +1668,6 @@ const Admin = (props) => {
                                   setPseudonimOfCompany(
                                     e.target.value.toLowerCase()
                                   )
-                                }
-                                style={
-                                  validationErr["pseudonimOfCompany"]
-                                    ? { borderBottom: "1px solid red" }
-                                    : {}
                                 }
                               />
                             </div>
@@ -1756,6 +1773,7 @@ const Admin = (props) => {
                                 className="saveBtnProfile"
                                 onClick={() => {
                                   //  cancelSave()
+                                  setValidationErr({});
                                   setNameOfCompany(DATA.name);
                                   // setPseudonimOfCompany("");
                                   setTypeOfCompany(

@@ -308,7 +308,72 @@ const MapComponent = (props) => {
                         : `/map`,
                     }}
                   >
-                    <div className="mapMarkerWrap">
+                    <div
+                      className="mapMarkerWrapNewDesign"
+                      style={
+                        cluster.item.streams &&
+                        cluster.item.streams[0] &&
+                        cluster.item.streams[0].preview &&
+                        !!streamTime
+                          ? {
+                              backgroundImage: `url(${cluster.item.streams[0].preview})`,
+                            }
+                          : {}
+                      }
+                    >
+                      <div className="mapMarkerGradientWrapperNewDesign">
+                        {!streamTime && (
+                          <>
+                            <div className="companyImgMapNewDesign">
+                              <p className="mapNoTranslationTextNewDesign">
+                                {nextStreamTime.start_time &&
+                                  nextStreamTime.day.toLowerCase() !==
+                                    "сегодня" &&
+                                  "Начало трансляции в " +
+                                    EN_SHORT_TO_RU_LONG_V_P[
+                                      nextStreamTime.day
+                                    ] +
+                                    " в " +
+                                    nextStreamTime.start_time}
+                                {nextStreamTime.start_time &&
+                                  nextStreamTime.day.toLowerCase() ===
+                                    "сегодня" &&
+                                  "Трансляция начнется сегодня в " +
+                                    nextStreamTime.start_time}
+                                {!nextStreamTime.start_time &&
+                                  "Нет предстоящих трансляций"}
+                              </p>
+                            </div>
+                          </>
+                        )}
+                        <p className="mapMarkerDescNewDesign">
+                          <p
+                            style={!streamTime ? { color: "#919191" } : {}}
+                            className="mapMarkerNameNewDesign"
+                          >
+                            {cluster.item.name}
+                          </p>
+                          <p
+                            style={!streamTime ? { color: "#919191" } : {}}
+                            className="typeOfPartyMapNewDesign"
+                          >
+                            Супер пати всех студентов
+                          </p>
+                          <p className="bottomMapMarkerTextWrapNewDesign">
+                            <span className="isOpenedMapNewDesign">
+                              {isWork && <span> Открыто </span>}
+                              {/* {workTime} */}
+                              {!isWork && <span> Закрыто </span>}
+                            </span>
+                            <span className="typeOfCompanyMapNewDesign">
+                              {cluster.item.categories[0] &&
+                                cluster.item.categories[0].name}
+                            </span>
+                          </p>
+                        </p>
+                      </div>
+                    </div>
+                    {/* <div className="mapMarkerWrap">
                       <div className="mapMarker">
                         {!!streamTime &&
                           (!previewError ? (
@@ -319,13 +384,7 @@ const MapComponent = (props) => {
                               // src={cluster.item.streams[0].url}
                               autoPlay={true}
                             />
-                          ) : (
-                            // <video
-                            //   className="companyImg"
-                            //   src={cluster.item.streams[0].url}
-                            //   autoPlay
-                            //   onError={(err) => setPreviewError(err)}
-                            // />
+                          ) : (                           
                             <div className="companyImg mapNoTranslationWrap">
                               <p className="mapNoTranslationText">ERR</p>
                             </div>
@@ -359,7 +418,7 @@ const MapComponent = (props) => {
                         </span>
                       </p>
                       <div className="arrow"></div>
-                    </div>
+                    </div> */}
                   </Link>
                 </Marker>
               );

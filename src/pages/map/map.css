@@ -15,6 +15,86 @@
   width: 100%;
   height: 100vh;
 }
+/* ------------------------------------------ */
+.mapMarkerWrapNewDesign {
+  width: 100px;
+  height: 115px;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+.mapMarkerGradientWrapperNewDesign {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(196, 196, 196, 0) 0%, #000000 100%);
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+}
+.mapMarkerDescNewDesign {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 35px;
+  padding: 0 5px 5px 5px;
+}
+.mapMarkerNameNewDesign {
+  color: #fff;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.isOpenedMapNewDesign {
+  color: rgb(54, 204, 51);
+  font-size: 7px;
+  text-transform: uppercase;
+  line-height: 10px;
+}
+.typeOfCompanyMapNewDesign {
+  line-height: 10px;
+  color: #ff0960;
+  font-size: 7px;
+  text-transform: uppercase;
+}
+.typeOfPartyMapNewDesign {
+  color: #fff;
+  font-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bottomMapMarkerTextWrapNewDesign {
+  display: flex;
+  justify-content: space-between;
+  line-height: 16px;
+}
+.mapNoTranslationTextNewDesign {
+  color: #919191;
+
+  text-align: center;
+  padding: 3px;
+}
+.companyImgMapNewDesign {
+  object-fit: cover;
+  -webkit-transition: 0.2s ease all;
+  -o-transition: 0.2s ease all;
+  transition: 0.2s ease all;
+  height: 100%;
+  display: flex;
+  padding-top: 30px;
+  justify-content: center;
+}
+/* ----------------------------------------------- */
 .mapMarkerWrap {
   position: absolute;
   top: -90px;
