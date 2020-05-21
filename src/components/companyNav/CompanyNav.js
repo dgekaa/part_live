@@ -71,10 +71,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const firstScrollBtnToCenter = () => {
     if (localStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
-        alert(isClickedTypeBtn(el.innerText));
-
         if (isClickedTypeBtn(el.innerText)) {
-          alert("НОРМ");
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
@@ -83,7 +80,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
 
           slideBtnMenu.current.scrollTo({
             left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
-            behavior: "smooth",
+            // behavior: "smooth",
           });
         }
       });
@@ -95,6 +92,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
+    alert(localStorage.getItem("filter_type") + "____LS");
+    alert(name + "____name");
+
     return localStorage.getItem("filter_type") === name;
   };
 
