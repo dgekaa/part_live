@@ -321,6 +321,7 @@ const MapComponent = (props) => {
                           : {}
                       }
                     >
+                      <div className="arrowMapNewDesign"></div>
                       <div className="mapMarkerGradientWrapperNewDesign">
                         {!streamTime && (
                           <>
@@ -353,16 +354,9 @@ const MapComponent = (props) => {
                           >
                             {cluster.item.name}
                           </p>
-                          <p
-                            style={!streamTime ? { color: "#919191" } : {}}
-                            className="typeOfPartyMapNewDesign"
-                          >
-                            Супер пати всех студентов
-                          </p>
                           <p className="bottomMapMarkerTextWrapNewDesign">
                             <span className="isOpenedMapNewDesign">
                               {isWork && <span> Открыто </span>}
-                              {/* {workTime} */}
                               {!isWork && <span> Закрыто </span>}
                             </span>
                             <span className="typeOfCompanyMapNewDesign">
