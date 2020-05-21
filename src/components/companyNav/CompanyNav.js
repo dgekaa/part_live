@@ -68,6 +68,13 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     });
   };
 
+  const scrollAllBtnToCenter = () => {
+    slideBtnMenu.current.scrollTo({
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+
   const firstScrollBtnToCenter = () => {
     if (localStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBlock").forEach((el, i) => {
@@ -92,17 +99,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
-    if (
-      localStorage.getItem("filter_type").toLowerCase().trim() ===
-      name.toLowerCase().trim()
-    ) {
-      // alert(localStorage.getItem("filter_type") + "____LS");
-      // alert(name + "____name");
-
+    if (localStorage.getItem("filter_type") === name) {
       return true;
     }
     return false;
-    // return localStorage.getItem("filter_type") === name;
   };
 
   useEffect(() => {
@@ -163,6 +163,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
             clickedType();
             setClickedTypeLocal();
             localStorage.setItem("filter_type", "");
+            scrollAllBtnToCenter();
           }}
         >
           <Link

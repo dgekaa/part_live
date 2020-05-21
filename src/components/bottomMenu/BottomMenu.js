@@ -26,9 +26,7 @@ const BottomMenu = ({ isShowMenu }) => {
     color: "#fff",
     background: "#e32a6c",
   };
-  // useEffect(() => {
-  //   alert(window.location.pathname, "pathname");
-  // }, []);
+
   return (
     <animated.div style={animateProps} className="BottomMenu">
       <Link
