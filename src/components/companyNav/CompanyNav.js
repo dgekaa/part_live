@@ -92,10 +92,13 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
-    alert(localStorage.getItem("filter_type") + "____LS");
-    alert(name + "____name");
-
-    return localStorage.getItem("filter_type") === name;
+    if (localStorage.getItem("filter_type") === name) {
+      alert(localStorage.getItem("filter_type") + "____LS");
+      alert(name + "____name");
+      return true;
+    }
+    return false;
+    // return localStorage.getItem("filter_type") === name;
   };
 
   useEffect(() => {
