@@ -91,17 +91,13 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     return !clickedTypeLocal && !localStorage.getItem("filter_type");
   };
 
-  const [ClickedTypeBtnForFirstLoad, setClickedTypeBtnForFirstLoad] = useState(
-    ""
-  );
-
   const isClickedTypeBtn = (name) => {
-    !ClickedTypeBtnForFirstLoad && setClickedTypeBtnForFirstLoad(name);
-    if (localStorage.getItem("filter_type") === name) {
-      if (!ClickedTypeBtnForFirstLoad) {
-        alert(localStorage.getItem("filter_type") + "____LS");
-        alert(name + "____name");
-      }
+    if (
+      localStorage.getItem("filter_type").toLowerCase().trim() ===
+      name.toLowerCase().trim()
+    ) {
+      // alert(localStorage.getItem("filter_type") + "____LS");
+      // alert(name + "____name");
 
       return true;
     }
@@ -111,7 +107,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
 
   useEffect(() => {
     firstScrollBtnToCenter();
-  }, [ClickedTypeBtnForFirstLoad]);
+  }, []);
 
   const animateProps = useSpring({
     left: toSlideFixedNav ? -200 : 0,
