@@ -96,10 +96,13 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   );
 
   const isClickedTypeBtn = (name) => {
-    setClickedTypeBtnForFirstLoad();
+    !ClickedTypeBtnForFirstLoad && setClickedTypeBtnForFirstLoad(name);
     if (localStorage.getItem("filter_type") === name) {
-      alert(localStorage.getItem("filter_type") + "____LS");
-      alert(name + "____name");
+      if (!ClickedTypeBtnForFirstLoad) {
+        alert(localStorage.getItem("filter_type") + "____LS");
+        alert(name + "____name");
+      }
+
       return true;
     }
     return false;
