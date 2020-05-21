@@ -5,7 +5,6 @@ import { useSpring, animated } from "react-spring";
 import "./bottomMenu.css";
 
 const BottomMenu = ({ isShowMenu }) => {
-  const pathname = window.location.pathname;
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   !windowWidth && setWindowWidth(window.innerWidth);
@@ -27,15 +26,21 @@ const BottomMenu = ({ isShowMenu }) => {
     color: "#fff",
     background: "#e32a6c",
   };
-  useEffect(() => {
-    alert(pathname, "pathname");
-  }, []);
+  // useEffect(() => {
+  //   alert(window.location.pathname, "pathname");
+  // }, []);
   return (
     <animated.div style={animateProps} className="BottomMenu">
-      <Link to="/home" style={pathname === "/home" ? clickedBtnStyle : {}}>
+      <Link
+        to="/home"
+        style={window.location.pathname === "/home" ? clickedBtnStyle : {}}
+      >
         СПИСОК
       </Link>
-      <Link to="/map" style={pathname === "/map" ? clickedBtnStyle : {}}>
+      <Link
+        to="/map"
+        style={window.location.pathname === "/map" ? clickedBtnStyle : {}}
+      >
         КАРТА
       </Link>
     </animated.div>
