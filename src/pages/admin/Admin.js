@@ -875,8 +875,30 @@ const Admin = (props) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
+                          <div style={{ display: "flex" }}>
+                            <h3
+                              style={{
+                                fontSize: "24px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              ПРОФИЛЬ ЗАВЕДЕНИЯ
+                            </h3>
+                            <span
+                              style={{
+                                paddingLeft: "12px",
+                                color: "#E32A6C",
+                                fontWeight: "bold",
+                                fontSize: "24px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              ({DATA.name})
+                            </span>
+                          </div>
                           <div
                             style={{
+                              marginTop: "22px",
                               display: "flex",
                               flexDirection: "row",
                             }}

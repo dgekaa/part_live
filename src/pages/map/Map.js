@@ -308,6 +308,7 @@ const MapComponent = (props) => {
                         : `/map`,
                     }}
                   >
+                    <div className="arrowMapNewDesign"></div>
                     <div
                       className="mapMarkerWrapNewDesign"
                       style={
@@ -321,7 +322,6 @@ const MapComponent = (props) => {
                           : {}
                       }
                     >
-                      <div className="arrowMapNewDesign"></div>
                       <div className="mapMarkerGradientWrapperNewDesign">
                         {!streamTime && (
                           <>
@@ -355,18 +355,27 @@ const MapComponent = (props) => {
                             {cluster.item.name}
                           </p>
                           <p className="bottomMapMarkerTextWrapNewDesign">
+                            <span className="workTimeMapNewDesign">
+                              {workTime}
+                            </span>
                             <span className="isOpenedMapNewDesign">
                               {isWork && <span> Открыто </span>}
-                              {!isWork && <span> Закрыто </span>}
-                            </span>
-                            <span className="typeOfCompanyMapNewDesign">
-                              {cluster.item.categories[0] &&
-                                cluster.item.categories[0].name}
+                              {!isWork && (
+                                <span style={{ color: "#848484" }}>
+                                  Закрыто
+                                </span>
+                              )}
                             </span>
                           </p>
                         </p>
                       </div>
+
+                      <span className="typeOfCompanyMapNewDesign">
+                        {cluster.item.categories[0] &&
+                          cluster.item.categories[0].name}
+                      </span>
                     </div>
+
                     {/* <div className="mapMarkerWrap">
                       <div className="mapMarker">
                         {!!streamTime &&

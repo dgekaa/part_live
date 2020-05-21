@@ -22,14 +22,14 @@
   background-size: cover;
   background-position: center;
   background-color: #000;
-  border-radius: 5px;
+  border-radius: 10px;
   position: relative;
   bottom: 110px;
   right: 50px;
 }
 .mapMarkerGradientWrapperNewDesign {
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: 10px;
   position: absolute;
   top: 0;
   left: 0;
@@ -37,7 +37,12 @@
   bottom: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, rgba(196, 196, 196, 0) 0%, #000000 100%);
+  background: linear-gradient(
+    180deg,
+    #000000 0%,
+    rgba(196, 196, 196, 0) 52.08%,
+    rgba(16, 16, 16, 0.92) 90.62%
+  );
   display: flex;
   flex: 1;
   align-items: flex-end;
@@ -47,35 +52,50 @@
   bottom: 0;
   right: 0;
   left: 0;
-  height: 35px;
-  padding: 0 5px 5px 5px;
+  height: 32px;
+  padding: 3px;
+  padding-right: 6px;
 }
 .mapMarkerNameNewDesign {
   color: #fff;
-  font-size: 15px;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 16px;
 }
 .isOpenedMapNewDesign {
-  color: rgb(54, 204, 51);
-  font-size: 10px;
+  color: #36cc33;
   text-transform: uppercase;
+  font-weight: 900;
+  font-size: 7px;
+  line-height: 9px;
+}
+.workTimeMapNewDesign {
+  font-weight: 600;
+  font-size: 8px;
+  line-height: 9px;
+  color: #ffffff;
 }
 .typeOfCompanyMapNewDesign {
   color: #ff0960;
-  font-size: 10px;
+  font-size: 9px;
+  font-weight: 900;
   text-transform: uppercase;
+  position: absolute;
+  top: 6px;
+  right: 6px;
 }
 
 .bottomMapMarkerTextWrapNewDesign {
   display: flex;
   justify-content: space-between;
   line-height: 16px;
+  padding: 2px;
 }
 .mapNoTranslationTextNewDesign {
   color: #919191;
-
   text-align: center;
   padding: 3px;
 }
@@ -87,7 +107,7 @@
   height: 100%;
   display: flex;
   /* padding-top: 15px; */
-  padding-bottom: 30px;
+  padding-bottom: 26px;
   justify-content: center;
   align-items: center;
 }
@@ -99,8 +119,8 @@
   border-top-color: #000;
   border-bottom: 0;
   position: absolute;
-  bottom: -10px;
-  left: 40px;
+  bottom: 0px;
+  left: -10px;
 }
 /* ----------------------------------------------- */
 .mapMarkerWrap {

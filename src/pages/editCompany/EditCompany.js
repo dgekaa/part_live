@@ -87,6 +87,14 @@ const EditCompany = () => {
         />
         {!isLoading && (
           <animated.div className="editCompanyContent" style={animateProps}>
+            <div className="bigEditCompanyHeaderDesc">
+              <Link to="/home">
+                <span style={{ fontSize: "18px", paddingRight: "10px" }}>
+                  &#8592;
+                </span>
+                На главную
+              </Link>
+            </div>
             <h3>СПИСОК ЗАВЕДЕНИЙ</h3>
             <table>
               <tbody>

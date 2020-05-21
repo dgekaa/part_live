@@ -106,6 +106,15 @@ textarea {
 .previewPhoto:hover {
   border: 2px solid #e32a6c;
 }
+.previewPhoto:hover .uploadPhotoTextDesctop {
+  color: #e32a6c;
+  transition: 0.3s ease all;
+}
+.previewPhoto:hover .uploadPhotoSizeTextDesctop {
+  color: #e32a6c;
+  transition: 0.3s ease all;
+}
+
 .ReactCrop__image {
   max-height: 300px;
 }
@@ -349,7 +358,7 @@ textarea {
 .workTimeTableWrap h3 {
   padding-bottom: 20px;
   padding-left: 15px;
-  font-size: 18px;
+  font-size: 24px;
 }
 .streamAdminBlock {
   font-size: 18px;

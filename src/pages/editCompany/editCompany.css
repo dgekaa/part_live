@@ -1,10 +1,17 @@
 .editCompanyContent {
   width: 1000px;
   margin: 0 auto;
-  padding-top: 60px;
+  /* padding-top: 60px; */
 }
 .editCompanyRow {
   border-top: 1px solid #eaeaea;
+}
+.bigEditCompanyHeaderDesc {
+  height: 88px;
+  font-size: 18px;
+  line-height: 88px;
+  font-size: 14px;
+  font-weight: normal;
 }
 .editCompanyContent h3 {
   font-weight: 700;
@@ -42,7 +49,7 @@
 .editCompanyContent .errStyle {
   font-weight: 500;
   font-size: 18px;
-  color: #aeaeae;
+  color: #e32a6c;
 }
 .editCompanyContent .typeCompany {
   font-weight: 400;
@@ -52,6 +59,7 @@
 
 @media screen and (max-width: 760px) {
   .editCompanyContent {
+    width: 100vw;
     overflow: hidden;
     margin: 0;
     position: relative;
@@ -59,6 +67,7 @@
     padding-top: 60px;
   }
   .editCompanyContent h3 {
+    width: 100vw;
     padding: 5px;
     font-weight: 700;
     font-size: 18px;
