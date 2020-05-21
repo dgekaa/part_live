@@ -90,8 +90,6 @@ const SmallCompanyBlock = ({ item }) => {
       fetch(item.streams[0].url)
         .then((res) => {
           console.log(res.status, "status");
-          console.log(res.statusText, "statusText");
-          console.log(res.url, "url");
           res.statusText.toLowerCase() === "ok"
             ? setVideoError(false)
             : setVideoError("err");

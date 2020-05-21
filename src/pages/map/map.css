@@ -24,7 +24,8 @@
   background-color: #000;
   border-radius: 5px;
   position: relative;
-  /* overflow: hidden; */
+  bottom: 110px;
+  right: 50px;
 }
 .mapMarkerGradientWrapperNewDesign {
   overflow: hidden;
