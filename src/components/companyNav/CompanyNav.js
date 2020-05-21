@@ -103,7 +103,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
 
   useEffect(() => {
     firstScrollBtnToCenter();
-  }, []);
+  }, [localStorage.getItem("filter_type")]);
 
   const animateProps = useSpring({
     left: toSlideFixedNav ? -200 : 0,
