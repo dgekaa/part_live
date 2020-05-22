@@ -1572,21 +1572,33 @@ const Admin = (props) => {
                                 }
                               />
                             </div>
-                            <div
-                              className="chooseStreamAddressSaveBtn"
-                              onClick={() => {
-                                if (streamAddressData) {
-                                  if (!DATA.streams[0]) {
-                                    createStream(streamAddressData);
+                            <div style={{ display: "flex" }}>
+                              <div
+                                style={{ marginRight: "19px" }}
+                                className="chooseStreamAddressSaveBtn"
+                                onClick={() => {
+                                  if (streamAddressData) {
+                                    if (!DATA.streams[0]) {
+                                      createStream(streamAddressData);
+                                    } else {
+                                      updateStream(streamAddressData);
+                                    }
                                   } else {
-                                    updateStream(streamAddressData);
+                                    alert("Заполните поле");
                                   }
-                                } else {
-                                  alert("Заполните поле");
-                                }
-                              }}
-                            >
-                              Сохранить
+                                }}
+                              >
+                                Сохранить
+                              </div>
+                              <div
+                                style={{ marginTop: "38px" }}
+                                className="cancelBtnProfile"
+                                onClick={() => {
+                                  setStreamAddressData("");
+                                }}
+                              >
+                                Отмена
+                              </div>
                             </div>
                           </div>
                         </div>

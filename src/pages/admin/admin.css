@@ -394,6 +394,9 @@ textarea {
   padding-left: 15px;
   font-size: 24px;
 }
+.streamAdminBlock h3 {
+  font-size: 24px;
+}
 .streamAdminBlock {
   font-size: 18px;
 }
@@ -625,7 +628,7 @@ textarea {
   flex-direction: column;
 }
 .chooseStreamAddressDesc .cameraAddresLable {
-  font-weight: 400;
+  font-weight: 500;
   font-size: 16px;
   color: #4f4f4f;
   background-color: #fff;
@@ -659,7 +662,6 @@ textarea {
   justify-content: center;
   align-items: center;
   text-transform: uppercase;
-  font-size: 14px;
   cursor: pointer;
   border: 1px solid #eee;
   height: 40px;
@@ -669,6 +671,8 @@ textarea {
   background-color: #e32a6c;
   color: #fff;
   transition: 0.3s ease opacity;
+  font-weight: bold;
+  font-size: 14px;
 }
 .chooseStreamAddressDesc .chooseStreamAddressSaveBtn:hover {
   opacity: 0.8;
