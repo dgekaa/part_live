@@ -39,7 +39,7 @@
   transition: 0.2s ease all;
 }
 .companyNavBlock:hover {
-  background-color: #e32a6c;
+  /* background-color: #e32a6c; */
 }
 .companyNavBlock:hover .companyNavLink {
   color: #fff;

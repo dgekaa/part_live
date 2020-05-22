@@ -205,7 +205,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                     ? "activeBtnText companyNavLink"
                     : "companyNavLink"
                 }
-                style={isClickedTypeBtn(el.name) ? { color: "#fff" } : {}}
+                style={
+                  isClickedTypeBtn(el.name)
+                    ? { color: "#fff", backgroundColor: "#e32a6c" }
+                    : {}
+                }
                 to={currentPage}
               >
                 {isClickedTypeBtn(el.name) ? (
