@@ -15,7 +15,7 @@ textarea {
 }
 .leftAdminMenuDesctop {
   flex: 1.5;
-  padding: 45px 10px 10px 0;
+  padding: 89px 10px 10px 0;
 }
 .barIconClass {
   width: 30px;
@@ -67,14 +67,24 @@ textarea {
   font-size: 16px !important;
   color: #000;
 }
+.breadСrumbs:hover {
+  color: rgb(227, 42, 108);
+}
+.breadСrumbsArrow {
+  margin: 0 7px;
+  font-size: 18px;
+}
+.breadСrumbsCurrent {
+  color: rgb(227, 42, 108);
+  cursor: pointer;
+}
 .adminContentMobile {
   display: none;
 }
 .adminContentDesctop {
   display: flex;
   flex: 4;
-  padding: 10px;
-  margin-top: 50px;
+  padding: 0 10px 10px 10px;
   flex-direction: column;
 }
 
@@ -211,6 +221,26 @@ textarea {
   transition: 0.3s ease opacity;
   margin: 50px 0 15px 0;
 }
+
+.cancelBtnProfile {
+  border: 2px solid #c4c4c4;
+  color: #4f4f4f;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 244px;
+  height: 39px;
+  cursor: pointer;
+  margin: 50px 0 15px 0;
+}
+.cancelBtnProfile:hover {
+  color: rgb(227, 42, 108);
+  border: 2px solid rgb(227, 42, 108);
+  transition: 0.3s ease all;
+}
 .saveBtnProfile:hover {
   opacity: 0.8;
 }
@@ -338,19 +368,23 @@ textarea {
   cursor: pointer;
   transition: 0.3s ease all;
   flex: 3;
+  font-size: 16px;
+  font-weight: normal;
 }
 .workTimeTableWrap .tableWorkDesc tr .timeTd:hover {
   color: #e32a6c;
 }
 .workTimeTableWrap .tableWorkDesc tr .doAsDayOfTd {
+  text-align: center;
   color: #e32a6c;
   transition: 0.3s ease all;
   cursor: pointer;
   flex: 3;
   font-size: 13px;
   text-transform: uppercase;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 25px;
+  letter-spacing: 0.5px;
 }
 .workTimeTableWrap .tableWorkDesc tr .doAsDayOfTd:hover {
   color: #000;
@@ -366,6 +400,8 @@ textarea {
 .videoWrapAdminDesctop {
   margin-top: 20px;
   width: 80%;
+  border-radius: 10px;
+  overflow: hidden;
 }
 .videoWrapAdminMobile {
   display: none;

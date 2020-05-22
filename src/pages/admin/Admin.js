@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 import Cropper from "react-easy-crop";
 import Dropzone from "react-dropzone";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 import Switch from "react-switch";
@@ -75,6 +75,16 @@ const DisableStream = styled.span`
     flex-direction: column;
   }
 `;
+const DayOffDot = styled.span`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e32a6c;
+  display: inline-block;
+  top: -10px;
+  position: relative;
+  left: 2px;
+`;
 
 const Gray16px = styled.span`
   font-size: 16px;
@@ -111,6 +121,7 @@ const Admin = (props) => {
   const [descOfCompany, setDescOfCompany] = useState("");
   const [currentImage, setCurrentImage] = useState(null);
   const [switchChecked, setSwitchChecked] = useState(null);
+  const [isSuccessSave, setIsSuccessSave] = useState(false);
 
   const [cookies] = useCookies([]);
 
@@ -536,6 +547,10 @@ const Admin = (props) => {
         .then((data) => {
           if (!data.errors) {
             console.log("SUCCESS");
+            setIsSuccessSave(true);
+            setTimeout(() => {
+              setIsSuccessSave(false);
+            }, 1000);
           } else {
             console.log(data.errors, " ERRORS");
           }
@@ -723,7 +738,7 @@ const Admin = (props) => {
     if (oneDay && oneDay.id) {
       return "Сделать выходным";
     } else {
-      return "";
+      return "Выходной";
     }
   };
 
@@ -875,6 +890,24 @@ const Admin = (props) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
+                          <div
+                            style={{
+                              height: "100px",
+                              display: "flex",
+                              alignItems: "center",
+                              fontWeight: "normal",
+                              fontSize: "14px",
+                              lineHeight: "16px",
+                            }}
+                          >
+                            <Link to="/editCompany" className="breadСrumbs">
+                              Список заведений
+                            </Link>
+                            <span className="breadСrumbsArrow">&#8594;</span>
+                            <p className="breadСrumbs breadСrumbsCurrent">
+                              Профиль заведения
+                            </p>
+                          </div>
                           <div style={{ display: "flex" }}>
                             <h3
                               style={{
@@ -1194,7 +1227,7 @@ const Admin = (props) => {
                                 СОХРАНИТЬ
                               </p>
                               <p
-                                className="saveBtnProfile"
+                                className="cancelBtnProfile"
                                 onClick={() => {
                                   // cancelSave()
                                   setValidationErr({});
@@ -1227,7 +1260,26 @@ const Admin = (props) => {
                     if (el.clicked && i === 1) {
                       return (
                         <div key={i} className="workTimeTableWrap">
-                          <h3>ГРАФИК РАБОТЫ</h3>
+                          <div
+                            style={{
+                              height: "100px",
+                              display: "flex",
+                              alignItems: "center",
+                              fontWeight: "normal",
+                              fontSize: "14px",
+                              lineHeight: "16px",
+                              paddingLeft: "15px",
+                            }}
+                          >
+                            <Link to="/editCompany" className="breadСrumbs">
+                              Список заведений
+                            </Link>
+                            <span className="breadСrumbsArrow">&#8594;</span>
+                            <p className="breadСrumbs breadСrumbsCurrent">
+                              График работы: {DATA.name}
+                            </p>
+                          </div>
+                          <h3 style={{ paddingLeft: "15px" }}>ГРАФИК РАБОТЫ</h3>
                           <table className="tableWorkDesc">
                             <tbody>
                               {DATA.schedules &&
@@ -1244,10 +1296,11 @@ const Admin = (props) => {
                                                 fontWeight: "700",
                                                 color: "#e32a6c",
                                               }
-                                            : {}
+                                            : { fontWeight: "normal" }
                                         }
                                       >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
+
                                         {oneDay.start_time &&
                                           (oneDay.start_time.split(":")[0] *
                                             3600 +
@@ -1261,6 +1314,7 @@ const Admin = (props) => {
                                                   tomorrowFromDay(i)
                                                 ]
                                               }`)}
+                                        {numberDayNow === i && <DayOffDot />}
                                       </td>
                                       <td
                                         style={
@@ -1298,11 +1352,16 @@ const Admin = (props) => {
                                       </td>
                                       <td
                                         style={
-                                          numberDayNow === i
+                                          (numberDayNow === i
                                             ? {
                                                 fontWeight: "700",
                                               }
-                                            : {}
+                                            : {},
+                                          isSetAsDayOff(
+                                            oneDay
+                                          ).toLowerCase() === "выходной"
+                                            ? { color: "#000" }
+                                            : {})
                                         }
                                         className="doAsDayOfTd"
                                         onClick={() => setAsDayOf(oneDay.id)}
@@ -1321,7 +1380,28 @@ const Admin = (props) => {
                     if (el.clicked && i === 2) {
                       return (
                         <div className="workTimeTableWrap">
-                          <h3>ГРАФИК ТРАНСЛЯЦИЙ</h3>
+                          <div
+                            style={{
+                              height: "100px",
+                              display: "flex",
+                              alignItems: "center",
+                              fontWeight: "normal",
+                              fontSize: "14px",
+                              lineHeight: "16px",
+                              paddingLeft: "15px",
+                            }}
+                          >
+                            <Link to="/editCompany" className="breadСrumbs">
+                              Список заведений
+                            </Link>
+                            <span className="breadСrumbsArrow">&#8594;</span>
+                            <p className="breadСrumbs breadСrumbsCurrent">
+                              График трансляций: {DATA.name}
+                            </p>
+                          </div>
+                          <h3 style={{ paddingLeft: "15px" }}>
+                            ГРАФИК ТРАНСЛЯЦИЙ
+                          </h3>
                           <table className="tableWorkDesc">
                             <tbody>
                               {DATA.streams &&
@@ -1340,7 +1420,9 @@ const Admin = (props) => {
                                                 fontWeight: "700",
                                                 color: "#E32A6C",
                                               }
-                                            : {}
+                                            : {
+                                                fontWeight: "normal",
+                                              }
                                         }
                                       >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
@@ -1357,6 +1439,7 @@ const Admin = (props) => {
                                                   tomorrowFromDay(i)
                                                 ]
                                               }`)}
+                                        {numberDayNow === i && <DayOffDot />}
                                       </td>
                                       <td
                                         style={
@@ -1420,6 +1503,24 @@ const Admin = (props) => {
                     if (el.clicked && i === 3) {
                       return (
                         <div key={i} className="streamAdminBlock">
+                          <div
+                            style={{
+                              height: "100px",
+                              display: "flex",
+                              alignItems: "center",
+                              fontWeight: "normal",
+                              fontSize: "14px",
+                              lineHeight: "16px",
+                            }}
+                          >
+                            <Link to="/editCompany" className="breadСrumbs">
+                              Список заведений
+                            </Link>
+                            <span className="breadСrumbsArrow">&#8594;</span>
+                            <p className="breadСrumbs breadСrumbsCurrent">
+                              Стрим: {DATA.name}
+                            </p>
+                          </div>
                           <h3>СТРИМ</h3>
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
@@ -1792,7 +1893,8 @@ const Admin = (props) => {
                                 СОХРАНИТЬ
                               </p>
                               <p
-                                className="saveBtnProfile"
+                                className="cancelBtnProfile"
+                                style={{ marginTop: "10px" }}
                                 onClick={() => {
                                   //  cancelSave()
                                   setValidationErr({});
@@ -2135,6 +2237,47 @@ const Admin = (props) => {
             </Popup>
           )}
         </div>
+        {isSuccessSave && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: "100%",
+              width: "100%",
+              background: "rgba(255,255,255,0.5)",
+              zIndex: 4,
+              opacity: 1,
+              transition: "03s ease all",
+            }}
+          >
+            <p
+              style={{
+                background: "#FFFFFF",
+                border: "2px solid #AEAEAE",
+                boxSizing: "border-box",
+                borderRadius: "5px",
+                height: "53px",
+                width: "245px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "fixed",
+                top: "calc(50vh - 26px)",
+                left: "calc(50vw - 122px)",
+                fontWeight: "bold",
+                fontSize: "14px",
+                lineHeight: "16px",
+                color: "#4F4F4F",
+                textTransform: "uppercase",
+              }}
+            >
+              Сохранено
+            </p>
+          </div>
+        )}
       </div>
     );
   }
