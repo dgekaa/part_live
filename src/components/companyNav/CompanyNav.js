@@ -158,7 +158,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           className={
             isClickedAllBtn() ? "activeBtn companyNavBlock" : "companyNavBlock"
           }
-          style={isClickedAllBtn() ? { background: "#e32a6c" } : {}}
+          style={isClickedAllBtn() ? { backgroundColor: "#e32a6c" } : {}}
           onClick={(e) => {
             clickedType();
             setClickedTypeLocal();
@@ -207,7 +207,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                 }
                 style={
                   isClickedTypeBtn(el.name)
-                    ? { color: "#fff", backgroundColor: "#e32a6c" }
+                    ? {
+                        color: "#fff",
+                        // backgroundColor: "#e32a6c",
+                        borderRadius: "10px",
+                      }
                     : {}
                 }
                 to={currentPage}
