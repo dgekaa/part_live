@@ -71,7 +71,10 @@ const Home = () => {
       setCompanyData(DATA);
     }
   };
-
+  useEffect(() => {
+    sessionStorage.setItem("prevZoom", "");
+    sessionStorage.setItem("prevCenter", "");
+  }, []);
   useEffect(() => {
     if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
       const filterName = localStorage.getItem("filter_type");

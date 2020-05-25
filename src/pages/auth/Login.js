@@ -84,7 +84,10 @@ const Login = () => {
         console.log(err, "LOGIN ERR");
       });
   };
-
+  useEffect(() => {
+    sessionStorage.setItem("prevZoom", "");
+    sessionStorage.setItem("prevCenter", "");
+  }, []);
   const animateProps = useSpring({
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },

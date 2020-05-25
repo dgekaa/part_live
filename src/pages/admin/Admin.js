@@ -806,6 +806,11 @@ const Admin = (props) => {
     setStreamScheduleOpen(false);
   };
 
+  useEffect(() => {
+    sessionStorage.setItem("prevZoom", "");
+    sessionStorage.setItem("prevCenter", "");
+  }, []);
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {

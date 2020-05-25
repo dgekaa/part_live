@@ -3,7 +3,6 @@ import GooggleMapReact from "google-map-react";
 import useSupercluster from "use-supercluster";
 import { Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
-import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -95,6 +94,12 @@ const MapComponent = (props) => {
       setMarkers(DATA);
     }
   };
+  // useEffect(() => {
+  //   console.log(zoom, "zooooom");
+  //   console.log(bounds, "bounds");
+
+  // }, [zoom, bounds]);
+  // localStorage.setItem
 
   useEffect(() => {
     if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
@@ -130,6 +135,7 @@ const MapComponent = (props) => {
     };
   });
 
+  const [currentCenterOfMap, setCurrentCenterOfMap] = useState();
   const [defaultCenter, setDefaultCenter] = useState();
 
   if (navigator.geolocation && !defaultCenter) {
@@ -202,17 +208,23 @@ const MapComponent = (props) => {
               key: API_KEY,
             }}
             defaultCenter={
-              defaultCenter || {
-                lat: 53.904577,
-                lng: 27.557328,
-              }
+              sessionStorage.getItem("prevCenter")
+                ? {
+                    lat: JSON.parse(sessionStorage.getItem("prevCenter")).lat,
+                    lng: JSON.parse(sessionStorage.getItem("prevCenter")).lng,
+                  }
+                : defaultCenter || {
+                    lat: 53.904577,
+                    lng: 27.557328,
+                  }
             }
-            defaultZoom={12}
+            defaultZoom={+sessionStorage.getItem("prevZoom") || 12}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => {
               mapRef.current = map;
             }}
-            onChange={({ zoom, bounds }) => {
+            onChange={({ zoom, bounds, center }) => {
+              setCurrentCenterOfMap(center);
               setZoom(zoom);
               setBounds([
                 bounds.nw.lng,
@@ -276,6 +288,13 @@ const MapComponent = (props) => {
                   lng={longitude}
                 >
                   <Link
+                    onClick={() => {
+                      sessionStorage.setItem("prevZoom", zoom);
+                      sessionStorage.setItem(
+                        "prevCenter",
+                        JSON.stringify(currentCenterOfMap)
+                      );
+                    }}
                     onMouseDown={(e) => {
                       !("ontouchstart" in document.documentElement) &&
                         mouseDownHandler(e);
