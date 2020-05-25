@@ -16,21 +16,23 @@
   }
   .BottomMenu a {
     display: inline-block;
-    border: 1px solid #c4c4c4;
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 500;
     height: 40px;
     cursor: pointer;
-    width: 90px;
+    width: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #fff;
   }
+  .bottomMenuText {
+    margin-left: 10px;
+  }
   .BottomMenu a:hover {
     transition: 0.3s ease all;
-    color: #fff;
-    background: #e32a6c;
+    color: #e32a6c;
+    /* background: #e32a6c; */
   }
   .BottomMenu a:first-of-type {
     border-right: none;

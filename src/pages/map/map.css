@@ -26,6 +26,10 @@
   position: relative;
   bottom: 110px;
   right: 50px;
+  transition: 0.3s ease opacity;
+}
+.mapMarkerWrapNewDesign:hover {
+  opacity: 0.9;
 }
 .mapMarkerGradientWrapperNewDesign {
   overflow: hidden;

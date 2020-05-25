@@ -178,8 +178,14 @@ const Company = (props) => {
         }}
       >
         <div className="bigCompanyHeaderDesc">
-          <Link to="/home"> &#60; На главную</Link>
+          <Link to="/home">
+            <span style={{ fontSize: "18px", paddingRight: "5px" }}>
+              &#8592;
+            </span>
+            На главную
+          </Link>
         </div>
+
         {DATA && (
           <div className="flex">
             <div className="shadowBlock">

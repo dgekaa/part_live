@@ -11,6 +11,9 @@
   margin: 5px;
   transition: 0.2s ease all;
 }
+.SmallCompanyBlockNewDesign:hover {
+  opacity: 0.9;
+}
 .gradientWrapperNewDesign {
   position: absolute;
   top: 0;

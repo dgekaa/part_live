@@ -117,6 +117,7 @@ const Registration = () => {
     return (
       <div>
         <Header
+          arrow
           isShowMenu={isShowMenu}
           logo
           burger
@@ -132,6 +133,12 @@ const Registration = () => {
           }}
           style={animateProps}
         >
+          <Link to="/home" className="loginGoBackBtn">
+            <span style={{ fontSize: "18px", paddingRight: "5px" }}>
+              &#8592;
+            </span>
+            На главную
+          </Link>
           <div className="authBlock">
             {!isSuccess && (
               <>

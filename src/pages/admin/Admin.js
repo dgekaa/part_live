@@ -760,6 +760,12 @@ const Admin = (props) => {
     config: { duration: 200 },
   });
 
+  const animateSavedProps = useSpring({
+    opacity: isSuccessSave ? 1 : 0,
+    top: isSuccessSave ? 0 : 4999,
+    config: { duration: 300 },
+  });
+
   const tomorrowFromDay = (day) => {
     if (day === 6) {
       return 0;
@@ -845,6 +851,18 @@ const Admin = (props) => {
                 {/* __________________DESCTOP__________________ */}
                 <div className="leftAdminMenuDesctop">
                   <div className="leftAdminMenu">
+                    <Link className={"goBackFromAdmin"} to={"/editCompany"}>
+                      <span
+                        style={{
+                          fontSize: "18px",
+                          paddingRight: "10px",
+                          paddingBottom: "2px",
+                        }}
+                      >
+                        &#8592;
+                      </span>
+                      К списку заведений
+                    </Link>
                     <ul>
                       {leftMenuSettings.map((el, id) => {
                         return (
@@ -895,24 +913,6 @@ const Admin = (props) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
-                          <div
-                            style={{
-                              height: "100px",
-                              display: "flex",
-                              alignItems: "center",
-                              fontWeight: "normal",
-                              fontSize: "14px",
-                              lineHeight: "16px",
-                            }}
-                          >
-                            <Link to="/editCompany" className="breadСrumbs">
-                              Список заведений
-                            </Link>
-                            <span className="breadСrumbsArrow">&#8594;</span>
-                            <p className="breadСrumbs breadСrumbsCurrent">
-                              Профиль заведения
-                            </p>
-                          </div>
                           <div style={{ display: "flex" }}>
                             <h3
                               style={{
@@ -988,14 +988,11 @@ const Admin = (props) => {
                                     ></canvas>
                                   </div>
                                   {/* <span
-                                onClick={downloadImgFromCanvas}
-                                style={{ position: "relative", top: "-280px" }}
-                              >
-                                Скачать
-                              </span>
-                              <span onClick={handeleClearToDefault}>
-                                Очистить
-                              </span> */}
+                                    onClick={downloadImgFromCanvas}
+                                    style={{}}
+                                  >
+                                    Скачать
+                                  </span> */}
                                 </div>
                               ) : (
                                 <div
@@ -1024,7 +1021,7 @@ const Admin = (props) => {
                               >
                                 {({ getRootProps, getInputProps }) => {
                                   return (
-                                    <section>
+                                    <section style={{ display: "flex" }}>
                                       <div
                                         className="changePhotoBlock previewRef"
                                         {...getRootProps()}
@@ -1033,10 +1030,20 @@ const Admin = (props) => {
                                           className="changePhotoInput"
                                           {...getInputProps()}
                                         />
-                                        <p className="changePhoto">
-                                          Изменить фото профиля
-                                        </p>
+                                        {imgSrc && (
+                                          <p className="changePhoto">
+                                            Изменить
+                                          </p>
+                                        )}
                                       </div>
+                                      {imgSrc && (
+                                        <span
+                                          className="changePhoto"
+                                          onClick={handeleClearToDefault}
+                                        >
+                                          Удалить
+                                        </span>
+                                      )}
                                     </section>
                                   );
                                 }}
@@ -1060,7 +1067,7 @@ const Admin = (props) => {
                               >
                                 <p
                                   style={{
-                                    fontWeight: "500",
+                                    fontWeight: "700",
                                     fontSize: "16px",
                                   }}
                                 >
@@ -1231,7 +1238,8 @@ const Admin = (props) => {
                               >
                                 СОХРАНИТЬ
                               </p>
-                              <p
+                              <Link
+                                to={"/editCompany"}
                                 className="cancelBtnProfile"
                                 onClick={() => {
                                   // cancelSave()
@@ -1256,7 +1264,7 @@ const Admin = (props) => {
                                 }}
                               >
                                 ОТМЕНА
-                              </p>
+                              </Link>
                             </div>
                           </div>
                         </div>
@@ -1265,25 +1273,6 @@ const Admin = (props) => {
                     if (el.clicked && i === 1) {
                       return (
                         <div key={i} className="workTimeTableWrap">
-                          <div
-                            style={{
-                              height: "100px",
-                              display: "flex",
-                              alignItems: "center",
-                              fontWeight: "normal",
-                              fontSize: "14px",
-                              lineHeight: "16px",
-                              paddingLeft: "15px",
-                            }}
-                          >
-                            <Link to="/editCompany" className="breadСrumbs">
-                              Список заведений
-                            </Link>
-                            <span className="breadСrumbsArrow">&#8594;</span>
-                            <p className="breadСrumbs breadСrumbsCurrent">
-                              График работы: {DATA.name}
-                            </p>
-                          </div>
                           <h3 style={{ paddingLeft: "15px" }}>ГРАФИК РАБОТЫ</h3>
                           <table className="tableWorkDesc">
                             <tbody>
@@ -1385,25 +1374,6 @@ const Admin = (props) => {
                     if (el.clicked && i === 2) {
                       return (
                         <div className="workTimeTableWrap">
-                          <div
-                            style={{
-                              height: "100px",
-                              display: "flex",
-                              alignItems: "center",
-                              fontWeight: "normal",
-                              fontSize: "14px",
-                              lineHeight: "16px",
-                              paddingLeft: "15px",
-                            }}
-                          >
-                            <Link to="/editCompany" className="breadСrumbs">
-                              Список заведений
-                            </Link>
-                            <span className="breadСrumbsArrow">&#8594;</span>
-                            <p className="breadСrumbs breadСrumbsCurrent">
-                              График трансляций: {DATA.name}
-                            </p>
-                          </div>
                           <h3 style={{ paddingLeft: "15px" }}>
                             ГРАФИК ТРАНСЛЯЦИЙ
                           </h3>
@@ -1508,24 +1478,6 @@ const Admin = (props) => {
                     if (el.clicked && i === 3) {
                       return (
                         <div key={i} className="streamAdminBlock">
-                          <div
-                            style={{
-                              height: "100px",
-                              display: "flex",
-                              alignItems: "center",
-                              fontWeight: "normal",
-                              fontSize: "14px",
-                              lineHeight: "16px",
-                            }}
-                          >
-                            <Link to="/editCompany" className="breadСrumbs">
-                              Список заведений
-                            </Link>
-                            <span className="breadСrumbsArrow">&#8594;</span>
-                            <p className="breadСrumbs breadСrumbsCurrent">
-                              Стрим: {DATA.name}
-                            </p>
-                          </div>
                           <h3>СТРИМ</h3>
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
@@ -1748,7 +1700,7 @@ const Admin = (props) => {
                               >
                                 {({ getRootProps, getInputProps }) => {
                                   return (
-                                    <section>
+                                    <section style={{ display: "flex" }}>
                                       <div
                                         className="changePhotoBlock"
                                         {...getRootProps()}
@@ -1757,10 +1709,20 @@ const Admin = (props) => {
                                           className="changePhotoInput previewRef"
                                           {...getInputProps()}
                                         />
-                                        <p className="changePhoto">
-                                          Сменить фото профиля
-                                        </p>
+                                        {imgSrc && (
+                                          <p className="changePhoto">
+                                            Изменить
+                                          </p>
+                                        )}
                                       </div>
+                                      {imgSrc && (
+                                        <span
+                                          className="changePhoto"
+                                          onClick={handeleClearToDefault}
+                                        >
+                                          Удалить
+                                        </span>
+                                      )}
                                     </section>
                                   );
                                 }}
@@ -1909,7 +1871,8 @@ const Admin = (props) => {
                               >
                                 СОХРАНИТЬ
                               </p>
-                              <p
+                              <Link
+                                to={"/editCompany"}
                                 className="cancelBtnProfile"
                                 style={{ marginTop: "10px" }}
                                 onClick={() => {
@@ -1931,7 +1894,7 @@ const Admin = (props) => {
                                 }}
                               >
                                 ОТМЕНА
-                              </p>
+                              </Link>
                             </div>
                           </div>
                         </SideBar>
@@ -2171,13 +2134,16 @@ const Admin = (props) => {
             <Popup
               togglePopup={togglePopupDatePicker}
               wrpaStyle={windowWidth <= 760 ? { alignItems: "flex-end" } : {}}
-              style={windowWidth <= 760 ? {} : { borderRadius: "5px" }}
+              style={
+                windowWidth <= 760
+                  ? {}
+                  : { borderRadius: "5px", transform: "scale(1.5)" }
+              }
             >
               <div className="popupWrapper">
-                <span
-                  className="closePopupBtn"
-                  onClick={togglePopupDatePicker}
-                ></span>
+                <span className="closePopupBtn" onClick={togglePopupDatePicker}>
+                  &#215;
+                </span>
                 <div className="TimePickerContainer">
                   <TimePicker
                     realTimeInPicker={startRealTimeInPicker}
@@ -2217,15 +2183,24 @@ const Admin = (props) => {
                 >
                   Сделать выходным
                 </p>
-                <div
-                  className="saveBtn"
-                  onClick={() => {
-                    togglePopupDatePicker();
-                    isSetWorkTimeDPick && setWorkTimeOfOneDay();
-                    !isSetWorkTimeDPick && setStreamTimeOfOneDay();
-                  }}
-                >
-                  Сохранить
+                <div style={{ display: "flex" }}>
+                  <div
+                    className="saveBtn"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => {
+                      togglePopupDatePicker();
+                      isSetWorkTimeDPick && setWorkTimeOfOneDay();
+                      !isSetWorkTimeDPick && setStreamTimeOfOneDay();
+                    }}
+                  >
+                    Сохранить
+                  </div>
+                  <div
+                    className="cancelBtn"
+                    onClick={() => togglePopupDatePicker()}
+                  >
+                    Отмена
+                  </div>
                 </div>
               </div>
             </Popup>
@@ -2254,47 +2229,67 @@ const Admin = (props) => {
             </Popup>
           )}
         </div>
-        {isSuccessSave && (
-          <div
-            style={{
+        {/* {isSuccessSave && ( */}
+        <animated.div
+          style={
+            ({
               position: "absolute",
-              top: 0,
+              top: "4999px",
               left: 0,
               right: 0,
               bottom: 0,
               height: "100%",
               width: "100%",
-              background: "rgba(255,255,255,0.5)",
-              zIndex: 4,
-              opacity: 1,
-              transition: "03s ease all",
+              zIndex: -10,
+              background: "red",
+              boxShadow: "0 0  1000px rgba(0,0,0,0.7) inset",
+            },
+            animateSavedProps)
+          }
+        >
+          <div
+            style={{
+              // position: "relative",
+              // top: 0,
+              // left: 0,
+              // right: 0,
+              // bottom: 0,
+              height: "100%",
+              width: "100%",
+              background: "rgba(255,255,255,0.6)",
             }}
           >
             <p
-              style={{
-                background: "#FFFFFF",
-                border: "2px solid #AEAEAE",
-                boxSizing: "border-box",
-                borderRadius: "5px",
-                height: "53px",
-                width: "245px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "fixed",
-                top: "calc(50vh - 26px)",
-                left: "calc(50vw - 122px)",
-                fontWeight: "bold",
-                fontSize: "14px",
-                lineHeight: "16px",
-                color: "#4F4F4F",
-                textTransform: "uppercase",
-              }}
+              style={
+                ({
+                  background: "#FFFFFF",
+                  border: "2px solid #AEAEAE",
+                  boxSizing: "border-box",
+                  borderRadius: "5px",
+                  height: "53px",
+                  width: "245px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "fixed",
+                  top: "calc(50vh - 26px)",
+                  left: "calc(50vw - 122px)",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                  lineHeight: "16px",
+                  color: "#4F4F4F",
+                  textTransform: "uppercase",
+                  opacity: 1,
+                  boxShadow: "0 0  1000px 1000px rgba(255,255,255,0.4)",
+                },
+                isSuccessSave ? { zIndex: 4 } : { zIndex: 0 })
+              }
             >
               Сохранено
             </p>
           </div>
-        )}
+        </animated.div>
+        {/* )} */}
       </div>
     );
   }

@@ -9,6 +9,19 @@
   padding-top: 140px;
   background-color: #e5e5e5;
 }
+.loginGoBackBtn {
+  position: absolute;
+  top: 77px;
+  left: 10px;
+  font-size: 16px;
+  font-weight: normal;
+  transition: 0.3s ease color;
+  height: 30px;
+  width: 150px;
+}
+.loginGoBackBtn:hover {
+  color: #e32a6c;
+}
 .authBlock {
   transition: 0.3s ease transform;
   transform: scale(1.5);
@@ -147,5 +160,8 @@
   .Login {
     height: 100vh;
     position: relative;
+  }
+  .loginGoBackBtn {
+    display: none;
   }
 }

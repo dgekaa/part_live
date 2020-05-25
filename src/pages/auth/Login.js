@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 
 import Header from "../../components/header/Header";
@@ -104,12 +104,17 @@ const Login = () => {
     return (
       <div className="loginWrapper">
         <Header
+          arrow
           isShowMenu={isShowMenu}
           logo
           burger
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
+        <Link to="/home" className="loginGoBackBtn">
+          <span style={{ fontSize: "18px", paddingRight: "5px" }}>&#8592;</span>
+          На главную
+        </Link>
         <animated.div
           className="Login"
           onClick={(e) => {

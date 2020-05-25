@@ -15,7 +15,20 @@ textarea {
 }
 .leftAdminMenuDesctop {
   flex: 1.5;
-  padding: 89px 10px 10px 0;
+  padding: 0px 10px 10px 0;
+}
+.leftAdminMenuDesctop .goBackFromAdmin {
+  font-size: 14px;
+  font-weight: normal;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s ease color;
+  letter-spacing: 0.5px;
+}
+.leftAdminMenuDesctop .goBackFromAdmin:hover {
+  color: rgb(227, 42, 108);
 }
 .barIconClass {
   width: 30px;
@@ -37,9 +50,9 @@ textarea {
   position: fixed;
 }
 .leftAdminMenuDesctop .leftAdminMenu .LeftAdminBtn {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
-  height: 50px;
+  height: 35px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -47,9 +60,9 @@ textarea {
   letter-spacing: 1px;
 }
 .leftAdminMenuDesctop .leftAdminMenu .clickedLeftAdminBtn {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
-  height: 50px;
+  height: 35px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -73,6 +86,7 @@ textarea {
 .breadСrumbsArrow {
   margin: 0 7px;
   font-size: 18px;
+  padding-bottom: 3px;
 }
 .breadСrumbsCurrent {
   color: rgb(227, 42, 108);
@@ -84,7 +98,7 @@ textarea {
 .adminContentDesctop {
   display: flex;
   flex: 4;
-  padding: 0 10px 10px 10px;
+  padding: 100px 10px 10px 10px;
   flex-direction: column;
 }
 
@@ -140,7 +154,7 @@ textarea {
 }
 .changePhotoBlock {
   cursor: pointer;
-  width: 250px;
+  width: 125px;
 }
 .changePhotoBlock:active,
 .changePhotoBlock:hover,
@@ -154,7 +168,7 @@ textarea {
   font-weight: 600;
   text-transform: uppercase;
   font-size: 12px;
-  width: 250px;
+  width: 125px;
   cursor: pointer;
   text-align: center;
   padding-top: 12px;
@@ -569,38 +583,16 @@ textarea {
   background-color: #eee;
 }
 .closePopupBtn {
-  display: none;
+  cursor: pointer;
+  font-size: 40px;
+  transition: 0.3s ease color;
+  text-align: right;
+  line-height: 40px;
 }
-.closePopupBtn::before {
-  content: "";
-  width: 30px;
-  height: 2px;
-  position: absolute;
-  z-index: 5;
-  right: 0px;
-  top: 9px;
-  transform: rotate(45deg);
-  background-color: #000;
+.closePopupBtn:hover {
+  color: #e32a6c;
 }
-.closePopupBtn::after {
-  content: "";
-  width: 30px;
-  height: 2px;
-  right: 0px;
-  top: 9px;
-  position: absolute;
-  z-index: 5;
-  transform: rotate(-45deg);
-  background-color: #000;
-}
-.closePopupBtn:hover::before {
-  background: #e32a6c;
-  transition: 0.3s ease all;
-}
-.closePopupBtn:hover::after {
-  background: #e32a6c;
-  transition: 0.3s ease all;
-}
+
 .cameraAddressWrapper {
   width: 80%;
   display: flex;
@@ -697,7 +689,27 @@ textarea {
   opacity: 0.8;
   transition: 0.3s ease all;
 }
-
+.cancelBtn {
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 40px;
+  font-size: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  align-self: center;
+  width: 235px;
+  height: 45px;
+  line-height: 45px;
+  background: #fff;
+  color: #c4c4c4;
+  border: 2px solid #c4c4c4;
+}
+.cancelBtn:hover {
+  color: #e32a6c;
+  border-color: #e32a6c;
+  transition: 0.3s ease all;
+}
 .TimePickerContainer {
   display: flex;
   flex-direction: row;
@@ -974,6 +986,7 @@ textarea {
   .leftAdminMenuDesctop {
     display: none;
   }
+
   .adminContentMobile {
     display: block;
     margin-top: 48px;
