@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
-// import Cropper from "react-easy-crop";
+import CropperMobile from "react-easy-crop";
 import Cropper from "cropperjs";
 
 import Dropzone from "react-dropzone";
@@ -600,12 +600,18 @@ const Admin = (props) => {
     if (imageElementRef.current) {
       const cropper = new Cropper(imageElementRef.current, {
         zoomable: true,
-        scalable: true,
+        scalable: false,
+        dragMode: "move",
         aspectRatio: 1,
         rotatable: true,
-        crop: () => {
+        movableL: true,
+        modal: true,
+        crop: (e) => {
+          console.log(e, "EVENT !!!!");
           const canvas = cropper.getCroppedCanvas();
           setImageDestination(canvas.toDataURL("image/png"));
+
+          console.log(canvas.toDataURL("image/png"), "canvass");
         },
       });
     }
@@ -1669,7 +1675,7 @@ const Admin = (props) => {
                                     background: "#fff",
                                   }}
                                 >
-                                  {/* <Cropper
+                                  <CropperMobile
                                     style={{
                                       containerStyle: {
                                         maxHeight: "250px",
@@ -1699,7 +1705,7 @@ const Admin = (props) => {
                                         height: naturalHeight,
                                       });
                                     }}
-                                  /> */}
+                                  />
                                   <br />
                                   {/* <span onClick={downloadImgFromCanvas}>
                                   Скачать

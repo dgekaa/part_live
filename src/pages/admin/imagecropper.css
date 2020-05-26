@@ -1,6 +1,7 @@
 .img-container {
   width: 250px;
   height: 250px;
+  overflow: hidden;
 }
 .img-preview {
   width: 100px;
