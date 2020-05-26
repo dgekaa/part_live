@@ -1534,6 +1534,14 @@ const Admin = (props) => {
                                   DATA.streams[0].url
                                 }
                               />
+                              <VideoPlayer
+                                // preview={
+
+                                // }
+                                src={
+                                  "http://partycamera.org:80/streaming/123/index.m3u8"
+                                }
+                              />
                             </div>
                           )}
                           <DisableStream>
