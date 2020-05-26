@@ -1520,6 +1520,17 @@ const Admin = (props) => {
                       return (
                         <div key={i} className="streamAdminBlock">
                           <h3>СТРИМ</h3>
+                          {console.log(DATA, "JJJJ")}
+                          {DATA.id && DATA.id == 16 && (
+                            <div className="videoWrapAdminDesctop">
+                              <VideoPlayer
+                                src={
+                                  "http://partycamera.org:80/streaming/123/index.m3u8"
+                                }
+                              />
+                            </div>
+                          )}
+
                           {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminDesctop">
                               <VideoPlayer
@@ -1532,14 +1543,6 @@ const Admin = (props) => {
                                   DATA.streams &&
                                   DATA.streams[0] &&
                                   DATA.streams[0].url
-                                }
-                              />
-                              <VideoPlayer
-                                // preview={
-
-                                // }
-                                src={
-                                  "http://partycamera.org:80/streaming/123/index.m3u8"
                                 }
                               />
                             </div>
