@@ -594,7 +594,6 @@ const Admin = (props) => {
   };
 
   const imageElementRef = useRef(null);
-  const imageElementMobileRef = useRef(null);
   const [imageDestination, setImageDestination] = useState("");
 
   useEffect(() => {
@@ -620,30 +619,6 @@ const Admin = (props) => {
       });
     }
   }, [imageElementRef.current]);
-
-  useEffect(() => {
-    if (imageElementMobileRef.current) {
-      const cropper = new Cropper(imageElementMobileRef.current, {
-        zoomable: true,
-        scalable: false,
-        dragMode: "move",
-        aspectRatio: 1,
-        rotatable: true,
-        movableL: true,
-        modal: true,
-
-        imageSmoothingEnabled: true,
-
-        crop: (e) => {
-          console.log(e, "EVENT !!!!");
-          const canvas = cropper.getCroppedCanvas();
-          setImageDestination(canvas.toDataURL("image/png"));
-
-          console.log(canvas.toDataURL("image/png"), "canvass");
-        },
-      });
-    }
-  }, [imageElementMobileRef.current]);
 
   // function submitImage() {
   //   const formData = new FormData();
@@ -1684,31 +1659,6 @@ const Admin = (props) => {
                                   }}
                                 >
                                   <div>
-                                    <div
-                                      className="cropWrapper"
-                                      style={{
-                                        position: "relative",
-                                        height: "250px",
-                                        background: "#fff",
-                                      }}
-                                    >
-                                      <div className="img-container">
-                                        <img
-                                          ref={imageElementMobileRef}
-                                          src={imgSrc}
-                                          alt="src"
-                                        />
-                                      </div>
-                                      {/* <img
-                                      className="img-preview"
-                                      src={imageDestination}
-                                      alt="destination"
-                                    /> */}
-                                      <canvas
-                                        className="cropCanvasImage"
-                                        ref={imagePreviewCanvas}
-                                      ></canvas>
-                                    </div>
                                     {/* <span
                                     onClick={downloadImgFromCanvas}
                                     style={{}}
@@ -1716,7 +1666,7 @@ const Admin = (props) => {
                                     Скачать
                                   </span> */}
                                   </div>
-                                  {/* <CropperMobile
+                                  <CropperMobile
                                     restrictPosition={true}
                                     style={{
                                       containerStyle: {
@@ -1753,7 +1703,7 @@ const Admin = (props) => {
                                       });
                                     }}
                                   />
-                                  <br /> */}
+                                  <br />
                                   {/* <span onClick={downloadImgFromCanvas}>
                                   Скачать
                                 </span>
