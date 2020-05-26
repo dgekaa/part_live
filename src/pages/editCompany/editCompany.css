@@ -15,7 +15,6 @@
 }
 .bigEditCompanyHeaderDesc a:hover {
   color: #e32a6c;
-  transition: 0.3s ease color;
 }
 
 .editCompanyContent h3 {

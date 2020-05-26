@@ -878,19 +878,19 @@ const Admin = (props) => {
               <div className="adminWrapper">
                 {/* __________________DESCTOP__________________ */}
                 <div className="leftAdminMenuDesctop">
+                  <Link className={"goBackFromAdmin"} to={"/editCompany"}>
+                    <span
+                      style={{
+                        fontSize: "18px",
+                        paddingRight: "10px",
+                        paddingBottom: "2px",
+                      }}
+                    >
+                      &#8592;
+                    </span>
+                    К списку заведений
+                  </Link>
                   <div className="leftAdminMenu">
-                    <Link className={"goBackFromAdmin"} to={"/editCompany"}>
-                      <span
-                        style={{
-                          fontSize: "18px",
-                          paddingRight: "10px",
-                          paddingBottom: "2px",
-                        }}
-                      >
-                        &#8592;
-                      </span>
-                      К списку заведений
-                    </Link>
                     <ul>
                       {leftMenuSettings.map((el, id) => {
                         return (

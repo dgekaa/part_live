@@ -58,11 +58,7 @@
 }
 .bigCompanyHeaderDesc a {
   font-weight: normal;
-  transition: 0.3s ease color;
-
   font-size: 14px;
-
-  /* transition: 0.3s ease color; */
   letter-spacing: 0.5px;
 }
 .bigCompanyHeaderDesc a:hover {
