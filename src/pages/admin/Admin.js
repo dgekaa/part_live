@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
-import Cropper from "react-easy-crop";
+// import Cropper from "react-easy-crop";
+import Cropper from "cropperjs";
+
 import Dropzone from "react-dropzone";
 import { Redirect, Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
@@ -32,6 +34,8 @@ import SideBar from "./Sidebar";
 
 import "./admin.css";
 import "./sidebar.css";
+import "cropperjs/dist/cropper.min.css";
+import "./imagecropper.css";
 
 const MobileAdminMenuTitle = styled.p`
   text-align: center;
@@ -589,6 +593,24 @@ const Admin = (props) => {
     );
   };
 
+  const imageElementRef = useRef(null);
+  const [imageDestination, setImageDestination] = useState("");
+
+  useEffect(() => {
+    if (imageElementRef.current) {
+      const cropper = new Cropper(imageElementRef.current, {
+        zoomable: true,
+        scalable: true,
+        aspectRatio: 1,
+        rotatable: true,
+        crop: () => {
+          const canvas = cropper.getCroppedCanvas();
+          setImageDestination(canvas.toDataURL("image/png"));
+        },
+      });
+    }
+  }, [imageElementRef.current]);
+
   // function submitImage() {
   //   const formData = new FormData();
   //   formData.append("file", currentImage);
@@ -952,7 +974,20 @@ const Admin = (props) => {
                                       background: "#fff",
                                     }}
                                   >
-                                    <Cropper
+                                    <div className="img-container">
+                                      <img
+                                        ref={imageElementRef}
+                                        src={imgSrc}
+                                        alt="src"
+                                      />
+                                    </div>
+
+                                    {/* <img
+                                      className="img-preview"
+                                      src={imageDestination}
+                                      alt="destination"
+                                    /> */}
+                                    {/* <Cropper
                                       style={{
                                         containerStyle: {
                                           background: "#fff",
@@ -981,7 +1016,7 @@ const Admin = (props) => {
                                           height: naturalHeight,
                                         });
                                       }}
-                                    />
+                                    /> */}
                                     <canvas
                                       className="cropCanvasImage"
                                       ref={imagePreviewCanvas}
@@ -1634,7 +1669,7 @@ const Admin = (props) => {
                                     background: "#fff",
                                   }}
                                 >
-                                  <Cropper
+                                  {/* <Cropper
                                     style={{
                                       containerStyle: {
                                         maxHeight: "250px",
@@ -1664,7 +1699,7 @@ const Admin = (props) => {
                                         height: naturalHeight,
                                       });
                                     }}
-                                  />
+                                  /> */}
                                   <br />
                                   {/* <span onClick={downloadImgFromCanvas}>
                                   Скачать
