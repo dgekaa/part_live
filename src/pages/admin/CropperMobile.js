@@ -14,8 +14,9 @@ const CropperMobile = ({
     const Hammer = window.Hammer;
     var myElement = document.getElementById("myElement");
     var mc = new Hammer(myElement);
+    mc.get("pinch").set({ enable: true });
 
-    mc.on("panleft panright tap press pinch", function (ev) {
+    mc.on("pinch", function (ev) {
       alert(ev.type);
     });
   }, []);
