@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
-import CropperMobile from "react-easy-crop";
 import Cropper from "cropperjs";
 
 import Dropzone from "react-dropzone";
@@ -31,6 +30,7 @@ import {
   downloadBase64File,
 } from "./EncodeToBase64";
 import SideBar from "./Sidebar";
+import CropperMobile from "./CropperMobile";
 
 import "./admin.css";
 import "./sidebar.css";
@@ -623,6 +623,23 @@ const Admin = (props) => {
       });
     }
   }, [imageElementRef.current]);
+
+  const [useProfilePic, setUseProfilePic] = useState("");
+  const [scaleValue, setScaleValue] = useState(1);
+
+  const editorRef = useRef(null);
+
+  const onCrop = () => {
+    if (editorRef.current) {
+      const url = editorRef.current.getImageScaledToCanvas().toDataURL();
+      setUseProfilePic(url);
+    }
+  };
+
+  const onScaleChange = (scaleValueEvent) => {
+    const scaleValue = parseFloat(scaleValueEvent.target.value);
+    setScaleValue(scaleValue);
+  };
 
   // function submitImage() {
   //   const formData = new FormData();
@@ -1771,62 +1788,13 @@ const Admin = (props) => {
                                       background: "#fff",
                                     }}
                                   >
-                                    <div>
-                                      {/* <span
-                                    onClick={downloadImgFromCanvas}
-                                    style={{}}
-                                  >
-                                    Скачать
-                                  </span> */}
-                                    </div>
                                     <CropperMobile
-                                      restrictPosition={true}
-                                      style={{
-                                        containerStyle: {
-                                          maxHeight: "250px",
-                                        },
-                                        mediaStyle: {
-                                          maxHeight: "250px",
-                                        },
-                                      }}
-                                      image={imgSrc}
-                                      crop={crop}
-                                      zoom={zoom}
-                                      onZoomChange={setZoom}
-                                      aspect={aspect}
-                                      onCropChange={(data) => {
-                                        setCrop({
-                                          x: data.x * 1,
-                                          y: data.y * 1,
-                                        });
-                                      }}
-                                      onCropComplete={(
-                                        croppedArea,
-                                        croppedAreaPixels
-                                      ) => {
-                                        onCropComplete(croppedAreaPixels);
-                                      }}
-                                      onMediaLoaded={({
-                                        naturalWidth,
-                                        naturalHeight,
-                                      }) => {
-                                        setCurrentImageSize({
-                                          width: naturalWidth,
-                                          height: naturalHeight,
-                                        });
-                                      }}
+                                      imgSrc={imgSrc}
+                                      editorRef={editorRef}
+                                      onCrop={onCrop}
+                                      scaleValue={scaleValue}
+                                      onScaleChange={onScaleChange}
                                     />
-                                    <br />
-                                    {/* <span onClick={downloadImgFromCanvas}>
-                                  Скачать
-                                </span>
-                                <span onClick={handeleClearToDefault}>
-                                  Очистить
-                                </span> */}
-                                    {/* <canvas
-                                    className="cropCanvasImage"
-                                    ref={imagePreviewCanvas}
-                                  ></canvas> */}
                                   </div>
                                 ) : (
                                   <div
