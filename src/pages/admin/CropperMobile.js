@@ -12,34 +12,23 @@ const CropperMobile = ({
 
   useEffect(() => {
     const Hammer = window.Hammer;
-    var myElement = document.getElementById("myElement");
-    var mc = new Hammer(myElement);
+    var hammerEvent = document.getElementById("hammerEvent");
+    var mc = new Hammer(hammerEvent);
     mc.get("pinch").set({ enable: true });
 
     mc.on("pinch", function (ev) {
-      //   console.log(ev, "EV");
-      //   alert(ev.scale);
-      setMouseScale((prev) => prev + ev.scale);
+      let count = 0;
+      if (ev.scale > 1) {
+        count = count + 0.1;
+      } else {
+        count = count - 0.1;
+      }
+      setMouseScale((prev) => count);
     });
   }, []);
 
   return (
-    <div
-      style={{ width: "250px", height: "250px" }}
-      id="myElement"
-      //   onWheel={(event) => {
-      //     event.preventDefault();
-      //     document.body.addEventListener("wheel", (event) => {
-      //       event.preventDefault();
-      //     });
-      //     if (event.deltaY < 0) {
-      //       setMouseScale((prev) => +prev + 0.1);
-      //     } else {
-      //       setMouseScale((prev) => +prev - 0.1);
-      //     }
-      //     console.log(event, "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-      //   }}
-    >
+    <div style={{ width: "250px", height: "250px" }} id="hammerEvent">
       <AvatarEditor
         width={230}
         height={230}
