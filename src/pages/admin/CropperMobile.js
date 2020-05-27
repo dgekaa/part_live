@@ -9,6 +9,7 @@ const CropperMobile = ({
   onScaleChange,
 }) => {
   const [mouseScale, setMouseScale] = useState(1);
+  const [countGlobal, setCountGlobl] = useState(0);
 
   useEffect(() => {
     const Hammer = window.Hammer;
@@ -16,8 +17,18 @@ const CropperMobile = ({
     const mc = new Hammer(hammerEvent);
     mc.get("pinch").set({ enable: true });
 
+    let count = 0;
+    mc.on("pinchend", (ev) => {
+      setCountGlobl((prev) => prev + count);
+    });
+
     mc.on("pinch", (ev) => {
-      setMouseScale((prev) => ev.scale);
+      if (ev.scale < 0.95) {
+        count = count - 0.1;
+      } else if (ev.scale > 1.05) {
+        count = count + 0.1;
+      }
+      //   setMouseScale((prev) => ev.scale);
     });
   }, []);
 
@@ -28,7 +39,7 @@ const CropperMobile = ({
         height={230}
         image={imgSrc}
         border={10}
-        scale={mouseScale}
+        scale={countGlobal}
         ref={editorRef}
       />
       {/* <input
