@@ -1000,6 +1000,7 @@ textarea {
   }
   .makeAsDayOffMobile {
     display: block;
+
     font-size: 18px;
     color: #e32a6c;
     padding: 30px 0;

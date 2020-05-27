@@ -614,11 +614,11 @@ const Admin = (props) => {
         imageSmoothingEnabled: true,
 
         crop: (e) => {
-          console.log(e, "EVENT !!!!");
+          // console.log(e, "EVENT !!!!");
           const canvas = cropper.getCroppedCanvas();
           setImageDestination(canvas.toDataURL("image/png"));
 
-          console.log(canvas.toDataURL("image/png"), "canvass");
+          // console.log(canvas.toDataURL("image/png"), "canvass");
         },
       });
     }
