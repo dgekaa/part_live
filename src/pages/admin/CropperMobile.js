@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AvatarEditor from "react-avatar-editor";
 
 const CropperMobile = ({
@@ -10,10 +10,20 @@ const CropperMobile = ({
 }) => {
   const [mouseScale, setMouseScale] = useState(1);
 
+  useEffect(() => {
+    const Hammer = window.Hammer;
+    var myElement = document.getElementById("myElement");
+    var mc = new Hammer(myElement);
+
+    mc.on("panleft panright tap press pinch", function (ev) {
+      alert(ev.type);
+    });
+  }, []);
+
   return (
     <div
       style={{ width: "250px", height: "250px" }}
-      onGestureChange={(e) => alert(e.scale)}
+      id="myElement"
       //   onWheel={(event) => {
       //     event.preventDefault();
       //     document.body.addEventListener("wheel", (event) => {
