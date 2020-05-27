@@ -17,14 +17,7 @@ const CropperMobile = ({
     mc.get("pinch").set({ enable: true });
 
     mc.on("pinch", (ev) => {
-      alert(ev.scale);
-      //   let count = 0;
-      //   if (ev.scale > 1) {
-      //     count = count + 0.1;
-      //   } else {
-      //     count = count - 0.1;
-      //   }
-      //   setMouseScale((prev) => count);
+      setMouseScale((prev) => ev.scale);
     });
   }, []);
 
@@ -48,6 +41,8 @@ const CropperMobile = ({
         step="0.1"
       /> */}
       {/* <button onClick={onCrop}>crop</button> */}
+      <p>.</p>
+      <p>{mouseScale}</p>
     </div>
   );
 };
