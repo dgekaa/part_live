@@ -12,18 +12,19 @@ const CropperMobile = ({
 
   useEffect(() => {
     const Hammer = window.Hammer;
-    var hammerEvent = document.getElementById("hammerEvent");
-    var mc = new Hammer(hammerEvent);
+    const hammerEvent = document.getElementById("hammerEvent");
+    const mc = new Hammer(hammerEvent);
     mc.get("pinch").set({ enable: true });
 
-    mc.on("pinch", function (ev) {
-      let count = 0;
-      if (ev.scale > 1) {
-        count = count + 0.1;
-      } else {
-        count = count - 0.1;
-      }
-      setMouseScale((prev) => count);
+    mc.on("pinch", (ev) => {
+      alert(ev.scale);
+      //   let count = 0;
+      //   if (ev.scale > 1) {
+      //     count = count + 0.1;
+      //   } else {
+      //     count = count - 0.1;
+      //   }
+      //   setMouseScale((prev) => count);
     });
   }, []);
 
