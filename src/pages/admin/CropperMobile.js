@@ -19,7 +19,7 @@ const CropperMobile = ({
     mc.on("pinch", function (ev) {
       //   console.log(ev, "EV");
       //   alert(ev.scale);
-      setMouseScale(ev.scale);
+      setMouseScale((prev) => prev + ev.scale);
     });
   }, []);
 
