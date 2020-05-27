@@ -1780,22 +1780,13 @@ const Admin = (props) => {
                             >
                               <div className="uploadFile">
                                 {imgSrc ? (
-                                  <div
-                                    className="cropWrapper"
-                                    style={{
-                                      position: "relative",
-                                      height: "250px",
-                                      background: "#fff",
-                                    }}
-                                  >
-                                    <CropperMobile
-                                      imgSrc={imgSrc}
-                                      editorRef={editorRef}
-                                      onCrop={onCrop}
-                                      scaleValue={scaleValue}
-                                      onScaleChange={onScaleChange}
-                                    />
-                                  </div>
+                                  <CropperMobile
+                                    imgSrc={imgSrc}
+                                    editorRef={editorRef}
+                                    onCrop={onCrop}
+                                    scaleValue={scaleValue}
+                                    onScaleChange={onScaleChange}
+                                  />
                                 ) : (
                                   <div
                                     className="previewPhoto"
