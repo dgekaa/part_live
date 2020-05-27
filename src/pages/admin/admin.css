@@ -44,7 +44,9 @@ textarea {
   height: 26px;
   margin: 2px 0 0 3px;
 }
-
+.mobileTimePickerHeader {
+  display: none;
+}
 .leftAdminMenuDesctop .leftAdminMenu {
   position: fixed;
 }
@@ -855,6 +857,10 @@ textarea {
   border: 2px solid #e32a6c;
 }
 @media screen and (max-width: 760px) {
+  .mobileTimePickerHeader {
+    display: flex;
+    margin-bottom: 31px;
+  }
   .closeSidebarBtn {
     position: fixed;
     text-align: center;
@@ -886,10 +892,10 @@ textarea {
   .popupWrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100vw;
-    height: calc(100vh - 100px);
-    padding: 20px;
+    height: 100%;
+    padding: 0px;
   }
   .Admin {
     position: relative;
@@ -999,6 +1005,10 @@ textarea {
     padding: 30px 0;
     text-align: center;
     cursor: pointer;
+    font-weight: normal;
+  }
+  .makeAsDayOffMobile:hover {
+    color: #000;
   }
   .dayOfWeekScheduleMobile {
     font-weight: 400;
