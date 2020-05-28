@@ -35,7 +35,7 @@ const CropperMobile = ({
         });
       }
     });
-  }, [count]);
+  }, []);
 
   return (
     <div style={{ width: "250px", height: "250px" }} id="hammerEvent">
