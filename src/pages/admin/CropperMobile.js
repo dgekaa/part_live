@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AvatarEditor from "react-avatar-editor";
 
-const CropperMobile = ({
-  imgSrc,
-  scaleValue,
-  editorRef,
-  onCrop,
-  onScaleChange,
-}) => {
+const CropperMobile = ({ imgSrc, editorRef, onCrop }) => {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
@@ -20,7 +14,7 @@ const CropperMobile = ({
       if (ev.scale < 1) {
         setCount((prev) => {
           if (prev >= 0.3) {
-            return prev - 0.005;
+            return prev - 0.01;
           } else {
             return prev;
           }
@@ -47,15 +41,7 @@ const CropperMobile = ({
         scale={count}
         ref={editorRef}
       />
-      {/* <input
-        style={{ width: "250px" }}
-        type="range"
-        value={scaleValue}
-        min="1"
-        max="10"
-        onChange={onScaleChange}
-        step="0.1"
-      /> */}
+
       {/* <button onClick={onCrop}>crop</button> */}
     </div>
   );

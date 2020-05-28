@@ -625,7 +625,6 @@ const Admin = (props) => {
   }, [imageElementRef.current]);
 
   const [useProfilePic, setUseProfilePic] = useState("");
-  const [scaleValue, setScaleValue] = useState(1);
 
   const editorRef = useRef(null);
 
@@ -634,11 +633,6 @@ const Admin = (props) => {
       const url = editorRef.current.getImageScaledToCanvas().toDataURL();
       setUseProfilePic(url);
     }
-  };
-
-  const onScaleChange = (scaleValueEvent) => {
-    const scaleValue = parseFloat(scaleValueEvent.target.value);
-    setScaleValue(scaleValue);
   };
 
   // function submitImage() {
@@ -1784,8 +1778,6 @@ const Admin = (props) => {
                                     imgSrc={imgSrc}
                                     editorRef={editorRef}
                                     onCrop={onCrop}
-                                    scaleValue={scaleValue}
-                                    onScaleChange={onScaleChange}
                                   />
                                 ) : (
                                   <div

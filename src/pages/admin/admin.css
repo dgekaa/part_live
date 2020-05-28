@@ -857,6 +857,9 @@ textarea {
   border: 2px solid #e32a6c;
 }
 @media screen and (max-width: 760px) {
+  .adminWrapper {
+    max-width: 100%;
+  }
   .mobileTimePickerHeader {
     display: flex;
     margin-bottom: 31px;
