@@ -9,7 +9,7 @@ const CropperMobile = ({
   onScaleChange,
 }) => {
   const [mouseScale, setMouseScale] = useState(1);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
 
   useEffect(() => {
     const Hammer = window.Hammer;
