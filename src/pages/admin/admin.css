@@ -857,6 +857,15 @@ textarea {
   border: 2px solid #e32a6c;
 }
 @media screen and (max-width: 760px) {
+  .adminMenuContainer .menuBlock {
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: none;
+    letter-spacing: 0.5px;
+    margin-right: 10px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+  }
   .adminWrapper {
     max-width: 100%;
   }
@@ -997,7 +1006,7 @@ textarea {
 
   .adminContentMobile {
     display: block;
-    margin-top: 48px;
+    margin-top: 68px;
     margin-bottom: 65px;
     flex: 1;
   }

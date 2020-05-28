@@ -5,7 +5,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  /* bottom: 0; */
   margin: auto;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
@@ -13,7 +13,7 @@
   align-items: center;
   z-index: 1200;
   transition: 1s ease all;
-  animation: show 0.5s ease;
+  animation: show 0.3s ease;
 }
 .popup_inner {
   background-color: #fff;
@@ -24,5 +24,17 @@
   }
   100% {
     opacity: 1;
+  }
+}
+@media screen and (max-width: 760px) {
+  @keyframes show {
+    0% {
+      top: 1000px;
+      opacity: 0;
+    }
+    100% {
+      top: 0;
+      opacity: 1;
+    }
   }
 }

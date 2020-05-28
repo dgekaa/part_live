@@ -76,6 +76,7 @@
     -o-transition: 0.3s ease all;
     transition: 0.3s ease all;
     background-color: #fff;
+    border-bottom: 1px solid #ececec;
   }
   .arrowGoBack {
     position: absolute;
