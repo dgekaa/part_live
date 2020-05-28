@@ -20,7 +20,7 @@ const CropperMobile = ({
       if (ev.scale < 1) {
         setCount((prev) => {
           if (prev >= 0.3) {
-            return prev - 0.01;
+            return prev - 0.005;
           } else {
             return prev;
           }
@@ -57,9 +57,6 @@ const CropperMobile = ({
         step="0.1"
       /> */}
       {/* <button onClick={onCrop}>crop</button> */}
-      <p> .................{count.toFixed(3)}</p>
-      <p>{(count < 3).toString()} меньше 3</p>
-      <p>{(count > 0.3).toString()} больше 0.3</p>
     </div>
   );
 };
