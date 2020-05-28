@@ -53,7 +53,7 @@ const CropperMobile = ({
       /> */}
       {/* <button onClick={onCrop}>crop</button> */}
       <p>.</p>
-      <p>{mouseScale}</p>
+      <p>{count}</p>
     </div>
   );
 };
