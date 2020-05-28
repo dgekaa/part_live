@@ -47,8 +47,9 @@ const CropperMobile = ({
         step="0.1"
       /> */}
       {/* <button onClick={onCrop}>crop</button> */}
-      <p>.</p>
-      <p>{count} !</p>
+      <p> .................{count} !</p>
+      <p>{count < 3} sssssssssss</p>
+      <p>{count > 0.3} qqqqqqqqqq</p>
     </div>
   );
 };
