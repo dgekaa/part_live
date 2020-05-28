@@ -20,7 +20,7 @@ const CropperMobile = ({
       if (ev.scale < 1) {
         setCount((prev) => {
           if (prev >= 0.3) {
-            return prev - 0.025;
+            return prev - 0.01;
           } else {
             return prev;
           }
@@ -28,7 +28,7 @@ const CropperMobile = ({
       } else {
         setCount((prev) => {
           if (prev <= 3) {
-            return prev + 0.025;
+            return prev + 0.01;
           } else {
             return prev;
           }
