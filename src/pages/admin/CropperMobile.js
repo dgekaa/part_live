@@ -32,10 +32,16 @@ const CropperMobile = ({ imgSrc, editorRef, onCrop }) => {
   }, []);
 
   return (
-    <div style={{ width: "250px", height: "250px" }} id="hammerEvent">
+    <div
+      style={{
+        width: `${window.innerWidth - 40}px`,
+        height: `${window.innerWidth - 40}px`,
+      }}
+      id="hammerEvent"
+    >
       <AvatarEditor
-        width={230}
-        height={230}
+        width={window.innerWidth - 60}
+        height={window.innerWidth - 60}
         image={imgSrc}
         border={10}
         scale={count}

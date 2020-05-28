@@ -610,9 +610,7 @@ const Admin = (props) => {
         rotatable: true,
         movableL: true,
         modal: true,
-
         imageSmoothingEnabled: true,
-
         crop: (e) => {
           // console.log(e, "EVENT !!!!");
           const canvas = cropper.getCroppedCanvas();
