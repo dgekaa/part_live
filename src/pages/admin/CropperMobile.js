@@ -24,9 +24,13 @@ const CropperMobile = ({
 
     mc.on("pinch", (ev) => {
       if (ev.scale < 1) {
-        setCount((prev) => prev - 0.1);
+        if (count > 0.3) {
+          setCount((prev) => prev - 0.025);
+        }
       } else {
-        setCount((prev) => prev + 0.1);
+        if (count < 5) {
+          setCount((prev) => prev + 0.1);
+        }
       }
       //   setMouseScale((prev) => ev.scale);
     });
