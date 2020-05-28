@@ -11,7 +11,7 @@ const CropperMobile = ({
   const [count, setCount] = useState(1);
 
   useEffect(() => {
-    if (count > 0.3 && count < 3) {
+    if (+count > 0.3 && +count < 3) {
       const Hammer = window.Hammer;
       const hammerEvent = document.getElementById("hammerEvent");
       const mc = new Hammer(hammerEvent);
@@ -47,9 +47,9 @@ const CropperMobile = ({
         step="0.1"
       /> */}
       {/* <button onClick={onCrop}>crop</button> */}
-      <p> .................{count} !</p>
-      <p>{count < 3} sssssssssss</p>
-      <p>{count > 0.3} qqqqqqqqqq</p>
+      <p> .................{count.toFixed(3)}</p>
+      <p>{(count < 3).toString()} меньше 3</p>
+      <p>{(count > 0.3).toString()} больше 0.3</p>
     </div>
   );
 };
