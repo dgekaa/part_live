@@ -11,22 +11,20 @@ const CropperMobile = ({
   const [count, setCount] = useState(1);
 
   useEffect(() => {
-    const Hammer = window.Hammer;
-    const hammerEvent = document.getElementById("hammerEvent");
-    const mc = new Hammer(hammerEvent);
     if (count > 0.3 && count < 3) {
+      const Hammer = window.Hammer;
+      const hammerEvent = document.getElementById("hammerEvent");
+      const mc = new Hammer(hammerEvent);
       mc.get("pinch").set({ enable: true });
-    } else {
-      mc.get("pinch").set({ enable: false });
-    }
 
-    mc.on("pinch", (ev) => {
-      if (ev.scale < 1) {
-        setCount((prev) => prev - 0.025);
-      } else {
-        setCount((prev) => prev + 0.025);
-      }
-    });
+      mc.on("pinch", (ev) => {
+        if (ev.scale < 1) {
+          setCount((prev) => prev - 0.025);
+        } else {
+          setCount((prev) => prev + 0.025);
+        }
+      });
+    }
   }, []);
 
   return (
@@ -50,7 +48,7 @@ const CropperMobile = ({
       /> */}
       {/* <button onClick={onCrop}>crop</button> */}
       <p>.</p>
-      <p>{count}</p>
+      <p>{count} !</p>
     </div>
   );
 };
