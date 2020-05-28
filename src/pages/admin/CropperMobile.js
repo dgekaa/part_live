@@ -14,15 +14,17 @@ const CropperMobile = ({
     const Hammer = window.Hammer;
     const hammerEvent = document.getElementById("hammerEvent");
     const mc = new Hammer(hammerEvent);
-    mc.get("pinch").set({ enable: true });
+    if (count > 0.3 && count < 3) {
+      mc.get("pinch").set({ enable: true });
+    } else {
+      mc.get("pinch").set({ enable: false });
+    }
 
     mc.on("pinch", (ev) => {
-      if (count > 0.3 && count < 3) {
-        if (ev.scale < 1) {
-          setCount((prev) => prev - 0.025);
-        } else {
-          setCount((prev) => prev + 0.1);
-        }
+      if (ev.scale < 1) {
+        setCount((prev) => prev - 0.025);
+      } else {
+        setCount((prev) => prev + 0.025);
       }
     });
   }, []);
