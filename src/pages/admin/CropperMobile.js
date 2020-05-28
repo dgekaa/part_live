@@ -19,15 +19,15 @@ const CropperMobile = ({
     mc.on("pinch", (ev) => {
       if (ev.scale < 1) {
         setCount((prev) => {
-          if (prev > 0.3) {
-            return prev - 0.015;
+          if (prev >= 0.3) {
+            return prev - 0.025;
           } else {
             return prev;
           }
         });
       } else {
         setCount((prev) => {
-          if (prev < 3) {
+          if (prev <= 3) {
             return prev + 0.025;
           } else {
             return prev;
