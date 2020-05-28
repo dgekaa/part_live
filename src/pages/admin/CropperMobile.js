@@ -17,12 +17,22 @@ const CropperMobile = ({
     mc.get("pinch").set({ enable: true });
 
     mc.on("pinch", (ev) => {
-      if (count > 0.3 && count < 3) {
-        if (ev.scale < 1) {
-          setCount((prev) => prev - 0.15);
-        } else {
-          setCount((prev) => prev + 0.025);
-        }
+      if (ev.scale < 1) {
+        setCount((prev) => {
+          if (prev > 0.3) {
+            return prev - 0.015;
+          } else {
+            return prev;
+          }
+        });
+      } else {
+        setCount((prev) => {
+          if (prev < 3) {
+            return prev + 0.025;
+          } else {
+            return prev;
+          }
+        });
       }
     });
   }, [count]);
