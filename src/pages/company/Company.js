@@ -24,14 +24,12 @@ import "./company.css";
 const Company = (props) => {
   const [showPopup, setShowPopap] = useState(false);
   const [DATA, setDATA] = useState(null);
-
   const [showStream, setShowStream] = useState(false);
   const [nextStreamTime, setNextStreamTime] = useState(false);
   const [workTime, setWorkTime] = useState(false);
   const [isWork, setIsWork] = useState(false);
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isLoading, setIsLoading] = useState(true);
   const [curDistance, setCurDistance] = useState(null);
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
@@ -84,32 +82,31 @@ const Company = (props) => {
     setIsShowMenu(true);
   };
 
-  !windowWidth && setWindowWidth(window.innerWidth);
-
   useEffect(() => {
     window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
       hideSideMenu();
     };
   });
 
-  if (navigator.geolocation && DATA) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setCurDistance(
-          getDistanceFromLatLonInKm(
-            pos.coords.latitude,
-            pos.coords.longitude,
-            DATA.place.coordinates.split(",")[0],
-            DATA.place.coordinates.split(",")[1]
-          )
-        );
-      },
-      (err) => console.log(err, " GEOLOCATION COMPANY ERROR ")
-    );
-  } else {
-    console.log("Геолокация недоступна ");
-  }
+  useEffect(() => {
+    if (navigator.geolocation && DATA) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCurDistance(
+            getDistanceFromLatLonInKm(
+              pos.coords.latitude,
+              pos.coords.longitude,
+              DATA.place.coordinates.split(",")[0],
+              DATA.place.coordinates.split(",")[1]
+            )
+          );
+        },
+        (err) => console.log(err, "ошибка геолокации")
+      );
+    } else {
+      console.log("Геолокация недоступна ");
+    }
+  }, []);
 
   const mouseDownMapHandler = (e) => {
     setMouseMapCoordinates({
@@ -148,7 +145,7 @@ const Company = (props) => {
     }
   };
 
-  const animateProps = useSpring({
+  const SwipePageSpring = useSpring({
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
   });
@@ -171,7 +168,7 @@ const Company = (props) => {
       />
       <animated.div
         className="Company"
-        style={animateProps}
+        style={SwipePageSpring}
         onClick={(e) => {
           if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
             hideSideMenu();

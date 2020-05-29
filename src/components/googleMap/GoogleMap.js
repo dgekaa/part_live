@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import "react-google-places-autocomplete/dist/assets/index.css";
+import styled from "styled-components";
 
 import { API_KEY } from "../../constants";
 import CustomImg from "../customImg/CustomImg";
@@ -10,6 +11,95 @@ import { styles } from "./GoogleMapStyles.js";
 import "./googleMap.css";
 
 const LoadingContainer = (props) => <div></div>;
+
+const CloseBTN = styled.span`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  height: 25px;
+  width: 25px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 25px;
+  justify-content: center;
+  line-height: 21px;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 3px;
+  &:hover {
+    color: red;
+  }
+`;
+
+const MapContainerStyle = styled.div`
+  height: 100vh;
+`;
+
+const PointPosition = styled(CustomImg)`
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: calc(50% - 25px);
+  top: calc(50% - 45px);
+`;
+
+const MyMap = styled(Map)`
+  position: relative !important;
+`;
+
+const AutocompleteWrap = styled.div`
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  @media (max-width: 760px) {
+    flex-direction: column;
+  }
+`;
+
+const BtnWrap = styled.div`
+  display: flex;
+  margin-top: 10px;
+  margin-left: 20px;
+  @media (max-width: 760px) {
+    justify-content: space-around;
+    width: 95%;
+    margin: 20px auto;
+  }
+`;
+
+const SaveBtn = styled.div`
+  background-color: #fff;
+  margin-right: 10px;
+  padding: 6px;
+  border-radius: 4px;
+  width: 150px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 700;
+  background-color: #e32a6c;
+  color: #fff;
+  @media (max-width: 760px) {
+    width: 49%;
+  }
+`;
+
+const CancelBtn = styled.div`
+  background-color: #fff;
+  margin-right: 10px;
+  padding: 6px;
+  border-radius: 4px;
+  width: 150px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 700;
+  @media (max-width: 760px) {
+    width: 49%;
+    margin-right: 0;
+  }
+`;
 
 const MapContainer = ({
   google,
@@ -23,7 +113,7 @@ const MapContainer = ({
   const initialCenter = initialCenterMap || {
     lat: 53.904241,
     lng: 27.556932,
-  }; // Минск
+  };
 
   const initialZoom = 12;
 
@@ -68,15 +158,12 @@ const MapContainer = ({
     });
   };
 
-  const onReady = (mapProps, map) => {};
-  const mapClicked = (mapProps, map, e) => {};
   const onDragend = (mapProps, map, e) => {
     getStreetFromLatLng({
       lat: map.center.lat(),
       lng: map.center.lng(),
     });
   };
-  const onMarkerClick = (props, marker, e) => {};
 
   const onPlaceSelected = (place) => {
     setStreetName(place.description);
@@ -84,14 +171,11 @@ const MapContainer = ({
   };
 
   return (
-    <div className="MapContainerStyle" style={styleContainerMap}>
-      <Map
-        gestureHandling="greedy" //убрал свайп карты двумя пальцами
+    <MapContainerStyle style={styleContainerMap}>
+      <MyMap
+        gestureHandling="greedy"
         scrollwheel={true}
-        className="myMap"
         google={google}
-        onReady={onReady}
-        onClick={mapClicked}
         onDragend={isNewAddress && onDragend}
         zoom={initialZoom}
         initialCenter={initialCenter}
@@ -106,31 +190,22 @@ const MapContainer = ({
         fullscreenControl={false}
       >
         <Marker
-          onClick={onMarkerClick}
           name={"Place"}
           title={"Current location"}
           position={initialCenter}
-          // icon={{
-          //   url: "/path/to/custom_icon.png",
-          //   anchor: new google.maps.Point(32, 32),
-          //   scaledSize: new google.maps.Size(64, 64)
-          // }}
         />
-      </Map>
+      </MyMap>
 
+      {isNewAddress && <PointPosition alt="pos" name={"location"} />}
       {isNewAddress && (
-        <CustomImg alt="!" className="pointPosition" name={"location"} />
-      )}
-      {isNewAddress && (
-        <div className="inputBtnsWrap">
+        <AutocompleteWrap>
           <GooglePlacesAutocomplete
             onSelect={onPlaceSelected}
             placeholder="Введите адрес"
             initialValue={streetName}
           />
-          <div className="newAddressBtnWrap">
-            <div
-              className="chooseNewAddressBtn"
+          <BtnWrap>
+            <SaveBtn
               onClick={() => {
                 if (streetName && latLng) {
                   chooseNewAddress(streetName, latLng);
@@ -138,19 +213,13 @@ const MapContainer = ({
               }}
             >
               СОХРАНИТЬ
-            </div>
-            <div className="cancelNewAddressBtn" onClick={togglePopupGoogleMap}>
-              ОТМЕНА
-            </div>
-          </div>
-        </div>
+            </SaveBtn>
+            <CancelBtn onClick={togglePopupGoogleMap}>ОТМЕНА</CancelBtn>
+          </BtnWrap>
+        </AutocompleteWrap>
       )}
-      {closeBtn && (
-        <div className="closeBtn" onClick={togglePopupGoogleMap}>
-          &#215;
-        </div>
-      )}
-    </div>
+      {closeBtn && <CloseBTN onClick={togglePopupGoogleMap}>&#215;</CloseBTN>}
+    </MapContainerStyle>
   );
 };
 

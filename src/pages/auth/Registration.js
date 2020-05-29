@@ -2,12 +2,33 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useSpring, animated } from "react-spring";
+import styled from "styled-components";
 
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import QUERY from "../../query";
+import {
+  GoBackBtn,
+  GoBackBtnArrow,
+  AuthBlock,
+  HeadTitle,
+  AuthBlockWrap,
+  AuthForm,
+  AuthInput,
+  AuthSubmitBtn,
+  Question,
+  ErrorField,
+  AuthForgetSubmitBtn,
+} from "./Login";
 
-import "./auth.css";
+const SuccessText = styled.p`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  text-align: center;
+  margin-bottom: 25px;
+  margin-top: 5px;
+`;
 
 const Registration = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
@@ -124,8 +145,8 @@ const Registration = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <animated.div
-          className="Login"
+        <AuthBlockWrap
+          as={animated.div}
           onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
@@ -133,71 +154,69 @@ const Registration = () => {
           }}
           style={animateProps}
         >
-          <Link to="/home" className="loginGoBackBtn">
-            <span style={{ fontSize: "18px", paddingRight: "5px" }}>
-              &#8592;
-            </span>
+          <GoBackBtn to="/home">
+            <GoBackBtnArrow>&#8592;</GoBackBtnArrow>
             На главную
-          </Link>
-          <div className="authBlock">
+          </GoBackBtn>
+          <AuthBlock>
             {!isSuccess && (
               <>
-                <h4>РЕГИСТРАЦИЯ</h4>
-                <form
+                <HeadTitle>РЕГИСТРАЦИЯ</HeadTitle>
+                <AuthForm
                   ref={register}
                   onSubmit={(e) => {
                     e.preventDefault();
                     registration();
                   }}
                 >
-                  <input
+                  <AuthInput
                     type="name"
                     name="name"
                     placeholder="Имя"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
-                  <input
+                  <AuthInput
                     type="text"
                     name="email"
                     placeholder="E-mail"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  <input
+                  <AuthInput
                     type="password"
                     name="password"
                     placeholder="Пароль"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <input
+                  <AuthInput
                     type="password"
                     name="re_password"
                     placeholder="Повтор пароля"
                     value={rePassword}
                     onChange={(e) => setRePassword(e.target.value)}
                   />
-                  <input type="submit" value="Зарегистрироваться" />
-                </form>
-                <Link className="forgetPass" to="/login">
+                  <AuthSubmitBtn type="submit" value="Зарегистрироваться" />
+                </AuthForm>
+                <Question as={Link} to="/login">
                   Уже есть аккаунт?
-                  <p className="errorField"> {oneValidationError}</p>
-                </Link>
+                  <ErrorField> {oneValidationError}</ErrorField>
+                </Question>
               </>
             )}
             {isSuccess && (
               <>
                 <h4>ПОЗДРАВЛЯЕМ!</h4>
-                <p className="successText">Вы успешно прошли регистрацию!</p>
-                <Link to="/home" className="btnSubmit">
+                <SuccessText>Вы успешно прошли регистрацию!</SuccessText>
+                <AuthForgetSubmitBtn to="/home">
                   ПЕРЕЙТИ НА ГЛАВНУЮ
-                </Link>
+                </AuthForgetSubmitBtn>
               </>
             )}
-          </div>
+          </AuthBlock>
           <SlideSideMenu isShowMenu={isShowMenu} />
-        </animated.div>
+        </AuthBlockWrap>
       </div>
     );
   }

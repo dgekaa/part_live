@@ -1,24 +1,29 @@
 import React, { useRef, useState, useEffect } from "react";
 import ReactAwesomePlayer from "react-awesome-player";
+import styled from "styled-components";
 
-import "./videoPlayer.css";
+const VideoError = styled.div`
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  text-align: center;
+  padding: 30px;
+  background: #000;
+`;
 
-const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
-  // const [isPlay, setIsPlay] = useState(false);
+const VideoPlayer = ({ src, autoplay, muted, preview }) => {
   const [isVideoErr, setIsVideoErr] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    videoRef.current.video.style.height = "100%";
+  }, []);
 
   const options = {
     autoplay: autoplay,
     muted: muted,
     poster: preview,
     fluid: true,
-    // children: [
-    // disablePlayBtn ? "" : "bigPlayButton",
-    // "controlBar",
-    // "PosterImage",
-    // "PictureInPictureToggle",
-    // "LoadingSpinner",
-    // ],
     sources: [
       {
         type: "application/x-mpegURL",
@@ -27,40 +32,9 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
     ],
   };
 
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    videoRef.current.video.style.height = "100%";
-    console.log(videoRef.current, "@@@@@@1111111111111@");
-    // document.querySelector(".vjs-big-play-button").style.zIndex = 100;
-  }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     // console.log(videoRef.current.player.bigPlayButton, "?????????????????");
-  //   }, 0);
-
-  //   // document.querySelector(".vjs-big-play-button").style.zIndex = 100;
-  // }, [videoRef]);
-
-  // const play = () => {
-  //   setIsPlay(true);
-  //   videoRef.current.player.play();
-  // };
-
-  // const playing = () => {
-  // setIsPlay(true);
-  // videoRef.current.player.play();
-  // };
-
   const error = () => {
     setIsVideoErr("Ошибка");
   };
-
-  // const pause = () => {
-  // setIsPlay(false);
-  // videoRef.current.player.pause();
-  // };
 
   return (
     <div
@@ -70,43 +44,13 @@ const VideoPlayer = ({ src, autoplay, muted, preview, disablePlayBtn }) => {
         width: "100%",
       }}
     >
-      {/* {!isPlay && !isVideoErr && (
-        <video
-          style={{
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: isPlay ? 0 : 3,
-          }}
-          src={preview}
-          autoPlay
-        />
-      )} */}
       {!isVideoErr ? (
-        <ReactAwesomePlayer
-          ref={videoRef}
-          options={options}
-          // play={play}
-          // playing={playing}
-          error={error}
-          // pause={pause}
-        />
+        <ReactAwesomePlayer ref={videoRef} options={options} error={error} />
       ) : (
-        <p
-          style={{
-            width: "100%",
-            height: "100%",
-            color: "#fff",
-            textAlign: "center",
-            padding: "30px",
-            background: "#000",
-          }}
-        >
+        <VideoError>
           Видео временно не работает. <br />
           Извините за неудобства.
-        </p>
+        </VideoError>
       )}
     </div>
   );

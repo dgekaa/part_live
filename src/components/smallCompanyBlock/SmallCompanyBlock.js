@@ -1,21 +1,141 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
-import CustomImg from "../customImg/CustomImg";
 import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import styled from "styled-components";
 
-import "./smallCompanyBlock.css";
+const SmallCompBlock = styled(Link)`
+  width: 240px;
+  height: 234px;
+  overflow: hidden;
+  border-radius: 10px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+  margin: 5px;
+  transition: 0.2s ease all;
+  &:hover {
+    opacity: 0.9;
+  }
+  @media (max-width: 760px) {
+    width: calc(33% - 10px);
+  }
+  @media (max-width: 650px) {
+    width: calc(50% - 10px);
+  }
+  @media (max-width: 460px) {
+    height: 200px;
+  }
+  @media (max-width: 380px) {
+    width: calc(50% - 10px);
+    height: 170px;
+  }
+`;
 
-const IsOpenedNewDesign = styled.p`
+const NoTranslation = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 64px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: #aeaeae;
+`;
+
+const IsGradient = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: ${({ showStream }) =>
+    showStream
+      ? "linear-gradient(180deg, rgba(196, 196, 196, 0) 0%, #000 100%)"
+      : ""};
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+`;
+
+const Description = styled.div`
+  display: flex;
+  width: 100%;
+  height: 64px;
+  flex-direction: column;
+  padding: 0 10px;
+`;
+
+const TopDescriptionBlock = styled.div`
+  width: 100%;
+`;
+
+const CompanyName = styled.p`
+  color: ${({ showStream }) => (showStream ? "#fff" : "#919191")};
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 21px;
+`;
+
+const PartyType = styled.p`
+  color: ${({ showStream }) => (showStream ? "#fff" : "#919191")};
+  font-size: 13px;
+  line-height: 15px;
+  padding-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const BottomDescriptionBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 6px;
+`;
+
+const WorkTimeWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const WorkTime = styled.p`
+  font-weight: 500;
+  font-size: 10px;
+  color: ${({ showStream }) => (showStream ? "#fff" : "#919191")};
+  line-height: 14px;
+  margin-right: 4px;
+`;
+
+const IsOpened = styled.p`
   font-weight: 700;
   font-size: 10px;
   text-transform: uppercase;
   color: #36cc33;
   line-height: 14px;
+`;
+
+const CompanyType = styled.p`
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+  color: #ff0960;
 `;
 
 const SmallCompanyBlock = ({ item }) => {
@@ -24,13 +144,6 @@ const SmallCompanyBlock = ({ item }) => {
   const [isWork, setIsWork] = useState(false);
   const [curDistance, setCurDistance] = useState(null);
   const [nextStreamTime, setNextStreamTime] = useState(false);
-  const [previewError, setPreviewError] = useState(false);
-  const [videoError, setVideoError] = useState(null);
-
-  useEffect(() => {
-    isShowStreamNow(item, setShowStream, setNextStreamTime);
-    isWorkTimeNow(item, setWorkTime, setIsWork);
-  }, [item]);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   !windowWidth && setWindowWidth(window.innerWidth);
@@ -39,6 +152,11 @@ const SmallCompanyBlock = ({ item }) => {
       setWindowWidth(e.target.innerWidth);
     };
   });
+
+  useEffect(() => {
+    isShowStreamNow(item, setShowStream, setNextStreamTime);
+    isWorkTimeNow(item, setWorkTime, setIsWork);
+  }, [item]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -54,11 +172,11 @@ const SmallCompanyBlock = ({ item }) => {
           );
         },
         (err) => {
-          console.log(err, " GEOLOCATION ERROR SMALLCOMPANYBLOCK");
+          console.log(err, "Ошибка геолокации");
         }
       );
     } else {
-      console.log("Геолокация недоступна ");
+      console.log("Геолокация недоступна");
     }
   }, []);
 
@@ -83,193 +201,46 @@ const SmallCompanyBlock = ({ item }) => {
     }
   };
 
-  useEffect(() => {
-    item.streams &&
-      item.streams[0] &&
-      item.streams[0].url &&
-      fetch(item.streams[0].url)
-        .then((res) => {
-          console.log(res.status, "status");
-          res.statusText.toLowerCase() === "ok"
-            ? setVideoError(false)
-            : setVideoError("err");
-        })
-        .catch((err) => setVideoError("err"));
-  }, []);
-
-  const showIsVideoErr = () => {
-    if (item.streams && item.streams[0] && item.streams[0].url && videoError) {
-      return (
-        <span style={{ color: "red", fontSize: "10px", fontWeight: "bold" }}>
-          Err
-        </span>
-      );
-    } else if (
-      item.streams &&
-      item.streams[0] &&
-      item.streams[0].url &&
-      !videoError
-    ) {
-      return (
-        <span style={{ color: "green", fontSize: "10px", fontWeight: "bold" }}>
-          Ok
-        </span>
-      );
-    } else {
-      return <span style={{ color: "transparent" }}>.</span>;
-    }
-  };
-
   return (
-    <Link
+    <SmallCompBlock
       to={{ pathname: `/company/${item.id}` }}
-      className="SmallCompanyBlockNewDesign"
       style={
         item.streams && item.streams[0] && item.streams[0].preview && showStream
           ? { backgroundImage: `url(${item.streams[0].preview})` }
           : {}
       }
     >
-      {!showStream && (
-        <div className="noTranslationNewDesign">
-          <p className="noTranslationTextNewDesign">
-            {whenWillBeTranslation()}
-          </p>
-        </div>
-      )}
-
-      <div
-        className={
-          showStream ? "gradientWrapperNewDesign" : "noGradientWrapperNewDesign"
-        }
-      >
-        <div className="descriptionNewDesign">
-          <div className="topBlockTextNewDesign">
-            <p
-              style={showStream ? { color: "#fff" } : { color: "#919191" }}
-              className="companyNameNewDesign"
-            >
-              {item.name}
-            </p>
-            <p
-              style={showStream ? { color: "#fff" } : { color: "#919191" }}
-              className="companyTitleNewDesign"
-            >
+      {!showStream && <NoTranslation>{whenWillBeTranslation()}</NoTranslation>}
+      <IsGradient showStream={showStream}>
+        <Description>
+          <TopDescriptionBlock>
+            <CompanyName showStream={showStream}>{item.name}</CompanyName>
+            <PartyType showStream={showStream}>
               Супер пати всех студентов
-            </p>
-          </div>
-          <div className="bottomBlockTextNewDesign">
-            <div className="workTimeIsOpenedNewDesign">
+            </PartyType>
+          </TopDescriptionBlock>
+          <BottomDescriptionBlock>
+            <WorkTimeWrap>
               {workTime && (
-                <p
-                  style={showStream ? { color: "#fff" } : { color: "#919191" }}
-                  className="workTimeTextNewDesign"
-                >
-                  {workTime}
-                </p>
+                <WorkTime showStream={showStream}>{workTime}</WorkTime>
               )}
               {isWork ? (
-                <IsOpenedNewDesign>
+                <IsOpened>
                   {windowWidth <= 380 && workTime ? "ОТКР" : "ОТКРЫТО"}
-                </IsOpenedNewDesign>
+                </IsOpened>
               ) : (
-                <IsOpenedNewDesign>
+                <IsOpened>
                   {windowWidth <= 380 && workTime ? "ЗАКР" : "ЗАКРЫТО"}
-                </IsOpenedNewDesign>
+                </IsOpened>
               )}
-            </div>
-            <p className="companyTypeNewDesign">
+            </WorkTimeWrap>
+            <CompanyType>
               {item.categories && item.categories[0] && item.categories[0].name}
-            </p>
-          </div>
-        </div>
-      </div>
-    </Link>
-    // <Link
-    //   to={{ pathname: `/company/${item.id}` }}
-    //   style={{ position: "relative" }}
-    //   className="SmallCompanyBlock"
-    // >
-    //   <div
-    //     style={{
-    //       position: "absolute",
-    //       width: "100%",
-    //       height: "100%",
-    //       zIndex: 999,
-    //       opacity: 0,
-    //     }}
-    //   ></div>
-    //   <div className="imgContainer">
-    //     {!!showStream &&
-    //       item.streams[0] &&
-    //       (!previewError ? (
-    //         <VideoPlayer
-    //           disablePlayBtn
-    //           className="companyImg"
-    //           preview={item.streams[0].preview}
-    //           // src={item.streams[0].url}
-    //           autoPlay={true}
-    //         />
-    //       ) : (
-    //         <div className="companyImg">
-    //           <p className="noPreviewText">ERR</p>
-    //         </div>
-    //       ))}
-
-    //     {!showStream && (
-    //       <div className="companyImg">
-    //         <p className="noPreviewText">{whenWillBeTranslation()}</p>
-    //       </div>
-    //     )}
-    //   </div>
-
-    // <div className="description">
-    //   <div className="topBlockText">
-    //     <div className="companyNameWrap">
-    //       <p className="companyName">{item.name}</p>
-    //       <p className="companyType">
-    //         {item.categories && item.categories[0] && item.categories[0].name}{" "}
-    //       </p>
-    //     </div>
-    //     <p className="companyTitle">"Супер пати всех студентов"</p>
-    //     {showIsVideoErr()}
-    //   </div>
-
-    //     <div className="bottomBlockText">
-    //       <div className="rowCompanyBlock">
-    //         <div className="smallRowCompanyBlock">
-    //           <CustomImg alt="eye" className="eyeCompanyBlock" name={"eye"} />
-    //           <p className="leftTextCompanyBlock">25 752</p>
-    //         </div>
-    //         <div className="smallRowCompanyBlock">
-    //           <span className="circle"></span>
-    //           <p className="leftTextCompanyBlock">255</p>
-    //         </div>
-    //       </div>
-    //       <p className="workTimeText">{workTime}</p>
-    //     </div>
-    //   </div>
-    //   {/* Mobile */}
-    //   <div className="descriptionMobile">
-    //     <p className="nameOfCompany">{item.name}</p>
-    //     <div className="distanceFirst1 distanceFirstLeft1">
-    //       <div className="distanceAndType">
-    //         {curDistance && <span>{Number(curDistance).toFixed(2)} km</span>}
-    //         {!curDistance && " 0 km."}
-    //         <span>
-    //           {item.categories && item.categories[0] && item.categories[0].name}
-    //         </span>
-    //       </div>
-    //     </div>
-    //     {isWork && (
-    //       <p className="endTimeMobile">
-    //         Открыто: до
-    //         <span> {workTime.split("-")[1]}</span>
-    //       </p>
-    //     )}
-    //     {!isWork && <p className="endTimeMobile">Закрыто</p>}
-    //   </div>
-    // </Link>
+            </CompanyType>
+          </BottomDescriptionBlock>
+        </Description>
+      </IsGradient>
+    </SmallCompBlock>
   );
 };
 

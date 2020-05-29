@@ -2,12 +2,176 @@ import React, { useState, useRef, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect, Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
+import styled from "styled-components";
 
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import QUERY from "../../query";
 
-import "./auth.css";
+export const GoBackBtn = styled(Link)`
+  position: absolute;
+  top: 77px;
+  left: 10px;
+  font-size: 16px;
+  font-weight: normal;
+  height: 30px;
+  width: 150px;
+  &:hover {
+    color: #e32a6c;
+  }
+  @media (max-width: 760px) {
+    display: none;
+  }
+`;
+
+export const GoBackBtnArrow = styled.span`
+  font-size: 18px;
+  padding-right: 5px;
+`;
+
+export const AuthBlock = styled.div`
+  transition: 0.3s ease transform;
+  transform: scale(1.5);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 258px;
+  padding: 20px 0;
+  background: #ffffff;
+  border: 1px solid #eef1f6;
+  border-radius: 10px;
+  flex-direction: column;
+  @media (max-width: 760px) {
+    transform: scale(1.1);
+    width: 85%;
+  }
+`;
+
+export const HeadTitle = styled.div`
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  margin-bottom: 15px;
+  @media (max-width: 760px) {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+`;
+
+export const AuthBlockWrap = styled.div`
+  background: #ffffff;
+  height: calc(100vh - 65px);
+  padding-top: 140px;
+  background-color: #e5e5e5;
+  @media (max-width: 760px) {
+    height: 100vh;
+    position: relative;
+  }
+`;
+
+export const AuthForm = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  @media (max-width: 760px) {
+    display: flex;
+    width: 85%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+`;
+
+export const AuthInput = styled.input`
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+  -webkit-appearance: none;
+  transition: 0.3s ease all;
+  width: 189px;
+  font-size: 14px;
+  height: 30px;
+  outline: none;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 7px 0px;
+  padding: 0 10px;
+  @media (max-width: 760px) {
+    width: 100%;
+    height: 45px;
+  }
+`;
+
+export const AuthSubmitBtn = styled(AuthInput)`
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+  -webkit-appearance: none;
+  background: #e32a6c;
+  border: 1px solid #e32a6c;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  cursor: pointer;
+  &:active {
+    background: #d37596;
+  }
+`;
+
+export const AuthForgetSubmitBtn = styled.div`
+  background: #e32a6c;
+  border: 1px solid #e32a6c;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  cursor: pointer;
+  width: 189px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Question = styled.p`
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #bdbdbd;
+  line-height: 8px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s ease color;
+  &:hover {
+    color: #e32a6c;
+  }
+`;
+
+export const ErrorField = styled.span`
+  display: block;
+  transition: 0.3s ease all;
+  margin: 15px 10px 0 10px;
+  font-size: 11px;
+  color: rgb(241, 62, 62);
+`;
 
 const Login = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
@@ -79,16 +243,17 @@ const Login = () => {
       .catch((err) => {
         removeCookie("origin_data");
         removeCookie("origin_id");
-
         setIsLogin(false);
         console.log(err, "LOGIN ERR");
       });
   };
+
   useEffect(() => {
     sessionStorage.setItem("prevZoom", "");
     sessionStorage.setItem("prevCenter", "");
   }, []);
-  const animateProps = useSpring({
+
+  const SwipePageSpring = useSpring({
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
   });
@@ -102,7 +267,7 @@ const Login = () => {
     return "Обычный юзер";
   } else {
     return (
-      <div className="loginWrapper">
+      <div>
         <Header
           arrow
           isShowMenu={isShowMenu}
@@ -111,29 +276,31 @@ const Login = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <Link to="/home" className="loginGoBackBtn">
-          <span style={{ fontSize: "18px", paddingRight: "5px" }}>&#8592;</span>
+        <GoBackBtn to="/home">
+          <GoBackBtnArrow>&#8592;</GoBackBtnArrow>
           На главную
-        </Link>
-        <animated.div
-          className="Login"
+        </GoBackBtn>
+        <AuthBlockWrap
+          as={animated.div}
           onClick={(e) => {
             if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
               hideSideMenu();
             }
           }}
-          style={animateProps}
+          style={SwipePageSpring}
         >
-          <div className="authBlock">
-            <h4>{!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}</h4>
-            <form
+          <AuthBlock>
+            <HeadTitle>
+              {!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}
+            </HeadTitle>
+            <AuthForm
               ref={loginRef}
               onSubmit={(e) => {
                 e.preventDefault();
                 !isForgetPass && userLogin(email, password);
               }}
             >
-              <input
+              <AuthInput
                 autocomplete="username"
                 type="email"
                 name="email"
@@ -143,7 +310,7 @@ const Login = () => {
               />
               {!isForgetPass && (
                 <>
-                  <input
+                  <AuthInput
                     autocomplete="current-password"
                     type="password"
                     name="password"
@@ -151,23 +318,20 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <input type="submit" value="ВОЙТИ" />
+                  <AuthSubmitBtn type="submit" value="ВОЙТИ" />
                 </>
               )}
-              {isForgetPass && <p className="btnSubmit">ОТПРАВИТЬ</p>}
-            </form>
-            <p
-              className="forgetPass"
-              onClick={() => setIsForgetPass((prev) => !prev)}
-            >
+              {isForgetPass && (
+                <AuthForgetSubmitBtn>ОТПРАВИТЬ</AuthForgetSubmitBtn>
+              )}
+            </AuthForm>
+            <Question onClick={() => setIsForgetPass((prev) => !prev)}>
               {!isForgetPass ? "  Забыли пароль?" : " Уже есть аккаунт?"}
-              <span className="errorField">
-                {!isForgetPass && allValidationError}
-              </span>
-            </p>
-          </div>
+              <ErrorField>{!isForgetPass && allValidationError}</ErrorField>
+            </Question>
+          </AuthBlock>
           <SlideSideMenu isShowMenu={isShowMenu} />
-        </animated.div>
+        </AuthBlockWrap>
       </div>
     );
   }

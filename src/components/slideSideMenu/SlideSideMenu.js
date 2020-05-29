@@ -2,10 +2,48 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useSpring, animated } from "react-spring";
+import styled from "styled-components";
 
 import QUERY from "../../query";
 
-import "./slideSideMenu.css";
+const SideMenuWrap = styled(Link)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100vh;
+  width: 100%;
+  z-index: 2;
+  display: ${({ shomMenu }) => (shomMenu ? "block" : "none")};
+`;
+
+const SideMenu = styled(Link)`
+  position: absolute;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  padding: 10px;
+  background-color: #eef1f6;
+  overflow: hidden;
+  padding-top: 50px;
+  z-index: 3;
+`;
+
+const SideMenuList = styled.ul`
+  line-height: 30px;
+  padding-left: 20px;
+  list-style-type: none;
+`;
+
+const ListLink = styled(Link)`
+  display: block;
+  width: 100%;
+  transition: 0.3s ease all;
+  &:hover {
+    color: rgb(227, 42, 108);
+  }
+`;
 
 const SlideSideMenu = ({ isShowMenu }) => {
   const [shomMenu, setShowMenu] = useState(false);
@@ -37,81 +75,75 @@ const SlideSideMenu = ({ isShowMenu }) => {
           removeCookie("origin_data");
           removeCookie("origin_id");
         } else {
-          console.log(data.errors, " ERRORS LOGOUT");
+          console.log(data.errors, "ERRORS LOGOUT");
         }
       })
-      .catch((err) => console.log(err, "  *******ERR LOGOUT"));
-
+      .catch((err) => console.log(err, "err LOGOUT"));
     removeCookie("origin_data");
     removeCookie("origin_id");
   };
 
-  const animateProps = useSpring({
+  const SwipeMenuSpring = useSpring({
     right: isShowMenu ? 0 : -200,
     config: { duration: 200 },
   });
 
+  const clicked = {
+    color: "#e32a6c",
+  };
+
   return (
-    <div
-      className="SlideSideMenuWrap"
-      style={shomMenu ? { display: "block" } : { display: "none" }}
-    >
-      <animated.div className="SlideSideMenu" style={animateProps}>
-        <ul className="sideMenuUl">
-          <li className="sideMenuLi">
-            <Link
-              to="/home"
-              style={pathname === "/home" ? { color: "#e32a6c" } : {}}
-            >
+    <SideMenuWrap shomMenu={shomMenu}>
+      <SideMenu as={animated.div} style={SwipeMenuSpring}>
+        <SideMenuList>
+          <li>
+            <ListLink to="/home" style={pathname === "/home" ? clicked : {}}>
               Главная
-            </Link>
+            </ListLink>
           </li>
           <li>
-            <Link
-              to="/map"
-              style={pathname === "/map" ? { color: "#e32a6c" } : {}}
-            >
+            <ListLink to="/map" style={pathname === "/map" ? clicked : {}}>
               Карта
-            </Link>
+            </ListLink>
           </li>
           <li>
             {Number(cookies.origin_id) === 1 && (
-              <Link
+              <ListLink
                 to="/editCompany"
-                style={pathname === "/editCompany" ? { color: "#e32a6c" } : {}}
+                style={pathname === "/editCompany" ? clicked : {}}
               >
                 К списку
-              </Link>
+              </ListLink>
             )}
           </li>
           <li>
             {!Number(cookies.origin_id) && (
-              <Link
+              <ListLink
                 to="/login"
-                style={pathname === "/login" ? { color: "#e32a6c" } : {}}
+                style={pathname === "/login" ? clicked : {}}
               >
                 Вход
-              </Link>
+              </ListLink>
             )}
             {!!Number(cookies.origin_id) && (
-              <Link onClick={logout} to="/login">
+              <ListLink onClick={logout} to="/login">
                 Выход
-              </Link>
+              </ListLink>
             )}
           </li>
           <li>
             {!Number(cookies.origin_id) && (
-              <Link
+              <ListLink
                 to="/registration"
-                style={pathname === "/registration" ? { color: "#e32a6c" } : {}}
+                style={pathname === "/registration" ? clicked : {}}
               >
                 Регистрация
-              </Link>
+              </ListLink>
             )}
           </li>
-        </ul>
-      </animated.div>
-    </div>
+        </SideMenuList>
+      </SideMenu>
+    </SideMenuWrap>
   );
 };
 
