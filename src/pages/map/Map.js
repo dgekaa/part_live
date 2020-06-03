@@ -67,19 +67,18 @@ const MarkerArrow = styled.div`
   height: 0;
   margin: 0 auto;
   border: 10px solid transparent;
-  border-top-color: #000;
+  border-top-color: #fff;
   border-bottom: 0;
   position: absolute;
-  bottom: 0px;
+  bottom: -14px;
   left: -10px;
 `;
 
 const MarkerWrapp = styled.div`
   width: 100px;
-  height: 100px;
-  background-size: cover;
-  background-position: center;
-  background-color: #000;
+  height: 115px;
+  background-color: #fff;
+  overflow: hidden;
   border-radius: 10px;
   position: relative;
   bottom: 110px;
@@ -93,13 +92,6 @@ const MarkerWrapp = styled.div`
 const MarkerInner = styled.div`
   overflow: hidden;
   border-radius: 10px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex: 1;
   align-items: flex-end;
@@ -107,8 +99,8 @@ const MarkerInner = styled.div`
 
 const CustomImgStyle = styled(CustomImg)`
   position: absolute;
-  top: 3px;
-  right: 3px;
+  top: 60px;
+  right: 4px;
 `;
 
 const PreviewBlock = styled.div`
@@ -116,18 +108,39 @@ const PreviewBlock = styled.div`
   -webkit-transition: 0.2s ease all;
   -o-transition: 0.2s ease all;
   transition: 0.2s ease all;
-  height: 100%;
+  height: 100px;
   display: flex;
-  /* padding-top: 15px; */
   padding-bottom: 26px;
   justify-content: center;
   align-items: center;
+  position: relative;
+`;
+
+const TranslationBlock = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 81px;
+  width: 100px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  overflow: hidden;
 `;
 
 const NoTranslationText = styled.p`
   color: #919191;
   text-align: center;
   padding: 3px;
+  background-color: #000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 81px;
+  display: flex;
+  align-items: center;
 `;
 
 const MarkerDesc = styled.p`
@@ -138,16 +151,11 @@ const MarkerDesc = styled.p`
   height: 34px;
   padding: 4px;
   padding-right: 6px;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.1596) 0%,
-    rgba(0, 0, 0, 0.38) 13.54%
-  );
-  border-radius: 0px 0px 5px 5px;
+  background: #fff;
 `;
 
 const MarkerName = styled.p`
-  color: #fff;
+  color: #000;
   font-size: 12px;
   font-weight: bold;
   white-space: nowrap;
@@ -164,7 +172,7 @@ const BottomMarkerText = styled.p`
 `;
 
 const IsOpened = styled.span`
-  color: #fff;
+  color: #909090;
   font-weight: normal;
   font-size: 11px;
   line-height: 13px;
@@ -469,21 +477,20 @@ const MapComponent = (props) => {
                     }}
                   >
                     <MarkerArrow></MarkerArrow>
-                    <MarkerWrapp
-                      style={
-                        cluster.item.streams &&
-                        cluster.item.streams[0] &&
-                        cluster.item.streams[0].preview &&
-                        !!streamTime
-                          ? {
-                              backgroundImage: `url(${cluster.item.streams[0].preview})`,
-                            }
-                          : {}
-                      }
-                    >
+                    <MarkerWrapp>
                       <MarkerInner>
-                        {!streamTime && (
-                          <PreviewBlock>
+                        <PreviewBlock>
+                          {cluster.item.streams &&
+                            cluster.item.streams[0] &&
+                            cluster.item.streams[0].preview &&
+                            !!streamTime && (
+                              <TranslationBlock
+                                style={{
+                                  backgroundImage: `url(${cluster.item.streams[0].preview})`,
+                                }}
+                              />
+                            )}
+                          {!streamTime && (
                             <NoTranslationText>
                               {nextStreamTime.start_time &&
                                 nextStreamTime.day.toLowerCase() !==
@@ -500,8 +507,9 @@ const MapComponent = (props) => {
                               {!nextStreamTime.start_time &&
                                 "Нет предстоящих трансляций"}
                             </NoTranslationText>
-                          </PreviewBlock>
-                        )}
+                          )}
+                        </PreviewBlock>
+
                         <MarkerDesc>
                           <MarkerName>{cluster.item.name}</MarkerName>
                           <BottomMarkerText>

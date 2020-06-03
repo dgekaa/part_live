@@ -48,6 +48,7 @@ const Desctop = styled.div`
 const PreviewBlockD = styled.div`
   height: 150px;
   background: #000;
+  background-size: cover;
 `;
 
 const NoTranslationD = styled.div`
@@ -152,123 +153,6 @@ const LocationStyle = styled.p`
 `;
 
 const Tooltip = styled.div`
-  transition: 0.3s ease all;
-  padding: 5px;
-  background: #ff0960;
-  border-radius: 5px;
-  position: absolute;
-  font-weight: bold;
-  font-size: 10px;
-  line-height: 12px;
-  top: 133px;
-  left: 5px;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  text-transform: uppercase;
-  opacity: 0;
-`;
-
-const Mobile = styled.div`
-  display: none;
-  @media (max-width: 760px) {
-    display: block;
-  }
-`;
-
-const PreviewBlockM = styled.div`
-  height: 150px;
-  background: #000;
-`;
-
-const NoTranslationM = styled.div`
-  display: flex;
-  height: 150px;
-  padding: 15px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 19px;
-  color: #c4c4c4;
-  background: #000;
-`;
-
-const DescriptionM = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  padding: 10px;
-`;
-
-const TopDescriptionBlockM = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
-const CustomImgStyleM = styled(CustomImg)`
-  margin-right: 5px;
-`;
-
-const CompanyNameM = styled.p`
-  color: #000;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 21px;
-  letter-spacing: 0.5px;
-`;
-
-const BottomDescriptionBlockM = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-top: 6px;
-`;
-
-const WorkTimeWrapM = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  align-items: center;
-`;
-
-const CircleM = styled.div`
-  margin-left: 3px;
-  width: 7px;
-  height: 7px;
-  background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
-  border-radius: 50%;
-  margin-top: 2px;
-  margin-right: 6px;
-`;
-
-const IsOpenedM = styled.p`
-  font-weight: normal;
-  font-size: 14px;
-  text-transform: lowercase;
-  color: #000;
-  line-height: 16px;
-`;
-
-const LocationWrapM = styled.div`
-  display: flex;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
-  color: #000;
-  padding-top: 9px;
-`;
-
-const LocationStyleM = styled.div`
-  display: flex;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-`;
-
-const TooltipM = styled.div`
   transition: 0.3s ease all;
   padding: 5px;
   background: #ff0960;
@@ -424,79 +308,6 @@ const SmallCompanyBlock = ({ item }) => {
           </LocationWrap>
         </DescriptionD>
       </Desctop>
-      {/* <Mobile>
-        {item.streams &&
-        item.streams[0] &&
-        item.streams[0].preview &&
-        showStream ? (
-          <PreviewBlockM
-            style={{ backgroundImage: `url(${item.streams[0].preview})` }}
-          />
-        ) : (
-          <NoTranslationM
-            style={
-              item.streams &&
-              item.streams[0] &&
-              item.streams[0].preview &&
-              !showStream
-                ? { backgroundImage: `url(${item.streams[0].preview})` }
-                : {}
-            }
-          >
-            {whenWillBeTranslation()}
-          </NoTranslationM>
-        )}
-        <DescriptionM>
-          <TopDescriptionBlockM>
-            {item.categories[0] && (
-              <>
-                <TooltipM>{item.categories[0].name}</TooltipM>
-
-                <CustomImgStyleM
-                  onMouseEnter={(e) => {
-                    e.target.previousSibling.style.opacity = 1;
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.previousSibling.style.opacity = 0;
-                  }}
-                  alt="Icon"
-                  name={item.categories[0].slug}
-                  width="20"
-                  height="20"
-                />
-              </>
-            )}
-            <CompanyNameM>{item.name}</CompanyNameM>
-          </TopDescriptionBlockM>
-          <BottomDescriptionBlockM>
-            <WorkTimeWrapM>
-              {isWork ? (
-                <>
-                  <CircleM isWork={isWork} />
-                  <IsOpenedM>Открыто до {workTime.split("-")[1]}</IsOpenedM>
-                </>
-              ) : (
-                <>
-                  <CircleM isWork={isWork} />
-                  <IsOpenedM>закрыто</IsOpenedM>
-                </>
-              )}
-            </WorkTimeWrapM>
-          </BottomDescriptionBlockM>
-          <LocationWrapM>
-            <CustomImgStyleM
-              alt="Icon"
-              name={"location"}
-              width="16"
-              height="16"
-            />
-
-            <LocationStyleM>
-              {curDistance ? `${curDistance.toFixed(2)} km` : item.address}
-            </LocationStyleM>
-          </LocationWrapM>
-        </DescriptionM>
-      </Mobile> */}
     </SmallCompBlock>
   );
 };
