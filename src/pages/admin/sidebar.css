@@ -41,32 +41,23 @@ body {
   display: none;
 }
 
-/* Color/shape of close button cross */
 .bm-cross {
-  /* background: #bdc3c7; */
 }
 
-/* General sidebar styles */
 .bm-menu {
   background: #fff;
   padding: 2.5em 0;
   font-size: 1.15em;
 }
 
-/* Morph shape necessary with bubble or elastic */
 .bm-morph-shape {
-  /* fill: #373a47; */
 }
 
-/* Wrapper for item list */
 .bm-item-list {
-  /* color: #b8b7ad; */
 }
 
-/* Styling of overlay */
 .bm-overlay {
   top: 0;
   left: 0;
-  /* background: rgba(0, 0, 0, 0.3); */
   background: #fff !important;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "react-spring";
+import styled from "styled-components";
 
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import TypeNav from "../../components/typeNav/TypeNav";
@@ -10,7 +11,59 @@ import Header from "../../components/header/Header";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 
-import "./home.css";
+const HomeContentWrap = styled.div`
+  padding-top: 50px;
+  width: 1000px;
+  margin: 0 auto;
+  @media (max-width: 760px) {
+    position: relative;
+    padding-top: 100px;
+    width: 100%;
+    padding-bottom: 65px;
+  }
+`;
+
+const NavContainer = styled.div`
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  height: 54px;
+  @media (max-width: 760px) {
+    height: 0;
+    margin: 0;
+  }
+`;
+
+const HomeContent = styled.div`
+  margin-top: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  @media (max-width: 760px) {
+    -webkit-transition: 0.3s ease all 0.2s;
+    -o-transition: 0.3s ease all 0.2s;
+    transition: 0.3s ease all 0.2s;
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+`;
+
+const NoOneCompany = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  padding: 30px;
+`;
 
 const Home = () => {
   const [DATA, setDATA] = useState([]);
@@ -24,7 +77,7 @@ const Home = () => {
           id name address description logo menu actions coordinates
           streams{url name id preview schedules{id day start_time end_time}}
           schedules {id day start_time end_time}
-          categories {id name}
+          categories {id name slug}
         }
       }`,
     })
@@ -33,30 +86,11 @@ const Home = () => {
         setIsLoading(false);
         setCompanyData(data.data.places);
         setDATA(data.data.places);
-        // const left = [],
-        //   middle = [],
-        //   right = [];
-        // data.data.places.forEach((el, i) => {
-        //   if (el.streams && el.streams[0] && el.streams[0].url) {
-        //     fetch(el.streams[0].url)
-        //       .then((res) => {
-        //         if (res.ok) {
-        //           left.push(el);
-        //         } else {
-        //           middle.push(el);
-        //         }
-        //         setIsLoading(false);
-
-        //         setCompanyData([...left, ...middle, ...right]);
-        //         setDATA([...left, ...middle, ...right]);
-        //       })
-        //       .catch((err) => console.log(err, "video status err"));
-        //   } else {
-        //     right.push(el);
-        //   }
-        // });
       })
       .catch((err) => console.log(err, "HOME DATA ERR"));
+
+    sessionStorage.setItem("prevZoom", "");
+    sessionStorage.setItem("prevCenter", "");
   }, []);
 
   const clickedType = (type) => {
@@ -71,10 +105,7 @@ const Home = () => {
       setCompanyData(DATA);
     }
   };
-  useEffect(() => {
-    sessionStorage.setItem("prevZoom", "");
-    sessionStorage.setItem("prevCenter", "");
-  }, []);
+
   useEffect(() => {
     if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
       const filterName = localStorage.getItem("filter_type");
@@ -84,26 +115,23 @@ const Home = () => {
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
-
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
     document.body.style.overflow = "visible";
     setIsShowMenu(false);
   };
-
   const showSideMenu = () => {
     setShowSlideSideMenu(true);
     document.body.style.overflow = "hidden";
     setIsShowMenu(true);
   };
-
   useEffect(() => {
     window.onresize = function (e) {
       hideSideMenu();
     };
   });
 
-  const animateProps = useSpring({
+  const SwipePageSpring = useSpring({
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
   });
@@ -123,27 +151,26 @@ const Home = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <animated.div className="homeContentWrap" style={animateProps}>
-          <div className="navContainer">
+        <HomeContentWrap as={animated.div} style={SwipePageSpring}>
+          <NavContainer>
             <CompanyNav
               currentPage="/home"
               toSlideFixedNav={isShowMenu}
               clickedType={(type) => clickedType(type)}
             />
             <TypeNav />
-          </div>
-          <div className="homeContent">
+          </NavContainer>
+          <HomeContent>
             {!!companyData.length &&
               companyData.map((el, i) => (
                 <SmallCompanyBlock item={el} key={i} />
               ))}
             {!companyData.length && isLoading && <Loader />}
             {!companyData.length && !isLoading && (
-              <div className="noOneCompany">Нет заведений</div>
+              <NoOneCompany>Нет заведений</NoOneCompany>
             )}
-          </div>
-        </animated.div>
-
+          </HomeContent>
+        </HomeContentWrap>
         <BottomMenu isShowMenu={isShowMenu} />
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />

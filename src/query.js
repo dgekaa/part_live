@@ -6,6 +6,7 @@ const QUERY = (body, origin_data) => {
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
+        // "Content-Type": "multipart/form-data",
         Authorization: origin_data ? "Bearer " + origin_data : "",
       },
     })

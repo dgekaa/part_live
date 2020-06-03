@@ -12,6 +12,29 @@ import "./googleMap.css";
 
 const LoadingContainer = (props) => <div></div>;
 
+const MapHeader = styled.div`
+  display: none;
+  @media (max-width: 760px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 44px;
+    border-bottom: 1px solid #ececec;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    background: #fff;
+  }
+`;
+const MapHeaderBtn = styled.p`
+  letter-spacing: 0.5px;
+  color: #e32a6c;
+  font-size: 16px;
+  font-weight: normal;
+`;
+
 const CloseBTN = styled.span`
   position: absolute;
   top: 10px;
@@ -55,6 +78,7 @@ const AutocompleteWrap = styled.div`
   left: 0;
   width: 100%;
   @media (max-width: 760px) {
+    top: 60px;
     flex-direction: column;
   }
 `;
@@ -64,9 +88,7 @@ const BtnWrap = styled.div`
   margin-top: 10px;
   margin-left: 20px;
   @media (max-width: 760px) {
-    justify-content: space-around;
-    width: 95%;
-    margin: 20px auto;
+    display: none;
   }
 `;
 
@@ -81,9 +103,6 @@ const SaveBtn = styled.div`
   font-weight: 700;
   background-color: #e32a6c;
   color: #fff;
-  @media (max-width: 760px) {
-    width: 49%;
-  }
 `;
 
 const CancelBtn = styled.div`
@@ -95,10 +114,6 @@ const CancelBtn = styled.div`
   text-align: center;
   cursor: pointer;
   font-weight: 700;
-  @media (max-width: 760px) {
-    width: 49%;
-    margin-right: 0;
-  }
 `;
 
 const MapContainer = ({
@@ -195,6 +210,19 @@ const MapContainer = ({
           position={initialCenter}
         />
       </MyMap>
+
+      <MapHeader>
+        <MapHeaderBtn onClick={togglePopupGoogleMap}>Отмена</MapHeaderBtn>
+        <MapHeaderBtn
+          onClick={() => {
+            if (streetName && latLng) {
+              chooseNewAddress(streetName, latLng);
+            }
+          }}
+        >
+          Готово
+        </MapHeaderBtn>
+      </MapHeader>
 
       {isNewAddress && <PointPosition alt="pos" name={"location"} />}
       {isNewAddress && (

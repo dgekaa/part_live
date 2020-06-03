@@ -3,6 +3,7 @@ import GooggleMapReact from "google-map-react";
 import useSupercluster from "use-supercluster";
 import { Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
+import styled from "styled-components";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -16,7 +17,6 @@ import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
 
 import { styles } from "../../components/googleMap/GoogleMapStyles";
-import "./map.css";
 
 const Marker = ({ children }) => children;
 
@@ -24,16 +24,179 @@ const createMapOptions = () => {
   return { styles: styles };
 };
 
+const NavContainerMap = styled.div`
+  position: relative;
+  display: flex;
+  width: 1000px;
+  margin: 0 auto;
+  justify-content: space-between;
+  top: 50px;
+  @media (max-width: 760px) {
+    justify-content: center;
+  }
+`;
+
+const MapContainer = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  @media (max-width: 760px) {
+    position: fixed;
+    top: 105px;
+    width: 100%;
+    height: calc(100% - 100px);
+  }
+`;
+
+const ClusterMarker = styled.div`
+  width: 36px;
+  height: 36px;
+  background: #e32a6c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 16px;
+  color: #ffffff;
+`;
+
+const MarkerArrow = styled.div`
+  width: 0;
+  height: 0;
+  margin: 0 auto;
+  border: 10px solid transparent;
+  border-top-color: #000;
+  border-bottom: 0;
+  position: absolute;
+  bottom: 0px;
+  left: -10px;
+`;
+
+const MarkerWrapp = styled.div`
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+  border-radius: 10px;
+  position: relative;
+  bottom: 110px;
+  right: 50px;
+  transition: 0.3s ease opacity;
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const MarkerInner = styled.div`
+  overflow: hidden;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+`;
+
+const CustomImgStyle = styled(CustomImg)`
+  position: absolute;
+  top: 3px;
+  right: 3px;
+`;
+
+const PreviewBlock = styled.div`
+  object-fit: cover;
+  -webkit-transition: 0.2s ease all;
+  -o-transition: 0.2s ease all;
+  transition: 0.2s ease all;
+  height: 100%;
+  display: flex;
+  /* padding-top: 15px; */
+  padding-bottom: 26px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NoTranslationText = styled.p`
+  color: #919191;
+  text-align: center;
+  padding: 3px;
+`;
+
+const MarkerDesc = styled.p`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 34px;
+  padding: 4px;
+  padding-right: 6px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1596) 0%,
+    rgba(0, 0, 0, 0.38) 13.54%
+  );
+  border-radius: 0px 0px 5px 5px;
+`;
+
+const MarkerName = styled.p`
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 14px;
+`;
+
+const BottomMarkerText = styled.p`
+  display: flex;
+  justify-content: space-between;
+  line-height: 16px;
+  padding: 2px;
+`;
+
+const IsOpened = styled.span`
+  color: #fff;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 900;
+  line-height: 9px;
+`;
+
+const Row = styled.div`
+  display: flex;
+`;
+
+const Circle = styled.div`
+  width: 5px;
+  height: 5px;
+  background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
+  border-radius: 50%;
+  margin-top: 3px;
+  margin-right: 5px;
+`;
+
 const MapComponent = (props) => {
+  const mapRef = useRef();
+
   const [DATA, setDATA] = useState([]);
   const [markers, setMarkers] = useState([]);
-  const mapRef = useRef();
   const [zoom, setZoom] = useState(12);
   const [bounds, setBounds] = useState(null);
-  const [windowWidth, setWindowWidth] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
-  const [previewError, setPreviewError] = useState(false);
+  const [referrer, setReferrer] = useState("");
+  const [currentCenterOfMap, setCurrentCenterOfMap] = useState();
+  const [defaultCenter, setDefaultCenter] = useState();
 
   useEffect(() => {
     QUERY({
@@ -52,6 +215,13 @@ const MapComponent = (props) => {
       })
       .catch((err) => console.log(err, "MAP  ERR"));
   }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
+      const filterName = localStorage.getItem("filter_type");
+      clickedType(filterName);
+    }
+  }, [DATA]);
 
   const points = markers.map((el, i) => {
     return {
@@ -94,24 +264,9 @@ const MapComponent = (props) => {
       setMarkers(DATA);
     }
   };
-  // useEffect(() => {
-  //   console.log(zoom, "zooooom");
-  //   console.log(bounds, "bounds");
-
-  // }, [zoom, bounds]);
-  // localStorage.setItem
-
-  useEffect(() => {
-    if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
-      const filterName = localStorage.getItem("filter_type");
-      clickedType(filterName);
-    }
-  }, [DATA]);
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [referrer, setReferrer] = useState("");
-
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
     setTimeout(() => {
@@ -119,24 +274,16 @@ const MapComponent = (props) => {
     }, 400);
     setIsShowMenu(false);
   };
-
   const showSideMenu = () => {
     setShowSlideSideMenu(true);
     document.body.style.overflow = "hidden";
     setIsShowMenu(true);
   };
-
-  !windowWidth && setWindowWidth(window.innerWidth);
-
   useEffect(() => {
     window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
       hideSideMenu();
     };
   });
-
-  const [currentCenterOfMap, setCurrentCenterOfMap] = useState();
-  const [defaultCenter, setDefaultCenter] = useState();
 
   if (navigator.geolocation && !defaultCenter) {
     navigator.geolocation.getCurrentPosition(
@@ -166,7 +313,7 @@ const MapComponent = (props) => {
     }
   };
 
-  const animateProps = useSpring({
+  const SwipePageSpring = useSpring({
     left: isShowMenu ? -200 : 0,
     config: { duration: 200 },
   });
@@ -186,7 +333,7 @@ const MapComponent = (props) => {
         showSlideSideMenu={showSlideSideMenu}
         showSideMenu={showSideMenu}
       />
-      <div className="navContainerMap">
+      <NavContainerMap>
         <CompanyNav
           style={{ zIndex: 1 }}
           currentPage="/map"
@@ -194,10 +341,10 @@ const MapComponent = (props) => {
           toSlideFixedNav={isShowMenu}
         />
         <TypeNav style={{ zIndex: 1 }} />
-      </div>
+      </NavContainerMap>
       {isLoading && <Loader />}
       {!isLoading && (
-        <animated.div className="mapContainer" style={animateProps}>
+        <MapContainer as={animated.div} style={SwipePageSpring}>
           <GooggleMapReact
             options={createMapOptions}
             style={{
@@ -236,13 +383,7 @@ const MapComponent = (props) => {
           >
             {defaultCenter && (
               <Marker lat={defaultCenter.lat} lng={defaultCenter.lng}>
-                <CustomImg
-                  alt="me"
-                  className="eye"
-                  name={"dancer"}
-                  width="32"
-                  height="32"
-                />
+                <CustomImg alt="me" name={"dancer"} width="32" height="32" />
               </Marker>
             )}
 
@@ -261,9 +402,9 @@ const MapComponent = (props) => {
                     lat={latitude}
                     lng={longitude}
                   >
-                    <div className="clusterMarker">
+                    <ClusterMarker>
                       <p> {pointCount}</p>
-                    </div>
+                    </ClusterMarker>
                   </Marker>
                 );
               }
@@ -327,9 +468,8 @@ const MapComponent = (props) => {
                         : `/map`,
                     }}
                   >
-                    <div className="arrowMapNewDesign"></div>
-                    <div
-                      className="mapMarkerWrapNewDesign"
+                    <MarkerArrow></MarkerArrow>
+                    <MarkerWrapp
                       style={
                         cluster.item.streams &&
                         cluster.item.streams[0] &&
@@ -341,79 +481,10 @@ const MapComponent = (props) => {
                           : {}
                       }
                     >
-                      <div className="mapMarkerGradientWrapperNewDesign">
+                      <MarkerInner>
                         {!streamTime && (
-                          <>
-                            <div className="companyImgMapNewDesign">
-                              <p className="mapNoTranslationTextNewDesign">
-                                {nextStreamTime.start_time &&
-                                  nextStreamTime.day.toLowerCase() !==
-                                    "сегодня" &&
-                                  "Начало трансляции в " +
-                                    EN_SHORT_TO_RU_LONG_V_P[
-                                      nextStreamTime.day
-                                    ] +
-                                    " в " +
-                                    nextStreamTime.start_time}
-                                {nextStreamTime.start_time &&
-                                  nextStreamTime.day.toLowerCase() ===
-                                    "сегодня" &&
-                                  "Трансляция начнется сегодня в " +
-                                    nextStreamTime.start_time}
-                                {!nextStreamTime.start_time &&
-                                  "Нет предстоящих трансляций"}
-                              </p>
-                            </div>
-                          </>
-                        )}
-                        <p className="mapMarkerDescNewDesign">
-                          <p
-                            style={!streamTime ? { color: "#919191" } : {}}
-                            className="mapMarkerNameNewDesign"
-                          >
-                            {cluster.item.name}
-                          </p>
-                          <p className="bottomMapMarkerTextWrapNewDesign">
-                            <span className="workTimeMapNewDesign">
-                              {workTime}
-                            </span>
-                            <span className="isOpenedMapNewDesign">
-                              {isWork && <span> Открыто </span>}
-                              {!isWork && (
-                                <span style={{ color: "#848484" }}>
-                                  Закрыто
-                                </span>
-                              )}
-                            </span>
-                          </p>
-                        </p>
-                      </div>
-
-                      <span className="typeOfCompanyMapNewDesign">
-                        {cluster.item.categories[0] &&
-                          cluster.item.categories[0].name}
-                      </span>
-                    </div>
-
-                    {/* <div className="mapMarkerWrap">
-                      <div className="mapMarker">
-                        {!!streamTime &&
-                          (!previewError ? (
-                            <VideoPlayer
-                              disablePlayBtn
-                              className="companyImg"
-                              preview={cluster.item.streams[0].preview}
-                              // src={cluster.item.streams[0].url}
-                              autoPlay={true}
-                            />
-                          ) : (                           
-                            <div className="companyImg mapNoTranslationWrap">
-                              <p className="mapNoTranslationText">ERR</p>
-                            </div>
-                          ))}
-                        {!streamTime && (
-                          <div className="companyImg mapNoTranslationWrap">
-                            <p className="mapNoTranslationText">
+                          <PreviewBlock>
+                            <NoTranslationText>
                               {nextStreamTime.start_time &&
                                 nextStreamTime.day.toLowerCase() !==
                                   "сегодня" &&
@@ -428,25 +499,46 @@ const MapComponent = (props) => {
                                   nextStreamTime.start_time}
                               {!nextStreamTime.start_time &&
                                 "Нет предстоящих трансляций"}
-                            </p>
-                          </div>
+                            </NoTranslationText>
+                          </PreviewBlock>
                         )}
-                      </div>
-                      <p className="mapMarkerName">
-                        {cluster.item.name}
-                        <span className="openedTo">
-                          {isWork && <span> Открыто:{workTime} </span>}
-                          {!isWork && <span> Закрыто </span>}
-                        </span>
-                      </p>
-                      <div className="arrow"></div>
-                    </div> */}
+                        <MarkerDesc>
+                          <MarkerName>{cluster.item.name}</MarkerName>
+                          <BottomMarkerText>
+                            <IsOpened>
+                              {isWork && (
+                                <Row>
+                                  <Circle isWork={isWork} />
+                                  <span>до {workTime.split("-")[1]}</span>
+                                </Row>
+                              )}
+                              {!isWork && (
+                                <Row>
+                                  <Circle isWork={isWork} />
+                                  <span>закрыто</span>
+                                </Row>
+                              )}
+                            </IsOpened>
+                          </BottomMarkerText>
+                        </MarkerDesc>
+                      </MarkerInner>
+                      {cluster.item.categories[0] &&
+                        cluster.item.categories[0].slug && (
+                          <CustomImgStyle
+                            active
+                            alt="Icon"
+                            name={cluster.item.categories[0].slug}
+                            width="16"
+                            height="16"
+                          />
+                        )}
+                    </MarkerWrapp>
                   </Link>
                 </Marker>
               );
             })}
           </GooggleMapReact>
-        </animated.div>
+        </MapContainer>
       )}
 
       <BottomMenu isShowMenu={isShowMenu} />

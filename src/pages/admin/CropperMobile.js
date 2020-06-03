@@ -36,6 +36,7 @@ const CropperMobile = ({ imgSrc, editorRef, onCrop }) => {
       style={{
         width: `${window.innerWidth - 40}px`,
         height: `${window.innerWidth - 40}px`,
+        margin: "0 auto",
       }}
       id="hammerEvent"
     >

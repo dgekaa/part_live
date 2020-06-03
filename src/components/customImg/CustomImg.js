@@ -1,8 +1,19 @@
 import React from "react";
 
-const CustomImg = ({ name, className, alt, active, width, height }) => {
+const CustomImg = ({
+  name,
+  className,
+  alt,
+  active,
+  width,
+  height,
+  onMouseEnter,
+  onMouseOut,
+}) => {
   return (
     <img
+      onMouseEnter={onMouseEnter}
+      onMouseOut={onMouseOut}
       alt={alt}
       className={className}
       src={

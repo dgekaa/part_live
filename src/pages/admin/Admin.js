@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCookies } from "react-cookie";
 import Cropper from "cropperjs";
-
 import Dropzone from "react-dropzone";
 import { Redirect, Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 import Switch from "react-switch";
+import autosize from "autosize";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
@@ -37,16 +37,177 @@ import "./sidebar.css";
 import "cropperjs/dist/cropper.min.css";
 import "./imagecropper.css";
 
-const MobileAdminMenuTitle = styled.p`
-  text-align: center;
-  padding-top: 20px;
-  padding-bottom: 10px;
-  font-weight: bold;
-  font-size: 18px;
-  text-transform: uppercase;
+const AdminStyle = styled.div`
+  position: relative;
 `;
 
-const DescriptionWrap = styled.div`
+const AdminWrapper = styled.div`
+  display: flex;
+  width: 1000px;
+  margin: 0 auto;
+  @media (max-width: 760px) {
+    max-width: 100%;
+  }
+`;
+
+const PartyLive = styled.p`
+  display: inline-block;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0.05em;
+  transition: 0.3s ease all;
+  color: #323232;
+  @media (max-width: 760px) {
+    font-size: 20px;
+  }
+`;
+
+const Live = styled.span`
+  display: inline-block;
+  background-color: #e32a6c;
+  color: #fff;
+  border-radius: 5px;
+  margin-left: 3px;
+  padding: 0 7px;
+`;
+// ---------------------------------------------
+const LeftAdminMenuD = styled.div`
+  flex: 1.5;
+  padding: 0px 10px 10px 0;
+  @media (max-width: 760px) {
+    display: none;
+  }
+`;
+
+const GoBack = styled(Link)`
+  font-size: 14px;
+  font-weight: normal;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  &:hover {
+    color: rgb(227, 42, 108);
+  }
+`;
+
+const GoBackArrow = styled.span`
+  font-size: 18px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+`;
+
+const LeftAdminMenuInnerD = styled.div`
+  position: fixed;
+`;
+
+const LeftAdminBtnD = styled.li`
+  font-size: 13px;
+  font-weight: 800;
+  height: 35px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: ${({ clicked }) => (clicked ? "#e32a6c" : "#000")};
+  letter-spacing: 1px;
+  &:hover {
+    color: #e32a6c;
+  }
+`;
+
+const AdminImgWrapD = styled.div`
+  width: 30px;
+  height: 30px;
+  margin-right: 16px;
+`;
+
+const AdminContentD = styled.div`
+  display: flex;
+  flex: 4;
+  padding: 100px 10px 10px 10px;
+  flex-direction: column;
+  @media (max-width: 760px) {
+    display: none;
+  }
+`;
+
+const ProfileTitleD = styled.div`
+  display: flex;
+`;
+
+const ProfileTitleH3D = styled.h3`
+  font-size: 24px;
+  line-height: 24px;
+`;
+
+const ProfileTitleNameD = styled.span`
+  padding-left: 12px;
+  color: #e32a6c;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 24px;
+`;
+
+const ProfileContentD = styled.div`
+  margin-top: 22px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const CropWrapperD = styled.div`
+  position: relative;
+  height: 250px;
+  background: #fff;
+`;
+
+const PreviewPhotoTextD = styled.p`
+  font-size: 22px;
+  font-weight: 500;
+  color: #aeaeae;
+`;
+
+const PreviewPhotoSizeD = styled.p`
+  font-weight: 500;
+  font-size: 18px;
+  color: #aeaeae;
+`;
+
+const PreviewPhotoD = styled.div`
+  display: flex;
+  height: 250px;
+  width: 250px;
+  background-color: #f2f2f7;
+  border-radius: 10px;
+  color: #aeaeae;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  &:hover {
+    border: 2px solid #e32a6c;
+  }
+  &:hover ${PreviewPhotoTextD} {
+    color: #e32a6c;
+    transition: 0.3s ease all;
+  }
+  &:hover ${PreviewPhotoSizeD} {
+    color: #e32a6c;
+    transition: 0.3s ease all;
+  }
+`;
+
+const ImgContainerD = styled.div`
+  width: 250px;
+  height: 250px;
+  overflow: hidden;
+`;
+
+const CanvasImageD = styled.canvas`
+  display: none;
+`;
+
+const DescriptionWrapD = styled.div`
   display: flex;
   flex-direction: column !important;
   font-size: 10px;
@@ -55,7 +216,7 @@ const DescriptionWrap = styled.div`
   height: ${(props) => props.height && props.height};
 `;
 
-const LengthofDescription = styled.span`
+const LengthofDescriptionD = styled.span`
   padding-left: 10px;
   font-weight: 500;
   font-size: 11px;
@@ -68,7 +229,7 @@ const LengthofDescription = styled.span`
   }
 `;
 
-const DisableStream = styled.span`
+const DisableStreamD = styled.span`
   width: 80%;
   display: flex;
   flex-direction: row;
@@ -80,7 +241,8 @@ const DisableStream = styled.span`
     flex-direction: column;
   }
 `;
-const DayOffDot = styled.span`
+
+const DayOffDotD = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -91,14 +253,103 @@ const DayOffDot = styled.span`
   left: 2px;
 `;
 
-const Gray16px = styled.span`
+const DisableStreamToNexDayD = styled.span`
   font-size: 16px;
   color: #6f6f6f;
 `;
 
-const Black18px = styled.span`
+const DisableStreamTextD = styled.span`
   font-size: 18px;
   color: #000;
+`;
+
+// ____________________________________________-
+const PreviewPhotoM = styled.div`
+  display: flex;
+  height: 125px;
+  width: 125px;
+  background-color: #f2f2f7;
+  border: 2px solid #909090;
+  border-radius: 10px;
+  color: #aeaeae;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: 0.3s ease all;
+  align-self: center;
+  margin-top: 15px;
+  &:hover {
+    border: 2px solid #e32a6c;
+    color: #e32a6c;
+  }
+`;
+
+const AddressM = styled.div`
+  display: inline-block;
+  overflow: hidden;
+  font-weight: 300;
+  font-size: 16px;
+  color: #4f4f4f;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #e5e5e5;
+  margin: 15px 0;
+  padding: 15px 0;
+  cursor: pointer;
+`;
+
+const DescriptionM = styled.div`
+  display: inline-block;
+  overflow: hidden;
+  font-weight: 300;
+  font-size: 16px;
+  color: #4f4f4f;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-bottom: 1px solid #e5e5e5;
+  margin: 15px 0;
+  padding: 15px 0;
+  cursor: pointer;
+`;
+
+const DescTextareaM = styled.textarea`
+  outline: none;
+  color: #4f4f4f;
+  opacity: none;
+  border: none;
+  border-bottom: 1px solid #e5e5e5;
+  box-sizing: border-box;
+  line-height: 24px;
+  padding: 5px;
+  width: calc(100% - 30px);
+  margin: 0 15px;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 24px;
+  resize: none;
+`;
+
+const DescLengthM = styled.p`
+  font-weight: 500;
+  color: ${(props) =>
+    props.descOfCompany.length === props.descOfCompanyLimit ? "red" : "green"};
+  width: 100%;
+  font-size: 10px;
+  text-align: right;
+  padding-left: 10px;
+  padding-right: 15px;
+`;
+
+const AdminMenuTitleM = styled.p`
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  text-transform: uppercase;
 `;
 
 const Admin = (props) => {
@@ -107,6 +358,9 @@ const Admin = (props) => {
   const [DATA, setDATA] = useState([]);
   const [showPopupDatePicker, setShowPopapDatePicker] = useState(false);
   const [showPopupGoogleMap, setShowPopapGoogleMap] = useState(false);
+  const [showPopupDescription, setShowPopapDescription] = useState(false);
+  const [showPopupChooseType, setShowPopapChooseType] = useState(false);
+  const [showPopupUploadFile, setShowPopapUploadFile] = useState(false);
   const [startTimePicker, setStartTimePicker] = useState("00:00");
   const [endTimePicker, setEndTimePicker] = useState("00:00");
   const [startRealTimeInPicker, setStartRealTimeInPicker] = useState();
@@ -127,6 +381,7 @@ const Admin = (props) => {
   const [currentImage, setCurrentImage] = useState(null);
   const [switchChecked, setSwitchChecked] = useState(null);
   const [isSuccessSave, setIsSuccessSave] = useState(false);
+  const [FILE, setFILE] = useState("");
 
   const [cookies] = useCookies([]);
 
@@ -183,9 +438,9 @@ const Admin = (props) => {
       query: `query {
       place (id:"${props.match.params.id}") {
         id name address description logo menu actions coordinates
-        streams{url name id preview schedules{id day start_time end_time}}
+        streams{url name id preview schedules{id day start_time end_time} see_you_tomorrow}
         schedules {id day start_time end_time}
-        categories {id name}
+        categories {id name slug}
       }
   }`,
     })
@@ -250,6 +505,40 @@ const Admin = (props) => {
           }
         })
         .catch((err) => console.log(err, "UPDATESTREAM ERR"));
+    }
+  };
+
+  const disableStream = (data) => {
+    alert(data);
+    if (cookies.origin_data) {
+      QUERY(
+        {
+          query: `mutation {
+            updateStream (
+              input:{
+                id:"${DATA.streams[0].id}"
+               ${
+                 data
+                   ? `
+                see_you_tomorrow: "${data}"`
+                   : ` see_you_tomorrow: ${data}`
+               }
+               
+              }
+            ) { id name url }
+          }`,
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            refreshData();
+          } else {
+            console.log(data.errors, "disableStream ERRORS");
+          }
+        })
+        .catch((err) => console.log(err, "disableStream ERR"));
     }
   };
 
@@ -447,13 +736,43 @@ const Admin = (props) => {
       : setShowPopapGoogleMap(true);
   };
 
+  const togglePopupDescription = () => {
+    showPopupDescription
+      ? setShowPopapDescription(false)
+      : setShowPopapDescription(true);
+  };
+
+  const togglePopupChooseType = () => {
+    showPopupChooseType
+      ? setShowPopapChooseType(false)
+      : setShowPopapChooseType(true);
+  };
+
+  const togglePopupUploadFile = () => {
+    showPopupUploadFile
+      ? setShowPopapUploadFile(false)
+      : setShowPopapUploadFile(true);
+  };
+
   useEffect(() => {
-    if (showPopupDatePicker || showPopupGoogleMap) {
+    if (
+      showPopupDatePicker ||
+      showPopupGoogleMap ||
+      showPopupDescription ||
+      showPopupChooseType ||
+      showPopupUploadFile
+    ) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-  }, [showPopupDatePicker, showPopupGoogleMap]);
+  }, [
+    showPopupDatePicker,
+    showPopupGoogleMap,
+    showPopupDescription,
+    showPopupChooseType,
+    showPopupUploadFile,
+  ]);
 
   const setStartTime = (h, m) => {
     setStartTimePicker("" + h + ":" + m);
@@ -524,7 +843,84 @@ const Admin = (props) => {
     DATA.name && setNameOfCompany(DATA.name);
   }, [DATA.name]);
 
+  const dateNow = new Date()
+    .toLocaleDateString()
+    .split(".")
+    .reverse()
+    .join("-");
+
+  useEffect(() => {
+    DATA.streams &&
+      DATA.streams[0] &&
+      DATA.streams[0].see_you_tomorrow &&
+      setSwitchChecked(DATA.streams[0].see_you_tomorrow === dateNow);
+  }, [DATA.streams]);
+
   const descOfCompanyLimit = 300;
+
+  const updateCategory = () => {
+    if (cookies.origin_data) {
+      QUERY(
+        {
+          query: `mutation {
+            updatePlace(
+              input:{
+                id:"${props.match.params.id}"
+                ${
+                  typeOfCompanyId && typeOfCompanyId !== DATA.categories[0].id
+                    ? `categories:{
+                    disconnect:"${DATA.categories[0].id}"
+                    connect:"${typeOfCompanyId}"
+                  }`
+                    : `categories:{}`
+                }
+               
+              }
+            ){id}
+          }`,
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            console.log("SUCCESS");
+            refreshData();
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch((err) => console.log(err, "  *******ERR"));
+    }
+  };
+
+  const updateDescription = () => {
+    if (cookies.origin_data) {
+      QUERY(
+        {
+          query: `mutation {
+            updatePlace(
+              input:{
+                id:"${props.match.params.id}"
+                description:"${descOfCompany || DATA.description}" 
+              }
+            ){id}
+          }`,
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            console.log("SUCCESS");
+            refreshData();
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch((err) => console.log(err, "  *******ERR"));
+    }
+  };
 
   const updatePlaceData = () => {
     if (cookies.origin_data) {
@@ -535,16 +931,6 @@ const Admin = (props) => {
               input:{
                 id:"${props.match.params.id}"
                 name:"${nameOfCompany || DATA.name}"
-                description:"${descOfCompany || DATA.description}"
-                ${
-                  typeOfCompanyId && typeOfCompanyId !== DATA.categories[0].id
-                    ? `categories:{
-                    disconnect:"${DATA.categories[0].id}"
-                    connect:"${typeOfCompanyId}"
-                  }`
-                    : `categories:{}`
-                }
-               
               }
             ){id}
           }`,
@@ -585,17 +971,18 @@ const Admin = (props) => {
     .split(",")
     .map((item) => item.trim());
 
-  const onCropComplete = (crop) => {
-    const canvasRef = imagePreviewCanvas.current;
+  // const onCropComplete = (crop) => {
+  //   const canvasRef = imagePreviewCanvas.current;
 
-    image64toCanvasRef(
-      canvasRef,
-      imgSrc,
-      crop,
-      naturalImageSize,
-      currentImageSize
-    );
-  };
+  //   image64toCanvasRef(
+  //     canvasRef,
+  //     imgSrc,
+  //     crop,
+  //     naturalImageSize,
+  //     currentImageSize
+  //   );
+
+  // };
 
   const imageElementRef = useRef(null);
   const [imageDestination, setImageDestination] = useState("");
@@ -612,11 +999,18 @@ const Admin = (props) => {
         modal: true,
         imageSmoothingEnabled: true,
         crop: (e) => {
-          // console.log(e, "EVENT !!!!");
           const canvas = cropper.getCroppedCanvas();
-          setImageDestination(canvas.toDataURL("image/png"));
 
-          // console.log(canvas.toDataURL("image/png"), "canvass");
+          canvas.toBlob(function (blob) {
+            const formData = new FormData();
+            formData.append("my-file", blob, "filename.png");
+
+            // Post via axios or other transport method
+            setImageDestination(formData);
+          });
+
+          // var base64Str = canvas.toDataURL("image/png");
+          // setImageDestination(base64Str);
         },
       });
     }
@@ -720,6 +1114,9 @@ const Admin = (props) => {
           "load",
           (theFile) => {
             const myResult = myFileItemReader.result;
+            setImgSrc("");
+            setImgSrcExt("");
+
             setImgSrc(myResult);
             setImgSrcExt(extractImageFileExtensionFromBase64(myResult));
           },
@@ -861,6 +1258,10 @@ const Admin = (props) => {
     sessionStorage.setItem("prevCenter", "");
   }, []);
 
+  useEffect(() => {
+    autosize(document.querySelectorAll("textarea"));
+  });
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {
@@ -873,8 +1274,8 @@ const Admin = (props) => {
             }
           }}
         >
-          <animated.div
-            className="Admin"
+          <AdminStyle
+            as={animated.div}
             style={animateProps}
             onClick={(e) => {
               if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
@@ -891,32 +1292,19 @@ const Admin = (props) => {
             />
             {isLoading && <Loader />}
             {!isLoading && (
-              <div className="adminWrapper">
+              <AdminWrapper>
                 {/* __________________DESCTOP__________________ */}
-                <div className="leftAdminMenuDesctop">
-                  <Link className={"goBackFromAdmin"} to={"/editCompany"}>
-                    <span
-                      style={{
-                        fontSize: "18px",
-                        paddingRight: "10px",
-                        paddingBottom: "2px",
-                      }}
-                    >
-                      &#8592;
-                    </span>
-                    К списку заведений
-                  </Link>
-                  <div className="leftAdminMenu">
+                <LeftAdminMenuD>
+                  <GoBack to={"/editCompany"}>
+                    <GoBackArrow>&#8592;</GoBackArrow>К списку заведений
+                  </GoBack>
+                  <LeftAdminMenuInnerD>
                     <ul>
                       {leftMenuSettings.map((el, id) => {
                         return (
-                          <li
+                          <LeftAdminBtnD
+                            clicked={el.clicked}
                             key={id}
-                            className={
-                              el.clicked
-                                ? "clickedLeftAdminBtn"
-                                : "LeftAdminBtn"
-                            }
                             onClick={() => {
                               setLeftMenuSettings((prev) => {
                                 let newArr = [...prev];
@@ -930,120 +1318,148 @@ const Admin = (props) => {
                             }}
                           >
                             {el.img && (
-                              <div
-                                style={{
-                                  width: "30px",
-                                  height: "30px",
-                                  marginRight: "16px",
-                                }}
-                              >
+                              <AdminImgWrapD>
                                 <CustomImg
                                   className={el.class}
                                   alt={el.altImg}
                                   name={el.img}
                                 />
-                              </div>
+                              </AdminImgWrapD>
                             )}
                             {el.name}
-                          </li>
+                          </LeftAdminBtnD>
                         );
                       })}
                     </ul>
-                  </div>
-                </div>
+                  </LeftAdminMenuInnerD>
+                </LeftAdminMenuD>
 
-                <div className="adminContentDesctop">
+                <AdminContentD>
                   {leftMenuSettings.map((el, i) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
-                          <div style={{ display: "flex" }}>
-                            <h3
-                              style={{
-                                fontSize: "24px",
-                                lineHeight: "24px",
-                              }}
-                            >
-                              ПРОФИЛЬ ЗАВЕДЕНИЯ
-                            </h3>
-                            <span
-                              style={{
-                                paddingLeft: "12px",
-                                color: "#E32A6C",
-                                fontWeight: "bold",
-                                fontSize: "24px",
-                                lineHeight: "24px",
-                              }}
-                            >
-                              ({DATA.name})
-                            </span>
-                          </div>
-                          <div
-                            style={{
-                              marginTop: "22px",
-                              display: "flex",
-                              flexDirection: "row",
-                            }}
-                          >
+                          <ProfileTitleD>
+                            <ProfileTitleH3D>ПРОФИЛЬ ЗАВЕДЕНИЯ</ProfileTitleH3D>
+                            <ProfileTitleNameD>{DATA.name}</ProfileTitleNameD>
+                          </ProfileTitleD>
+                          <ProfileContentD>
                             <div>
                               {imgSrc ? (
                                 <div>
-                                  <div
-                                    className="cropWrapper"
-                                    style={{
-                                      position: "relative",
-                                      height: "250px",
-                                      background: "#fff",
-                                    }}
-                                  >
-                                    <div className="img-container">
+                                  <CropWrapperD>
+                                    <ImgContainerD>
                                       <img
                                         ref={imageElementRef}
                                         src={imgSrc}
                                         alt="src"
                                       />
-                                    </div>
-                                    {/* <img
-                                      className="img-preview"
-                                      src={imageDestination}
-                                      alt="destination"
-                                    /> */}
-                                    <canvas
-                                      className="cropCanvasImage"
+                                    </ImgContainerD>
+
+                                    <CanvasImageD
                                       ref={imagePreviewCanvas}
-                                    ></canvas>
-                                  </div>
-                                  {/* <span
-                                    onClick={downloadImgFromCanvas}
-                                    style={{}}
+                                    ></CanvasImageD>
+                                  </CropWrapperD>
+                                  <span
+                                    onClick={() => {
+                                      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                      if (cookies.origin_data) {
+                                        console.log(FILE, "FILE FILE FILE");
+                                        fetch("http://194.87.95.37/graphql", {
+                                          method: "POST",
+                                          mode: "cors",
+                                          body: JSON.stringify({
+                                            query: `
+                                              mutation($file: Upload!) {
+                                                placeImage(file: $file)
+                                              }
+                                            `,
+                                            variables: {
+                                              file: FILE,
+                                            },
+                                          }),
+                                          headers: {
+                                            "Content-Type":
+                                              "multipart/form-data",
+                                            Authorization: cookies.origin_data
+                                              ? "Bearer " + cookies.origin_data
+                                              : "",
+                                          },
+                                        })
+                                          .then((res) => res.json())
+                                          .then((data) => {
+                                            if (!data.errors) {
+                                              console.log(data, "SUCCESS");
+                                            } else {
+                                              console.log(
+                                                data.errors,
+                                                " ERRORS"
+                                              );
+                                            }
+                                          })
+                                          .catch((err) =>
+                                            console.log(err, "  *******ERR")
+                                          );
+
+                                        // QUERY(
+                                        //   {
+                                        //     query: `
+                                        //     mutation($file: Upload!) {
+                                        //       placeImage(file: $file)
+                                        //     }
+                                        //   `,
+                                        //     variables: {
+                                        //       file: FILE, // a.txt
+                                        //     },
+                                        //   },
+                                        //   cookies.origin_data
+                                        // )
+                                        // .then((res) => res.json())
+                                        // .then((data) => {
+                                        //   if (!data.errors) {
+                                        //     console.log("SUCCESS");
+                                        //   } else {
+                                        //     console.log(
+                                        //       data.errors,
+                                        //       " ERRORS"
+                                        //     );
+                                        //   }
+                                        // })
+                                        // .catch((err) =>
+                                        //   console.log(err, "  *******ERR")
+                                        // );
+                                      }
+                                    }}
                                   >
                                     Скачать
-                                  </span> */}
+                                  </span>
                                 </div>
                               ) : (
-                                <div
-                                  className="previewPhoto"
+                                <PreviewPhotoD
                                   onClick={() =>
                                     document
                                       .querySelector(".previewRef")
                                       .click()
                                   }
                                 >
-                                  <p className="uploadPhotoTextDesctop">
+                                  <PreviewPhotoTextD>
                                     Загрузить фото
-                                  </p>
-                                  <p className="uploadPhotoSizeTextDesctop">
+                                  </PreviewPhotoTextD>
+                                  <PreviewPhotoSizeD>
                                     250 X 250
-                                  </p>
-                                </div>
+                                  </PreviewPhotoSizeD>
+                                </PreviewPhotoD>
                               )}
+
                               <Dropzone
                                 multiple={false}
                                 accept={acceptedFileTypes}
                                 maxSize={imageMaxSize}
-                                onDrop={(acceptedFiles, rejectedFiles) =>
-                                  handleOnDrop(acceptedFiles, rejectedFiles)
-                                }
+                                onDrop={(acceptedFiles, rejectedFiles) => {
+                                  setFILE(acceptedFiles[0]);
+
+                                  handleOnDrop(acceptedFiles, rejectedFiles);
+                                }}
                               >
                                 {({ getRootProps, getInputProps }) => {
                                   return (
@@ -1099,7 +1515,7 @@ const Admin = (props) => {
                                 >
                                   Описание:
                                 </p>
-                                <DescriptionWrap
+                                <DescriptionWrapD
                                   width={"100%"}
                                   height={"230px"}
                                 >
@@ -1114,17 +1530,17 @@ const Admin = (props) => {
                                       setDescOfCompany(e.target.value)
                                     }
                                   />
-                                  <LengthofDescription
+                                  <LengthofDescriptionD
                                     descOfCompany={descOfCompany}
                                     descOfCompanyLimit={descOfCompanyLimit}
                                   >
                                     {descOfCompany.length} /{" "}
                                     {descOfCompanyLimit}
-                                  </LengthofDescription>
-                                </DescriptionWrap>
+                                  </LengthofDescriptionD>
+                                </DescriptionWrapD>
                               </div>
                             </div>
-                          </div>
+                          </ProfileContentD>
                           <div className="profileDataDesc">
                             <div className="inputBlockWrap">
                               <p
@@ -1272,10 +1688,6 @@ const Admin = (props) => {
                                   setValidationErr({});
                                   setNameOfCompany(DATA.name);
                                   // setPseudonimOfCompany("");
-                                  console.log(
-                                    DATA.categories[0].id,
-                                    "DATA.categories[0].id"
-                                  );
                                   setTypeOfCompany(
                                     DATA.categories &&
                                       DATA.categories[0] &&
@@ -1334,7 +1746,7 @@ const Admin = (props) => {
                                                   tomorrowFromDay(i)
                                                 ]
                                               }`)}
-                                        {numberDayNow === i && <DayOffDot />}
+                                        {numberDayNow === i && <DayOffDotD />}
                                       </td>
                                       <td
                                         style={
@@ -1440,7 +1852,7 @@ const Admin = (props) => {
                                                   tomorrowFromDay(i)
                                                 ]
                                               }`)}
-                                        {numberDayNow === i && <DayOffDot />}
+                                        {numberDayNow === i && <DayOffDotD />}
                                       </td>
                                       <td
                                         style={
@@ -1505,7 +1917,6 @@ const Admin = (props) => {
                       return (
                         <div key={i} className="streamAdminBlock">
                           <h3>СТРИМ</h3>
-                          {console.log(DATA, "JJJJ")}
                           {DATA.id && DATA.id == 16 && (
                             <div className="videoWrapAdminDesctop">
                               <VideoPlayer
@@ -1532,11 +1943,17 @@ const Admin = (props) => {
                               />
                             </div>
                           )}
-                          <DisableStream>
+
+                          <DisableStreamD>
                             <div>
-                              <Black18px>Отключить стрим</Black18px>
-                              <Gray16px>Выключить до следующего дня</Gray16px>
+                              <DisableStreamTextD>
+                                Отключить стрим
+                              </DisableStreamTextD>
+                              <DisableStreamToNexDayD>
+                                Выключить до следующего дня
+                              </DisableStreamToNexDayD>
                             </div>
+
                             <Switch
                               onChange={setSwitchChecked}
                               checked={switchChecked}
@@ -1545,7 +1962,8 @@ const Admin = (props) => {
                               uncheckedIcon={false}
                               checkedIcon={false}
                             />
-                          </DisableStream>
+                          </DisableStreamD>
+
                           <div className="chooseStreamAddressDesc">
                             <div className="cameraAddressWrapper">
                               <span className="cameraAddresLable">
@@ -1577,9 +1995,9 @@ const Admin = (props) => {
                                     } else {
                                       updateStream(streamAddressData);
                                     }
-                                  } else {
-                                    alert("Заполните поле");
                                   }
+
+                                  disableStream(switchChecked ? dateNow : null);
                                 }}
                               >
                                 Сохранить
@@ -1599,7 +2017,8 @@ const Admin = (props) => {
                       );
                     }
                   })}
-                </div>
+                </AdminContentD>
+
                 {/* __________________MOBILE__________________ */}
                 <div className="adminContentMobile">
                   <div className="adminMenuContainer">
@@ -1645,9 +2064,9 @@ const Admin = (props) => {
                                 Отмена
                               </p>
                               <Link to="/home">
-                                <p className="party_live">
-                                  PARTY<span className="live">.LIVE</span>
-                                </p>
+                                <PartyLive>
+                                  PARTY<Live>.LIVE</Live>
+                                </PartyLive>
                               </Link>
                               <p
                                 style={{
@@ -1664,7 +2083,7 @@ const Admin = (props) => {
                                 Готово
                               </p>
                             </div>
-                            <MobileAdminMenuTitle>Стрим</MobileAdminMenuTitle>
+                            <AdminMenuTitleM>Стрим</AdminMenuTitleM>
 
                             <div className="videoWrapAdminMobile">
                               <VideoPlayer
@@ -1711,8 +2130,8 @@ const Admin = (props) => {
                                 style={{
                                   letterSpacing: "0.5px",
                                   color: "#E32A6C",
-                                  fontSize: "16px",
-                                  fontWeight: "normal",
+                                  fontWeight: 500,
+                                  fontSize: "18px",
                                 }}
                                 onClick={() => {
                                   closeAllSidebar();
@@ -1720,32 +2139,21 @@ const Admin = (props) => {
                                   setValidationErr({});
                                   setNameOfCompany(DATA.name);
                                   // setPseudonimOfCompany("");
-                                  setTypeOfCompany(
-                                    DATA.categories &&
-                                      DATA.categories[0] &&
-                                      DATA.categories[0].name
-                                  );
-                                  setTypeOfCompanyId(
-                                    DATA.categories &&
-                                      DATA.categories[0] &&
-                                      DATA.categories[0].id
-                                  );
-                                  setDescOfCompany(DATA.description);
                                 }}
                               >
                                 Отмена
                               </p>
                               <Link to="/home">
-                                <p className="party_live">
-                                  PARTY<span className="live">.LIVE</span>
-                                </p>
+                                <PartyLive>
+                                  PARTY<Live>.LIVE</Live>
+                                </PartyLive>
                               </Link>
                               <p
                                 style={{
                                   letterSpacing: "0.5px",
                                   color: "#E32A6C",
-                                  fontSize: "16px",
-                                  fontWeight: "normal",
+                                  fontWeight: 500,
+                                  fontSize: "18px",
                                 }}
                                 className=""
                                 onClick={() => {
@@ -1762,9 +2170,7 @@ const Admin = (props) => {
                           >
                             &#10006;
                           </span> */}
-                            <MobileAdminMenuTitle>
-                              Профиль заведения
-                            </MobileAdminMenuTitle>
+                            <AdminMenuTitleM>Профиль</AdminMenuTitleM>
 
                             <div
                               className="uploadFileContainer"
@@ -1772,23 +2178,18 @@ const Admin = (props) => {
                             >
                               <div className="uploadFile">
                                 {imgSrc ? (
-                                  <CropperMobile
-                                    imgSrc={imgSrc}
-                                    editorRef={editorRef}
-                                    onCrop={onCrop}
-                                  />
+                                  <></>
                                 ) : (
-                                  <div
-                                    className="previewPhoto"
-                                    onClick={() =>
+                                  <PreviewPhotoM
+                                    onClick={() => {
+                                      togglePopupUploadFile();
                                       document
                                         .querySelector(".previewRef")
-                                        .click()
-                                    }
+                                        .click();
+                                    }}
                                   >
                                     <p>Загрузить фото</p>
-                                    <p>250 X 250</p>
-                                  </div>
+                                  </PreviewPhotoM>
                                 )}
                                 <Dropzone
                                   multiple={false}
@@ -1831,7 +2232,13 @@ const Admin = (props) => {
                             </div>
                             {/* ================================================= */}
                             <div className="profileDataDesc">
-                              <div className="inputBlockWrap">
+                              <div
+                                className="inputBlockWrap"
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <p
                                   style={
                                     validationErr["nameOfCompany"]
@@ -1839,8 +2246,7 @@ const Admin = (props) => {
                                       : {}
                                   }
                                 >
-                                  Название заведения:
-                                  <span style={{ color: "red" }}>*</span>
+                                  Название:
                                 </p>
                                 <input
                                   type="text"
@@ -1851,7 +2257,13 @@ const Admin = (props) => {
                                   }
                                 />
                               </div>
-                              <div className="inputBlockWrap">
+                              <div
+                                className="inputBlockWrap"
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                }}
+                              >
                                 <p
                                   style={
                                     validationErr["pseudonimOfCompany"]
@@ -1860,7 +2272,6 @@ const Admin = (props) => {
                                   }
                                 >
                                   Псевдоним:
-                                  <span style={{ color: "red" }}>*</span>
                                 </p>
                                 <input
                                   type="text"
@@ -1875,95 +2286,66 @@ const Admin = (props) => {
                               </div>
                               <div className="bigInputBlockWrap">
                                 <p>Категория:</p>
-                                <div className="categoryBtnWrap">
-                                  {!!uniqueCompanyType &&
-                                    uniqueCompanyType.map((el, i) => {
-                                      return (
-                                        <span
-                                          className="categoryBtn"
-                                          key={i}
-                                          style={
-                                            el &&
-                                            el.name &&
-                                            typeOfCompany &&
-                                            typeOfCompany === el.name
-                                              ? {
-                                                  background: "#e32a6c",
-                                                  color: "#fff",
-                                                }
-                                              : !typeOfCompany &&
-                                                DATA.categories &&
-                                                DATA.categories[0] &&
-                                                el &&
-                                                el.name &&
-                                                DATA.categories[0].name ===
-                                                  el.name
-                                              ? {
-                                                  background: "#e32a6c",
-                                                  color: "#fff",
-                                                }
-                                              : {}
-                                          }
-                                          onClick={() => {
-                                            setTypeOfCompany(el.name);
-                                            setTypeOfCompanyId(el.id);
-                                          }}
-                                          onMouseOver={() =>
-                                            setHoveredBtn(el.name)
-                                          }
-                                          onMouseOut={() => setHoveredBtn("")}
-                                        >
-                                          {typeOfCompany &&
-                                          typeOfCompany === el.name
-                                            ? renderCustomTypeImg(el.slug, true)
-                                            : !typeOfCompany &&
-                                              DATA.categories &&
-                                              DATA.categories[0] &&
-                                              DATA.categories[0].name ===
-                                                el.name
-                                            ? renderCustomTypeImg(el.slug, true)
-                                            : hoveredBtn === el.name
-                                            ? renderCustomTypeImg(el.slug, true)
-                                            : renderCustomTypeImg(
-                                                el.slug,
-                                                false
-                                              )}
-                                          {el.name}
-                                        </span>
-                                      );
-                                    })}
-                                </div>
-                              </div>
-                              <div className="inputBlockWrap">
-                                <p className="addressTextMobile">
-                                  Адрес заведения:
-                                </p>
-                                <div className="mobileAddresColumn">
-                                  <input type="text" value={DATA.address} />
-                                  <p
-                                    className="chooseAddressDesc"
-                                    onClick={() => togglePopupGoogleMap()}
-                                  >
-                                    ВЫБРАТЬ АДРЕС НА КАРТЕ
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="inputBlockWrap">
-                                <p>Описание:</p>
-                                <LengthofDescription
-                                  descOfCompany={descOfCompany}
-                                  descOfCompanyLimit={descOfCompanyLimit}
+
+                                <div
+                                  className="categoryBtnWrap"
+                                  style={{
+                                    margin: 0,
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                  }}
                                 >
-                                  {descOfCompany.length} / {descOfCompanyLimit}
-                                </LengthofDescription>
-                                <textarea
-                                  className="descTextarea"
-                                  maxLength={descOfCompanyLimit}
-                                  value={descOfCompany}
-                                  onChange={(e) =>
-                                    setDescOfCompany(e.target.value)
-                                  }
-                                />
+                                  <span
+                                    className="categoryAloneBtn"
+                                    style={{ margin: 0 }}
+                                  >
+                                    {renderCustomTypeImg(
+                                      DATA.categories &&
+                                        DATA.categories[0] &&
+                                        DATA.categories[0].slug,
+                                      false
+                                    )}
+                                    {DATA.categories &&
+                                      DATA.categories[0] &&
+                                      DATA.categories[0].name}
+                                  </span>
+                                  <span
+                                    className="ChooseNewCategory"
+                                    onClick={() => togglePopupChooseType()}
+                                  >
+                                    Выбрать...
+                                  </span>
+                                </div>
+                              </div>
+                              <div
+                                className="inputBlockWrap"
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  margin: 0,
+                                }}
+                              >
+                                <p className="addressTextMobile">Адрес:</p>
+                                <AddressM
+                                  onClick={() => togglePopupGoogleMap()}
+                                >
+                                  {DATA.address}
+                                </AddressM>
+                              </div>
+                              <div
+                                className="inputBlockWrap"
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  margin: 0,
+                                }}
+                              >
+                                <p>Описание:</p>
+                                <DescriptionM
+                                  onClick={() => togglePopupDescription()}
+                                >
+                                  {descOfCompany}
+                                </DescriptionM>
                               </div>
                             </div>
                           </div>
@@ -2013,9 +2395,9 @@ const Admin = (props) => {
                                   Отмена
                                 </p>
                                 <Link to="/home">
-                                  <p className="party_live">
-                                    PARTY<span className="live">.LIVE</span>
-                                  </p>
+                                  <PartyLive>
+                                    PARTY<Live>.LIVE</Live>
+                                  </PartyLive>
                                 </Link>
                                 <p
                                   style={{
@@ -2032,9 +2414,7 @@ const Admin = (props) => {
                                   Готово
                                 </p>
                               </div>
-                              <MobileAdminMenuTitle>
-                                График работы
-                              </MobileAdminMenuTitle>
+                              <AdminMenuTitleM>График работы</AdminMenuTitleM>
                               <div>
                                 <table>
                                   <tbody>
@@ -2153,9 +2533,9 @@ const Admin = (props) => {
                                 Отмена
                               </p>
                               <Link to="/home">
-                                <p className="party_live">
-                                  PARTY<span className="live">.LIVE</span>
-                                </p>
+                                <PartyLive>
+                                  PARTY<Live>.LIVE</Live>
+                                </PartyLive>
                               </Link>
                               <p
                                 style={{
@@ -2205,9 +2585,9 @@ const Admin = (props) => {
                                   Сохранить
                                 </div>
                               </div>
-                              <MobileAdminMenuTitle>
+                              <AdminMenuTitleM>
                                 График трансляций
-                              </MobileAdminMenuTitle>
+                              </AdminMenuTitleM>
                               <table>
                                 <tbody>
                                   {DATA.streams &&
@@ -2289,9 +2669,9 @@ const Admin = (props) => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </AdminWrapper>
             )}
-          </animated.div>
+          </AdminStyle>
           <SlideSideMenu isShowMenu={isShowMenu} />
 
           {showPopupDatePicker && (
@@ -2399,6 +2779,191 @@ const Admin = (props) => {
               </div>
             </Popup>
           )}
+
+          {showPopupChooseType && (
+            <Popup
+              togglePopup={togglePopupChooseType}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  height: "44px",
+                  borderBottom: "1px solid #ECECEC",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0 25px",
+                }}
+              >
+                <p
+                  className=""
+                  style={{
+                    letterSpacing: "0.5px",
+                    color: "#E32A6C",
+                    fontWeight: 500,
+                    fontSize: "18px",
+                  }}
+                  onClick={() => {
+                    setTypeOfCompany(
+                      DATA.categories &&
+                        DATA.categories[0] &&
+                        DATA.categories[0].name
+                    );
+                    setTypeOfCompanyId(
+                      DATA.categories &&
+                        DATA.categories[0] &&
+                        DATA.categories[0].id
+                    );
+                    togglePopupChooseType();
+                  }}
+                >
+                  Отмена
+                </p>
+
+                <p
+                  style={{
+                    letterSpacing: "0.5px",
+                    color: "#E32A6C",
+                    fontWeight: 500,
+                    fontSize: "18px",
+                  }}
+                  className=""
+                  onClick={() => {
+                    updateCategory();
+                    togglePopupChooseType();
+                  }}
+                >
+                  Готово
+                </p>
+              </div>
+              <AdminMenuTitleM>Тип заведения</AdminMenuTitleM>
+              <div style={{ width: "100%" }}>
+                {!!uniqueCompanyType &&
+                  uniqueCompanyType.map((el, i) => {
+                    return (
+                      <span
+                        className="categoryBtn"
+                        key={i}
+                        style={
+                          ({},
+                          el &&
+                          el.name &&
+                          typeOfCompany &&
+                          typeOfCompany === el.name
+                            ? {
+                                background: "#e32a6c",
+                                color: "#fff",
+                              }
+                            : !typeOfCompany &&
+                              DATA.categories &&
+                              DATA.categories[0] &&
+                              el &&
+                              el.name &&
+                              DATA.categories[0].name === el.name
+                            ? {
+                                background: "#e32a6c",
+                                color: "#fff",
+                              }
+                            : {})
+                        }
+                        onClick={() => {
+                          setTypeOfCompany(el.name);
+                          setTypeOfCompanyId(el.id);
+                        }}
+                        onMouseOver={() => setHoveredBtn(el.name)}
+                        onMouseOut={() => setHoveredBtn("")}
+                      >
+                        <span style={{ position: "relative", top: "10px" }}>
+                          {typeOfCompany && typeOfCompany === el.name
+                            ? renderCustomTypeImg(el.slug, true)
+                            : !typeOfCompany &&
+                              DATA.categories &&
+                              DATA.categories[0] &&
+                              DATA.categories[0].name === el.name
+                            ? renderCustomTypeImg(el.slug, true)
+                            : hoveredBtn === el.name
+                            ? renderCustomTypeImg(el.slug, true)
+                            : renderCustomTypeImg(el.slug, false)}
+                        </span>
+
+                        <span style={{ position: "relative", top: "4px" }}>
+                          {el.name}
+                        </span>
+                      </span>
+                    );
+                  })}
+              </div>
+            </Popup>
+          )}
+          {showPopupDescription && (
+            <Popup
+              togglePopup={togglePopupDescription}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  height: "44px",
+                  borderBottom: "1px solid #ECECEC",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0 25px",
+                }}
+              >
+                <p
+                  className=""
+                  style={{
+                    letterSpacing: "0.5px",
+                    color: "#E32A6C",
+                    fontSize: "18px",
+                    fontWeight: 500,
+                  }}
+                  onClick={() => {
+                    togglePopupDescription();
+                    setDescOfCompany(DATA.description);
+                  }}
+                >
+                  Отмена
+                </p>
+
+                <p
+                  style={{
+                    letterSpacing: "0.5px",
+                    color: "#E32A6C",
+                    fontSize: "18px",
+                    fontWeight: 500,
+                  }}
+                  className=""
+                  onClick={() => {
+                    updateDescription();
+                    togglePopupDescription();
+                  }}
+                >
+                  Готово
+                </p>
+              </div>
+              <AdminMenuTitleM>Описание</AdminMenuTitleM>
+              <DescTextareaM
+                id="autoresizeTextarea"
+                maxLength={descOfCompanyLimit}
+                value={descOfCompany}
+                onChange={(e) => setDescOfCompany(e.target.value)}
+              />
+
+              <DescLengthM
+                descOfCompany={descOfCompany}
+                descOfCompanyLimit={descOfCompanyLimit}
+              >
+                {descOfCompany.length} / {descOfCompanyLimit}
+              </DescLengthM>
+            </Popup>
+          )}
           {showPopupGoogleMap && (
             <Popup
               togglePopup={togglePopupGoogleMap}
@@ -2420,6 +2985,101 @@ const Admin = (props) => {
                 chooseNewAddress={chooseNewAddress}
                 isNewAddress
               />
+            </Popup>
+          )}
+
+          {showPopupUploadFile && (
+            <Popup
+              togglePopup={togglePopupUploadFile}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <div
+                className="mobileTimePickerHeader"
+                style={{
+                  height: "44px",
+                  borderBottom: "1px solid #ECECEC",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0 25px",
+                }}
+              >
+                <p
+                  style={{
+                    letterSpacing: "0.5px",
+                    color: "#E32A6C",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                  }}
+                  onClick={() => {
+                    setImgSrc(null);
+                    togglePopupUploadFile();
+                  }}
+                >
+                  Отмена
+                </p>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    letterSpacing: "0.5px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {titleInPicker}
+                </p>
+                <p
+                  style={{
+                    letterSpacing: "0.5px",
+                    color: "#E32A6C",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                  }}
+                  onClick={() => {
+                    setImgSrc(null);
+                    togglePopupUploadFile();
+                  }}
+                >
+                  Готово
+                </p>
+              </div>
+              <CropperMobile
+                imgSrc={imgSrc}
+                editorRef={editorRef}
+                onCrop={onCrop}
+              />
+              <Dropzone
+                multiple={false}
+                accept={acceptedFileTypes}
+                maxSize={imageMaxSize}
+                onDrop={(acceptedFiles, rejectedFiles) =>
+                  handleOnDrop(acceptedFiles, rejectedFiles)
+                }
+              >
+                {({ getRootProps, getInputProps }) => {
+                  return (
+                    <section style={{ display: "flex" }}>
+                      <div className="changePhotoBlock" {...getRootProps()}>
+                        <input
+                          className="changePhotoInput previewRef"
+                          {...getInputProps()}
+                        />
+                        {imgSrc && <p className="changePhoto">Изменить</p>}
+                      </div>
+                      {imgSrc && (
+                        <span
+                          className="changePhoto"
+                          onClick={handeleClearToDefault}
+                        >
+                          Удалить
+                        </span>
+                      )}
+                    </section>
+                  );
+                }}
+              </Dropzone>
             </Popup>
           )}
         </div>

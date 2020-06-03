@@ -17,7 +17,7 @@ const Show = keyframes`{
 
 const Show760 = keyframes`{
     0% {
-      top: 1000px;
+      top: 500px;
       opacity: 0;
     }
     100% {
@@ -51,7 +51,7 @@ const Popup = ({ children, togglePopup, style, wrpaStyle }) => {
     <PopupStyle
       className="popup"
       onClick={(e) => {
-        if (e.target.className === "popup") {
+        if (e.target.className.includes("popup")) {
           togglePopup();
         }
       }}

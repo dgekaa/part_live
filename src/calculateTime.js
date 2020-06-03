@@ -89,15 +89,12 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
     } else {
       setShowStream(false);
 
-      const sch = SetNewTimeObject(item.streams[0].schedules);
-
+      const STobject = SetNewTimeObject(item.streams[0].schedules);
       const sortedArr = [];
       EN_SHORT_DAY_OF_WEEK.forEach((el, i) => {
-        sortedArr.push(sch[el.day]);
+        sortedArr.push(STobject[el.day]);
       });
-
       let isSetTime = false;
-
       for (let i = 0; i < sortedArr.length; i++) {
         const streamWillBeToday = sortedArr[i] && sortedArr[i].day === curDay;
         if (streamWillBeToday) {
@@ -105,14 +102,6 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
             sortedArr[i].start_time.split(":")[0] * HtoMs +
             sortedArr[i].start_time.split(":")[1] * MtoMs;
           if (currentTimeMS < todayStartStream) {
-            // console.log(
-            //   {
-            //     id: item.id,
-            //     day: "сегодня",
-            //     start_time: sortedArr[i].start_time
-            //   },
-            //   "-----"
-            // );
             setNextStreamTime({
               id: item.id,
               day: "сегодня",
@@ -144,11 +133,6 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
         for (let i = 0; i < sortedArr.length; i++) {
           if (sortedArr[i] && i < numberDayNow) {
             if (sortedArr[i].start_time) {
-              // console.log({
-              //   id: item.id,
-              //   day: "сегодня",
-              //   start_time: sortedArr[i].start_time
-              // });
               setNextStreamTime({
                 id: item.id,
 
@@ -165,7 +149,12 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
   }
 };
 
-export const isWorkTimeNow = (item, setWorkTime, setIsWork) => {
+export const isWorkTimeNow = (
+  item,
+  setWorkTime,
+  setIsWork,
+  setNextWorkTime = () => {}
+) => {
   let yesterdayWorkTime, todayWorkTime;
 
   item.schedules.forEach((el) => {
@@ -176,6 +165,8 @@ export const isWorkTimeNow = (item, setWorkTime, setIsWork) => {
       todayWorkTime = el;
     }
   });
+
+  console.log(item.schedules, "-ITEM");
 
   const endYesterdayMS =
     yesterdayWorkTime &&
@@ -249,5 +240,65 @@ export const isWorkTimeNow = (item, setWorkTime, setIsWork) => {
           ":" +
           todayWorkTime.end_time.split(":")[1]
     );
+
+    const STobject = SetNewTimeObject(item.schedules);
+    const sortedArr = [];
+    EN_SHORT_DAY_OF_WEEK.forEach((el, i) => {
+      sortedArr.push(STobject[el.day]);
+    });
+    let isSetTime = false;
+    for (let i = 0; i < sortedArr.length; i++) {
+      const streamWillBeToday = sortedArr[i] && sortedArr[i].day === curDay;
+      if (streamWillBeToday) {
+        const todayStartStream =
+          sortedArr[i].start_time.split(":")[0] * HtoMs +
+          sortedArr[i].start_time.split(":")[1] * MtoMs;
+        if (currentTimeMS < todayStartStream) {
+          setNextWorkTime({
+            // id: item.id,
+            day: "сегодня",
+            start_time: sortedArr[i].start_time,
+            end_time: sortedArr[i].end_time,
+          });
+
+          isSetTime = true;
+        }
+      }
+    }
+    if (!isSetTime) {
+      for (let i = 0; i < sortedArr.length; i++) {
+        if (sortedArr[i] && i > numberDayNow) {
+          if (sortedArr[i].start_time) {
+            setNextWorkTime({
+              // id: item.id,
+
+              day: sortedArr[i].day,
+              start_time: sortedArr[i].start_time,
+              end_time: sortedArr[i].end_time,
+            });
+
+            isSetTime = true;
+            break;
+          }
+        }
+      }
+    }
+    if (!isSetTime) {
+      for (let i = 0; i < sortedArr.length; i++) {
+        if (sortedArr[i] && i < numberDayNow) {
+          if (sortedArr[i].start_time) {
+            setNextWorkTime({
+              // id: item.id,
+
+              day: sortedArr[i].day,
+              start_time: sortedArr[i].start_time,
+              end_time: sortedArr[i].end_time,
+            });
+            isSetTime = true;
+            break;
+          }
+        }
+      }
+    }
   }
 };

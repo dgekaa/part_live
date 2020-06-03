@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import CustomImg from "../customImg/CustomImg";
 
-import { EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
+import { EN_SHORT_TO_RU_LONG_V_P, EN_SHORT_TO_RU_LONG } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import styled from "styled-components";
 
 const SmallCompBlock = styled(Link)`
   width: 240px;
-  height: 234px;
+  height: 240px;
   overflow: hidden;
   border-radius: 10px;
   position: relative;
   background-size: cover;
   background-position: center;
-  background-color: #000;
+  background-color: #fff;
   margin: 5px;
   transition: 0.2s ease all;
+  border: 1px solid #f3f3f3;
+  box-shadow: 4px 4px 4px #e5e5e5;
   &:hover {
     opacity: 0.9;
   }
@@ -27,115 +30,259 @@ const SmallCompBlock = styled(Link)`
     width: calc(50% - 10px);
   }
   @media (max-width: 460px) {
-    height: 200px;
+    height: 240px;
   }
   @media (max-width: 380px) {
     width: calc(50% - 10px);
-    height: 170px;
+    height: 240px;
   }
 `;
 
-const NoTranslation = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+const Desctop = styled.div`
+  display: block;
+  @media (max-width: 760px) {
+    /* display: none; */
+  }
+`;
+
+const PreviewBlockD = styled.div`
+  height: 150px;
   background: #000;
-  padding: 20px;
+`;
+
+const NoTranslationD = styled.div`
   display: flex;
+  height: 150px;
+  padding: 15px;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding-bottom: 64px;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 19px;
-  color: #aeaeae;
-`;
-
-const IsGradient = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  background: ${({ showStream }) =>
-    showStream
-      ? "linear-gradient(180deg, rgba(196, 196, 196, 0) 0%, #000 100%)"
-      : ""};
-  display: flex;
-  flex: 1;
-  align-items: flex-end;
-`;
-
-const Description = styled.div`
-  display: flex;
-  width: 100%;
-  height: 64px;
-  flex-direction: column;
-  padding: 0 10px;
-`;
-
-const TopDescriptionBlock = styled.div`
-  width: 100%;
-`;
-
-const CompanyName = styled.p`
-  color: ${({ showStream }) => (showStream ? "#fff" : "#919191")};
   font-weight: bold;
   font-size: 18px;
+  line-height: 19px;
+  color: #c4c4c4;
+  background: #000;
+`;
+
+const DescriptionD = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  padding: 10px;
+`;
+
+const TopDescriptionBlockD = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const CustomImgStyle = styled(CustomImg)`
+  margin-right: 5px;
+`;
+
+const CompanyNameD = styled.p`
+  color: #000;
+  font-weight: 500;
+  font-size: 18px;
   line-height: 21px;
-`;
-
-const PartyType = styled.p`
-  color: ${({ showStream }) => (showStream ? "#fff" : "#919191")};
-  font-size: 13px;
-  line-height: 15px;
-  padding-top: 3px;
+  letter-spacing: 0.5px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
-const BottomDescriptionBlock = styled.div`
+const BottomDescriptionBlockD = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding-top: 6px;
 `;
 
-const WorkTimeWrap = styled.div`
+const WorkTimeWrapD = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  overflow: hidden;
 `;
 
-const WorkTime = styled.p`
+const Circle = styled.div`
+  margin-left: 3px;
+  width: 7px;
+  height: 7px;
+  background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
+  border-radius: 50%;
+  margin-top: 2px;
+  margin-right: 6px;
+`;
+
+const IsOpenedD = styled.p`
+  font-weight: normal;
+  font-size: 14px;
+  text-transform: lowercase;
+  color: #000;
+  line-height: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  @media (max-width: 460px) {
+    font-size: 13px;
+  }
+`;
+
+const LocationWrap = styled.div`
+  display: flex;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: #000;
+  padding-top: 7px;
+  overflow: hidden;
+  @media (max-width: 460px) {
+    font-size: 13px;
+  }
+`;
+
+const LocationStyle = styled.p`
+  display: flex;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
+const Tooltip = styled.div`
+  transition: 0.3s ease all;
+  padding: 5px;
+  background: #ff0960;
+  border-radius: 5px;
+  position: absolute;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+  top: 133px;
+  left: 5px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-transform: uppercase;
+  opacity: 0;
+`;
+
+const Mobile = styled.div`
+  display: none;
+  @media (max-width: 760px) {
+    display: block;
+  }
+`;
+
+const PreviewBlockM = styled.div`
+  height: 150px;
+  background: #000;
+`;
+
+const NoTranslationM = styled.div`
+  display: flex;
+  height: 150px;
+  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 19px;
+  color: #c4c4c4;
+  background: #000;
+`;
+
+const DescriptionM = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  padding: 10px;
+`;
+
+const TopDescriptionBlockM = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const CustomImgStyleM = styled(CustomImg)`
+  margin-right: 5px;
+`;
+
+const CompanyNameM = styled.p`
+  color: #000;
   font-weight: 500;
-  font-size: 10px;
-  color: ${({ showStream }) => (showStream ? "#fff" : "#919191")};
-  line-height: 14px;
-  margin-right: 4px;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.5px;
 `;
 
-const IsOpened = styled.p`
-  font-weight: 700;
-  font-size: 10px;
-  text-transform: uppercase;
-  color: #36cc33;
-  line-height: 14px;
+const BottomDescriptionBlockM = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 6px;
 `;
 
-const CompanyType = styled.p`
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 14px;
+const WorkTimeWrapM = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+`;
+
+const CircleM = styled.div`
+  margin-left: 3px;
+  width: 7px;
+  height: 7px;
+  background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
+  border-radius: 50%;
+  margin-top: 2px;
+  margin-right: 6px;
+`;
+
+const IsOpenedM = styled.p`
+  font-weight: normal;
+  font-size: 14px;
+  text-transform: lowercase;
+  color: #000;
+  line-height: 16px;
+`;
+
+const LocationWrapM = styled.div`
+  display: flex;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: #000;
+  padding-top: 9px;
+`;
+
+const LocationStyleM = styled.div`
+  display: flex;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+
+const TooltipM = styled.div`
+  transition: 0.3s ease all;
+  padding: 5px;
+  background: #ff0960;
+  border-radius: 5px;
+  position: absolute;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+  top: 133px;
+  left: 5px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
   text-transform: uppercase;
-  color: #ff0960;
+  opacity: 0;
 `;
 
 const SmallCompanyBlock = ({ item }) => {
@@ -144,18 +291,11 @@ const SmallCompanyBlock = ({ item }) => {
   const [isWork, setIsWork] = useState(false);
   const [curDistance, setCurDistance] = useState(null);
   const [nextStreamTime, setNextStreamTime] = useState(false);
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  !windowWidth && setWindowWidth(window.innerWidth);
-  useEffect(() => {
-    window.onresize = function (e) {
-      setWindowWidth(e.target.innerWidth);
-    };
-  });
+  const [nextWorkTime, setNextWorkTime] = useState(null);
 
   useEffect(() => {
     isShowStreamNow(item, setShowStream, setNextStreamTime);
-    isWorkTimeNow(item, setWorkTime, setIsWork);
+    isWorkTimeNow(item, setWorkTime, setIsWork, setNextWorkTime);
   }, [item]);
 
   useEffect(() => {
@@ -186,7 +326,7 @@ const SmallCompanyBlock = ({ item }) => {
       nextStreamTime.day.toLowerCase() !== "сегодня"
     ) {
       return (
-        "Начало трансляции:" +
+        "Начало трансляции: " +
         EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
         " в " +
         nextStreamTime.start_time
@@ -202,44 +342,161 @@ const SmallCompanyBlock = ({ item }) => {
   };
 
   return (
-    <SmallCompBlock
-      to={{ pathname: `/company/${item.id}` }}
-      style={
-        item.streams && item.streams[0] && item.streams[0].preview && showStream
-          ? { backgroundImage: `url(${item.streams[0].preview})` }
-          : {}
-      }
-    >
-      {!showStream && <NoTranslation>{whenWillBeTranslation()}</NoTranslation>}
-      <IsGradient showStream={showStream}>
-        <Description>
-          <TopDescriptionBlock>
-            <CompanyName showStream={showStream}>{item.name}</CompanyName>
-            <PartyType showStream={showStream}>
-              Супер пати всех студентов
-            </PartyType>
-          </TopDescriptionBlock>
-          <BottomDescriptionBlock>
-            <WorkTimeWrap>
-              {workTime && (
-                <WorkTime showStream={showStream}>{workTime}</WorkTime>
-              )}
+    <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
+      <Desctop>
+        {item.streams &&
+        item.streams[0] &&
+        item.streams[0].preview &&
+        showStream ? (
+          <PreviewBlockD
+            style={{ backgroundImage: `url(${item.streams[0].preview})` }}
+          />
+        ) : (
+          <NoTranslationD
+            style={
+              item.streams &&
+              item.streams[0] &&
+              item.streams[0].preview &&
+              !showStream
+                ? { backgroundImage: `url(${item.streams[0].preview})` }
+                : {}
+            }
+          >
+            {whenWillBeTranslation()}
+          </NoTranslationD>
+        )}
+        <DescriptionD>
+          <TopDescriptionBlockD>
+            {item.categories[0] && (
+              <>
+                <Tooltip>{item.categories[0].name}</Tooltip>
+
+                <CustomImgStyle
+                  onMouseEnter={(e) => {
+                    e.target.previousSibling.style.opacity = 1;
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.previousSibling.style.opacity = 0;
+                  }}
+                  alt="Icon"
+                  name={item.categories[0].slug}
+                  width="20"
+                  height="20"
+                />
+              </>
+            )}
+            <CompanyNameD>{item.name}</CompanyNameD>
+          </TopDescriptionBlockD>
+          <BottomDescriptionBlockD>
+            <WorkTimeWrapD>
               {isWork ? (
-                <IsOpened>
-                  {windowWidth <= 380 && workTime ? "ОТКР" : "ОТКРЫТО"}
-                </IsOpened>
+                <>
+                  <Circle isWork={isWork} />
+                  <IsOpenedD>Открыто до {workTime.split("-")[1]}</IsOpenedD>
+                </>
               ) : (
-                <IsOpened>
-                  {windowWidth <= 380 && workTime ? "ЗАКР" : "ЗАКРЫТО"}
-                </IsOpened>
+                <>
+                  <Circle isWork={isWork} />
+                  <IsOpenedD>
+                    {nextWorkTime && nextWorkTime.start_time
+                      ? `${
+                          nextWorkTime.day.toLowerCase() !== "сегодня"
+                            ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+                            : nextWorkTime.day
+                        }: ${nextWorkTime.start_time}-${nextWorkTime.end_time}`
+                      : "Закрыто"}
+                  </IsOpenedD>
+                </>
               )}
-            </WorkTimeWrap>
-            <CompanyType>
-              {item.categories && item.categories[0] && item.categories[0].name}
-            </CompanyType>
-          </BottomDescriptionBlock>
-        </Description>
-      </IsGradient>
+            </WorkTimeWrapD>
+          </BottomDescriptionBlockD>
+          <LocationWrap>
+            <CustomImgStyle
+              alt="Icon"
+              name={"location"}
+              width="16"
+              height="16"
+            />
+            <LocationStyle>{item.address}</LocationStyle>
+            {/* <LocationStyle>
+              {curDistance ? `${curDistance.toFixed(2)} km` : item.address}
+            </LocationStyle> */}
+          </LocationWrap>
+        </DescriptionD>
+      </Desctop>
+      {/* <Mobile>
+        {item.streams &&
+        item.streams[0] &&
+        item.streams[0].preview &&
+        showStream ? (
+          <PreviewBlockM
+            style={{ backgroundImage: `url(${item.streams[0].preview})` }}
+          />
+        ) : (
+          <NoTranslationM
+            style={
+              item.streams &&
+              item.streams[0] &&
+              item.streams[0].preview &&
+              !showStream
+                ? { backgroundImage: `url(${item.streams[0].preview})` }
+                : {}
+            }
+          >
+            {whenWillBeTranslation()}
+          </NoTranslationM>
+        )}
+        <DescriptionM>
+          <TopDescriptionBlockM>
+            {item.categories[0] && (
+              <>
+                <TooltipM>{item.categories[0].name}</TooltipM>
+
+                <CustomImgStyleM
+                  onMouseEnter={(e) => {
+                    e.target.previousSibling.style.opacity = 1;
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.previousSibling.style.opacity = 0;
+                  }}
+                  alt="Icon"
+                  name={item.categories[0].slug}
+                  width="20"
+                  height="20"
+                />
+              </>
+            )}
+            <CompanyNameM>{item.name}</CompanyNameM>
+          </TopDescriptionBlockM>
+          <BottomDescriptionBlockM>
+            <WorkTimeWrapM>
+              {isWork ? (
+                <>
+                  <CircleM isWork={isWork} />
+                  <IsOpenedM>Открыто до {workTime.split("-")[1]}</IsOpenedM>
+                </>
+              ) : (
+                <>
+                  <CircleM isWork={isWork} />
+                  <IsOpenedM>закрыто</IsOpenedM>
+                </>
+              )}
+            </WorkTimeWrapM>
+          </BottomDescriptionBlockM>
+          <LocationWrapM>
+            <CustomImgStyleM
+              alt="Icon"
+              name={"location"}
+              width="16"
+              height="16"
+            />
+
+            <LocationStyleM>
+              {curDistance ? `${curDistance.toFixed(2)} km` : item.address}
+            </LocationStyleM>
+          </LocationWrapM>
+        </DescriptionM>
+      </Mobile> */}
     </SmallCompBlock>
   );
 };

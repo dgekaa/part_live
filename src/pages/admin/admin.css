@@ -8,27 +8,6 @@ textarea {
   -webkit-appearance: none;
 }
 
-.adminWrapper {
-  display: flex;
-  width: 1000px;
-  margin: 0 auto;
-}
-.leftAdminMenuDesctop {
-  flex: 1.5;
-  padding: 0px 10px 10px 0;
-}
-.leftAdminMenuDesctop .goBackFromAdmin {
-  font-size: 14px;
-  font-weight: normal;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  letter-spacing: 0.5px;
-}
-.leftAdminMenuDesctop .goBackFromAdmin:hover {
-  color: rgb(227, 42, 108);
-}
 .barIconClass {
   width: 30px;
   height: 30px;
@@ -47,29 +26,7 @@ textarea {
 .mobileTimePickerHeader {
   display: none;
 }
-.leftAdminMenuDesctop .leftAdminMenu {
-  position: fixed;
-}
-.leftAdminMenuDesctop .leftAdminMenu .LeftAdminBtn {
-  font-size: 13px;
-  font-weight: 800;
-  height: 35px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #000;
-  letter-spacing: 1px;
-}
-.leftAdminMenuDesctop .leftAdminMenu .clickedLeftAdminBtn {
-  font-size: 13px;
-  font-weight: 800;
-  height: 35px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #e32a6c;
-  letter-spacing: 1px;
-}
+
 .leftAdminMenuDesctop .leftAdminMenu li img {
   margin-right: 16px;
 }
@@ -95,49 +52,6 @@ textarea {
 }
 .adminContentMobile {
   display: none;
-}
-.adminContentDesctop {
-  display: flex;
-  flex: 4;
-  padding: 100px 10px 10px 10px;
-  flex-direction: column;
-}
-
-.cropCanvasImage {
-  display: none;
-}
-.uploadPhotoTextDesctop {
-  font-size: 22px;
-  font-weight: 500;
-  color: #aeaeae;
-}
-.uploadPhotoSizeTextDesctop {
-  font-weight: 500;
-  font-size: 18px;
-  color: #aeaeae;
-}
-.previewPhoto {
-  display: flex;
-  height: 250px;
-  width: 250px;
-  background-color: #f2f2f7;
-  border-radius: 10px;
-  color: #aeaeae;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  cursor: pointer;
-}
-.previewPhoto:hover {
-  border: 2px solid #e32a6c;
-}
-.previewPhoto:hover .uploadPhotoTextDesctop {
-  color: #e32a6c;
-  transition: 0.3s ease all;
-}
-.previewPhoto:hover .uploadPhotoSizeTextDesctop {
-  color: #e32a6c;
-  transition: 0.3s ease all;
 }
 
 .ReactCrop__image {
@@ -198,23 +112,6 @@ textarea {
 }
 .addressText {
   margin-top: -70px;
-}
-.profileDataDesc .inputBlockWrap .chooseAddressDesc {
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  background-color: #e32a6c;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 244px;
-  cursor: pointer;
-  transition: 0.3s ease opacity;
-  margin: 15px 0 15px 0;
-}
-.profileDataDesc .inputBlockWrap .chooseAddressDesc:hover {
-  opacity: 0.8;
 }
 
 .profileDataDesc .inputBlockWrap .saveBtn {
@@ -338,6 +235,31 @@ textarea {
   margin-left: 19px;
 }
 .bigInputBlockWrap .categoryBtnWrap .categoryBtn {
+  display: flex;
+  height: 40px;
+  width: 125px;
+  flex-wrap: wrap;
+  padding: 0px;
+  border-radius: 5px;
+  border: 2px solid #c4c4c4;
+  margin-right: 18px;
+  align-items: center;
+  /* justify-content: center; */
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.ChooseNewCategory {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: #e32a6c;
+}
+.categoryAloneBtn {
   display: flex;
   height: 40px;
   width: 125px;
@@ -716,119 +638,13 @@ textarea {
   flex-direction: row;
   justify-content: center;
 }
-.timePicker {
-  display: flex;
-  flex-direction: row;
-  padding-bottom: 15px;
-  background: #ffffff;
-  border: 1px solid #d6d6d6;
-  box-sizing: border-box;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
-  padding: 10px;
-  margin: 5px;
-}
-.timePickerName {
-  text-align: center;
-  padding-bottom: 15px;
-  font-weight: 700;
-  font-size: 16px;
-  color: #909090;
-}
+
 .space {
   display: inline-block;
   width: 30px;
   height: 20px;
 }
-.timePickerHoursWrap,
-.timePickerMinutesWrap {
-  font-size: 20px;
-  display: flex;
-  flex-direction: column;
-  width: 60px;
-  height: 120px;
-  align-items: center;
-  justify-content: center;
-}
-.timePickerHours,
-.timePickerMinutes {
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 28px;
-  padding: 10px 0;
-  justify-content: center;
-}
-.twoDots {
-  display: flex;
-  width: 10px;
-  font-weight: 700;
-  align-self: center;
-  justify-content: center;
-}
-.topArrow,
-.bottomArrow {
-  cursor: pointer;
-  display: inline-block;
-  width: 100%;
-  height: 20px;
-  position: relative;
-}
-.topArrow::after {
-  content: "";
-  width: 15px;
-  height: 2px;
-  top: 7px;
-  right: 17.5px;
-  background-color: #909090;
-  position: absolute;
-  border-radius: 2px;
-  transform: rotate(45deg);
-}
-.topArrow::before {
-  content: "";
-  width: 15px;
-  height: 2px;
-  top: 7px;
-  left: 17.5px;
-  background-color: #909090;
-  position: absolute;
-  border-radius: 2px;
-  transform: rotate(-45deg);
-}
-.topArrow:hover::after {
-  background-color: #e32a6c;
-}
-.topArrow:hover::before {
-  background-color: #e32a6c;
-}
-.bottomArrow:hover::after {
-  background-color: #e32a6c;
-}
-.bottomArrow:hover::before {
-  background-color: #e32a6c;
-}
-.bottomArrow::after {
-  content: "";
-  width: 15px;
-  height: 2px;
-  top: 9px;
-  right: 17.5px;
-  background-color: #909090;
-  position: absolute;
-  transform: rotate(-45deg);
-  border-radius: 2px;
-}
-.bottomArrow::before {
-  content: "";
-  width: 15px;
-  height: 2px;
-  top: 9px;
-  left: 17.5px;
-  background-color: #909090;
-  position: absolute;
-  border-radius: 2px;
-  transform: rotate(45deg);
-}
+
 .makeAsDayOffMobile {
   display: none;
 }
@@ -856,7 +672,54 @@ textarea {
   color: #e32a6c !important;
   border: 2px solid #e32a6c;
 }
+.MapPopupHeader {
+  display: none !important;
+}
 @media screen and (max-width: 760px) {
+  .MapPopupHeader {
+    display: flex !important;
+  }
+  .сompanyNavImg {
+    width: 24px;
+    height: 24px;
+    margin-right: 11px;
+    margin-left: 20px;
+  }
+  .categoryBtn {
+    display: inline-block;
+    height: 50px;
+    width: 45%;
+    border-radius: 5px;
+    border: 2px solid #c4c4c4;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin: 8px;
+  }
+  .categoryBtn:hover {
+    background-color: #e32a6c;
+    color: #fff;
+  }
+  .profileDataDesc .inputBlockWrap input {
+    display: flex;
+    flex: 2;
+    height: 40px;
+    border: none;
+    opacity: none;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0 10px;
+    color: #4f4f4f;
+  }
+  .profileDataDesc .inputBlockWrap p {
+    display: flex;
+    flex: 0.5;
+    min-width: 110px;
+    font-weight: 500;
+    font-size: 16px;
+  }
   .adminMenuContainer .menuBlock {
     font-size: 16px;
     font-weight: 500;
@@ -866,9 +729,7 @@ textarea {
     padding-top: 13px;
     padding-bottom: 13px;
   }
-  .adminWrapper {
-    max-width: 100%;
-  }
+
   .mobileTimePickerHeader {
     display: flex;
     margin-bottom: 31px;
@@ -909,9 +770,7 @@ textarea {
     height: 100%;
     padding: 0px;
   }
-  .Admin {
-    position: relative;
-  }
+
   .adminContentMobile .uploadFile {
     display: flex;
     flex-direction: column;
@@ -928,6 +787,7 @@ textarea {
     flex-direction: column;
     margin: 40px 0;
     align-items: flex-start;
+    overflow: hidden;
   }
 
   .adminContentMobile .inputBlockWrap input,
@@ -949,7 +809,10 @@ textarea {
   .adminContentMobile .bigInputBlockWrap p {
     padding-top: 10px;
     padding-left: 0px;
-    flex: 0.8;
+    flex: 0.5;
+    min-width: 110px;
+    font-weight: 500;
+    font-size: 16px;
   }
   .adminContentMobile .saveBtnProfile {
     margin: 10px 0px;
@@ -990,18 +853,10 @@ textarea {
     flex-direction: column;
     width: 100%;
   }
-  .adminContentMobile .mobileAddresColumn input {
-  }
 
-  .adminContentDesctop {
-    display: none;
-  }
   .videoWrapAdminMobile {
     display: block;
     margin-top: 15px;
-  }
-  .leftAdminMenuDesctop {
-    display: none;
   }
 
   .adminContentMobile {
