@@ -9,9 +9,9 @@ import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import QUERY from "../../query";
 
 export const GoBackBtn = styled(Link)`
-  position: absolute;
-  top: 77px;
-  left: 10px;
+  position: relative;
+  top: -135px;
+  left: 0px;
   font-size: 16px;
   font-weight: normal;
   height: 30px;
@@ -61,10 +61,10 @@ export const HeadTitle = styled.div`
 `;
 
 export const AuthBlockWrap = styled.div`
-  background: #ffffff;
+  max-width: 1000px;
+  margin: 0 auto;
   height: calc(100vh - 65px);
   padding-top: 140px;
-  background-color: #e5e5e5;
   @media (max-width: 760px) {
     height: 100vh;
     position: relative;
@@ -276,10 +276,6 @@ const Login = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        <GoBackBtn to="/home">
-          <GoBackBtnArrow>&#8592;</GoBackBtnArrow>
-          На главную
-        </GoBackBtn>
         <AuthBlockWrap
           as={animated.div}
           onClick={(e) => {
@@ -289,6 +285,10 @@ const Login = () => {
           }}
           style={SwipePageSpring}
         >
+          <GoBackBtn to="/home">
+            <GoBackBtnArrow>&#8592;</GoBackBtnArrow>
+            На главную
+          </GoBackBtn>
           <AuthBlock>
             <HeadTitle>
               {!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}

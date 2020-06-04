@@ -7,6 +7,32 @@ textarea {
   user-select: initial;
   -webkit-appearance: none;
 }
+.popupPickerBtns {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+.popupPickerBtns p {
+  border-radius: 5px;
+  width: 170px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.popupPickerBtns p:hover {
+  opacity: 0.8;
+}
+
+.popupPickerBtns p:first-of-type {
+  background: #e32a6c;
+  color: #fff;
+}
+.popupPickerBtns p:last-of-type {
+  background: #fff;
+  border: 2px solid #c4c4c4;
+}
 
 .barIconClass {
   width: 30px;
@@ -676,6 +702,9 @@ textarea {
   display: none !important;
 }
 @media screen and (max-width: 760px) {
+  .popupPickerBtns {
+    display: none;
+  }
   .MapPopupHeader {
     display: flex !important;
   }

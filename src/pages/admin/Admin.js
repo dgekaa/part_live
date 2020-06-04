@@ -921,7 +921,7 @@ const Admin = (props) => {
         .catch((err) => console.log(err, "  *******ERR"));
     }
   };
-
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const updatePlaceData = () => {
     if (cookies.origin_data) {
       QUERY(
@@ -931,6 +931,14 @@ const Admin = (props) => {
               input:{
                 id:"${props.match.params.id}"
                 name:"${nameOfCompany || DATA.name}"
+                ${
+                  typeOfCompanyId && typeOfCompanyId !== DATA.categories[0].id
+                    ? `categories:{
+                    disconnect:"${DATA.categories[0].id}"
+                    connect:"${typeOfCompanyId}"
+                  }`
+                    : `categories:{}`
+                }
               }
             ){id}
           }`,
@@ -940,11 +948,11 @@ const Admin = (props) => {
         .then((res) => res.json())
         .then((data) => {
           if (!data.errors) {
-            console.log("SUCCESS");
+            console.log("SUCCESS !!!");
             setIsSuccessSave(true);
             setTimeout(() => {
               setIsSuccessSave(false);
-            }, 1000);
+            }, 2000);
           } else {
             console.log(data.errors, " ERRORS");
           }
@@ -1202,9 +1210,8 @@ const Admin = (props) => {
   });
 
   const animateSavedProps = useSpring({
-    opacity: isSuccessSave ? 1 : 0,
-    top: isSuccessSave ? 0 : 4999,
-    config: { duration: 300 },
+    bottom: isSuccessSave ? 20 : -100,
+    config: { duration: 200 },
   });
 
   const tomorrowFromDay = (day) => {
@@ -1360,11 +1367,15 @@ const Admin = (props) => {
                                       ref={imagePreviewCanvas}
                                     ></CanvasImageD>
                                   </CropWrapperD>
+
                                   <span
                                     onClick={() => {
                                       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                       if (cookies.origin_data) {
-                                        console.log(FILE, "FILE FILE FILE");
+                                        var formData = new FormData();
+                                        formData.append("username", "dgeka");
+                                        formData.append("userfile", FILE);
+                                        console.log(formData, "formData");
                                         fetch("http://194.87.95.37/graphql", {
                                           method: "POST",
                                           mode: "cors",
@@ -1381,6 +1392,7 @@ const Admin = (props) => {
                                           headers: {
                                             "Content-Type":
                                               "multipart/form-data",
+                                            // Accept: "application/json",
                                             Authorization: cookies.origin_data
                                               ? "Bearer " + cookies.origin_data
                                               : "",
@@ -1400,34 +1412,6 @@ const Admin = (props) => {
                                           .catch((err) =>
                                             console.log(err, "  *******ERR")
                                           );
-
-                                        // QUERY(
-                                        //   {
-                                        //     query: `
-                                        //     mutation($file: Upload!) {
-                                        //       placeImage(file: $file)
-                                        //     }
-                                        //   `,
-                                        //     variables: {
-                                        //       file: FILE, // a.txt
-                                        //     },
-                                        //   },
-                                        //   cookies.origin_data
-                                        // )
-                                        // .then((res) => res.json())
-                                        // .then((data) => {
-                                        //   if (!data.errors) {
-                                        //     console.log("SUCCESS");
-                                        //   } else {
-                                        //     console.log(
-                                        //       data.errors,
-                                        //       " ERRORS"
-                                        //     );
-                                        //   }
-                                        // })
-                                        // .catch((err) =>
-                                        //   console.log(err, "  *******ERR")
-                                        // );
                                       }
                                     }}
                                   >
@@ -1456,6 +1440,10 @@ const Admin = (props) => {
                                 accept={acceptedFileTypes}
                                 maxSize={imageMaxSize}
                                 onDrop={(acceptedFiles, rejectedFiles) => {
+                                  console.log(
+                                    acceptedFiles,
+                                    "________acceptedFiles"
+                                  );
                                   setFILE(acceptedFiles[0]);
 
                                   handleOnDrop(acceptedFiles, rejectedFiles);
@@ -2767,6 +2755,24 @@ const Admin = (props) => {
                     setTime={setEndTime}
                   />
                 </div>
+                <div className={"popupPickerBtns"}>
+                  <p
+                    onClick={() => {
+                      togglePopupDatePicker();
+                      isSetWorkTimeDPick && setWorkTimeOfOneDay();
+                      !isSetWorkTimeDPick && setStreamTimeOfOneDay();
+                    }}
+                  >
+                    Сохранить
+                  </p>
+                  <p
+                    onClick={() => {
+                      togglePopupDatePicker();
+                    }}
+                  >
+                    Отмена
+                  </p>
+                </div>
                 <p
                   className="makeAsDayOffMobile"
                   onClick={() => {
@@ -3083,62 +3089,29 @@ const Admin = (props) => {
             </Popup>
           )}
         </div>
-        {/* {isSuccessSave && ( */}
+
         <animated.div
-          style={
-            ({
-              position: "absolute",
-              top: "4999px",
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: "100%",
-              width: "100%",
-              zIndex: -10,
-              background: "red",
-              boxShadow: "0 0  1000px rgba(0,0,0,0.7) inset",
-            },
-            animateSavedProps)
-          }
+          style={{
+            height: "40px",
+            position: "fixed",
+            bottom: animateSavedProps.bottom,
+            left: "50%",
+            width: "200px",
+            zIndex: 10,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "#fff",
+            background: "#e32a6c",
+            borderRadius: "5px",
+            fontWeight: "400",
+            textTransform: "uppercase",
+          }}
         >
-          <div
-            style={{
-              height: "100%",
-              width: "100%",
-              background: "rgba(255,255,255,0.6)",
-            }}
-          >
-            <p
-              style={
-                ({
-                  background: "#FFFFFF",
-                  border: "2px solid #AEAEAE",
-                  boxSizing: "border-box",
-                  borderRadius: "5px",
-                  height: "53px",
-                  width: "245px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "fixed",
-                  top: "calc(50vh - 26px)",
-                  left: "calc(50vw - 122px)",
-                  fontWeight: "bold",
-                  fontSize: "14px",
-                  lineHeight: "16px",
-                  color: "#4F4F4F",
-                  textTransform: "uppercase",
-                  opacity: 1,
-                  boxShadow: "0 0  1000px 1000px rgba(255,255,255,0.4)",
-                },
-                isSuccessSave ? { zIndex: 4 } : { zIndex: 0 })
-              }
-            >
-              Сохранено
-            </p>
+          <div>
+            <p>Сохранено</p>
           </div>
         </animated.div>
-        {/* )} */}
       </div>
     );
   }

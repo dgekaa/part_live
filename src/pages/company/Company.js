@@ -221,6 +221,7 @@ const FlexM = styled.div`
 `;
 
 const ShadowBlockM = styled.div`
+  padding: 0 0 50px 0;
   flex-direction: column;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -253,40 +254,56 @@ const NoVideoM = styled.div`
 `;
 
 const DescM = styled.div`
-  -webkit-box-flex: 5;
-  -ms-flex: 5;
-  flex: 4;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 0 10px;
-  height: 45px;
 `;
 
-const DescriptionM = styled.div`
+const NameRowM = styled.div`
   display: flex;
-  height: 20px;
   justify-content: space-between;
+  align-items: center;
 `;
 
-const DistanceM = styled.p`
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 14px;
-  letter-spacing: 0.05em;
-  color: #e32a6c;
-  padding-bottom: 5px;
+const NameM = styled.span`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+  letter-spacing: 0.5px;
+  color: #000000;
+`;
+
+const CompanyTypeM = styled.div`
+  font-weight: normal;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  padding: 8px 0 3px 0;
+  display: flex;
+  align-items: center;
+`;
+
+const CustomImgTypeM = styled(CustomImg)`
+  margin-right: 5px;
 `;
 
 const OpenedToM = styled.p`
   display: block;
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: #219704;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  color: #000;
   height: 25px;
   line-height: 25px;
+`;
+
+const Circle = styled.span`
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 7px;
+  background-color: ${({ isWork }) => (isWork ? "#04B000" : "#6D6D6D")};
+  margin-right: 6px;
+  margin-left: 7px;
 `;
 
 const SmallMapWrapM = styled.div`
@@ -304,7 +321,6 @@ const SmallMapM = styled.div`
   display: block;
   border: none;
   margin-top: 10px;
-  border-radius: 5px;
   overflow: hidden;
   height: 200px;
   @media (max-width: 500px) {
@@ -314,11 +330,15 @@ const SmallMapM = styled.div`
 
 const SmallMapLocationM = styled.p`
   display: block;
-  font-size: 14px;
-  line-height: 16px;
-  letter-spacing: 0.05em;
   color: #000000;
   padding: 12px 9px;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const Company = (props) => {
@@ -605,53 +625,49 @@ const Company = (props) => {
                 {!showStream && <NoVideoM>{whenIsTranslation()}</NoVideoM>}
               </VideoBlockM>
               <DescM>
-                <DescriptionM>
-                  <h3>
-                    <span>
-                      {DATA.place.categories[0] &&
-                        DATA.place.categories[0].name}{" "}
-                      "
-                    </span>
-                    {DATA.place.name}"
-                  </h3>
-
-                  <DistanceM>
-                    {curDistance && (
-                      <span>{Number(curDistance).toFixed(2)} km</span>
-                    )}
-                    {!curDistance && " 0 km"}
-                  </DistanceM>
-                </DescriptionM>
+                <NameRowM>
+                  <NameM>{DATA.place.name}</NameM>
+                  <CustomImg alt="ico" name={"back"} height="20" width="20" />
+                </NameRowM>
+                <CompanyTypeM>
+                  <CustomImgTypeM
+                    alt="ico"
+                    name={DATA.place.categories[0].slug}
+                    height="16"
+                    width="16"
+                  />
+                  {DATA.place.categories[0].name}
+                </CompanyTypeM>
 
                 <OpenedToM>
+                  <Circle isWork={isWork} />
                   {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
-                  {!isWork && "Закрыто"}
+                  {!isWork && "закрыто"}
                 </OpenedToM>
+                <SmallMapWrapM>
+                  <SmallMapM
+                    onMouseDown={mouseDownMapHandler}
+                    onMouseUp={mouseUpMapHandler}
+                  >
+                    <GoogleMap
+                      togglePopupGoogleMap={togglePopup}
+                      styleContainerMap={{ height: "200px" }}
+                      initialCenterMap={
+                        DATA.place.coordinates
+                          ? {
+                              lat: Number(DATA.place.coordinates.split(",")[0]),
+                              lng: Number(DATA.place.coordinates.split(",")[1]),
+                            }
+                          : null
+                      }
+                    />
+                  </SmallMapM>
+                  <SmallMapLocationM>
+                    {DATA ? DATA.place.address : ""}
+                  </SmallMapLocationM>
+                </SmallMapWrapM>
               </DescM>
             </ShadowBlockM>
-
-            <SmallMapWrapM>
-              <SmallMapM
-                onMouseDown={mouseDownMapHandler}
-                onMouseUp={mouseUpMapHandler}
-              >
-                <GoogleMap
-                  togglePopupGoogleMap={togglePopup}
-                  styleContainerMap={{ height: "200px" }}
-                  initialCenterMap={
-                    DATA.place.coordinates
-                      ? {
-                          lat: Number(DATA.place.coordinates.split(",")[0]),
-                          lng: Number(DATA.place.coordinates.split(",")[1]),
-                        }
-                      : null
-                  }
-                />
-              </SmallMapM>
-              <SmallMapLocationM>
-                {DATA ? DATA.place.address : ""}
-              </SmallMapLocationM>
-            </SmallMapWrapM>
           </FlexM>
         )}
       </CompanyM>

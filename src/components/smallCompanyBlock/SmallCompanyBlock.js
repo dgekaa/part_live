@@ -38,7 +38,7 @@ const SmallCompBlock = styled(Link)`
   }
 `;
 
-const Desctop = styled.div`
+const DesctopMobile = styled.div`
   display: block;
   @media (max-width: 760px) {
     /* display: none; */
@@ -49,20 +49,31 @@ const PreviewBlockD = styled.div`
   height: 150px;
   background: #000;
   background-size: cover;
+  background-position: center;
 `;
 
 const NoTranslationD = styled.div`
-  display: flex;
   height: 150px;
-  padding: 15px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-weight: bold;
+  font-weight: 400;
   font-size: 18px;
   line-height: 19px;
   color: #c4c4c4;
   background: #000;
+  background-size: cover;
+  background-position: center;
+`;
+const TransparentBG = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  position: relative;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
 `;
 
 const DescriptionD = styled.div`
@@ -113,14 +124,12 @@ const Circle = styled.div`
   height: 7px;
   background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
   border-radius: 50%;
-  margin-top: 2px;
   margin-right: 6px;
 `;
 
 const IsOpenedD = styled.p`
   font-weight: normal;
   font-size: 14px;
-  text-transform: lowercase;
   color: #000;
   line-height: 16px;
   white-space: nowrap;
@@ -139,20 +148,19 @@ const LocationWrap = styled.div`
   letter-spacing: 0.5px;
   color: #000;
   padding-top: 7px;
-  overflow: hidden;
+
   @media (max-width: 460px) {
     font-size: 13px;
   }
 `;
 
-const LocationStyle = styled.p`
-  display: flex;
+const LocationStyle = styled.span`
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
 `;
 
-const Tooltip = styled.div`
+const TooltipType = styled.div`
   transition: 0.3s ease all;
   padding: 5px;
   background: #ff0960;
@@ -166,6 +174,23 @@ const Tooltip = styled.div`
   letter-spacing: 0.05em;
   color: #ffffff;
   text-transform: uppercase;
+  opacity: 0;
+`;
+
+const TooltipLocation = styled.div`
+  max-width: calc(100% - 10px);
+  transition: 0.3s ease all;
+  padding: 5px;
+  background: #ff0960;
+  border-radius: 5px;
+  position: absolute;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 14px;
+  top: 5px;
+  left: 5px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
   opacity: 0;
 `;
 
@@ -227,7 +252,7 @@ const SmallCompanyBlock = ({ item }) => {
 
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
-      <Desctop>
+      <DesctopMobile>
         {item.streams &&
         item.streams[0] &&
         item.streams[0].preview &&
@@ -246,28 +271,28 @@ const SmallCompanyBlock = ({ item }) => {
                 : {}
             }
           >
-            {whenWillBeTranslation()}
+            <TransparentBG>{whenWillBeTranslation()}</TransparentBG>
           </NoTranslationD>
         )}
         <DescriptionD>
-          <TopDescriptionBlockD>
+          <TooltipType>
+            {item.categories[0] && item.categories[0].name}
+          </TooltipType>
+          <TopDescriptionBlockD
+            onMouseEnter={(e) => {
+              e.currentTarget.previousSibling.style.opacity = 1;
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.previousSibling.style.opacity = 0;
+            }}
+          >
             {item.categories[0] && (
-              <>
-                <Tooltip>{item.categories[0].name}</Tooltip>
-
-                <CustomImgStyle
-                  onMouseEnter={(e) => {
-                    e.target.previousSibling.style.opacity = 1;
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.previousSibling.style.opacity = 0;
-                  }}
-                  alt="Icon"
-                  name={item.categories[0].slug}
-                  width="20"
-                  height="20"
-                />
-              </>
+              <CustomImgStyle
+                alt="Icon"
+                name={item.categories[0].slug}
+                width="20"
+                height="20"
+              />
             )}
             <CompanyNameD>{item.name}</CompanyNameD>
           </TopDescriptionBlockD>
@@ -285,7 +310,10 @@ const SmallCompanyBlock = ({ item }) => {
                     {nextWorkTime && nextWorkTime.start_time
                       ? `${
                           nextWorkTime.day.toLowerCase() !== "сегодня"
-                            ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+                            ? EN_SHORT_TO_RU_LONG[
+                                nextWorkTime.day
+                              ][0].toUpperCase() +
+                              EN_SHORT_TO_RU_LONG[nextWorkTime.day].slice(1)
                             : nextWorkTime.day
                         }: ${nextWorkTime.start_time}-${nextWorkTime.end_time}`
                       : "Закрыто"}
@@ -301,13 +329,20 @@ const SmallCompanyBlock = ({ item }) => {
               width="16"
               height="16"
             />
-            <LocationStyle>{item.address}</LocationStyle>
-            {/* <LocationStyle>
-              {curDistance ? `${curDistance.toFixed(2)} km` : item.address}
-            </LocationStyle> */}
+            <TooltipLocation>{item.address}</TooltipLocation>
+            <LocationStyle
+              onMouseEnter={(e) => {
+                e.target.previousSibling.style.opacity = 1;
+              }}
+              onMouseOut={(e) => {
+                e.target.previousSibling.style.opacity = 0;
+              }}
+            >
+              {item.address}
+            </LocationStyle>
           </LocationWrap>
         </DescriptionD>
-      </Desctop>
+      </DesctopMobile>
     </SmallCompBlock>
   );
 };
