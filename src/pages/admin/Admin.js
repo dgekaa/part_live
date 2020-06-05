@@ -80,7 +80,7 @@ const LeftAdminMenuD = styled.div`
 `;
 
 const GoBack = styled(Link)`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: normal;
   height: 100px;
   display: flex;
@@ -1348,7 +1348,7 @@ const Admin = (props) => {
                         <div key={i}>
                           <ProfileTitleD>
                             <ProfileTitleH3D>ПРОФИЛЬ ЗАВЕДЕНИЯ</ProfileTitleH3D>
-                            <ProfileTitleNameD>{DATA.name}</ProfileTitleNameD>
+                            <ProfileTitleNameD>({DATA.name})</ProfileTitleNameD>
                           </ProfileTitleD>
                           <ProfileContentD>
                             <div>

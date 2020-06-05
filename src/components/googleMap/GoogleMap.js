@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
+import { Map, Marker, InfoWindow, GoogleApiWrapper } from "google-maps-react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import "react-google-places-autocomplete/dist/assets/index.css";
 import styled from "styled-components";
@@ -33,6 +33,32 @@ const MapHeaderBtn = styled.p`
   color: #e32a6c;
   font-size: 16px;
   font-weight: normal;
+`;
+
+const YouAreHere = styled.p`
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  width: 80px;
+  height: 25px;
+  color: #fff;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: 0.3s ease all;
+  &::after {
+    width: 0;
+    height: 0;
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.3);
+    border-bottom: 0;
+  }
 `;
 
 const CloseBTN = styled.span`
@@ -180,6 +206,22 @@ const MapContainer = ({
     });
   };
 
+  const [dencerPosition, setDencerPosition] = useState(null);
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setDencerPosition({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+      },
+      (err) => console.log(err, " GEOLOCATION MAP ERROR")
+    );
+  } else {
+    console.log("Геолокация недоступна");
+  }
+
   const onPlaceSelected = (place) => {
     setStreetName(place.description);
     getLatLngFromStreet(place.description, true);
@@ -204,25 +246,45 @@ const MapContainer = ({
         rotateControl={false}
         fullscreenControl={false}
       >
-        <Marker
-          name={"Place"}
-          title={"Current location"}
-          position={initialCenter}
-        />
+        {dencerPosition && (
+          <Marker
+            name={"Dancer"}
+            title={""}
+            onClick={() => {}}
+            icon={{
+              url: `${process.env.PUBLIC_URL}/img/dancer.png`,
+              scaledSize: { width: 30, height: 30 },
+            }}
+            position={dencerPosition}
+          >
+            <InfoWindow
+              visible={true}
+              style={{
+                width: "100px",
+                height: "100px",
+                background: "red",
+              }}
+            >
+              <YouAreHere position={dencerPosition}>Вы тут</YouAreHere>
+            </InfoWindow>
+          </Marker>
+        )}
+        <Marker name={"Place"} title={"!!"} position={initialCenter} />
       </MyMap>
-
-      <MapHeader>
-        <MapHeaderBtn onClick={togglePopupGoogleMap}>Отмена</MapHeaderBtn>
-        <MapHeaderBtn
-          onClick={() => {
-            if (streetName && latLng) {
-              chooseNewAddress(streetName, latLng);
-            }
-          }}
-        >
-          Готово
-        </MapHeaderBtn>
-      </MapHeader>
+      {isNewAddress && (
+        <MapHeader>
+          <MapHeaderBtn onClick={togglePopupGoogleMap}>Отмена</MapHeaderBtn>
+          <MapHeaderBtn
+            onClick={() => {
+              if (streetName && latLng) {
+                chooseNewAddress(streetName, latLng);
+              }
+            }}
+          >
+            Готово!!!
+          </MapHeaderBtn>
+        </MapHeader>
+      )}
 
       {isNewAddress && <PointPosition alt="pos" name={"location"} />}
       {isNewAddress && (

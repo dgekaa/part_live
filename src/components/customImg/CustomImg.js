@@ -9,11 +9,13 @@ const CustomImg = ({
   height,
   onMouseEnter,
   onMouseOut,
+  onClick,
 }) => {
   return (
     <img
       onMouseEnter={onMouseEnter}
       onMouseOut={onMouseOut}
+      onClick={onClick}
       alt={alt}
       className={className}
       src={

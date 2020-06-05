@@ -234,11 +234,15 @@ const VideoBlockM = styled.div`
 `;
 
 const YesVideoM = styled.div`
-  height: 300px;
+  height: 250px;
   margin-bottom: 5px;
   background-color: #000;
   border-radius: 10px;
   overflow: hidden;
+  transition: 0.3s ease all;
+  @media (max-width: 460px) {
+    height: 175px;
+  }
 `;
 
 const NoVideoM = styled.div`
@@ -249,8 +253,12 @@ const NoVideoM = styled.div`
   align-items: center;
   color: #fff;
   background: #000;
-  height: 300px;
+  height: 250px;
   margin-bottom: 10px;
+  transition: 0.3s ease all;
+  @media (max-width: 460px) {
+    height: 175px;
+  }
 `;
 
 const DescM = styled.div`
@@ -263,6 +271,22 @@ const NameRowM = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+const WithIconBlockM = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+const DescIconsColumnM = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const DescNoIconsColumnM = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const NameM = styled.span`
@@ -294,26 +318,26 @@ const OpenedToM = styled.p`
   color: #000;
   height: 25px;
   line-height: 25px;
+  text-transform: lowercase;
 `;
 
-const Circle = styled.span`
+const CircleM = styled.span`
   display: inline-block;
   width: 7px;
   height: 7px;
   border-radius: 7px;
   background-color: ${({ isWork }) => (isWork ? "#04B000" : "#6D6D6D")};
   margin-right: 6px;
-  margin-left: 7px;
 `;
 
 const SmallMapWrapM = styled.div`
+  position: relative;
   height: 200px;
   display: block;
   opacity: 1;
   background-color: #fff;
-  border-radius: 5px;
   @media (max-width: 500px) {
-    height: 160px;
+    height: 100px;
   }
 `;
 
@@ -324,14 +348,14 @@ const SmallMapM = styled.div`
   overflow: hidden;
   height: 200px;
   @media (max-width: 500px) {
-    height: 160px;
+    height: 100px;
   }
 `;
 
 const SmallMapLocationM = styled.p`
-  display: block;
+  display: flex;
   color: #000000;
-  padding: 12px 9px;
+  padding: 12px 0;
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
@@ -339,6 +363,16 @@ const SmallMapLocationM = styled.p`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+`;
+
+const SmallMapTransparentBg = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 10px);
+  background: transparent;
+  cursor: pointer;
 `;
 
 const Company = (props) => {
@@ -629,21 +663,27 @@ const Company = (props) => {
                   <NameM>{DATA.place.name}</NameM>
                   <CustomImg alt="ico" name={"back"} height="20" width="20" />
                 </NameRowM>
-                <CompanyTypeM>
-                  <CustomImgTypeM
-                    alt="ico"
-                    name={DATA.place.categories[0].slug}
-                    height="16"
-                    width="16"
-                  />
-                  {DATA.place.categories[0].name}
-                </CompanyTypeM>
+                <WithIconBlockM>
+                  <DescIconsColumnM>
+                    <CustomImgTypeM
+                      alt="ico"
+                      name={DATA.place.categories[0].slug}
+                      height="16"
+                      width="16"
+                    />
+                    <CircleM isWork={isWork} />
+                  </DescIconsColumnM>
+                  <DescNoIconsColumnM>
+                    <CompanyTypeM>{DATA.place.categories[0].name}</CompanyTypeM>
+                    <OpenedToM>
+                      {isWork && (
+                        <span>Открыто: до {workTime.split("-")[1]}</span>
+                      )}
+                      {!isWork && "закрыто"}
+                    </OpenedToM>
+                  </DescNoIconsColumnM>
+                </WithIconBlockM>
 
-                <OpenedToM>
-                  <Circle isWork={isWork} />
-                  {isWork && <span>Открыто: до {workTime.split("-")[1]}</span>}
-                  {!isWork && "закрыто"}
-                </OpenedToM>
                 <SmallMapWrapM>
                   <SmallMapM
                     onMouseDown={mouseDownMapHandler}
@@ -663,8 +703,17 @@ const Company = (props) => {
                     />
                   </SmallMapM>
                   <SmallMapLocationM>
+                    <CustomImgTypeM
+                      alt="ico"
+                      name={"location"}
+                      height="16"
+                      width="16"
+                    />
                     {DATA ? DATA.place.address : ""}
                   </SmallMapLocationM>
+                  <SmallMapTransparentBg
+                    onClick={() => togglePopup()}
+                  ></SmallMapTransparentBg>
                 </SmallMapWrapM>
               </DescM>
             </ShadowBlockM>

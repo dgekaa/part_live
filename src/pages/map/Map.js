@@ -49,6 +49,34 @@ const MapContainer = styled.div`
   }
 `;
 
+const YouAreHere = styled.p`
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  width: 80px;
+  height: 25px;
+  color: #fff;
+  position: relative;
+  left: -25px;
+  bottom: 10px;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: 0.3s ease all;
+  &::after {
+    width: 0;
+    height: 0;
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.3);
+    border-bottom: 0;
+  }
+`;
+
 const ClusterMarker = styled.div`
   width: 36px;
   height: 36px;
@@ -70,50 +98,60 @@ const MarkerArrow = styled.div`
   border-top-color: #fff;
   border-bottom: 0;
   position: absolute;
-  bottom: -14px;
-  left: -10px;
+  bottom: -30px;
+  left: 20px;
+  @media (max-width: 760px) {
+    bottom: -10px;
+    left: 0px;
+  }
 `;
 
 const MarkerWrapp = styled.div`
-  width: 100px;
-  height: 115px;
+  width: 150px;
+  height: 150px;
   background-color: #fff;
   overflow: hidden;
   border-radius: 10px;
   position: relative;
-  bottom: 110px;
+  bottom: 130px;
   right: 50px;
   transition: 0.3s ease opacity;
   &:hover {
     opacity: 0.9;
   }
+  @media (max-width: 760px) {
+    width: 120px;
+    height: 130px;
+  }
 `;
 
 const MarkerInner = styled.div`
   overflow: hidden;
-  border-radius: 10px;
   display: flex;
+  border-radius: 10px 10px 0 0;
   flex: 1;
   align-items: flex-end;
+  @media (max-width: 760px) {
+    border-radius: 10px;
+  }
 `;
 
-const CustomImgStyle = styled(CustomImg)`
-  position: absolute;
-  top: 60px;
-  right: 4px;
-`;
+const CustomImgStyle = styled(CustomImg)``;
 
 const PreviewBlock = styled.div`
   object-fit: cover;
   -webkit-transition: 0.2s ease all;
   -o-transition: 0.2s ease all;
   transition: 0.2s ease all;
-  height: 100px;
+  height: 95px;
   display: flex;
   padding-bottom: 26px;
   justify-content: center;
   align-items: center;
   position: relative;
+  @media (max-width: 760px) {
+    height: 90px;
+  }
 `;
 
 const TranslationBlock = styled.div`
@@ -121,12 +159,17 @@ const TranslationBlock = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 81px;
-  width: 100px;
+  height: 95px;
+  width: 150px;
   background-size: cover;
   background-position: center;
-  border-radius: 5px;
   overflow: hidden;
+  background-color: #000;
+  @media (max-width: 760px) {
+    height: 90px;
+    width: 120px;
+    border-radius: 5px;
+  }
 `;
 
 const NoTranslationText = styled.p`
@@ -137,10 +180,14 @@ const NoTranslationText = styled.p`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100px;
-  height: 81px;
+  width: 150px;
+  height: 95px;
   display: flex;
   align-items: center;
+  @media (max-width: 760px) {
+    height: 90px;
+    width: 120px;
+  }
 `;
 
 const MarkerDesc = styled.p`
@@ -148,20 +195,33 @@ const MarkerDesc = styled.p`
   bottom: 0;
   right: 0;
   left: 0;
-  height: 34px;
-  padding: 4px;
+  height: 55px;
+  padding: 8px;
+  padding-top: 6px;
   padding-right: 6px;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  @media (max-width: 760px) {
+    height: 40px;
+    padding: 4px;
+  }
 `;
 
 const MarkerName = styled.p`
   color: #000;
-  font-size: 12px;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 14px;
+  line-height: 19px;
+  margin-left: 5px;
+  letter-spacing: 0.5px;
+  @media (max-width: 760px) {
+    font-size: 12px;
+  }
 `;
 
 const BottomMarkerText = styled.p`
@@ -172,12 +232,16 @@ const BottomMarkerText = styled.p`
 `;
 
 const IsOpened = styled.span`
-  color: #909090;
+  color: #000;
   font-weight: normal;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 13px;
   font-weight: 900;
   line-height: 9px;
+  @media (max-width: 760px) {
+    color: #909090;
+    font-size: 11px;
+  }
 `;
 
 const Row = styled.div`
@@ -185,12 +249,26 @@ const Row = styled.div`
 `;
 
 const Circle = styled.div`
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
+  margin-top: 1.5px;
   background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
   border-radius: 50%;
-  margin-top: 3px;
   margin-right: 5px;
+  margin-left: 3px;
+  @media (max-width: 760px) {
+    margin-top: 3px;
+    width: 5px;
+    height: 5px;
+  }
+`;
+
+const Opened = styled.span`
+  display: inline-block;
+
+  @media (max-width: 760px) {
+    display: none;
+  }
 `;
 
 const MapComponent = (props) => {
@@ -391,7 +469,19 @@ const MapComponent = (props) => {
           >
             {defaultCenter && (
               <Marker lat={defaultCenter.lat} lng={defaultCenter.lng}>
-                <CustomImg alt="me" name={"dancer"} width="32" height="32" />
+                <YouAreHere>Вы тут</YouAreHere>
+                <CustomImg
+                  onClick={({ target }) => {
+                    target.previousSibling.style.opacity = 1;
+                    setTimeout(() => {
+                      target.previousSibling.style.opacity = 0;
+                    }, 2000);
+                  }}
+                  alt="me"
+                  name={"dancer"}
+                  width="32"
+                  height="32"
+                />
               </Marker>
             )}
 
@@ -511,13 +601,30 @@ const MapComponent = (props) => {
                         </PreviewBlock>
 
                         <MarkerDesc>
-                          <MarkerName>{cluster.item.name}</MarkerName>
+                          <div style={{ display: "flex" }}>
+                            {cluster.item.categories[0] &&
+                              cluster.item.categories[0].slug && (
+                                <CustomImgStyle
+                                  className="qwe"
+                                  alt="Icon"
+                                  name={cluster.item.categories[0].slug}
+                                  width="16"
+                                  height="16"
+                                />
+                              )}
+                            <MarkerName>{cluster.item.name}</MarkerName>
+                          </div>
+
                           <BottomMarkerText>
                             <IsOpened>
                               {isWork && (
                                 <Row>
                                   <Circle isWork={isWork} />
-                                  <span>до {workTime.split("-")[1]}</span>
+                                  <span>
+                                    {" "}
+                                    <Opened>открыто</Opened> до{" "}
+                                    {workTime.split("-")[1]}
+                                  </span>
                                 </Row>
                               )}
                               {!isWork && (
@@ -530,16 +637,6 @@ const MapComponent = (props) => {
                           </BottomMarkerText>
                         </MarkerDesc>
                       </MarkerInner>
-                      {cluster.item.categories[0] &&
-                        cluster.item.categories[0].slug && (
-                          <CustomImgStyle
-                            active
-                            alt="Icon"
-                            name={cluster.item.categories[0].slug}
-                            width="16"
-                            height="16"
-                          />
-                        )}
                     </MarkerWrapp>
                   </Link>
                 </Marker>
