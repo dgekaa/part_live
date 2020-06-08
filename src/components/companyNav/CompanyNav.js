@@ -232,11 +232,12 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     if (sessionStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
         // if (isClickedTypeBtn(el.innerText)) {
-        console.log(sessionStorage.getItem("filter_type"));
-        console.log(el.innerText, "________");
-        alert(el.innerText == "Паб");
-        alert(el.innerText);
-        if (el.innerText == "Паб") {
+        // console.log(sessionStorage.getItem("filter_type"));
+
+        // console.log(el.getAttribute("data-name"), "________");
+        // alert(el.innerText == "Паб");
+        alert(el.getAttribute("data-name"));
+        if (el.getAttribute("data-name") == "Паб") {
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
@@ -335,6 +336,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           return (
             <CompanyNavBtn
               className="companyNavBtn"
+              data-name={el.name}
               key={i}
               ref={slideBtn}
               style={isClickedTypeBtn(el.name) ? { background: "#e32a6c" } : {}}
