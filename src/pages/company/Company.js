@@ -382,8 +382,8 @@ const Company = (props) => {
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
 
   useEffect(() => {
-    if (localStorage.getItem("uniqueCompanyType")) {
-      localStorage.setItem("uniqueCompanyType", "");
+    if (sessionStorage.getItem("uniqueCompanyType")) {
+      sessionStorage.setItem("uniqueCompanyType", "");
     }
   }, []);
 

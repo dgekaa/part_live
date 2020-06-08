@@ -186,8 +186,8 @@ const Login = () => {
   const [cookies, setCookie, removeCookie] = useCookies([]);
 
   useEffect(() => {
-    if (localStorage.getItem("uniqueCompanyType")) {
-      localStorage.setItem("uniqueCompanyType", "");
+    if (sessionStorage.getItem("uniqueCompanyType")) {
+      sessionStorage.setItem("uniqueCompanyType", "");
     }
   }, []);
 

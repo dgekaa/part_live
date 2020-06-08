@@ -509,12 +509,14 @@ const SmallCompanyBlock = ({ item }) => {
         <DescriptionM>
           <TopDescriptionBlockM>
             <IconToCenter>
-              <CustomImgStyleM
-                alt="Icon"
-                name={item.categories[0] && item.categories[0].slug}
-                width="20"
-                height="20"
-              />
+              {item.categories[0] && (
+                <CustomImgStyleM
+                  alt="Icon"
+                  name={item.categories[0] && item.categories[0].slug}
+                  width="20"
+                  height="20"
+                />
+              )}
             </IconToCenter>
             <CompanyNameM>{item.name}</CompanyNameM>
           </TopDescriptionBlockM>

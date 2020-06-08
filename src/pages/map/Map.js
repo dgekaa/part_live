@@ -308,8 +308,8 @@ const MapComponent = (props) => {
   }, []);
 
   useEffect(() => {
-    if (localStorage.getItem("filter_type") && !isLoading && DATA.length) {
-      const filterName = localStorage.getItem("filter_type");
+    if (sessionStorage.getItem("filter_type") && !isLoading && DATA.length) {
+      const filterName = sessionStorage.getItem("filter_type");
       clickedType(filterName);
     }
   }, [DATA]);

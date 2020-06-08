@@ -797,8 +797,8 @@ const Admin = (props) => {
   };
 
   const [leftMenuSettings, setLeftMenuSettings] = useState(
-    localStorage.getItem("opened_li_admin")
-      ? JSON.parse(localStorage.getItem("opened_li_admin"))
+    sessionStorage.getItem("opened_li_admin")
+      ? JSON.parse(sessionStorage.getItem("opened_li_admin"))
       : [
           {
             name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
@@ -832,7 +832,7 @@ const Admin = (props) => {
   );
 
   useEffect(() => {
-    localStorage.setItem("opened_li_admin", JSON.stringify(leftMenuSettings));
+    sessionStorage.setItem("opened_li_admin", JSON.stringify(leftMenuSettings));
   }, [leftMenuSettings]);
 
   useEffect(() => {

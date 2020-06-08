@@ -164,8 +164,8 @@ const CompNavText = styled.p`
 
 const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const [uniqueCompanyType, setUniqueCompanyType] = useState(
-    localStorage.getItem("uniqueCompanyType")
-      ? JSON.parse(localStorage.getItem("uniqueCompanyType"))
+    sessionStorage.getItem("uniqueCompanyType")
+      ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
       : []
   );
   const [isDown, setIsDown] = useState(false);
@@ -186,8 +186,8 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       .then((res) => res.json())
       .then((data) => {
         setUniqueCompanyType(
-          localStorage.getItem("uniqueCompanyType")
-            ? JSON.parse(localStorage.getItem("uniqueCompanyType"))
+          sessionStorage.getItem("uniqueCompanyType")
+            ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
             : data.data.categories
         );
       })
@@ -198,9 +198,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     if (
       uniqueCompanyType &&
       uniqueCompanyType.length &&
-      !localStorage.getItem("uniqueCompanyType")
+      !sessionStorage.getItem("uniqueCompanyType")
     ) {
-      localStorage.setItem(
+      sessionStorage.setItem(
         "uniqueCompanyType",
         JSON.stringify(uniqueCompanyType)
       );
@@ -229,7 +229,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const firstScrollBtnToCenter = () => {
-    if (localStorage.getItem("uniqueCompanyType")) {
+    if (sessionStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
         console.log(el, ":::::");
         if (isClickedTypeBtn(el.innerText)) {
@@ -249,11 +249,11 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedAllBtn = () => {
-    return !clickedTypeLocal && !localStorage.getItem("filter_type");
+    return !clickedTypeLocal && !sessionStorage.getItem("filter_type");
   };
 
   const isClickedTypeBtn = (name) => {
-    if (localStorage.getItem("filter_type") === name) {
+    if (sessionStorage.getItem("filter_type") === name) {
       return true;
     }
     return false;
@@ -313,7 +313,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
           onClick={(e) => {
             clickedType();
             setClickedTypeLocal();
-            localStorage.setItem("filter_type", "");
+            sessionStorage.setItem("filter_type", "");
             scrollAllBtnToCenter();
           }}
         >
@@ -335,7 +335,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               onClick={(e) => {
                 clickedType(el.name);
                 setClickedTypeLocal(el.name);
-                localStorage.setItem("filter_type", el.name);
+                sessionStorage.setItem("filter_type", el.name);
                 scrollBtnToCenter(e);
               }}
               onMouseOver={() => setHoveredBtn(el.name)}

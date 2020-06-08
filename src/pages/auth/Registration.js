@@ -58,8 +58,8 @@ const Registration = () => {
   const register = useRef(null);
 
   useEffect(() => {
-    if (localStorage.getItem("uniqueCompanyType")) {
-      localStorage.setItem("uniqueCompanyType", "");
+    if (sessionStorage.getItem("uniqueCompanyType")) {
+      sessionStorage.setItem("uniqueCompanyType", "");
     }
   }, []);
 
