@@ -8,7 +8,11 @@ import styled from "styled-components";
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
-import { EN_SHORT_TO_RU_LONG_V_P, API_KEY } from "../../constants";
+import {
+  EN_SHORT_TO_RU_LONG_V_P,
+  API_KEY,
+  EN_SHORT_TO_RU_LONG,
+} from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import TypeNav from "../../components/typeNav/TypeNav";
@@ -99,7 +103,7 @@ const MarkerArrow = styled.div`
   border-bottom: 0;
   position: absolute;
   bottom: -30px;
-  left: 20px;
+  left: 15px;
   @media (max-width: 760px) {
     bottom: -10px;
     left: 0px;
@@ -149,6 +153,7 @@ const PreviewBlock = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  text-align: center;
   @media (max-width: 760px) {
     height: 90px;
   }
@@ -174,7 +179,6 @@ const TranslationBlock = styled.div`
 
 const NoTranslationText = styled.p`
   color: #919191;
-  text-align: center;
   padding: 3px;
   background-color: #000;
   position: absolute;
@@ -183,9 +187,13 @@ const NoTranslationText = styled.p`
   width: 150px;
   height: 95px;
   display: flex;
+  align-self: center;
   align-items: center;
+  text-align: center;
+  justify-content: center;
   @media (max-width: 760px) {
     height: 90px;
+    text-align: center;
     width: 120px;
   }
 `;
@@ -218,7 +226,6 @@ const MarkerName = styled.p`
   text-overflow: ellipsis;
   line-height: 19px;
   margin-left: 5px;
-  letter-spacing: 0.5px;
   @media (max-width: 760px) {
     font-size: 12px;
   }
@@ -233,10 +240,9 @@ const BottomMarkerText = styled.p`
 
 const IsOpened = styled.span`
   color: #000;
-  font-weight: normal;
   font-size: 12px;
   line-height: 13px;
-  font-weight: 900;
+  font-weight: normal;
   line-height: 9px;
   @media (max-width: 760px) {
     color: #909090;
@@ -251,7 +257,6 @@ const Row = styled.div`
 const Circle = styled.div`
   width: 7px;
   height: 7px;
-  margin-top: 1.5px;
   background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
   border-radius: 50%;
   margin-right: 5px;
@@ -511,15 +516,22 @@ const MapComponent = (props) => {
               let streamTime = "",
                 workTime = "",
                 isWork = false,
-                nextStreamTime = "";
+                nextStreamTime = false,
+                nextWorkTime = null;
 
               const setShowStream = (time) => (streamTime = time);
               const setWorkTime = (time) => (workTime = time);
               const setIsWork = (bool) => (isWork = bool);
               const setNextStreamTime = (time) => (nextStreamTime = time);
+              const setNextWorkTime = (time) => (nextWorkTime = time);
 
               isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
-              isWorkTimeNow(cluster.item, setWorkTime, setIsWork);
+              isWorkTimeNow(
+                cluster.item,
+                setWorkTime,
+                setIsWork,
+                setNextWorkTime
+              );
               return (
                 <Marker
                   key={cluster.properties.crimeId}
@@ -595,7 +607,26 @@ const MapComponent = (props) => {
                                 "Трансляция начнется сегодня в " +
                                   nextStreamTime.start_time}
                               {!nextStreamTime.start_time &&
-                                "Нет предстоящих трансляций"}
+                                !nextWorkTime &&
+                                "Заведение закрыто"}
+
+                              {!nextStreamTime.start_time &&
+                                nextWorkTime &&
+                                nextWorkTime.start_time &&
+                                "Откроется: "}
+                              {!nextStreamTime.start_time &&
+                                nextWorkTime &&
+                                nextWorkTime.start_time && <br />}
+                              {!nextStreamTime.start_time &&
+                                nextWorkTime &&
+                                nextWorkTime.start_time &&
+                                `${
+                                  nextWorkTime.day.toLowerCase() !== "сегодня"
+                                    ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+                                    : nextWorkTime.day
+                                } ${nextWorkTime.start_time}-${
+                                  nextWorkTime.end_time
+                                }`}
                             </NoTranslationText>
                           )}
                         </PreviewBlock>
@@ -621,8 +652,7 @@ const MapComponent = (props) => {
                                 <Row>
                                   <Circle isWork={isWork} />
                                   <span>
-                                    {" "}
-                                    <Opened>открыто</Opened> до{" "}
+                                    <Opened>Открыто</Opened> до{" "}
                                     {workTime.split("-")[1]}
                                   </span>
                                 </Row>
@@ -630,7 +660,7 @@ const MapComponent = (props) => {
                               {!isWork && (
                                 <Row>
                                   <Circle isWork={isWork} />
-                                  <span>закрыто</span>
+                                  <span>Закрыто</span>
                                 </Row>
                               )}
                             </IsOpened>

@@ -124,14 +124,6 @@ const DescNameD = styled.h3`
   line-height: 35px;
 `;
 
-const TypeOfPartyD = styled.p`
-  font-size: 18px;
-  line-height: 21px;
-  padding: 2px 0 4px 0;
-  font-weight: 500;
-  color: #4f4f4f;
-`;
-
 const DayOfWeekD = styled.p`
   text-transform: uppercase;
   display: inline-block;
@@ -558,7 +550,7 @@ const Company = (props) => {
               <DescD>
                 <TopDescriptionD>
                   <DescNameD>{DATA.place.name}</DescNameD>
-                  <TypeOfPartyD>"Супер пати всех студентов"</TypeOfPartyD>
+
                   <DayOfWeekD>{DAY_OF_WEEK[numberDayNow]}</DayOfWeekD>
                 </TopDescriptionD>
 

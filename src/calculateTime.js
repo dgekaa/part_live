@@ -166,8 +166,6 @@ export const isWorkTimeNow = (
     }
   });
 
-  console.log(item.schedules, "-ITEM");
-
   const endYesterdayMS =
     yesterdayWorkTime &&
     yesterdayWorkTime.end_time.split(":")[0] * HtoMs +

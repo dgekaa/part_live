@@ -31,7 +31,10 @@ const SmallCompBlock = styled(Link)`
     margin-left: 0;
   }
   @media (max-width: 760px) {
+    height: 235px;
     margin: 5px;
+    width: calc(33% - 10px);
+    border-radius: 5px;
     &:nth-child(1) {
       margin: 5px;
     }
@@ -41,15 +44,12 @@ const SmallCompBlock = styled(Link)`
     &:nth-child(5n + 5) {
       margin: 5px;
     }
-    width: calc(33% - 10px);
-    height: 243px;
-    border-radius: 5px;
   }
   @media (max-width: 650px) {
     width: calc(50% - 10px);
   }
   @media (max-width: 375px) {
-    height: 220px;
+    height: 205px;
   }
 `;
 
@@ -107,18 +107,32 @@ const DescriptionD = styled.div`
 const TopDescriptionBlockD = styled.div`
   width: 100%;
   display: flex;
+  position: relative;
 `;
 
-const CustomImgStyleD = styled(CustomImg)`
+const IconToCenter = styled.div`
+  width: 20px;
+  display: flex;
+  justify-content: center;
   margin-right: 5px;
 `;
+
+const HoverTooltip = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+`;
+
+const CustomImgStyleD = styled(CustomImg)``;
 
 const CompanyNameD = styled.p`
   color: #000;
   font-weight: 500;
   font-size: 18px;
   line-height: 21px;
-  letter-spacing: 0.5px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -128,7 +142,6 @@ const BottomDescriptionBlockD = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-top: 6px;
 `;
 
 const WorkTimeWrapD = styled.div`
@@ -139,12 +152,10 @@ const WorkTimeWrapD = styled.div`
 `;
 
 const CircleD = styled.div`
-  margin-left: 3px;
   width: 7px;
   height: 7px;
   background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
   border-radius: 50%;
-  margin-right: 6px;
 `;
 
 const IsOpenedD = styled.p`
@@ -221,8 +232,8 @@ const NoTranslationM = styled.div`
   border-radius: 5px;
   overflow: hidden;
   height: 175px;
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 19px;
   color: #c4c4c4;
   background: #000;
@@ -260,22 +271,15 @@ const DescriptionM = styled.div`
 const TopDescriptionBlockM = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
 `;
 
-const CategoreNameM = styled.p`
-  font-weight: bold;
-  font-size: 14px;
-  color: #999;
-  letter-spacing: 0.5px;
-  text-transform: lowercase;
-`;
+const CustomImgStyleM = styled(CustomImg)``;
 
 const CompanyNameM = styled.p`
   color: #363636;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 18px;
-  line-height: 21px;
+  line-height: 25px;
   letter-spacing: 0.5px;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -284,7 +288,7 @@ const CompanyNameM = styled.p`
 
 const DistanceM = styled.p`
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.5px;
   color: #e32a6c;
   line-height: 23px;
@@ -297,16 +301,23 @@ const BottomDescriptionBlockM = styled.div`
   justify-content: space-between;
 `;
 
-const WorkTimeWrapM = styled.div`
+const WorkTimeDistanceWrapM = styled.div`
   display: flex;
   flex-direction: row;
+  flex: 1;
   align-items: center;
   overflow: hidden;
+  justify-content: space-between;
+`;
+
+const CircleRowM = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const IsOpenedM = styled.p`
-  font-weight: bold;
-  font-size: 12px;
+  font-weight: normal;
+  font-size: 14px;
   color: #000;
   line-height: 16px;
   white-space: nowrap;
@@ -397,26 +408,33 @@ const SmallCompanyBlock = ({ item }) => {
               e.currentTarget.previousSibling.style.opacity = 0;
             }}
           >
-            {item.categories[0] && (
-              <CustomImgStyleD
-                alt="Icon"
-                name={item.categories[0].slug}
-                width="20"
-                height="20"
-              />
-            )}
+            <HoverTooltip />
+            <IconToCenter>
+              {item.categories[0] && (
+                <CustomImgStyleD
+                  alt="Icon"
+                  name={item.categories[0].slug}
+                  width="20"
+                  height="20"
+                />
+              )}
+            </IconToCenter>
             <CompanyNameD>{item.name}</CompanyNameD>
           </TopDescriptionBlockD>
           <BottomDescriptionBlockD>
             <WorkTimeWrapD>
               {isWork ? (
                 <>
-                  <CircleD isWork={isWork} />
+                  <IconToCenter>
+                    <CircleD isWork={isWork} />
+                  </IconToCenter>
                   <IsOpenedD>Открыто до {workTime.split("-")[1]}</IsOpenedD>
                 </>
               ) : (
                 <>
-                  <CircleD isWork={isWork} />
+                  <IconToCenter>
+                    <CircleD isWork={isWork} />
+                  </IconToCenter>
                   <IsOpenedD>
                     {nextWorkTime && nextWorkTime.start_time
                       ? `${
@@ -434,12 +452,14 @@ const SmallCompanyBlock = ({ item }) => {
             </WorkTimeWrapD>
           </BottomDescriptionBlockD>
           <LocationWrapD>
-            <CustomImgStyleD
-              alt="Icon"
-              name={"location"}
-              width="16"
-              height="16"
-            />
+            <IconToCenter>
+              <CustomImgStyleD
+                alt="Icon"
+                name={"location"}
+                width="16"
+                height="16"
+              />
+            </IconToCenter>
 
             <LocationStyleD>
               {item.address &&
@@ -463,38 +483,57 @@ const SmallCompanyBlock = ({ item }) => {
         ) : (
           <NoTranslationM>
             <TransparentBgM>
-              {isWork ? whenWillBeTranslation() : "Закрыто"}
+              {nextWorkTime
+                ? isWork
+                  ? whenWillBeTranslation()
+                  : "Откроется:"
+                : isWork
+                ? whenWillBeTranslation()
+                : "Закрыто"}
               <p>
                 {nextWorkTime && nextWorkTime.start_time
                   ? `${
                       nextWorkTime.day.toLowerCase() !== "сегодня"
-                        ? EN_SHORT_TO_RU_LONG[
-                            nextWorkTime.day
-                          ][0].toUpperCase() +
-                          EN_SHORT_TO_RU_LONG[nextWorkTime.day].slice(1)
+                        ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
                         : nextWorkTime.day
-                    }: ${nextWorkTime.start_time}-${nextWorkTime.end_time}`
+                    }`
                   : ""}
+                {nextWorkTime && nextWorkTime.start_time && <br />}
+                {nextWorkTime &&
+                  nextWorkTime.start_time &&
+                  nextWorkTime.start_time + "-" + nextWorkTime.end_time}
               </p>
             </TransparentBgM>
           </NoTranslationM>
         )}
         <DescriptionM>
           <TopDescriptionBlockM>
+            <IconToCenter>
+              <CustomImgStyleM
+                alt="Icon"
+                name={item.categories[0] && item.categories[0].slug}
+                width="20"
+                height="20"
+              />
+            </IconToCenter>
             <CompanyNameM>{item.name}</CompanyNameM>
-            <DistanceM> {curDistance && curDistance.toFixed(2)} km</DistanceM>
           </TopDescriptionBlockM>
-          <CategoreNameM>
-            {item.categories[0] && item.categories[0].name}
-          </CategoreNameM>
+
           <BottomDescriptionBlockM>
-            <WorkTimeWrapM>
-              {isWork ? (
-                <IsOpenedM>Открыто до {workTime.split("-")[1]}</IsOpenedM>
-              ) : (
-                <IsOpenedM>Закрыто</IsOpenedM>
-              )}
-            </WorkTimeWrapM>
+            <WorkTimeDistanceWrapM>
+              <CircleRowM>
+                <IconToCenter>
+                  <CircleD isWork={isWork} />
+                </IconToCenter>
+                {isWork ? (
+                  <IsOpenedM>До {workTime.split("-")[1]}</IsOpenedM>
+                ) : (
+                  <IsOpenedM>Закрыто</IsOpenedM>
+                )}
+              </CircleRowM>
+
+              <DistanceM> {curDistance && curDistance.toFixed(2)} km</DistanceM>
+            </WorkTimeDistanceWrapM>
           </BottomDescriptionBlockM>
         </DescriptionM>
       </Mobile>

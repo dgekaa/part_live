@@ -10,7 +10,7 @@ import QUERY from "../../query";
 
 export const GoBackBtn = styled(Link)`
   position: relative;
-  top: -135px;
+  top: -104px;
   left: 0px;
   font-size: 16px;
   font-weight: normal;
