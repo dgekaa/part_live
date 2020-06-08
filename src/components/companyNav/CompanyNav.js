@@ -232,7 +232,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     if (sessionStorage.getItem("uniqueCompanyType")) {
       document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
         // if (isClickedTypeBtn(el.innerText)) {
-        if (sessionStorage.getItem("filter_type") === el.innerText) {
+        console.log(sessionStorage.getItem("filter_type"));
+        console.log(el.innerText, "________");
+        if ("Паб" === el.innerText) {
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
