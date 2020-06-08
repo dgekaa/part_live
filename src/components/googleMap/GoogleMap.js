@@ -173,6 +173,7 @@ const MapContainer = ({
         (results, status) => {
           if (status === "OK") {
             if (results[0]) {
+              console.log(results[0], " !!!!!");
               setStreetName(results[0].formatted_address);
               getLatLngFromStreet(results[0].formatted_address);
             } else {

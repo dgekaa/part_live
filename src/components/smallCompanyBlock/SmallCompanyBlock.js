@@ -198,24 +198,6 @@ const TooltipTypeD = styled.div`
   opacity: 0;
 `;
 
-const TooltipLocationD = styled.div`
-  max-width: calc(100% - 10px);
-  transition: 0.3s ease all;
-  padding: 5px;
-  background: #e32a6c;
-  border-radius: 5px;
-  position: absolute;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 14px;
-  top: 80px;
-  left: 5px;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  opacity: 0;
-  z-index: 0;
-`;
-
 const Mobile = styled.div`
   display: none;
   @media (max-width: 760px) {
@@ -458,16 +440,13 @@ const SmallCompanyBlock = ({ item }) => {
               width="16"
               height="16"
             />
-            <TooltipLocationD>{item.address}</TooltipLocationD>
-            <LocationStyleD
-              onMouseEnter={(e) => {
-                e.target.previousSibling.style.opacity = 1;
-              }}
-              onMouseOut={(e) => {
-                e.target.previousSibling.style.opacity = 0;
-              }}
-            >
-              {item.address}
+
+            <LocationStyleD>
+              {item.address &&
+                item.address
+                  .split(",")[0]
+                  .replace("улица", "ул.")
+                  .replace("проспект", "пр-т.")}
             </LocationStyleD>
           </LocationWrapD>
         </DescriptionD>

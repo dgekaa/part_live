@@ -231,21 +231,23 @@ const ShadowBlockM = styled.div`
 const VideoBlockM = styled.div`
   padding-right: 0px;
   padding-bottom: 0;
+  border-radius: 10px;
 `;
 
 const YesVideoM = styled.div`
-  height: 250px;
+  /* height: 250px; */
   margin-bottom: 5px;
   background-color: #000;
   border-radius: 10px;
   overflow: hidden;
   transition: 0.3s ease all;
   @media (max-width: 460px) {
-    height: 175px;
+    /* height: 175px; */
   }
 `;
 
 const NoVideoM = styled.div`
+  /* height: 250px; */
   text-align: center;
   border-radius: 10px;
   display: flex;
@@ -253,11 +255,10 @@ const NoVideoM = styled.div`
   align-items: center;
   color: #fff;
   background: #000;
-  height: 250px;
   margin-bottom: 10px;
   transition: 0.3s ease all;
   @media (max-width: 460px) {
-    height: 175px;
+    /* height: 175px; */
   }
 `;
 
@@ -602,7 +603,11 @@ const Company = (props) => {
                     <RowWithImageTextD>
                       <RowWithImageLeftTextD>Адрес: </RowWithImageLeftTextD>
                       <RowWithImageRightTextD>
-                        {DATA.place.address}
+                        {DATA.place.address &&
+                          DATA.place.address
+                            .split(",")[0]
+                            .replace("улица", "ул.")
+                            .replace("проспект", "пр-т.")}
                       </RowWithImageRightTextD>
                     </RowWithImageTextD>
                   </RowWithImageD>
@@ -709,7 +714,12 @@ const Company = (props) => {
                       height="16"
                       width="16"
                     />
-                    {DATA ? DATA.place.address : ""}
+                    {DATA
+                      ? DATA.place.address
+                          .split(",")[0]
+                          .replace("улица", "ул.")
+                          .replace("проспект", "пр-т.")
+                      : ""}
                   </SmallMapLocationM>
                   <SmallMapTransparentBg
                     onClick={() => togglePopup()}

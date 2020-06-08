@@ -1646,7 +1646,13 @@ const Admin = (props) => {
                                 <input
                                   disabled
                                   type="text"
-                                  value={DATA.address}
+                                  value={
+                                    DATA.address &&
+                                    DATA.address
+                                      .split(",")[0]
+                                      .replace("улица", "ул.")
+                                      .replace("проспект", "пр-т.")
+                                  }
                                 />
                                 <div>
                                   <span
@@ -2317,7 +2323,11 @@ const Admin = (props) => {
                                 <AddressM
                                   onClick={() => togglePopupGoogleMap()}
                                 >
-                                  {DATA.address}
+                                  {DATA.address &&
+                                    DATA.address
+                                      .split(",")[0]
+                                      .replace("улица", "ул.")
+                                      .replace("проспект", "пр-т.")}
                                 </AddressM>
                               </div>
                               <div
