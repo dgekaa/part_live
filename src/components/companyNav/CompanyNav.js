@@ -229,15 +229,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const firstScrollBtnToCenter = () => {
-    alert("1");
     if (sessionStorage.getItem("uniqueCompanyType")) {
-      alert("2");
-
       document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
-        alert("3");
         const x = isClickedTypeBtn(el.innerText);
         if (x) {
-          alert("4");
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
@@ -258,9 +253,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
-    console.log(sessionStorage.getItem("filter_type") === name);
-    console.log(sessionStorage.getItem("filter_type"));
-    console.log(name);
+    alert(sessionStorage.getItem("filter_type") === name);
+    alert(sessionStorage.getItem("filter_type"));
+    alert(name);
     if (sessionStorage.getItem("filter_type") === name) {
       return true;
     }
