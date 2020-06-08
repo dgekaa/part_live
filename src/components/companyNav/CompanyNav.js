@@ -229,10 +229,14 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const firstScrollBtnToCenter = () => {
+    alert("1");
     if (sessionStorage.getItem("uniqueCompanyType")) {
+      alert("2");
+
       document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
-        console.log(el, ":::::");
         if (isClickedTypeBtn(el.innerText)) {
+          alert("3");
+
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
