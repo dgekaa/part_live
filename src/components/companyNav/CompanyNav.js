@@ -257,6 +257,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   };
 
   const isClickedTypeBtn = (name) => {
+    console.log(sessionStorage.getItem("filter_type") === name);
+    console.log(sessionStorage.getItem("filter_type"));
+    console.log(name);
     if (sessionStorage.getItem("filter_type") === name) {
       return true;
     }
