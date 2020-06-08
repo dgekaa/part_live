@@ -138,10 +138,11 @@ const CompanyNameD = styled.p`
   overflow: hidden;
 `;
 
-const BottomDescriptionBlockD = styled.div`
+const MiddleDescriptionBlockD = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 5px;
 `;
 
 const WorkTimeWrapD = styled.div`
@@ -421,7 +422,7 @@ const SmallCompanyBlock = ({ item }) => {
             </IconToCenter>
             <CompanyNameD>{item.name}</CompanyNameD>
           </TopDescriptionBlockD>
-          <BottomDescriptionBlockD>
+          <MiddleDescriptionBlockD>
             <WorkTimeWrapD>
               {isWork ? (
                 <>
@@ -450,7 +451,7 @@ const SmallCompanyBlock = ({ item }) => {
                 </>
               )}
             </WorkTimeWrapD>
-          </BottomDescriptionBlockD>
+          </MiddleDescriptionBlockD>
           <LocationWrapD>
             <IconToCenter>
               <CustomImgStyleD
@@ -534,7 +535,9 @@ const SmallCompanyBlock = ({ item }) => {
                 )}
               </CircleRowM>
 
-              <DistanceM> {curDistance && curDistance.toFixed(2)} km</DistanceM>
+              <DistanceM>
+                {curDistance && curDistance.toFixed(2) + "km"}
+              </DistanceM>
             </WorkTimeDistanceWrapM>
           </BottomDescriptionBlockM>
         </DescriptionM>
