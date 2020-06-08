@@ -234,9 +234,10 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       alert("2");
 
       document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
-        if (isClickedTypeBtn(el.innerText)) {
-          alert("3");
-
+        alert("3");
+        const x = isClickedTypeBtn(el.innerText);
+        if (x) {
+          alert("4");
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
             (el.offsetLeft -
