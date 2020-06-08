@@ -234,6 +234,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         // if (isClickedTypeBtn(el.innerText)) {
         console.log(sessionStorage.getItem("filter_type"));
         console.log(el.innerText, "________");
+        alert(el.innerText.toLowerCase() == "паб");
         if (el.innerText.toLowerCase() == "паб") {
           const btnPositionToCenter =
             slideBtnMenu.current.offsetWidth / 2 -
