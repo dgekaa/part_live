@@ -42,6 +42,11 @@ const EditCompanyContent = styled.div`
   }
 `;
 
+const HeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const HeaderText = styled.h3`
   font-weight: 700;
   font-size: 24px;
@@ -53,6 +58,25 @@ const HeaderText = styled.h3`
     font-size: 18px;
     margin-bottom: 15px;
     text-align: center;
+  }
+`;
+
+const NewCompany = styled.div`
+  text-transform: uppercase;
+  padding: 0 10px;
+  border-radius: 5px;
+  height: 30px;
+  background-color: #e32a6c;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 15px;
+  font-weight: 500;
+  margin-bottom: 40px;
+  &:hover {
+    opacity: 0.7;
   }
 `;
 
@@ -130,6 +154,20 @@ const Td = styled.td`
   }
 `;
 
+const TdDelete = styled.td`
+  width: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e32a6c;
+  transition: 0.3s ease color;
+  font-weight: 500;
+  &:hover {
+    color: #000;
+  }
+`;
+
 const NameLink = styled(Link)`
   display: block;
   width: 100%;
@@ -162,7 +200,7 @@ const EditCompany = () => {
     hideSideMenu();
   };
 
-  useEffect(() => {
+  const refreshData = () => {
     QUERY({
       query: `query {
             places {id name  categories{name slug} streams{url preview}}
@@ -178,6 +216,10 @@ const EditCompany = () => {
         }
       })
       .catch((err) => console.log(err, "EDIT ERROR"));
+  };
+
+  useEffect(() => {
+    refreshData();
 
     sessionStorage.setItem("prevZoom", "");
     sessionStorage.setItem("prevCenter", "");
@@ -187,6 +229,57 @@ const EditCompany = () => {
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
   });
+
+  const createNewCompany = () => {
+    QUERY(
+      {
+        query: `mutation {
+          createPlace(
+            input:{
+              name: "Стандартное название",
+              address:"...",
+              description: "введите описание",
+              coordinates: "53.904241,27.556932"      
+            }){id name address description coordinates}        
+      }`,
+      },
+      cookies.origin_data
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.errors) {
+          console.log(data.data.createPlace.id, "____ID____");
+          refreshData();
+          return <Redirect to={`/admin/${data.data.createPlace.id}`} />;
+        } else {
+          console.log(data.errors, "EDIT ERROR");
+        }
+      })
+      .catch((err) => console.log(err, "EDIT ERROR"));
+  };
+
+  const deleteCompany = (id) => {
+    QUERY(
+      {
+        query: `mutation {
+          deletePlace(
+             id:${id}
+            ){id name}        
+      }`,
+      },
+      cookies.origin_data
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.errors) {
+          console.log(data, "____ID____");
+          refreshData();
+        } else {
+          console.log(data.errors, "EDIT ERROR");
+        }
+      })
+      .catch((err) => console.log(err, "EDIT ERROR"));
+  };
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -214,7 +307,17 @@ const EditCompany = () => {
               <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
               На главную
             </GoBackBtnD>
-            <HeaderText>СПИСОК ЗАВЕДЕНИЙ</HeaderText>
+
+            <HeaderRow>
+              <HeaderText>СПИСОК ЗАВЕДЕНИЙ</HeaderText>
+              <NewCompany
+                onClick={() => {
+                  createNewCompany();
+                }}
+              >
+                Создать заведение
+              </NewCompany>
+            </HeaderRow>
             <Table>
               <tbody>
                 {places &&
@@ -222,6 +325,16 @@ const EditCompany = () => {
                   places.map(({ id, name, categories }) => {
                     return (
                       <Tr key={id}>
+                        <TdDelete
+                          onClick={() => {
+                            var isDelete = window.confirm(
+                              "Действительно удалить?"
+                            );
+                            isDelete && deleteCompany(id);
+                          }}
+                        >
+                          &#215;
+                        </TdDelete>
                         <Td>
                           <NameLink to={`/admin/${id}`}>{name}</NameLink>
                         </Td>

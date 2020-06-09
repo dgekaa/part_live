@@ -289,11 +289,17 @@ const MapComponent = (props) => {
   const [currentCenterOfMap, setCurrentCenterOfMap] = useState();
   const [defaultCenter, setDefaultCenter] = useState();
 
+  const dateNow = new Date()
+    .toLocaleDateString()
+    .split(".")
+    .reverse()
+    .join("-");
+
   useEffect(() => {
     QUERY({
       query: `query{
           places{id name coordinates
-          streams{url name id preview schedules{id day start_time end_time}}
+          streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
           schedules{id day start_time end_time}
           categories{id name slug}}
         }`,
@@ -525,13 +531,20 @@ const MapComponent = (props) => {
               const setNextStreamTime = (time) => (nextStreamTime = time);
               const setNextWorkTime = (time) => (nextWorkTime = time);
 
-              isShowStreamNow(cluster.item, setShowStream, setNextStreamTime);
+              isShowStreamNow(
+                cluster.item,
+                setShowStream,
+                setNextStreamTime,
+                cluster.item.streams[0] &&
+                  dateNow === cluster.item.streams[0].see_you_tomorrow
+              );
               isWorkTimeNow(
                 cluster.item,
                 setWorkTime,
                 setIsWork,
                 setNextWorkTime
               );
+
               return (
                 <Marker
                   key={cluster.properties.crimeId}

@@ -36,7 +36,12 @@ const SetNewTimeObject = (data) => {
   return timeObject;
 };
 
-export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
+export const isShowStreamNow = (
+  item,
+  setShowStream,
+  setNextStreamTime,
+  see_you_tomorrow
+) => {
   if (item.streams[0]) {
     let yesterdayStream, todayStream;
 
@@ -69,20 +74,23 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
 
     if (
       startYesterdayStreamMS > endYesterdayStreamMS &&
-      endYesterdayStreamMS > currentTimeMS
+      endYesterdayStreamMS > currentTimeMS &&
+      !see_you_tomorrow
     ) {
       // идет видео за вчерашний день ещe
       setShowStream(true);
     } else if (
       startTodayStreamMS >= endTodayStreamMS &&
-      currentTimeMS >= startTodayStreamMS
+      currentTimeMS >= startTodayStreamMS &&
+      !see_you_tomorrow
     ) {
       // если видео началось сегодня и закончилось завтра
       setShowStream(true);
     } else if (
       startTodayStreamMS < endTodayStreamMS &&
       currentTimeMS > startTodayStreamMS &&
-      currentTimeMS < endTodayStreamMS
+      currentTimeMS < endTodayStreamMS &&
+      !see_you_tomorrow
     ) {
       // началось и закончилось сегодня
       setShowStream(true);
@@ -95,6 +103,7 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
         sortedArr.push(STobject[el.day]);
       });
       let isSetTime = false;
+
       for (let i = 0; i < sortedArr.length; i++) {
         const streamWillBeToday = sortedArr[i] && sortedArr[i].day === curDay;
         if (streamWillBeToday) {
@@ -107,7 +116,6 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
               day: "сегодня",
               start_time: sortedArr[i].start_time,
             });
-
             isSetTime = true;
           }
         }
@@ -118,7 +126,6 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
             if (sortedArr[i].start_time) {
               setNextStreamTime({
                 id: item.id,
-
                 day: sortedArr[i].day,
                 start_time: sortedArr[i].start_time,
               });
@@ -135,7 +142,6 @@ export const isShowStreamNow = (item, setShowStream, setNextStreamTime) => {
             if (sortedArr[i].start_time) {
               setNextStreamTime({
                 id: item.id,
-
                 day: sortedArr[i].day,
                 start_time: sortedArr[i].start_time,
               });

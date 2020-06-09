@@ -334,8 +334,19 @@ const SmallCompanyBlock = ({ item }) => {
   const [nextStreamTime, setNextStreamTime] = useState(false);
   const [nextWorkTime, setNextWorkTime] = useState(null);
 
+  const dateNow = new Date()
+    .toLocaleDateString()
+    .split(".")
+    .reverse()
+    .join("-");
+
   useEffect(() => {
-    isShowStreamNow(item, setShowStream, setNextStreamTime);
+    isShowStreamNow(
+      item,
+      setShowStream,
+      setNextStreamTime,
+      item.streams[0] && dateNow === item.streams[0].see_you_tomorrow
+    );
     isWorkTimeNow(item, setWorkTime, setIsWork, setNextWorkTime);
   }, [item]);
 
@@ -381,6 +392,13 @@ const SmallCompanyBlock = ({ item }) => {
       return "Нет предстоящих трансляций";
     }
   };
+
+  // const isTranslationDisabled = () => {
+  //   if (item.streams[0] && dateNow === item.streams[0].see_you_tomorrow) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>

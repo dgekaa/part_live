@@ -387,9 +387,22 @@ const Company = (props) => {
     }
   }, []);
 
+  const dateNow = new Date()
+    .toLocaleDateString()
+    .split(".")
+    .reverse()
+    .join("-");
+
   useEffect(() => {
     if (DATA) {
-      isShowStreamNow(DATA.place, setShowStream, setNextStreamTime);
+      isShowStreamNow(
+        DATA.place,
+        setShowStream,
+        setNextStreamTime,
+        DATA.place.streams &&
+          DATA.place.streams[0] &&
+          dateNow === DATA.place.streams[0].see_you_tomorrow
+      );
       isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
     }
   }, [DATA]);
@@ -399,7 +412,7 @@ const Company = (props) => {
       query: `query {
         place (id: ${props.match.params.id}) {
           id name address description
-          streams{url name id preview schedules{id day start_time end_time}}
+          streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
           categories{name slug} coordinates
           schedules {day start_time end_time} user {id name email}
         }
@@ -472,6 +485,25 @@ const Company = (props) => {
   };
 
   const whenIsTranslation = () => {
+    // if (
+    //   nextStreamTime.start_time &&
+    //   nextStreamTime.day.toLowerCase() !== "сегодня"
+    // ) {
+    //   return (
+    //     "Начало трансляции: " +
+    //     EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
+    //     " в " +
+    //     nextStreamTime.start_time
+    //   );
+    // } else if (
+    //   nextStreamTime.start_time &&
+    //   nextStreamTime.day.toLowerCase() === "сегодня"
+    // ) {
+    //   return "Начало трансляции: сегодня в " + nextStreamTime.start_time;
+    // } else if (!nextStreamTime.start_time) {
+    //   return "Нет предстоящих трансляций";
+    // }
+    console.log(nextStreamTime, "nextStreamTime");
     if (
       nextStreamTime.start_time &&
       nextStreamTime.day.toLowerCase() !== "сегодня"
@@ -664,14 +696,20 @@ const Company = (props) => {
                   <DescIconsColumnM>
                     <CustomImgTypeM
                       alt="ico"
-                      name={DATA.place.categories[0].slug}
+                      name={
+                        DATA.place.categories[0] &&
+                        DATA.place.categories[0].slug
+                      }
                       height="16"
                       width="16"
                     />
                     <CircleM isWork={isWork} />
                   </DescIconsColumnM>
                   <DescNoIconsColumnM>
-                    <CompanyTypeM>{DATA.place.categories[0].name}</CompanyTypeM>
+                    <CompanyTypeM>
+                      {DATA.place.categories[0] &&
+                        DATA.place.categories[0].name}
+                    </CompanyTypeM>
                     <OpenedToM>
                       {isWork && (
                         <span>Открыто: до {workTime.split("-")[1]}</span>

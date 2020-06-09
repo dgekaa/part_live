@@ -932,12 +932,21 @@ const Admin = (props) => {
                 id:"${props.match.params.id}"
                 name:"${nameOfCompany || DATA.name}"
                 ${
-                  typeOfCompanyId && typeOfCompanyId !== DATA.categories[0].id
+                  DATA.categories &&
+                  DATA.categories[0] &&
+                  typeOfCompanyId &&
+                  typeOfCompanyId !== DATA.categories[0].id
                     ? `categories:{
                     disconnect:"${DATA.categories[0].id}"
                     connect:"${typeOfCompanyId}"
                   }`
-                    : `categories:{}`
+                    : typeOfCompanyId
+                    ? `categories:{
+                      connect:"${typeOfCompanyId}"
+                    }`
+                    : `categories:{
+                      
+                    }`
                 }
               }
             ){id}
@@ -1727,7 +1736,8 @@ const Admin = (props) => {
                                       >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
 
-                                        {oneDay.start_time &&
+                                        {oneDay &&
+                                          oneDay.start_time &&
                                           (oneDay.start_time.split(":")[0] *
                                             3600 +
                                             oneDay.start_time.split(":")[1] *
@@ -1833,7 +1843,8 @@ const Admin = (props) => {
                                         }
                                       >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
-                                        {oneDay.start_time &&
+                                        {oneDay &&
+                                          oneDay.start_time &&
                                           (oneDay.start_time.split(":")[0] *
                                             3600 +
                                             oneDay.start_time.split(":")[1] *
