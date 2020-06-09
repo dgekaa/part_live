@@ -19,6 +19,7 @@ import TypeNav from "../../components/typeNav/TypeNav";
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
+import { defaultColor } from "../../constants";
 
 import { styles } from "../../components/googleMap/GoogleMapStyles";
 
@@ -84,7 +85,7 @@ const YouAreHere = styled.p`
 const ClusterMarker = styled.div`
   width: 36px;
   height: 36px;
-  background: #e32a6c;
+  background: ${defaultColor};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -191,6 +192,8 @@ const NoTranslationText = styled.p`
   align-items: center;
   text-align: center;
   justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
   @media (max-width: 760px) {
     height: 90px;
     text-align: center;
@@ -344,7 +347,7 @@ const MapComponent = (props) => {
     bounds,
     zoom,
     options: {
-      radius: 190,
+      radius: 300,
       maxZoom: 20,
     },
   });

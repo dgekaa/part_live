@@ -5,6 +5,7 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 
 import QUERY from "../../query";
+import { defaultColor } from "../../constants";
 
 const SideMenuWrap = styled(Link)`
   position: fixed;
@@ -89,7 +90,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
   });
 
   const clicked = {
-    color: "#e32a6c",
+    color: defaultColor,
   };
 
   return (

@@ -4,6 +4,7 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 
 import CustomImg from "../customImg/CustomImg";
+import { defaultColor } from "../../constants";
 
 const BottomMenuStyle = styled.div`
   display: none;
@@ -38,7 +39,7 @@ const Button = styled(Link)`
   background: #fff;
   &:hover {
     transition: 0.3s ease all;
-    color: #e32a6c;
+    color: ${defaultColor};
   }
 `;
 
@@ -58,14 +59,18 @@ const BottomMenu = ({ isShowMenu }) => {
     >
       <Button
         to="/home"
-        style={window.location.pathname === "/home" ? { color: "#e32a6c" } : {}}
+        style={
+          window.location.pathname === "/home" ? { color: defaultColor } : {}
+        }
       >
         <CustomImg alt="list" name={"menu2"} width={26} height={26} />
         <MenuText>СПИСОК</MenuText>
       </Button>
       <Button
         to="/map"
-        style={window.location.pathname === "/map" ? { color: "#e32a6c" } : {}}
+        style={
+          window.location.pathname === "/map" ? { color: defaultColor } : {}
+        }
       >
         <CustomImg alt="locat" name={"location1"} width={26} height={26} />
         <MenuText> КАРТА</MenuText>

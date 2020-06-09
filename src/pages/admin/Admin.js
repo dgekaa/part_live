@@ -22,6 +22,7 @@ import {
   EN_SHORT_DAY_OF_WEEK,
   EN_SHORT_TO_RU_SHORT,
   SHORT_DAY_OF_WEEK,
+  defaultColor,
 } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
 import {
@@ -64,7 +65,7 @@ const PartyLive = styled.p`
 
 const Live = styled.span`
   display: inline-block;
-  background-color: #e32a6c;
+  background-color: ${defaultColor};
   color: #fff;
   border-radius: 5px;
   margin-left: 3px;
@@ -109,10 +110,10 @@ const LeftAdminBtnD = styled.li`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: ${({ clicked }) => (clicked ? "#e32a6c" : "#000")};
+  color: ${({ clicked }) => (clicked ? defaultColor : "#000")};
   letter-spacing: 1px;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
 `;
 
@@ -143,7 +144,7 @@ const ProfileTitleH3D = styled.h3`
 
 const ProfileTitleNameD = styled.span`
   padding-left: 12px;
-  color: #e32a6c;
+  color: ${defaultColor};
   font-weight: bold;
   font-size: 24px;
   line-height: 24px;
@@ -185,14 +186,14 @@ const PreviewPhotoD = styled.div`
   flex-direction: column;
   cursor: pointer;
   &:hover {
-    border: 2px solid #e32a6c;
+    border: 2px solid ${defaultColor};
   }
   &:hover ${PreviewPhotoTextD} {
-    color: #e32a6c;
+    color: ${defaultColor};
     transition: 0.3s ease all;
   }
   &:hover ${PreviewPhotoSizeD} {
-    color: #e32a6c;
+    color: ${defaultColor};
     transition: 0.3s ease all;
   }
 `;
@@ -246,7 +247,7 @@ const DayOffDotD = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #e32a6c;
+  background: ${defaultColor};
   display: inline-block;
   top: -10px;
   position: relative;
@@ -281,8 +282,8 @@ const PreviewPhotoM = styled.div`
   align-self: center;
   margin-top: 15px;
   &:hover {
-    border: 2px solid #e32a6c;
-    color: #e32a6c;
+    border: 2px solid ${defaultColor};
+    color: ${defaultColor};
   }
 `;
 
@@ -867,14 +868,21 @@ const Admin = (props) => {
               input:{
                 id:"${props.match.params.id}"
                 ${
-                  typeOfCompanyId && typeOfCompanyId !== DATA.categories[0].id
+                  DATA.categories &&
+                  DATA.categories[0] &&
+                  typeOfCompanyId &&
+                  typeOfCompanyId !== DATA.categories[0].id
                     ? `categories:{
                     disconnect:"${DATA.categories[0].id}"
                     connect:"${typeOfCompanyId}"
                   }`
+                    : typeOfCompanyId
+                    ? `categories:{
+                            connect:"${typeOfCompanyId}"
+                          }`
                     : `categories:{}`
                 }
-               
+        
               }
             ){id}
           }`,
@@ -1599,7 +1607,7 @@ const Admin = (props) => {
                                           typeOfCompany &&
                                           typeOfCompany === el.name
                                             ? {
-                                                background: "#e32a6c",
+                                                background: defaultColor,
                                                 color: "#fff",
                                               }
                                             : !typeOfCompany &&
@@ -1610,7 +1618,7 @@ const Admin = (props) => {
                                               DATA.categories[0].name ===
                                                 el.name
                                             ? {
-                                                background: "#e32a6c",
+                                                background: defaultColor,
                                                 color: "#fff",
                                               }
                                             : {}
@@ -1729,7 +1737,7 @@ const Admin = (props) => {
                                           numberDayNow === i
                                             ? {
                                                 fontWeight: "700",
-                                                color: "#e32a6c",
+                                                color: defaultColor,
                                               }
                                             : { fontWeight: "normal" }
                                         }
@@ -1835,7 +1843,7 @@ const Admin = (props) => {
                                           numberDayNow === i
                                             ? {
                                                 fontWeight: "700",
-                                                color: "#E32A6C",
+                                                color: defaultColor,
                                               }
                                             : {
                                                 fontWeight: "normal",
@@ -1962,7 +1970,7 @@ const Admin = (props) => {
                             <Switch
                               onChange={setSwitchChecked}
                               checked={switchChecked}
-                              onColor="#e32a6c"
+                              onColor={defaultColor}
                               offColor="#999"
                               uncheckedIcon={false}
                               checkedIcon={false}
@@ -2035,70 +2043,69 @@ const Admin = (props) => {
                       >
                         Стрим<span className="rotateArrow"></span>
                       </div>
-                      {!!DATA.streams && DATA.streams[0] && (
-                        <SideBar
-                          isOpen={streamOpen}
-                          right
-                          pageWrapId={"page-wrap"}
-                          outerContainerId={"App"}
-                          width={"100%"}
-                        >
-                          <div style={{ position: "relative", top: "-46px" }}>
-                            <div
+                      <SideBar
+                        isOpen={streamOpen}
+                        right
+                        pageWrapId={"page-wrap"}
+                        outerContainerId={"App"}
+                        width={"100%"}
+                      >
+                        <div style={{ position: "relative", top: "-46px" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              height: "44px",
+                              borderBottom: "1px solid #ECECEC",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              padding: "0 25px",
+                            }}
+                          >
+                            <p
+                              className=""
                               style={{
-                                display: "flex",
-                                height: "44px",
-                                borderBottom: "1px solid #ECECEC",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: "0 25px",
+                                letterSpacing: "0.5px",
+                                color: defaultColor,
+                                fontSize: "16px",
+                                fontWeight: "normal",
+                              }}
+                              onClick={() => {
+                                closeAllSidebar();
                               }}
                             >
-                              <p
-                                className=""
-                                style={{
-                                  letterSpacing: "0.5px",
-                                  color: "#E32A6C",
-                                  fontSize: "16px",
-                                  fontWeight: "normal",
-                                }}
-                                onClick={() => {
-                                  closeAllSidebar();
-                                }}
-                              >
-                                Отмена
-                              </p>
-                              <Link to="/home">
-                                <PartyLive>
-                                  PARTY<Live>.LIVE</Live>
-                                </PartyLive>
-                              </Link>
-                              <p
-                                style={{
-                                  letterSpacing: "0.5px",
-                                  color: "#E32A6C",
-                                  fontSize: "16px",
-                                  fontWeight: "normal",
-                                }}
-                                className=""
-                                onClick={() => {
-                                  closeAllSidebar();
-                                }}
-                              >
-                                Готово
-                              </p>
-                            </div>
-                            <AdminMenuTitleM>Стрим</AdminMenuTitleM>
-
+                              Отмена
+                            </p>
+                            <Link to="/home">
+                              <PartyLive>
+                                PARTY<Live>.LIVE</Live>
+                              </PartyLive>
+                            </Link>
+                            <p
+                              style={{
+                                letterSpacing: "0.5px",
+                                color: defaultColor,
+                                fontSize: "16px",
+                                fontWeight: "normal",
+                              }}
+                              className=""
+                              onClick={() => {
+                                closeAllSidebar();
+                              }}
+                            >
+                              Готово
+                            </p>
+                          </div>
+                          <AdminMenuTitleM>Стрим</AdminMenuTitleM>
+                          {!!DATA.streams && DATA.streams[0] && (
                             <div className="videoWrapAdminMobile">
                               <VideoPlayer
                                 preview={DATA.streams[0].preview}
                                 src={DATA.streams[0].url}
                               />
                             </div>
-                          </div>
-                        </SideBar>
-                      )}
+                          )}
+                        </div>
+                      </SideBar>
                     </div>
                     {/* ______________________________Профиль заведения */}
                     <div className="menuBlockWrap profile">
@@ -2134,7 +2141,7 @@ const Admin = (props) => {
                                 className=""
                                 style={{
                                   letterSpacing: "0.5px",
-                                  color: "#E32A6C",
+                                  color: defaultColor,
                                   fontWeight: 500,
                                   fontSize: "18px",
                                 }}
@@ -2156,7 +2163,7 @@ const Admin = (props) => {
                               <p
                                 style={{
                                   letterSpacing: "0.5px",
-                                  color: "#E32A6C",
+                                  color: defaultColor,
                                   fontWeight: 500,
                                   fontSize: "18px",
                                 }}
@@ -2300,20 +2307,21 @@ const Admin = (props) => {
                                     alignItems: "center",
                                   }}
                                 >
-                                  <span
-                                    className="categoryAloneBtn"
-                                    style={{ margin: 0 }}
-                                  >
-                                    {renderCustomTypeImg(
-                                      DATA.categories &&
-                                        DATA.categories[0] &&
-                                        DATA.categories[0].slug,
-                                      false
+                                  {DATA.categories &&
+                                    DATA.categories[0] &&
+                                    DATA.categories[0].slug && (
+                                      <span
+                                        className="categoryAloneBtn"
+                                        style={{ margin: 0 }}
+                                      >
+                                        {renderCustomTypeImg(
+                                          DATA.categories[0].slug,
+                                          false
+                                        )}
+                                        {DATA.categories[0].name}
+                                      </span>
                                     )}
-                                    {DATA.categories &&
-                                      DATA.categories[0] &&
-                                      DATA.categories[0].name}
-                                  </span>
+
                                   <span
                                     className="ChooseNewCategory"
                                     onClick={() => togglePopupChooseType()}
@@ -2393,7 +2401,7 @@ const Admin = (props) => {
                                   className=""
                                   style={{
                                     letterSpacing: "0.5px",
-                                    color: "#E32A6C",
+                                    color: defaultColor,
                                     fontSize: "16px",
                                     fontWeight: "normal",
                                   }}
@@ -2411,7 +2419,7 @@ const Admin = (props) => {
                                 <p
                                   style={{
                                     letterSpacing: "0.5px",
-                                    color: "#E32A6C",
+                                    color: defaultColor,
                                     fontSize: "16px",
                                     fontWeight: "normal",
                                   }}
@@ -2439,7 +2447,7 @@ const Admin = (props) => {
                                               style={
                                                 numberDayNow === i
                                                   ? {
-                                                      color: "#E32A6C",
+                                                      color: defaultColor,
                                                       fontWeight: "700",
                                                     }
                                                   : { fontWeight: "400" }
@@ -2531,7 +2539,7 @@ const Admin = (props) => {
                                 className=""
                                 style={{
                                   letterSpacing: "0.5px",
-                                  color: "#E32A6C",
+                                  color: defaultColor,
                                   fontSize: "16px",
                                   fontWeight: "normal",
                                 }}
@@ -2549,7 +2557,7 @@ const Admin = (props) => {
                               <p
                                 style={{
                                   letterSpacing: "0.5px",
-                                  color: "#E32A6C",
+                                  color: defaultColor,
                                   fontSize: "16px",
                                   fontWeight: "normal",
                                 }}
@@ -2613,7 +2621,7 @@ const Admin = (props) => {
                                             style={
                                               numberDayNow === i
                                                 ? {
-                                                    color: "#E32A6C",
+                                                    color: defaultColor,
                                                     fontWeight: "700",
                                                   }
                                                 : { fontWeight: "400" }
@@ -2708,7 +2716,7 @@ const Admin = (props) => {
                     className=""
                     style={{
                       letterSpacing: "0.5px",
-                      color: "#E32A6C",
+                      color: defaultColor,
                       fontSize: "16px",
                       fontWeight: "normal",
                     }}
@@ -2731,7 +2739,7 @@ const Admin = (props) => {
                   <p
                     style={{
                       letterSpacing: "0.5px",
-                      color: "#E32A6C",
+                      color: defaultColor,
                       fontSize: "16px",
                       fontWeight: "normal",
                     }}
@@ -2829,7 +2837,7 @@ const Admin = (props) => {
                   className=""
                   style={{
                     letterSpacing: "0.5px",
-                    color: "#E32A6C",
+                    color: defaultColor,
                     fontWeight: 500,
                     fontSize: "18px",
                   }}
@@ -2853,7 +2861,7 @@ const Admin = (props) => {
                 <p
                   style={{
                     letterSpacing: "0.5px",
-                    color: "#E32A6C",
+                    color: defaultColor,
                     fontWeight: 500,
                     fontSize: "18px",
                   }}
@@ -2881,7 +2889,7 @@ const Admin = (props) => {
                           typeOfCompany &&
                           typeOfCompany === el.name
                             ? {
-                                background: "#e32a6c",
+                                background: defaultColor,
                                 color: "#fff",
                               }
                             : !typeOfCompany &&
@@ -2891,7 +2899,7 @@ const Admin = (props) => {
                               el.name &&
                               DATA.categories[0].name === el.name
                             ? {
-                                background: "#e32a6c",
+                                background: defaultColor,
                                 color: "#fff",
                               }
                             : {})
@@ -2947,7 +2955,7 @@ const Admin = (props) => {
                   className=""
                   style={{
                     letterSpacing: "0.5px",
-                    color: "#E32A6C",
+                    color: defaultColor,
                     fontSize: "18px",
                     fontWeight: 500,
                   }}
@@ -2962,7 +2970,7 @@ const Admin = (props) => {
                 <p
                   style={{
                     letterSpacing: "0.5px",
-                    color: "#E32A6C",
+                    color: defaultColor,
                     fontSize: "18px",
                     fontWeight: 500,
                   }}
@@ -3036,7 +3044,7 @@ const Admin = (props) => {
                 <p
                   style={{
                     letterSpacing: "0.5px",
-                    color: "#E32A6C",
+                    color: defaultColor,
                     fontSize: "16px",
                     fontWeight: 500,
                   }}
@@ -3060,7 +3068,7 @@ const Admin = (props) => {
                 <p
                   style={{
                     letterSpacing: "0.5px",
-                    color: "#E32A6C",
+                    color: defaultColor,
                     fontSize: "16px",
                     fontWeight: 500,
                   }}
@@ -3123,7 +3131,7 @@ const Admin = (props) => {
             justifyContent: "center",
             alignItems: "center",
             color: "#fff",
-            background: "#e32a6c",
+            background: defaultColor,
             borderRadius: "5px",
             fontWeight: "400",
             textTransform: "uppercase",

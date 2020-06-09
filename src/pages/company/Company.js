@@ -19,6 +19,7 @@ import {
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
 import { DAY_OF_WEEK, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
+import { defaultColor } from "../../constants";
 
 import "./company.css";
 
@@ -30,7 +31,7 @@ const GoBackBtnD = styled(Link)`
   width: 150px;
   line-height: 100px;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
   @media (max-width: 760px) {
     display: none;
@@ -185,7 +186,7 @@ const SmallMapD = styled.div`
 `;
 
 const CompanyTypeD = styled.div`
-  color: #e32a6c;
+  color: ${defaultColor};
   font-weight: 700;
   font-size: 18px;
   line-height: 21px;
@@ -520,7 +521,7 @@ const Company = (props) => {
     ) {
       return "Трансляция начнется сегодня в " + nextStreamTime.start_time;
     } else if (!nextStreamTime.start_time) {
-      return "Нет предстоящих трансляций";
+      return "Заведение закрыто";
     }
   };
 

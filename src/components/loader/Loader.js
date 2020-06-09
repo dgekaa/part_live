@@ -1,6 +1,8 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
 
+import { defaultColor } from "../../constants";
+
 const LoaderWrap = styled.div`
   display: flex;
   top: 100px;
@@ -38,7 +40,7 @@ const Roll = styled.div`
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #e32a6c;
+    background: ${defaultColor};
     margin: -4px 0 0 -4px;
   }
   &:nth-child(1) {

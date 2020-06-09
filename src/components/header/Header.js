@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import Burger from "../burger/Burger";
 import QUERY from "../../query";
+import { defaultColor } from "../../constants";
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -61,11 +62,11 @@ const PartyLive = styled.p`
 
 const Live = styled.span`
   display: inline-block;
-  background-color: #e32a6c;
   color: #fff;
   border-radius: 5px;
   margin-left: 3px;
   padding: 0 7px;
+  background-color: ${defaultColor};
 `;
 
 const GoBackArrow = styled.div`
@@ -115,14 +116,16 @@ const HeaderBTN = styled(Link)`
   font-size: 14px;
   font-weight: 500;
   color: ${(props) =>
-    props.pathname && props.pathname === "/editCompany" ? "#e32a6c" : "#000"};
+    props.pathname && props.pathname === "/editCompany"
+      ? defaultColor
+      : "#000"};
   margin-left: 10px;
   padding: 5px;
   border-radius: 5px;
   cursor: pointer;
   transition: 0.3s ease color;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
 `;
 

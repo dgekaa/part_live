@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import QUERY from "../../query";
 import CustomImg from "../customImg/CustomImg";
+import { defaultColor } from "../../constants";
 
 import "./companyNav.css";
 
@@ -87,7 +88,7 @@ const CompanyNavBtn = styled.div`
   border-right: none;
   transition: 0.2s ease all;
   &:hover {
-    background-color: #e32a6c;
+    background-color: ${defaultColor};
   }
   &:hover ${CompanyNavLink} {
     color: #fff;
@@ -307,7 +308,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       >
         <CompanyNavBtn
           className="companyNavBtn"
-          style={isClickedAllBtn() ? { backgroundColor: "#e32a6c" } : {}}
+          style={isClickedAllBtn() ? { backgroundColor: defaultColor } : {}}
           onClick={(e) => {
             clickedType();
             setClickedTypeLocal();
@@ -330,7 +331,9 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               data-name={el.name}
               key={i}
               ref={slideBtn}
-              style={isClickedTypeBtn(el.name) ? { background: "#e32a6c" } : {}}
+              style={
+                isClickedTypeBtn(el.name) ? { background: defaultColor } : {}
+              }
               onClick={(e) => {
                 clickedType(el.name);
                 setClickedTypeLocal(el.name);

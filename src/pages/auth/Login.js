@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import QUERY from "../../query";
+import { defaultColor } from "../../constants";
 
 export const GoBackBtn = styled(Link)`
   position: relative;
@@ -17,7 +18,7 @@ export const GoBackBtn = styled(Link)`
   height: 30px;
   width: 150px;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
   @media (max-width: 760px) {
     display: none;
@@ -116,8 +117,8 @@ export const AuthSubmitBtn = styled(AuthInput)`
   -ms-user-select: initial;
   user-select: initial;
   -webkit-appearance: none;
-  background: #e32a6c;
-  border: 1px solid #e32a6c;
+  background: ${defaultColor};
+  border: 1px solid ${defaultColor};
   box-sizing: border-box;
   border-radius: 5px;
   font-weight: 700;
@@ -132,8 +133,8 @@ export const AuthSubmitBtn = styled(AuthInput)`
 `;
 
 export const AuthForgetSubmitBtn = styled.div`
-  background: #e32a6c;
-  border: 1px solid #e32a6c;
+  background: ${defaultColor};
+  border: 1px solid ${defaultColor};
   box-sizing: border-box;
   border-radius: 5px;
   font-weight: 700;
@@ -161,7 +162,7 @@ export const Question = styled.p`
   cursor: pointer;
   transition: 0.3s ease color;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
 `;
 

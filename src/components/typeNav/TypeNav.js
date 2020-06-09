@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import { defaultColor } from "../../constants";
+
 const TypeNavStyle = styled.div`
   height: 70px;
   display: -webkit-box;
@@ -39,13 +41,13 @@ const Block = styled(Link)`
   }
   &:hover {
     color: #fff;
-    background: #e32a6c;
+    background: ${defaultColor};
   }
 `;
 
 const clickedStyle = {
   color: "#fff",
-  background: "#e32a6c",
+  background: defaultColor,
 };
 
 const TypeNav = ({ style }) => {

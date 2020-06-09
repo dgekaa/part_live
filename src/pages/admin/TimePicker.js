@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
+import { defaultColor } from "../../constants";
+
 const TPName = styled.p`
   text-align: center;
   padding-bottom: 15px;
@@ -69,10 +71,10 @@ const TopArrow = styled.span`
     transform: rotate(-45deg);
   }
   &:hover::after {
-    background-color: #e32a6c;
+    background-color: ${defaultColor};
   }
   &:hover::before {
-    background-color: #e32a6c;
+    background-color: ${defaultColor};
   }
 `;
 

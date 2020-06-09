@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import { API_KEY } from "../../constants";
 import CustomImg from "../customImg/CustomImg";
+import { defaultColor } from "../../constants";
 
 import { styles } from "./GoogleMapStyles.js";
 import "./googleMap.css";
@@ -30,7 +31,7 @@ const MapHeader = styled.div`
 `;
 const MapHeaderBtn = styled.p`
   letter-spacing: 0.5px;
-  color: #e32a6c;
+  color: ${defaultColor};
   font-size: 16px;
   font-weight: normal;
 `;
@@ -127,7 +128,7 @@ const SaveBtn = styled.div`
   text-align: center;
   cursor: pointer;
   font-weight: 700;
-  background-color: #e32a6c;
+  background-color: ${defaultColor};
   color: #fff;
 `;
 

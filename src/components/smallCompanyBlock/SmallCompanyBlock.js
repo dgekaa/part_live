@@ -6,6 +6,7 @@ import { EN_SHORT_TO_RU_LONG_V_P, EN_SHORT_TO_RU_LONG } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import styled from "styled-components";
+import { defaultColor } from "../../constants";
 
 const SmallCompBlock = styled(Link)`
   width: 240px;
@@ -291,7 +292,7 @@ const DistanceM = styled.p`
   font-weight: bold;
   font-size: 14px;
   letter-spacing: 0.5px;
-  color: #e32a6c;
+  color: ${defaultColor};
   line-height: 23px;
   white-space: nowrap;
 `;
@@ -389,7 +390,7 @@ const SmallCompanyBlock = ({ item }) => {
     ) {
       return "Начало трансляции: сегодня в " + nextStreamTime.start_time;
     } else if (!nextStreamTime.start_time) {
-      return "Нет предстоящих трансляций";
+      return "Заведение закрыто";
     }
   };
 

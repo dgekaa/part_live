@@ -8,6 +8,7 @@ import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
+import { defaultColor } from "../../constants";
 
 const GoBackBtnD = styled(Link)`
   font-size: 16px;
@@ -17,7 +18,7 @@ const GoBackBtnD = styled(Link)`
   width: 150px;
   line-height: 100px;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
   @media (max-width: 760px) {
     display: none;
@@ -45,6 +46,9 @@ const EditCompanyContent = styled.div`
 const HeaderRow = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: 760px) {
+    display: block;
+  }
 `;
 
 const HeaderText = styled.h3`
@@ -66,7 +70,7 @@ const NewCompany = styled.div`
   padding: 0 10px;
   border-radius: 5px;
   height: 30px;
-  background-color: #e32a6c;
+  background-color: ${defaultColor};
   color: #fff;
   display: flex;
   justify-content: center;
@@ -77,6 +81,10 @@ const NewCompany = styled.div`
   margin-bottom: 40px;
   &:hover {
     opacity: 0.7;
+  }
+  @media (max-width: 760px) {
+    width: 200px;
+    margin: 0 auto 20px auto;
   }
 `;
 
@@ -108,19 +116,19 @@ const Td = styled.td`
   &:first-of-type {
     flex: 1.5;
   }
-  &:nth-child(1) {
+  &:nth-child(2) {
     font-weight: 400;
     font-size: 18px;
   }
-  &:nth-child(2) {
+  &:nth-child(3) {
     font-weight: 400;
     font-size: 18px;
     color: #aeaeae;
   }
-  &:nth-child(3) {
+  &:nth-child(4) {
     font-weight: 500;
     font-size: 18px;
-    color: #e32a6c;
+    color: ${defaultColor};
   }
   @media (max-width: 760px) {
     display: flex;
@@ -128,7 +136,7 @@ const Td = styled.td`
     line-height: 45px;
     font-weight: 700;
     display: inline-block;
-    &:nth-child(1) {
+    &:nth-child(2) {
       white-space: nowrap;
       overflow: hidden;
       -o-text-overflow: ellipsis;
@@ -160,7 +168,7 @@ const TdDelete = styled.td`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #e32a6c;
+  color: ${defaultColor};
   transition: 0.3s ease color;
   font-weight: 500;
   &:hover {
@@ -173,7 +181,7 @@ const NameLink = styled(Link)`
   width: 100%;
   transition: 0.3s ease color;
   &:hover {
-    color: #e32a6c;
+    color: ${defaultColor};
   }
 `;
 

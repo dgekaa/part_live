@@ -75,3 +75,5 @@ export const EN_SHORT_DAY_OF_WEEK = [
     day: "Sun",
   },
 ];
+
+export const defaultColor = "#FF1569";
