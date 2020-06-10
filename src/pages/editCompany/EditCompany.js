@@ -65,11 +65,11 @@ const NewCompany = styled.div`
   background-color: ${defaultColor};
   cursor: pointer;
   color: #fff;
-  width: 300px;
-  height: 50px;
+  width: 240px;
+  height: 40px;
   border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 700;
   text-transform: uppercase;
   margin-top: 20px;
   &:hover {
@@ -162,7 +162,8 @@ const TdDelete = styled.td`
   align-items: center;
   color: ${defaultColor};
   transition: 0.3s ease color;
-  font-weight: 500;
+  font-weight: 400;
+  font-size: 22px;
   &:hover {
     color: #000;
   }

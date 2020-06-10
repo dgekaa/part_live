@@ -8,9 +8,12 @@ const VideoError = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  color: #fff;
   text-align: center;
+  color: #c4c4c4;
   padding: 30px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
   @media (max-width: 760px) {
     height: 380px;
   }

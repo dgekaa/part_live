@@ -278,7 +278,15 @@ const MapContainer = ({
             </InfoWindow>
           </Marker>
         )}
-        <Marker name={"Place"} title={"!!"} position={initialCenter} />
+        <Marker
+          name={"Place"}
+          title={"!!"}
+          position={initialCenter}
+          icon={{
+            url: `${process.env.PUBLIC_URL}/img/location.png`,
+            scaledSize: { width: 30, height: 30 },
+          }}
+        />
       </MyMap>
       {isNewAddress && (
         <MapHeader>

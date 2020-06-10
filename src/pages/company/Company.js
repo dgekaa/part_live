@@ -89,6 +89,10 @@ const NoVideoD = styled.div`
   background: #000;
   height: 300px;
   margin-bottom: 10px;
+  color: #c4c4c4;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
 `;
 
 const VideoDescrD = styled.p`
@@ -121,11 +125,13 @@ const DescNameD = styled.h3`
   font-weight: 700;
   font-size: 30px;
   line-height: 35px;
+  margin-left: -1px;
 `;
 
 const CompanyTypeRowD = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 10px;
 `;
 const CustomImgTypeD = styled(CustomImg)`
   margin-right: 6px;
@@ -133,21 +139,8 @@ const CustomImgTypeD = styled(CustomImg)`
 
 const CompanyTypeD = styled.div`
   font-weight: 500;
-  font-size: 16px;
+  font-size: 20px;
 `;
-
-// const DayOfWeekD = styled.p`
-//   text-transform: uppercase;
-//   display: inline-block;
-//   padding: 0 10px;
-//   height: 22px;
-//   background: #36cc33;
-//   border-radius: 5px;
-//   color: #fff;
-//   font-weight: 700;
-//   font-size: 10px;
-//   line-height: 22px;
-// `;
 
 const RowWithImageD = styled.div`
   display: -webkit-box;
@@ -574,14 +567,13 @@ const Company = (props) => {
                         DATA.place.categories[0] &&
                         DATA.place.categories[0].slug
                       }
-                      height="20"
-                      width="20"
+                      height="25"
+                      width="25"
                     />
                     <CompanyTypeD>
                       {DATA.place.categories[0] &&
                         DATA.place.categories[0].name}
                     </CompanyTypeD>
-                    {/* <DayOfWeekD>{DAY_OF_WEEK[numberDayNow]}</DayOfWeekD> */}
                   </CompanyTypeRowD>
                 </TopDescriptionD>
 
@@ -619,7 +611,7 @@ const Company = (props) => {
                   <RowWithImageD>
                     <CustomImgStyleD
                       alt="location"
-                      name={"location1"}
+                      name={"location"}
                       height="16"
                       width="16"
                     />
