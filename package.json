@@ -17,6 +17,7 @@
     "@testing-library/user-event": "^7.1.2",
     "apollo-upload-client": "^13.0.0",
     "autosize": "^4.0.2",
+    "axios": "^0.19.2",
     "base64-to-image": "^1.0.2",
     "cropperjs": "^1.5.7",
     "date-fns": "^2.10.0",

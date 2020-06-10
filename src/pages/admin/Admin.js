@@ -7,6 +7,7 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 import Switch from "react-switch";
 import autosize from "autosize";
+import axios from "axios";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
@@ -186,7 +187,8 @@ const PreviewPhotoD = styled.div`
   flex-direction: column;
   cursor: pointer;
   &:hover {
-    border: 2px solid ${defaultColor};
+    border: ${({ doNotHoverBorder }) =>
+      doNotHoverBorder ? "" : `2px solid ${defaultColor}`};
   }
   &:hover ${PreviewPhotoTextD} {
     color: ${defaultColor};
@@ -382,7 +384,7 @@ const Admin = (props) => {
   const [currentImage, setCurrentImage] = useState(null);
   const [switchChecked, setSwitchChecked] = useState(null);
   const [isSuccessSave, setIsSuccessSave] = useState(false);
-  const [FILE, setFILE] = useState("");
+  const [uploadImage, setUploadImage] = useState(null);
 
   const [cookies] = useCookies([]);
 
@@ -438,7 +440,7 @@ const Admin = (props) => {
     QUERY({
       query: `query {
       place (id:"${props.match.params.id}") {
-        id name address description logo menu actions coordinates alias
+        id name address description logo menu actions coordinates alias profile_image
         streams{url name id preview schedules{id day start_time end_time} see_you_tomorrow}
         schedules {id day start_time end_time}
         categories {id name slug}
@@ -943,7 +945,7 @@ const Admin = (props) => {
               input:{
                 id:"${props.match.params.id}"
                 name:"${nameOfCompany || DATA.name}"
-                alias:"${aliasOfCompany || DATA.alias}"
+                alias:"${aliasOfCompany || DATA.alias}"              
                 ${
                   DATA.categories &&
                   DATA.categories[0] &&
@@ -980,6 +982,80 @@ const Admin = (props) => {
           }
         })
         .catch((err) => console.log(err, "  *******ERR"));
+    }
+  };
+
+  const updateUploadImage = (profile_image) => {
+    QUERY(
+      {
+        query: `mutation {
+          updatePlace(
+            input:{
+              id:"${props.match.params.id}"
+              profile_image:"${profile_image}"
+            }
+          ){id profile_image}
+        }`,
+      },
+      cookies.origin_data
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.errors) {
+          console.log(data, "DATA !!!");
+          handeleClearToDefault();
+          refreshData();
+        } else {
+          console.log(data.errors, " ERRORS");
+        }
+      })
+      .catch((err) => console.log(err, "  *******ERR"));
+  };
+
+  const uploadImageTranscode = () => {
+    if (cookies.origin_data) {
+      const query = `
+          mutation ($file: Upload!) {
+            placeImage(file: $file)
+          }
+        `;
+
+      const data = {
+        file: null,
+      };
+
+      const operations = JSON.stringify({
+        query,
+        variables: {
+          data,
+        },
+      });
+      let formData = new FormData();
+      formData.append("operations", operations);
+      const map = {
+        "0": ["variables.file"],
+      };
+      formData.append("map", JSON.stringify(map));
+      formData.append("0", imageDestination);
+
+      axios({
+        url: "http://194.87.95.37/graphql",
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: cookies.origin_data
+            ? "Bearer " + cookies.origin_data
+            : "",
+        },
+        data: formData,
+      })
+        .then(function (res) {
+          res.data.data.placeImage &&
+            updateUploadImage(res.data.data.placeImage);
+        })
+        .catch(function (err) {
+          console.log(err, " ERR");
+        });
     }
   };
 
@@ -1030,17 +1106,13 @@ const Admin = (props) => {
         imageSmoothingEnabled: true,
         crop: (e) => {
           const canvas = cropper.getCroppedCanvas();
-
           canvas.toBlob(function (blob) {
-            const formData = new FormData();
-            formData.append("my-file", blob, "filename.png");
-
-            // Post via axios or other transport method
-            setImageDestination(formData);
+            if (blob) {
+              const formData = new FormData();
+              formData.append("my-file", blob, "filename.png");
+              setImageDestination(blob);
+            }
           });
-
-          // var base64Str = canvas.toDataURL("image/png");
-          // setImageDestination(base64Str);
         },
       });
     }
@@ -1056,25 +1128,6 @@ const Admin = (props) => {
       setUseProfilePic(url);
     }
   };
-
-  // function submitImage() {
-  //   const formData = new FormData();
-  //   formData.append("file", currentImage);
-
-  //   fetch("http://194.87.95.37/graphql", {
-  //     method: "POST",
-  //     mode: "cors",
-  //     body: JSON.stringify(formData),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: cookies.origin_data
-  //         ? "Bearer " + cookies.origin_data
-  //         : "",
-  //     },
-  //   })
-  //     .then((res) => console.log(res, "RES"))
-  //     .catch((err) => console.log(err, " ERR"));
-  // }
 
   const downloadImgFromCanvas = () => {
     if (imgSrc && imgSrcExt) {
@@ -1384,75 +1437,41 @@ const Admin = (props) => {
                                         alt="src"
                                       />
                                     </ImgContainerD>
-
                                     <CanvasImageD
                                       ref={imagePreviewCanvas}
                                     ></CanvasImageD>
                                   </CropWrapperD>
-
-                                  <span
-                                    onClick={() => {
-                                      if (cookies.origin_data) {
-                                        // var formData = new FormData();
-                                        // formData.append("username", "dgeka");
-                                        // formData.append("userfile", FILE);
-                                        // console.log(formData, "formData");
-                                        fetch("http://194.87.95.37/graphql", {
-                                          method: "POST",
-                                          mode: "cors",
-                                          body: JSON.stringify({
-                                            query: `
-                                              mutation($file: Upload!) {
-                                                placeImage(file: $file)
-                                              }
-                                            `,
-                                            variables: {
-                                              file: FILE,
-                                            },
-                                          }),
-                                          headers: {
-                                            "Content-Type":
-                                              "multipart/form-data",
-                                            // Accept: "application/json",
-                                            Authorization: cookies.origin_data
-                                              ? "Bearer " + cookies.origin_data
-                                              : "",
-                                          },
-                                        })
-                                          .then((res) => res.json())
-                                          .then((data) => {
-                                            if (!data.errors) {
-                                              console.log(data, "SUCCESS");
-                                            } else {
-                                              console.log(
-                                                data.errors,
-                                                " ERRORS"
-                                              );
-                                            }
-                                          })
-                                          .catch((err) =>
-                                            console.log(err, "  *******ERR")
-                                          );
-                                      }
-                                    }}
-                                  >
-                                    Скачать
-                                  </span>
                                 </div>
                               ) : (
                                 <PreviewPhotoD
+                                  doNotHoverBorder={DATA.profile_image}
                                   onClick={() =>
                                     document
                                       .querySelector(".previewRef")
                                       .click()
                                   }
                                 >
-                                  <PreviewPhotoTextD>
-                                    Загрузить фото
-                                  </PreviewPhotoTextD>
-                                  <PreviewPhotoSizeD>
-                                    250 X 250
-                                  </PreviewPhotoSizeD>
+                                  {DATA.profile_image ? (
+                                    <img
+                                      className={"uploadImgStyle"}
+                                      // style={{
+                                      //   borderRadius: "10px",
+                                      //   height: "254px",
+                                      //   width: "254px",
+                                      // }}
+                                      src={`http://194.87.95.37/storage/${DATA.profile_image}`}
+                                      alt="image"
+                                    />
+                                  ) : (
+                                    <>
+                                      <PreviewPhotoTextD>
+                                        Загрузить фото
+                                      </PreviewPhotoTextD>
+                                      <PreviewPhotoSizeD>
+                                        250 X 250
+                                      </PreviewPhotoSizeD>
+                                    </>
+                                  )}
                                 </PreviewPhotoD>
                               )}
 
@@ -1461,12 +1480,6 @@ const Admin = (props) => {
                                 accept={acceptedFileTypes}
                                 maxSize={imageMaxSize}
                                 onDrop={(acceptedFiles, rejectedFiles) => {
-                                  console.log(
-                                    acceptedFiles,
-                                    "________acceptedFiles"
-                                  );
-                                  setFILE(acceptedFiles[0]);
-
                                   handleOnDrop(acceptedFiles, rejectedFiles);
                                 }}
                               >
@@ -1690,6 +1703,8 @@ const Admin = (props) => {
                                 style={{ marginRight: "20px" }}
                                 className="saveBtnProfile"
                                 onClick={() => {
+                                  checkValidationError() &&
+                                    uploadImageTranscode();
                                   checkValidationError() && updatePlaceData();
                                 }}
                               >

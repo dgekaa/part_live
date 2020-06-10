@@ -7,6 +7,16 @@ textarea {
   user-select: initial;
   -webkit-appearance: none;
 }
+.uploadImgStyle {
+  border-radius: 10px !important;
+  height: 254px;
+  width: 254px;
+}
+.uploadImgStyle:hover {
+  transition: 0.1s ease all;
+  border: 2px solid #f8104d;
+  box-sizing: content-box;
+}
 .popupPickerBtns {
   display: flex;
   justify-content: space-around;
@@ -894,6 +904,7 @@ textarea {
     margin-bottom: 65px;
     flex: 1;
   }
+
   .makeAsDayOffMobile {
     display: block;
 

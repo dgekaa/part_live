@@ -74,7 +74,7 @@ const Home = () => {
     QUERY({
       query: `query {
         places {
-          id name address description logo menu actions coordinates
+          id name address description profile_image logo menu actions coordinates
           streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
           schedules {id day start_time end_time}
           categories {id name slug}

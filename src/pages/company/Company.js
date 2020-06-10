@@ -93,6 +93,9 @@ const NoVideoD = styled.div`
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
+  background-image: url(${({ bg }) => bg});
+  background-size: cover;
+  background-position: center;
 `;
 
 const VideoDescrD = styled.p`
@@ -246,6 +249,9 @@ const NoVideoM = styled.div`
   background: #000;
   margin-bottom: 10px;
   transition: 0.3s ease all;
+  background-image: url(${({ bg }) => bg});
+  background-size: cover;
+  background-position: center;
   @media (max-width: 460px) {
     /* height: 175px; */
   }
@@ -408,7 +414,7 @@ const Company = (props) => {
     QUERY({
       query: `query {
         place (id: ${props.match.params.id}) {
-          id name address description
+          id name address description profile_image
           streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
           categories{name slug} coordinates
           schedules {day start_time end_time} user {id name email}
@@ -551,7 +557,18 @@ const Company = (props) => {
                     />
                   </YesVideoD>
                 )}
-                {!showStream && <NoVideoD>{whenIsTranslation()}</NoVideoD>}
+                {!showStream && (
+                  <NoVideoD
+                    bg={
+                      DATA.place.profile_image
+                        ? "http://194.87.95.37/storage/" +
+                          DATA.place.profile_image
+                        : ""
+                    }
+                  >
+                    {whenIsTranslation()}
+                  </NoVideoD>
+                )}
                 <VideoDescrD>
                   <VideoDescrNameD>{DATA.place.name}</VideoDescrNameD> -{" "}
                   {DATA.place.description}
@@ -673,7 +690,18 @@ const Company = (props) => {
                     />
                   </YesVideoM>
                 )}
-                {!showStream && <NoVideoM>{whenIsTranslation()}</NoVideoM>}
+                {!showStream && (
+                  <NoVideoM
+                    bg={
+                      DATA.place.profile_image
+                        ? "http://194.87.95.37/storage/" +
+                          DATA.place.profile_image
+                        : ""
+                    }
+                  >
+                    {whenIsTranslation()}
+                  </NoVideoM>
+                )}
               </VideoBlockM>
               <DescM>
                 <NameRowM>

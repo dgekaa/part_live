@@ -79,6 +79,8 @@ const NoTranslationD = styled.div`
   line-height: 19px;
   color: #c4c4c4;
   background: #000;
+
+  background-image: url(${({ bg }) => bg});
   background-size: cover;
   background-position: center;
 `;
@@ -239,6 +241,7 @@ const NoTranslationM = styled.div`
   line-height: 19px;
   color: #c4c4c4;
   background: #000;
+  background-image: url(${({ bg }) => bg});
   background-size: cover;
   background-position: center;
   @media (max-width: 375px) {
@@ -412,7 +415,17 @@ const SmallCompanyBlock = ({ item }) => {
             style={{ backgroundImage: `url(${item.streams[0].preview})` }}
           />
         ) : (
-          <NoTranslationD>
+          <NoTranslationD
+            bg={
+              item.profile_image
+                ? "http://194.87.95.37/storage/" + item.profile_image
+                : ""
+            }
+          >
+            {console.log(
+              "http://194.87.95.37/storage/" + item.profile_image,
+              "sss"
+            )}
             <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
           </NoTranslationD>
         )}
@@ -501,7 +514,13 @@ const SmallCompanyBlock = ({ item }) => {
             style={{ backgroundImage: `url(${item.streams[0].preview})` }}
           />
         ) : (
-          <NoTranslationM>
+          <NoTranslationM
+            bg={
+              item.profile_image
+                ? "http://194.87.95.37/storage/" + item.profile_image
+                : ""
+            }
+          >
             <TransparentBgM>
               {nextWorkTime
                 ? isWork
