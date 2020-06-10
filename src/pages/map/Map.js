@@ -194,6 +194,9 @@ const NoTranslationText = styled.p`
   justify-content: center;
   font-weight: bold;
   font-size: 14px;
+  background-image: url(${({ bg }) => bg});
+  background-size: cover;
+  background-position: center;
   @media (max-width: 760px) {
     height: 90px;
     text-align: center;
@@ -301,7 +304,7 @@ const MapComponent = (props) => {
   useEffect(() => {
     QUERY({
       query: `query{
-          places{id name coordinates
+          places{id name coordinates profile_image
           streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
           schedules{id day start_time end_time}
           categories{id name slug}}
@@ -609,7 +612,14 @@ const MapComponent = (props) => {
                               />
                             )}
                           {!streamTime && (
-                            <NoTranslationText>
+                            <NoTranslationText
+                              bg={
+                                cluster.item.profile_image
+                                  ? "http://194.87.95.37/storage/" +
+                                    cluster.item.profile_image
+                                  : ""
+                              }
+                            >
                               {nextStreamTime.start_time &&
                                 nextStreamTime.day.toLowerCase() !==
                                   "сегодня" &&
