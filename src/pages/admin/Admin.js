@@ -375,7 +375,7 @@ const Admin = (props) => {
   const [uniqueCompanyType, setUniqueCompanyType] = useState();
   const [hoveredBtn, setHoveredBtn] = useState("");
   const [nameOfCompany, setNameOfCompany] = useState("");
-  const [pseudonimOfCompany, setPseudonimOfCompany] = useState("");
+  const [aliasOfCompany, setAliasOfCompany] = useState("");
   const [typeOfCompany, setTypeOfCompany] = useState("");
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
@@ -438,7 +438,7 @@ const Admin = (props) => {
     QUERY({
       query: `query {
       place (id:"${props.match.params.id}") {
-        id name address description logo menu actions coordinates
+        id name address description logo menu actions coordinates alias
         streams{url name id preview schedules{id day start_time end_time} see_you_tomorrow}
         schedules {id day start_time end_time}
         categories {id name slug}
@@ -844,6 +844,10 @@ const Admin = (props) => {
     DATA.name && setNameOfCompany(DATA.name);
   }, [DATA.name]);
 
+  useEffect(() => {
+    DATA.alias && setAliasOfCompany(DATA.alias);
+  }, [DATA.alias]);
+
   const dateNow = new Date()
     .toLocaleDateString()
     .split(".")
@@ -929,7 +933,7 @@ const Admin = (props) => {
         .catch((err) => console.log(err, "  *******ERR"));
     }
   };
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   const updatePlaceData = () => {
     if (cookies.origin_data) {
       QUERY(
@@ -939,6 +943,7 @@ const Admin = (props) => {
               input:{
                 id:"${props.match.params.id}"
                 name:"${nameOfCompany || DATA.name}"
+                alias:"${aliasOfCompany || DATA.alias}"
                 ${
                   DATA.categories &&
                   DATA.categories[0] &&
@@ -1248,11 +1253,11 @@ const Admin = (props) => {
       });
       return false;
     } else if (
-      (pseudonimOfCompany && !pseudonimOfCompany.match("^[a-zA-Z0-9]+$")) ||
-      pseudonimOfCompany.length < 1
+      (aliasOfCompany && !aliasOfCompany.match("^[a-zA-Z0-9]+$")) ||
+      aliasOfCompany.length < 1
     ) {
       setValidationErr({
-        pseudonimOfCompany: "только латиница и цифры и поле не пустое",
+        aliasOfCompany: "только латиница и цифры и поле не пустое",
       });
       return false;
     } else {
@@ -1387,12 +1392,11 @@ const Admin = (props) => {
 
                                   <span
                                     onClick={() => {
-                                      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                                       if (cookies.origin_data) {
-                                        var formData = new FormData();
-                                        formData.append("username", "dgeka");
-                                        formData.append("userfile", FILE);
-                                        console.log(formData, "formData");
+                                        // var formData = new FormData();
+                                        // formData.append("username", "dgeka");
+                                        // formData.append("userfile", FILE);
+                                        // console.log(formData, "formData");
                                         fetch("http://194.87.95.37/graphql", {
                                           method: "POST",
                                           mode: "cors",
@@ -1572,7 +1576,7 @@ const Admin = (props) => {
                               <p
                                 className="blockNameDesc"
                                 style={
-                                  validationErr["pseudonimOfCompany"]
+                                  validationErr["aliasOfCompany"]
                                     ? { color: "red" }
                                     : {}
                                 }
@@ -1583,10 +1587,10 @@ const Admin = (props) => {
                               <input
                                 pattern="^[a-zA-Z0-9]+$"
                                 type="text"
-                                placeholder={DATA.name}
-                                value={pseudonimOfCompany}
+                                placeholder={DATA.alias}
+                                value={aliasOfCompany}
                                 onChange={(e) =>
-                                  setPseudonimOfCompany(
+                                  setAliasOfCompany(
                                     e.target.value.toLowerCase()
                                   )
                                 }
@@ -1695,10 +1699,9 @@ const Admin = (props) => {
                                 to={"/editCompany"}
                                 className="cancelBtnProfile"
                                 onClick={() => {
-                                  // cancelSave()
                                   setValidationErr({});
                                   setNameOfCompany(DATA.name);
-                                  // setPseudonimOfCompany("");
+                                  setAliasOfCompany(DATA.alias);
                                   setTypeOfCompany(
                                     DATA.categories &&
                                       DATA.categories[0] &&
@@ -2147,10 +2150,9 @@ const Admin = (props) => {
                                 }}
                                 onClick={() => {
                                   closeAllSidebar();
-                                  //  cancelSave()
                                   setValidationErr({});
                                   setNameOfCompany(DATA.name);
-                                  // setPseudonimOfCompany("");
+                                  setAliasOfCompany(DATA.alias);
                                 }}
                               >
                                 Отмена
@@ -2278,7 +2280,7 @@ const Admin = (props) => {
                               >
                                 <p
                                   style={
-                                    validationErr["pseudonimOfCompany"]
+                                    validationErr["aliasOfCompany"]
                                       ? { color: "red" }
                                       : {}
                                   }
@@ -2287,10 +2289,10 @@ const Admin = (props) => {
                                 </p>
                                 <input
                                   type="text"
-                                  placeholder={DATA.name}
-                                  value={pseudonimOfCompany}
+                                  placeholder={DATA.alias}
+                                  value={aliasOfCompany}
                                   onChange={(e) =>
-                                    setPseudonimOfCompany(
+                                    setAliasOfCompany(
                                       e.target.value.toLowerCase()
                                     )
                                   }

@@ -76,4 +76,4 @@ export const EN_SHORT_DAY_OF_WEEK = [
   },
 ];
 
-export const defaultColor = "#FF1569";
+export const defaultColor = "#f8104d";

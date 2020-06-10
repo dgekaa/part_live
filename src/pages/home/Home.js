@@ -171,7 +171,7 @@ const Home = () => {
             )}
           </HomeContent>
         </HomeContentWrap>
-        <BottomMenu isShowMenu={isShowMenu} />
+        <BottomMenu isShowMenu={isShowMenu} border />
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

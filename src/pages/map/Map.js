@@ -692,7 +692,7 @@ const MapComponent = (props) => {
         </MapContainer>
       )}
 
-      <BottomMenu isShowMenu={isShowMenu} />
+      <BottomMenu isShowMenu={isShowMenu} border />
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>
   );

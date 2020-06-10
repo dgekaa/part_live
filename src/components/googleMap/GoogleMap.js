@@ -80,6 +80,13 @@ const CloseBTN = styled.span`
   &:hover {
     color: red;
   }
+  @media (max-width: 760px) {
+    height: 50px;
+    width: 50px;
+    font-size: 40px;
+    padding: 0;
+    line-height: 42px;
+  }
 `;
 
 const MapContainerStyle = styled.div`

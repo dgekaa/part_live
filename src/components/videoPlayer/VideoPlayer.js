@@ -3,12 +3,20 @@ import ReactAwesomePlayer from "react-awesome-player";
 import styled from "styled-components";
 
 const VideoError = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   color: #fff;
   text-align: center;
   padding: 30px;
-  background: #000;
+  @media (max-width: 760px) {
+    height: 380px;
+  }
+  @media (max-width: 560px) {
+    height: 190px;
+  }
 `;
 
 const VideoPlayer = ({ src, autoplay, muted, preview }) => {

@@ -9,6 +9,7 @@ import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import { defaultColor } from "../../constants";
+import Popup from "../../components/popup/Popup";
 
 const GoBackBtnD = styled(Link)`
   font-size: 16px;
@@ -43,14 +44,6 @@ const EditCompanyContent = styled.div`
   }
 `;
 
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: center;
-  @media (max-width: 760px) {
-    display: block;
-  }
-`;
-
 const HeaderText = styled.h3`
   font-weight: 700;
   font-size: 24px;
@@ -66,25 +59,24 @@ const HeaderText = styled.h3`
 `;
 
 const NewCompany = styled.div`
-  text-transform: uppercase;
-  padding: 0 10px;
-  border-radius: 5px;
-  height: 30px;
-  background-color: ${defaultColor};
-  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${defaultColor};
   cursor: pointer;
-  margin-left: 15px;
-  font-weight: 500;
-  margin-bottom: 40px;
+  color: #fff;
+  width: 300px;
+  height: 50px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 20px;
   &:hover {
     opacity: 0.7;
   }
   @media (max-width: 760px) {
-    width: 200px;
-    margin: 0 auto 20px auto;
+    margin: 20px auto;
   }
 `;
 
@@ -185,18 +177,72 @@ const NameLink = styled(Link)`
   }
 `;
 
+const PopupQuestion = styled.p`
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+`;
+
+const PopupBtnsWrap = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+`;
+
+const Yes = styled.div`
+  display: flex;
+  align-items: center;
+  width: 120px;
+  justify-content: center;
+  height: 40px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 16px;
+  text-transform: uppercase;
+  &:hover {
+    opacity: 0.7;
+  }
+
+  background-color: ${defaultColor};
+`;
+
+const No = styled(Yes)`
+  background-color: #fff;
+  border: 2px solid ${defaultColor};
+  color: #000;
+`;
+
 const EditCompany = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [cookies] = useCookies([]);
   const [isLoading, setIsLoading] = useState(true);
   const [places, setPlaces] = useState([]);
+  const [showPopupIsDelete, setShowPopupIsDelete] = useState(false);
+  const [clickedDeleteBtnName, setClickedDeleteBtnName] = useState("");
+  const [clickedDeleteBtnId, setClickedDeleteBtnId] = useState("");
+
+  const togglePopupIsDelete = () => {
+    showPopupIsDelete
+      ? setShowPopupIsDelete(false)
+      : setShowPopupIsDelete(true);
+  };
 
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
     document.body.style.overflow = "visible";
     setIsShowMenu(false);
   };
+
+  useEffect(() => {
+    if (showPopupIsDelete) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showPopupIsDelete]);
 
   const showSideMenu = () => {
     setShowSlideSideMenu(true);
@@ -211,7 +257,7 @@ const EditCompany = () => {
   const refreshData = () => {
     QUERY({
       query: `query {
-            places {id name  categories{name slug} streams{url preview}}
+            places {id name alias categories{name slug} streams{url preview}}
           }`,
     })
       .then((res) => res.json())
@@ -245,10 +291,14 @@ const EditCompany = () => {
           createPlace(
             input:{
               name: "Стандартное название",
-              address:"...",
+              address:"улица Ленина 8, Минск, Беларусь",
               description: "введите описание",
-              coordinates: "53.904241,27.556932"      
-            }){id name address description coordinates}        
+              coordinates: "53.9006799,27.5582599",
+              alias:"pseudonim",
+              categories:{
+                connect: 2
+              }    
+            }){id name address description coordinates categories{slug}}        
       }`,
       },
       cookies.origin_data
@@ -256,7 +306,7 @@ const EditCompany = () => {
       .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
-          console.log(data.data.createPlace.id, "____ID____");
+          console.log(data, "____ID____");
           refreshData();
           return <Redirect to={`/admin/${data.data.createPlace.id}`} />;
         } else {
@@ -316,29 +366,20 @@ const EditCompany = () => {
               На главную
             </GoBackBtnD>
 
-            <HeaderRow>
-              <HeaderText>СПИСОК ЗАВЕДЕНИЙ</HeaderText>
-              <NewCompany
-                onClick={() => {
-                  createNewCompany();
-                }}
-              >
-                Создать заведение
-              </NewCompany>
-            </HeaderRow>
+            <HeaderText>СПИСОК ЗАВЕДЕНИЙ</HeaderText>
+
             <Table>
               <tbody>
                 {places &&
                   places.length &&
-                  places.map(({ id, name, categories }) => {
+                  places.map(({ id, name, alias, categories }) => {
                     return (
                       <Tr key={id}>
                         <TdDelete
                           onClick={() => {
-                            var isDelete = window.confirm(
-                              "Действительно удалить?"
-                            );
-                            isDelete && deleteCompany(id);
+                            togglePopupIsDelete();
+                            setClickedDeleteBtnName(name);
+                            setClickedDeleteBtnId(id);
                           }}
                         >
                           &#215;
@@ -346,11 +387,7 @@ const EditCompany = () => {
                         <Td>
                           <NameLink to={`/admin/${id}`}>{name}</NameLink>
                         </Td>
-                        <Td>
-                          {categories[0] &&
-                            categories[0].slug &&
-                            categories[0].slug.toLowerCase()}
-                        </Td>
+                        <Td>{alias && alias.toLowerCase()}</Td>
                         <Td>
                           {categories[0] &&
                             categories[0].name &&
@@ -361,10 +398,32 @@ const EditCompany = () => {
                   })}
               </tbody>
             </Table>
+            <NewCompany onClick={() => createNewCompany()}>
+              Создать заведение
+            </NewCompany>
           </EditCompanyContent>
         )}
         {isLoading && <Loader />}
         <SlideSideMenu isShowMenu={isShowMenu} />
+        {showPopupIsDelete && (
+          <Popup
+            togglePopup={togglePopupIsDelete}
+            style={{ padding: "20px", borderRadius: "10px" }}
+          >
+            <PopupQuestion>{`Действительно хотите удалить  "${clickedDeleteBtnName}"?`}</PopupQuestion>
+            <PopupBtnsWrap>
+              <Yes
+                onClick={() => {
+                  deleteCompany(clickedDeleteBtnId);
+                  setShowPopupIsDelete(false);
+                }}
+              >
+                да
+              </Yes>
+              <No onClick={() => setShowPopupIsDelete(false)}>нет</No>
+            </PopupBtnsWrap>
+          </Popup>
+        )}
       </div>
     );
   }

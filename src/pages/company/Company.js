@@ -66,7 +66,7 @@ const ShadowBlockD = styled.div`
 const VideoBlockD = styled.div`
   -webkit-box-flex: 5;
   -ms-flex: 5;
-  flex: 5;
+  flex: 1;
   padding-bottom: 20px;
   padding-right: 20px;
 `;
@@ -103,9 +103,7 @@ const VideoDescrNameD = styled.span`
 `;
 
 const DescD = styled.span`
-  -webkit-box-flex: 5;
-  -ms-flex: 5;
-  flex: 4;
+  flex: 1;
   padding: 0 5px 0 20px;
   height: 300px;
   display: flex;
@@ -125,18 +123,31 @@ const DescNameD = styled.h3`
   line-height: 35px;
 `;
 
-const DayOfWeekD = styled.p`
-  text-transform: uppercase;
-  display: inline-block;
-  padding: 0 10px;
-  height: 22px;
-  background: #36cc33;
-  border-radius: 5px;
-  color: #fff;
-  font-weight: 700;
-  font-size: 10px;
-  line-height: 22px;
+const CompanyTypeRowD = styled.div`
+  display: flex;
+  align-items: center;
 `;
+const CustomImgTypeD = styled(CustomImg)`
+  margin-right: 6px;
+`;
+
+const CompanyTypeD = styled.div`
+  font-weight: 500;
+  font-size: 16px;
+`;
+
+// const DayOfWeekD = styled.p`
+//   text-transform: uppercase;
+//   display: inline-block;
+//   padding: 0 10px;
+//   height: 22px;
+//   background: #36cc33;
+//   border-radius: 5px;
+//   color: #fff;
+//   font-weight: 700;
+//   font-size: 10px;
+//   line-height: 22px;
+// `;
 
 const RowWithImageD = styled.div`
   display: -webkit-box;
@@ -183,14 +194,6 @@ const SmallMapD = styled.div`
   cursor: pointer;
   width: 100%;
   height: 85px;
-`;
-
-const CompanyTypeD = styled.div`
-  color: ${defaultColor};
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 21px;
-  padding-left: 30px;
 `;
 
 const CompanyM = styled.div`
@@ -486,25 +489,6 @@ const Company = (props) => {
   };
 
   const whenIsTranslation = () => {
-    // if (
-    //   nextStreamTime.start_time &&
-    //   nextStreamTime.day.toLowerCase() !== "сегодня"
-    // ) {
-    //   return (
-    //     "Начало трансляции: " +
-    //     EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-    //     " в " +
-    //     nextStreamTime.start_time
-    //   );
-    // } else if (
-    //   nextStreamTime.start_time &&
-    //   nextStreamTime.day.toLowerCase() === "сегодня"
-    // ) {
-    //   return "Начало трансляции: сегодня в " + nextStreamTime.start_time;
-    // } else if (!nextStreamTime.start_time) {
-    //   return "Нет предстоящих трансляций";
-    // }
-    console.log(nextStreamTime, "nextStreamTime");
     if (
       nextStreamTime.start_time &&
       nextStreamTime.day.toLowerCase() !== "сегодня"
@@ -583,8 +567,22 @@ const Company = (props) => {
               <DescD>
                 <TopDescriptionD>
                   <DescNameD>{DATA.place.name}</DescNameD>
-
-                  <DayOfWeekD>{DAY_OF_WEEK[numberDayNow]}</DayOfWeekD>
+                  <CompanyTypeRowD>
+                    <CustomImgTypeD
+                      alt="ico"
+                      name={
+                        DATA.place.categories[0] &&
+                        DATA.place.categories[0].slug
+                      }
+                      height="20"
+                      width="20"
+                    />
+                    <CompanyTypeD>
+                      {DATA.place.categories[0] &&
+                        DATA.place.categories[0].name}
+                    </CompanyTypeD>
+                    {/* <DayOfWeekD>{DAY_OF_WEEK[numberDayNow]}</DayOfWeekD> */}
+                  </CompanyTypeRowD>
                 </TopDescriptionD>
 
                 <div>
@@ -656,9 +654,6 @@ const Company = (props) => {
                   />
                 </SmallMapD>
               </DescD>
-              <CompanyTypeD>
-                {DATA.place.categories[0] && DATA.place.categories[0].name}
-              </CompanyTypeD>
             </ShadowBlockD>
           </FlexD>
         )}

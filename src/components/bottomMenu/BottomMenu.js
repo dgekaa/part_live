@@ -9,6 +9,7 @@ import { defaultColor } from "../../constants";
 const BottomMenuStyle = styled.div`
   display: none;
   @media (max-width: 760px) {
+    border-top: ${({ border }) => (border ? "1px solid #eee" : "none")};
     display: flex;
     height: 55px;
     background: #fff;
@@ -43,7 +44,7 @@ const Button = styled(Link)`
   }
 `;
 
-const BottomMenu = ({ isShowMenu }) => {
+const BottomMenu = ({ isShowMenu, border }) => {
   const swipeFixedElementSpring = useSpring({
     left: isShowMenu ? -200 : 0,
     config: {
@@ -53,6 +54,7 @@ const BottomMenu = ({ isShowMenu }) => {
 
   return (
     <BottomMenuStyle
+      border={border}
       as={animated.div}
       style={swipeFixedElementSpring}
       className="BottomMenu"

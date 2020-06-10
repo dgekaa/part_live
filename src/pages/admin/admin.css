@@ -26,7 +26,7 @@ textarea {
 }
 
 .popupPickerBtns p:first-of-type {
-  background: #ff1569;
+  background: #f8104d;
   color: #fff;
 }
 .popupPickerBtns p:last-of-type {
@@ -57,7 +57,7 @@ textarea {
   margin-right: 16px;
 }
 .leftAdminMenuDesctop .leftAdminMenu li:hover {
-  color: #ff1569;
+  color: #f8104d;
 }
 .blockNameDesc {
   font-weight: 700 !important;
@@ -117,7 +117,7 @@ textarea {
   letter-spacing: 0.5px;
 }
 .changePhoto:hover {
-  color: #ff1569;
+  color: #f8104d;
 }
 .profileDataDesc {
   justify-content: space-between;
@@ -148,7 +148,7 @@ textarea {
   color: #fff;
   font-weight: 700;
   font-size: 14px;
-  background-color: #ff1569;
+  background-color: #f8104d;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -283,7 +283,7 @@ textarea {
   line-height: 16px;
   letter-spacing: 0.5px;
   cursor: pointer;
-  color: #ff1569;
+  color: #f8104d;
 }
 .categoryAloneBtn {
   display: flex;
@@ -304,7 +304,7 @@ textarea {
 }
 
 .bigInputBlockWrap .categoryBtn:hover {
-  background-color: #ff1569;
+  background-color: #f8104d;
   color: #fff;
 }
 .tableWorkDesc {
@@ -335,11 +335,11 @@ textarea {
   font-weight: normal;
 }
 .workTimeTableWrap .tableWorkDesc tr .timeTd:hover {
-  color: #ff1569;
+  color: #f8104d;
 }
 .workTimeTableWrap .tableWorkDesc tr .doAsDayOfTd {
   text-align: center;
-  color: #ff1569;
+  color: #f8104d;
   transition: 0.3s ease all;
   cursor: pointer;
   flex: 3;
@@ -507,8 +507,8 @@ textarea {
 }
 .chooseAddressBtn,
 .uploadFileBtn {
-  background-color: #ff1569;
-  border: 1px solid #ff1569;
+  background-color: #f8104d;
+  border: 1px solid #f8104d;
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
@@ -539,7 +539,7 @@ textarea {
   line-height: 40px;
 }
 .closePopupBtn:hover {
-  color: #ff1569;
+  color: #f8104d;
 }
 
 .cameraAddressWrapper {
@@ -594,7 +594,7 @@ textarea {
   padding: 0 10px;
   margin-left: 10px;
   border-radius: 5px;
-  background-color: #ff1569;
+  background-color: #f8104d;
   color: #fff;
   line-height: 28px;
 }
@@ -609,7 +609,7 @@ textarea {
   width: 244px;
   margin-top: 37px;
   border-radius: 5px;
-  background-color: #ff1569;
+  background-color: #f8104d;
   color: #fff;
   transition: 0.3s ease opacity;
   font-weight: bold;
@@ -620,7 +620,7 @@ textarea {
 }
 .saveBtn {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-  background-color: #ff1569;
+  background-color: #f8104d;
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
@@ -655,8 +655,8 @@ textarea {
   border: 2px solid #c4c4c4;
 }
 .cancelBtn:hover {
-  color: #ff1569;
-  border-color: #ff1569;
+  color: #f8104d;
+  border-color: #f8104d;
   transition: 0.3s ease all;
 }
 .TimePickerContainer {
@@ -695,8 +695,8 @@ textarea {
   line-height: 40px;
 }
 .chooseAddressHoveredDesc:hover {
-  color: #ff1569 !important;
-  border: 2px solid #ff1569;
+  color: #f8104d !important;
+  border: 2px solid #f8104d;
 }
 .MapPopupHeader {
   display: none !important;
@@ -727,7 +727,7 @@ textarea {
     margin: 8px;
   }
   .categoryBtn:hover {
-    background-color: #ff1569;
+    background-color: #f8104d;
     color: #fff;
   }
   .profileDataDesc .inputBlockWrap input {
@@ -898,7 +898,7 @@ textarea {
     display: block;
 
     font-size: 18px;
-    color: #ff1569;
+    color: #f8104d;
     padding: 30px 0;
     text-align: center;
     cursor: pointer;
