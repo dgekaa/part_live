@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AvatarEditor from "react-avatar-editor";
 
-const CropperMobile = ({ imgSrc, editorRef, onCrop }) => {
+const CropperMobile = ({ imgSrc, editorRef }) => {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
@@ -42,14 +42,12 @@ const CropperMobile = ({ imgSrc, editorRef, onCrop }) => {
     >
       <AvatarEditor
         width={window.innerWidth - 60}
-        height={window.innerWidth - 60}
+        height={(window.innerWidth - 60) * 0.56}
         image={imgSrc}
         border={10}
         scale={count}
         ref={editorRef}
       />
-
-      {/* <button onClick={onCrop}>crop</button> */}
     </div>
   );
 };

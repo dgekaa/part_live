@@ -259,8 +259,8 @@ const DisableStreamTextD = styled.span`
 // ____________________________________________-
 const PreviewPhotoM = styled.div`
   display: flex;
-  height: 125px;
-  width: 125px;
+  height: 122px;
+  width: 213px;
   background-color: #f2f2f7;
   border: 2px solid #909090;
   border-radius: 10px;
@@ -1005,7 +1005,7 @@ const Admin = (props) => {
       .catch((err) => console.log(err, "  *******ERR"));
   };
 
-  const uploadImageTranscode = () => {
+  const uploadImageTranscode = (blob) => {
     if (cookies.origin_data) {
       const query = `
           mutation ($file: Upload!) {
@@ -1029,7 +1029,7 @@ const Admin = (props) => {
         "0": ["variables.file"],
       };
       formData.append("map", JSON.stringify(map));
-      formData.append("0", imageDestination);
+      formData.append("0", blob || imageDestination);
 
       axios({
         url: "http://194.87.95.37/graphql",
@@ -1103,6 +1103,7 @@ const Admin = (props) => {
             if (blob) {
               const formData = new FormData();
               formData.append("my-file", blob, "filename.png");
+              console.log("@@@@@@@@@@@@@@@@@@@@");
               setImageDestination(blob);
             }
           });
@@ -1111,23 +1112,18 @@ const Admin = (props) => {
     }
   }, [imageElementRef.current]);
 
-  const [useProfilePic, setUseProfilePic] = useState("");
-
   const editorRef = useRef(null);
 
   const onCrop = () => {
     if (editorRef.current) {
-      const base64 = editorRef.current.getImageScaledToCanvas().toDataURL();
-      setUseProfilePic(base64);
-
-      fetch(base64)
+      const canvas = editorRef.current.getImage().toDataURL();
+      fetch(canvas)
         .then((res) => res.blob())
         .then((blob) => {
-          setImageDestination(blob);
-          uploadImageTranscode();
+          uploadImageTranscode(blob);
         });
 
-      console.log(base64, " URL______");
+      console.log(canvas, " ___________URL______");
     }
   };
 
@@ -1159,7 +1155,6 @@ const Admin = (props) => {
   };
 
   const handleOnDrop = (files, rejectedFiles) => {
-    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     if (rejectedFiles && rejectedFiles.length > 0) {
       console.log(rejectedFiles, "---rejectedFiles");
       verifyFile(rejectedFiles);
@@ -2206,25 +2201,55 @@ const Admin = (props) => {
                                 {imgSrc ? (
                                   <></>
                                 ) : (
-                                  <PreviewPhotoM
-                                    onClick={() => {
-                                      togglePopupUploadFile();
-                                      document
-                                        .querySelector(".previewRef")
-                                        .click();
-                                    }}
-                                  >
-                                    {DATA.profile_image ? (
-                                      <img
-                                        className={"uploadImgStyleMobile"}
-                                        src={`http://194.87.95.37/storage/${DATA.profile_image}`}
-                                        alt="image"
-                                        style={{ height: "125px" }}
-                                      />
-                                    ) : (
-                                      <p>Загрузить фото</p>
-                                    )}
-                                  </PreviewPhotoM>
+                                  <>
+                                    <PreviewPhotoM
+                                      onClick={() => {
+                                        togglePopupUploadFile();
+                                        document
+                                          .querySelector(".previewRef")
+                                          .click();
+                                      }}
+                                    >
+                                      {DATA.profile_image ? (
+                                        <img
+                                          className={"uploadImgStyleMobile"}
+                                          src={`http://194.87.95.37/storage/${DATA.profile_image}`}
+                                          alt="image"
+                                          style={{ height: "120px" }}
+                                        />
+                                      ) : (
+                                        <p>Загрузить фото</p>
+                                      )}
+                                    </PreviewPhotoM>
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        fontWeight: "bold",
+                                        fontSize: "16px",
+                                        marginTop: "15px",
+                                      }}
+                                    >
+                                      <span
+                                        style={{ marginRight: "30px" }}
+                                        onClick={() => {
+                                          togglePopupUploadFile();
+                                          document
+                                            .querySelector(".previewRef")
+                                            .click();
+                                        }}
+                                      >
+                                        Изменить
+                                      </span>
+                                      <span
+                                        onClick={() =>
+                                          updateOrRemoveUploadImage()
+                                        }
+                                      >
+                                        Удалить
+                                      </span>
+                                    </div>
+                                  </>
                                 )}
                                 <Dropzone
                                   multiple={false}
@@ -3104,11 +3129,7 @@ const Admin = (props) => {
                   Готово@@@
                 </p>
               </div>
-              <CropperMobile
-                imgSrc={imgSrc}
-                editorRef={editorRef}
-                onCrop={onCrop}
-              />
+              <CropperMobile imgSrc={imgSrc} editorRef={editorRef} />
               <Dropzone
                 multiple={false}
                 accept={acceptedFileTypes}
