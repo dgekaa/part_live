@@ -178,7 +178,7 @@ const TranslationBlock = styled.div`
   }
 `;
 
-const NoTranslationText = styled.p`
+const NoTranslation = styled.p`
   color: #919191;
   padding: 3px;
   background-color: #000;
@@ -203,6 +203,15 @@ const NoTranslationText = styled.p`
     width: 120px;
   }
 `;
+
+// const TransparentBg = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 150px;
+//   height: 95px;
+//   background-color: rgba(0, 0, 255, 0.1);
+// `;
 
 const MarkerDesc = styled.p`
   position: absolute;
@@ -612,7 +621,7 @@ const MapComponent = (props) => {
                               />
                             )}
                           {!streamTime && (
-                            <NoTranslationText
+                            <NoTranslation
                               bg={
                                 cluster.item.profile_image
                                   ? "http://194.87.95.37/storage/" +
@@ -620,6 +629,7 @@ const MapComponent = (props) => {
                                   : ""
                               }
                             >
+                              {/* <TransparentBg /> */}
                               {nextStreamTime.start_time &&
                                 nextStreamTime.day.toLowerCase() !==
                                   "сегодня" &&
@@ -653,7 +663,7 @@ const MapComponent = (props) => {
                                 } ${nextWorkTime.start_time}-${
                                   nextWorkTime.end_time
                                 }`}
-                            </NoTranslationText>
+                            </NoTranslation>
                           )}
                         </PreviewBlock>
 

@@ -1124,25 +1124,17 @@ const Admin = (props) => {
 
   const onCrop = () => {
     if (editorRef.current) {
-      const url = editorRef.current.getImageScaledToCanvas().toDataURL();
-      setUseProfilePic(url);
-    }
-  };
+      const base64 = editorRef.current.getImageScaledToCanvas().toDataURL();
+      setUseProfilePic(base64);
 
-  const downloadImgFromCanvas = () => {
-    if (imgSrc && imgSrcExt) {
-      const canvasRef = imagePreviewCanvas.current;
-      const imageData64 = canvasRef.toDataURL("image/" + imgSrcExt);
+      fetch(base64)
+        .then((res) => res.blob())
+        .then((blob) => {
+          setImageDestination(blob);
+          uploadImageTranscode();
+        });
 
-      const myFileName = "preview." + imgSrcExt;
-
-      if (imageData64.length > 8) {
-        downloadBase64File(imageData64, myFileName);
-        handeleClearToDefault();
-        // submitImage();
-      } else {
-        alert("Нужно обрезать изображение");
-      }
+      console.log(base64, " URL______");
     }
   };
 
@@ -1174,6 +1166,7 @@ const Admin = (props) => {
   };
 
   const handleOnDrop = (files, rejectedFiles) => {
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     if (rejectedFiles && rejectedFiles.length > 0) {
       console.log(rejectedFiles, "---rejectedFiles");
       verifyFile(rejectedFiles);
@@ -1181,7 +1174,6 @@ const Admin = (props) => {
     if (files && files.length > 0) {
       const isVerified = verifyFile(files);
       if (isVerified) {
-        // Base64data
         const currentFile = files[0];
         const myFileItemReader = new FileReader();
 
@@ -1454,11 +1446,6 @@ const Admin = (props) => {
                                   {DATA.profile_image ? (
                                     <img
                                       className={"uploadImgStyle"}
-                                      // style={{
-                                      //   borderRadius: "10px",
-                                      //   height: "254px",
-                                      //   width: "254px",
-                                      // }}
                                       src={`http://194.87.95.37/storage/${DATA.profile_image}`}
                                       alt="image"
                                     />
@@ -2217,7 +2204,16 @@ const Admin = (props) => {
                                         .click();
                                     }}
                                   >
-                                    <p>Загрузить фото</p>
+                                    {DATA.profile_image ? (
+                                      <img
+                                        className={"uploadImgStyleMobile"}
+                                        src={`http://194.87.95.37/storage/${DATA.profile_image}`}
+                                        alt="image"
+                                        style={{ height: "125px" }}
+                                      />
+                                    ) : (
+                                      <p>Загрузить фото</p>
+                                    )}
                                   </PreviewPhotoM>
                                 )}
                                 <Dropzone
@@ -3070,7 +3066,7 @@ const Admin = (props) => {
                     togglePopupUploadFile();
                   }}
                 >
-                  Отмена
+                  Отмена@@@
                 </p>
                 <p
                   style={{
@@ -3090,11 +3086,12 @@ const Admin = (props) => {
                     fontWeight: 500,
                   }}
                   onClick={() => {
-                    setImgSrc(null);
+                    // setImgSrc(null);
                     togglePopupUploadFile();
+                    onCrop();
                   }}
                 >
-                  Готово
+                  Готово@@@
                 </p>
               </div>
               <CropperMobile
@@ -3118,16 +3115,16 @@ const Admin = (props) => {
                           className="changePhotoInput previewRef"
                           {...getInputProps()}
                         />
-                        {imgSrc && <p className="changePhoto">Изменить</p>}
+                        {/* {imgSrc && <p className="changePhoto">Изменить</p>} */}
                       </div>
-                      {imgSrc && (
+                      {/* {imgSrc && (
                         <span
                           className="changePhoto"
                           onClick={handeleClearToDefault}
                         >
                           Удалить
                         </span>
-                      )}
+                      )} */}
                     </section>
                   );
                 }}

@@ -17,6 +17,19 @@ textarea {
   border: 2px solid #f8104d;
   box-sizing: content-box;
 }
+
+.uploadImgStyleMobile {
+  border-radius: 10px !important;
+  height: 125px;
+  width: 125px !important;
+}
+
+.uploadImgStyleMobile:hover {
+  transition: 0.1s ease all;
+  border: 2px solid #f8104d;
+  box-sizing: content-box;
+}
+
 .popupPickerBtns {
   display: flex;
   justify-content: space-around;
