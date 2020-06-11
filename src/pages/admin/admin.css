@@ -9,8 +9,8 @@ textarea {
 }
 .uploadImgStyle {
   border-radius: 10px !important;
-  height: 254px;
-  width: 254px;
+  height: 200px;
+  width: 320px;
 }
 .uploadImgStyle:hover {
   transition: 0.1s ease all;

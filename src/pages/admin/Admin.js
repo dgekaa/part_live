@@ -159,7 +159,7 @@ const ProfileContentD = styled.div`
 
 const CropWrapperD = styled.div`
   position: relative;
-  height: 250px;
+  height: 205px;
   background: #fff;
 `;
 
@@ -169,16 +169,10 @@ const PreviewPhotoTextD = styled.p`
   color: #aeaeae;
 `;
 
-const PreviewPhotoSizeD = styled.p`
-  font-weight: 500;
-  font-size: 18px;
-  color: #aeaeae;
-`;
-
 const PreviewPhotoD = styled.div`
   display: flex;
-  height: 250px;
-  width: 250px;
+  height: 200px;
+  width: 320px;
   background-color: #f2f2f7;
   border-radius: 10px;
   color: #aeaeae;
@@ -194,15 +188,11 @@ const PreviewPhotoD = styled.div`
     color: ${defaultColor};
     transition: 0.3s ease all;
   }
-  &:hover ${PreviewPhotoSizeD} {
-    color: ${defaultColor};
-    transition: 0.3s ease all;
-  }
 `;
 
 const ImgContainerD = styled.div`
-  width: 250px;
-  height: 250px;
+  width: 320px;
+  height: 200px;
   overflow: hidden;
 `;
 
@@ -384,7 +374,6 @@ const Admin = (props) => {
   const [currentImage, setCurrentImage] = useState(null);
   const [switchChecked, setSwitchChecked] = useState(null);
   const [isSuccessSave, setIsSuccessSave] = useState(false);
-  const [uploadImage, setUploadImage] = useState(null);
 
   const [cookies] = useCookies([]);
 
@@ -985,14 +974,18 @@ const Admin = (props) => {
     }
   };
 
-  const updateUploadImage = (profile_image) => {
+  const updateOrRemoveUploadImage = (profile_image) => {
     QUERY(
       {
         query: `mutation {
           updatePlace(
             input:{
               id:"${props.match.params.id}"
-              profile_image:"${profile_image}"
+              ${
+                profile_image
+                  ? `profile_image: "${profile_image}"`
+                  : `profile_image: ${null}`
+              }             
             }
           ){id profile_image}
         }`,
@@ -1051,7 +1044,7 @@ const Admin = (props) => {
       })
         .then(function (res) {
           res.data.data.placeImage &&
-            updateUploadImage(res.data.data.placeImage);
+            updateOrRemoveUploadImage(res.data.data.placeImage);
         })
         .catch(function (err) {
           console.log(err, " ERR");
@@ -1099,7 +1092,7 @@ const Admin = (props) => {
         zoomable: true,
         scalable: false,
         dragMode: "move",
-        aspectRatio: 1,
+        aspectRatio: 16 / 9,
         rotatable: true,
         movableL: true,
         modal: true,
@@ -1139,9 +1132,9 @@ const Admin = (props) => {
   };
 
   const handeleClearToDefault = () => {
-    const canvasRef = imagePreviewCanvas.current;
-    const ctx = canvasRef.getContext("2d");
-    ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
+    // const canvasRef = imagePreviewCanvas.current;
+    // const ctx = canvasRef.getContext("2d");
+    // ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
     setImgSrc(null);
     setImgSrcExt(null);
   };
@@ -1454,14 +1447,31 @@ const Admin = (props) => {
                                       <PreviewPhotoTextD>
                                         Загрузить фото
                                       </PreviewPhotoTextD>
-                                      <PreviewPhotoSizeD>
-                                        250 X 250
-                                      </PreviewPhotoSizeD>
                                     </>
                                   )}
                                 </PreviewPhotoD>
                               )}
-
+                              {DATA.profile_image && !imgSrc && (
+                                <div style={{ marginTop: "10px" }}>
+                                  <span
+                                    className="changePhoto"
+                                    style={{ marginRight: "20px" }}
+                                    onClick={() =>
+                                      document
+                                        .querySelector(".previewRef")
+                                        .click()
+                                    }
+                                  >
+                                    Изменить
+                                  </span>
+                                  <span
+                                    className="changePhoto"
+                                    onClick={() => updateOrRemoveUploadImage()}
+                                  >
+                                    Удалить
+                                  </span>
+                                </div>
+                              )}
                               <Dropzone
                                 multiple={false}
                                 accept={acceptedFileTypes}
@@ -1492,7 +1502,7 @@ const Admin = (props) => {
                                           className="changePhoto"
                                           onClick={handeleClearToDefault}
                                         >
-                                          Удалить
+                                          Отмена
                                         </span>
                                       )}
                                     </section>
@@ -1526,7 +1536,7 @@ const Admin = (props) => {
                                 </p>
                                 <DescriptionWrapD
                                   width={"100%"}
-                                  height={"230px"}
+                                  height={"185px"}
                                 >
                                   <textarea
                                     className="descTextarea"
