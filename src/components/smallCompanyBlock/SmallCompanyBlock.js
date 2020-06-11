@@ -77,9 +77,8 @@ const NoTranslationD = styled.div`
   font-weight: 400;
   font-size: 18px;
   line-height: 19px;
-  color: #c4c4c4;
+  color: #eee;
   background: #000;
-
   background-image: url(${({ bg }) => bg});
   background-size: cover;
   background-position: center;
@@ -95,7 +94,7 @@ const TransparentBgD = styled.div`
   top: 0;
   left: 0;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const DescriptionD = styled.div`
@@ -239,7 +238,7 @@ const NoTranslationM = styled.div`
   font-weight: 500;
   font-size: 16px;
   line-height: 19px;
-  color: #c4c4c4;
+  color: #eee;
   background: #000;
   background-image: url(${({ bg }) => bg});
   background-size: cover;
@@ -260,7 +259,7 @@ const TransparentBgM = styled.div`
   top: 0;
   left: 0;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   flex-direction: column;
 `;
 

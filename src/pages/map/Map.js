@@ -50,7 +50,7 @@ const MapContainer = styled.div`
     position: fixed;
     top: 105px;
     width: 100%;
-    height: calc(100% - 100px);
+    height: calc(100% - 140px);
   }
 `;
 
@@ -179,7 +179,7 @@ const TranslationBlock = styled.div`
 `;
 
 const NoTranslation = styled.p`
-  color: #919191;
+  color: #eee;
   padding: 3px;
   background-color: #000;
   position: absolute;
@@ -188,12 +188,6 @@ const NoTranslation = styled.p`
   width: 150px;
   height: 95px;
   display: flex;
-  align-self: center;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
   background-image: url(${({ bg }) => bg});
   background-size: cover;
   background-position: center;
@@ -204,14 +198,21 @@ const NoTranslation = styled.p`
   }
 `;
 
-// const TransparentBg = styled.div`
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 150px;
-//   height: 95px;
-//   background-color: rgba(0, 0, 255, 0.1);
-// `;
+const TransparentBg = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-self: center;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+`;
 
 const MarkerDesc = styled.p`
   position: absolute;
@@ -359,7 +360,7 @@ const MapComponent = (props) => {
     bounds,
     zoom,
     options: {
-      radius: 300,
+      radius: 170,
       maxZoom: 20,
     },
   });
@@ -629,40 +630,43 @@ const MapComponent = (props) => {
                                   : ""
                               }
                             >
-                              {/* <TransparentBg /> */}
-                              {nextStreamTime.start_time &&
-                                nextStreamTime.day.toLowerCase() !==
-                                  "сегодня" &&
-                                "Начало трансляции в " +
-                                  EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-                                  " в " +
-                                  nextStreamTime.start_time}
-                              {nextStreamTime.start_time &&
-                                nextStreamTime.day.toLowerCase() ===
-                                  "сегодня" &&
-                                "Трансляция начнется сегодня в " +
-                                  nextStreamTime.start_time}
-                              {!nextStreamTime.start_time &&
-                                !nextWorkTime &&
-                                "Заведение закрыто"}
+                              <TransparentBg>
+                                {nextStreamTime.start_time &&
+                                  nextStreamTime.day.toLowerCase() !==
+                                    "сегодня" &&
+                                  "Начало трансляции в " +
+                                    EN_SHORT_TO_RU_LONG_V_P[
+                                      nextStreamTime.day
+                                    ] +
+                                    " в " +
+                                    nextStreamTime.start_time}
+                                {nextStreamTime.start_time &&
+                                  nextStreamTime.day.toLowerCase() ===
+                                    "сегодня" &&
+                                  "Трансляция начнется сегодня в " +
+                                    nextStreamTime.start_time}
+                                {!nextStreamTime.start_time &&
+                                  !nextWorkTime &&
+                                  "Заведение закрыто"}
 
-                              {!nextStreamTime.start_time &&
-                                nextWorkTime &&
-                                nextWorkTime.start_time &&
-                                "Откроется: "}
-                              {!nextStreamTime.start_time &&
-                                nextWorkTime &&
-                                nextWorkTime.start_time && <br />}
-                              {!nextStreamTime.start_time &&
-                                nextWorkTime &&
-                                nextWorkTime.start_time &&
-                                `${
-                                  nextWorkTime.day.toLowerCase() !== "сегодня"
-                                    ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
-                                    : nextWorkTime.day
-                                } ${nextWorkTime.start_time}-${
-                                  nextWorkTime.end_time
-                                }`}
+                                {!nextStreamTime.start_time &&
+                                  nextWorkTime &&
+                                  nextWorkTime.start_time &&
+                                  "Откроется: "}
+                                {!nextStreamTime.start_time &&
+                                  nextWorkTime &&
+                                  nextWorkTime.start_time && <br />}
+                                {!nextStreamTime.start_time &&
+                                  nextWorkTime &&
+                                  nextWorkTime.start_time &&
+                                  `${
+                                    nextWorkTime.day.toLowerCase() !== "сегодня"
+                                      ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+                                      : nextWorkTime.day
+                                  } ${nextWorkTime.start_time}-${
+                                    nextWorkTime.end_time
+                                  }`}
+                              </TransparentBg>
                             </NoTranslation>
                           )}
                         </PreviewBlock>

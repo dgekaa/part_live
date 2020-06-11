@@ -80,22 +80,31 @@ const YesVideoD = styled.div`
 `;
 
 const NoVideoD = styled.div`
-  text-align: center;
+  position: relative;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
   background: #000;
   height: 300px;
   margin-bottom: 10px;
-  color: #c4c4c4;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
   background-image: url(${({ bg }) => bg});
   background-size: cover;
   background-position: center;
+  overflow: hidden;
+`;
+const NoVideoBgTransparentD = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #eee;
+  font-weight: 400;
+  font-size: 18px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;
 
 const VideoDescrD = styled.p`
@@ -239,22 +248,37 @@ const YesVideoM = styled.div`
 `;
 
 const NoVideoM = styled.div`
-  /* height: 250px; */
+  position: relative;
+  height: 350px;
   text-align: center;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
   background: #000;
   margin-bottom: 10px;
   transition: 0.3s ease all;
   background-image: url(${({ bg }) => bg});
   background-size: cover;
   background-position: center;
+  overflow: hidden;
   @media (max-width: 460px) {
-    /* height: 175px; */
+    height: 200px;
   }
+`;
+
+const NoVideoBgTransparentM = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #eee;
+  font-weight: 400;
+  font-size: 18px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;
 
 const DescM = styled.div`
@@ -342,9 +366,10 @@ const SmallMapM = styled.div`
   border: none;
   margin-top: 10px;
   overflow: hidden;
-  height: 200px;
+  height: 185px;
+  border-radius: 5px;
   @media (max-width: 500px) {
-    height: 100px;
+    height: 90px;
   }
 `;
 
@@ -359,6 +384,8 @@ const SmallMapLocationM = styled.p`
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  margin-top: 8px;
+  height: 30px;
 `;
 
 const SmallMapTransparentBg = styled.div`
@@ -566,7 +593,10 @@ const Company = (props) => {
                         : ""
                     }
                   >
-                    {whenIsTranslation()}
+                    <NoVideoBgTransparentD>
+                      {" "}
+                      {whenIsTranslation()}
+                    </NoVideoBgTransparentD>
                   </NoVideoD>
                 )}
                 <VideoDescrD>
@@ -699,7 +729,9 @@ const Company = (props) => {
                         : ""
                     }
                   >
-                    {whenIsTranslation()}
+                    <NoVideoBgTransparentM>
+                      {whenIsTranslation()}
+                    </NoVideoBgTransparentM>
                   </NoVideoM>
                 )}
               </VideoBlockM>
@@ -736,23 +768,6 @@ const Company = (props) => {
                 </WithIconBlockM>
 
                 <SmallMapWrapM>
-                  <SmallMapM
-                    onMouseDown={mouseDownMapHandler}
-                    onMouseUp={mouseUpMapHandler}
-                  >
-                    <GoogleMap
-                      togglePopupGoogleMap={togglePopup}
-                      styleContainerMap={{ height: "200px" }}
-                      initialCenterMap={
-                        DATA.place.coordinates
-                          ? {
-                              lat: Number(DATA.place.coordinates.split(",")[0]),
-                              lng: Number(DATA.place.coordinates.split(",")[1]),
-                            }
-                          : null
-                      }
-                    />
-                  </SmallMapM>
                   <SmallMapLocationM>
                     <CustomImgTypeM
                       alt="ico"
@@ -767,6 +782,24 @@ const Company = (props) => {
                           .replace("проспект", "пр-т.")
                       : ""}
                   </SmallMapLocationM>
+                  <SmallMapM
+                    onMouseDown={mouseDownMapHandler}
+                    onMouseUp={mouseUpMapHandler}
+                  >
+                    <GoogleMap
+                      togglePopupGoogleMap={togglePopup}
+                      styleContainerMap={{ height: "330px" }}
+                      initialCenterMap={
+                        DATA.place.coordinates
+                          ? {
+                              lat: Number(DATA.place.coordinates.split(",")[0]),
+                              lng: Number(DATA.place.coordinates.split(",")[1]),
+                            }
+                          : null
+                      }
+                    />
+                  </SmallMapM>
+
                   <SmallMapTransparentBg
                     onClick={() => togglePopup()}
                   ></SmallMapTransparentBg>
