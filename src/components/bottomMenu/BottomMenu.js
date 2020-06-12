@@ -60,10 +60,8 @@ const BottomMenu = ({ isShowMenu, border }) => {
       className="BottomMenu"
     >
       <Button
-        to="/home"
-        style={
-          window.location.pathname === "/home" ? { color: defaultColor } : {}
-        }
+        to="/"
+        style={window.location.pathname === "/" ? { color: defaultColor } : {}}
       >
         <CustomImg alt="list" name={"menu2"} width={26} height={26} />
         <MenuText>СПИСОК</MenuText>

@@ -567,7 +567,7 @@ const Company = (props) => {
             hideSideMenu();
         }}
       >
-        <GoBackBtnD to="/home">
+        <GoBackBtnD to="/">
           <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
           На главную
         </GoBackBtnD>

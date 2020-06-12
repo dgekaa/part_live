@@ -2085,7 +2085,7 @@ const Admin = (props) => {
                             >
                               Отмена
                             </p>
-                            <Link to="/home">
+                            <Link to="/">
                               <PartyLive>
                                 PARTY<Live>.LIVE</Live>
                               </PartyLive>
@@ -2164,7 +2164,7 @@ const Admin = (props) => {
                               >
                                 Отмена
                               </p>
-                              <Link to="/home">
+                              <Link to="/">
                                 <PartyLive>
                                   PARTY<Live>.LIVE</Live>
                                 </PartyLive>
@@ -2459,7 +2459,7 @@ const Admin = (props) => {
                                 >
                                   Отмена
                                 </p>
-                                <Link to="/home">
+                                <Link to="/">
                                   <PartyLive>
                                     PARTY<Live>.LIVE</Live>
                                   </PartyLive>
@@ -2597,7 +2597,7 @@ const Admin = (props) => {
                               >
                                 Отмена
                               </p>
-                              <Link to="/home">
+                              <Link to="/">
                                 <PartyLive>
                                   PARTY<Live>.LIVE</Live>
                                 </PartyLive>

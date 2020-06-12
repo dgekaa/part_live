@@ -286,7 +286,7 @@ const Login = () => {
           }}
           style={SwipePageSpring}
         >
-          <GoBackBtn to="/home">
+          <GoBackBtn to="/">
             <GoBackBtnArrow>&#8592;</GoBackBtnArrow>
             На главную
           </GoBackBtn>

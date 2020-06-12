@@ -133,7 +133,7 @@ const Registration = () => {
   });
 
   if (!!Number(cookies.origin_id)) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/" />;
   } else {
     return (
       <div>
@@ -154,7 +154,7 @@ const Registration = () => {
           }}
           style={animateProps}
         >
-          <GoBackBtn to="/home">
+          <GoBackBtn to="/">
             <GoBackBtnArrow>&#8592;</GoBackBtnArrow>
             На главную
           </GoBackBtn>
@@ -209,7 +209,7 @@ const Registration = () => {
               <>
                 <h4>ПОЗДРАВЛЯЕМ!</h4>
                 <SuccessText>Вы успешно прошли регистрацию!</SuccessText>
-                <AuthForgetSubmitBtn to="/home">
+                <AuthForgetSubmitBtn to="/">
                   ПЕРЕЙТИ НА ГЛАВНУЮ
                 </AuthForgetSubmitBtn>
               </>

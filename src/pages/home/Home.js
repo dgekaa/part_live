@@ -154,7 +154,7 @@ const Home = () => {
         <HomeContentWrap as={animated.div} style={SwipePageSpring}>
           <NavContainer>
             <CompanyNav
-              currentPage="/home"
+              currentPage="/"
               toSlideFixedNav={isShowMenu}
               clickedType={(type) => clickedType(type)}
             />

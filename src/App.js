@@ -23,7 +23,7 @@ const App = () => {
       <CookiesProvider>
         <div className="App">
           <Switch>
-            <Route exact path="/home/:type?" component={Home} />
+            <Route exact path="/" component={Home} />
             <Route path="/map" component={Map} />
             <Route path="/company/:id" component={Company} />
             <Route path="/login" component={Login} />
@@ -31,7 +31,7 @@ const App = () => {
             <Route path="/admin/:id" component={Admin} />
             <Route path="/calendar" component={Calendar} />
             <Route path="/editCompany" component={EditCompany} />
-            <Redirect to="/home" />
+            <Redirect to="/" />
           </Switch>
         </div>
       </CookiesProvider>

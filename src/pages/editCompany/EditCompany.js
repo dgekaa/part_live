@@ -343,7 +343,7 @@ const EditCompany = () => {
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else if (Number(cookies.origin_id) !== 1) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/" />;
   } else {
     return (
       <div
@@ -362,7 +362,7 @@ const EditCompany = () => {
         />
         {!isLoading && (
           <EditCompanyContent as={animated.div} style={SwipePageSpring}>
-            <GoBackBtnD to="/home">
+            <GoBackBtnD to="/">
               <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
               На главную
             </GoBackBtnD>

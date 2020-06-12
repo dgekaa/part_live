@@ -174,7 +174,7 @@ const Header = ({
     <HeaderContainer as={animated.div} style={swipeFixedElementSpring}>
       <HeaderStyle>
         {logo && (
-          <Link to="/home">
+          <Link to="/">
             <PartyLive>
               PARTY<Live>.LIVE</Live>
             </PartyLive>

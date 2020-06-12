@@ -55,8 +55,8 @@ const TypeNav = ({ style }) => {
   return (
     <TypeNavStyle style={{ ...style }}>
       <Block
-        to={{ pathname: "/home" }}
-        style={pathname === "/home" ? clickedStyle : {}}
+        to={{ pathname: "/" }}
+        style={pathname === "/" ? clickedStyle : {}}
       >
         <p>СПИСОК </p>
       </Block>

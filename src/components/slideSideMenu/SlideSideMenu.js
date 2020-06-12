@@ -98,7 +98,7 @@ const SlideSideMenu = ({ isShowMenu }) => {
       <SideMenu as={animated.div} style={SwipeMenuSpring}>
         <SideMenuList>
           <li>
-            <ListLink to="/home" style={pathname === "/home" ? clicked : {}}>
+            <ListLink to="/" style={pathname === "/" ? clicked : {}}>
               Главная
             </ListLink>
           </li>
