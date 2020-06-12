@@ -724,7 +724,24 @@ textarea {
 .MapPopupHeader {
   display: none !important;
 }
+.successSaved {
+  height: 40px;
+  position: fixed;
+  left: 50%;
+  width: 200px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
 @media screen and (max-width: 760px) {
+  .successSaved {
+    display: none;
+  }
   .popupPickerBtns {
     display: none;
   }

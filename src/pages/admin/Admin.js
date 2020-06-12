@@ -3101,7 +3101,7 @@ const Admin = (props) => {
                     togglePopupUploadFile();
                   }}
                 >
-                  Отмена@@@
+                  Отмена
                 </p>
                 <p
                   style={{
@@ -3126,7 +3126,7 @@ const Admin = (props) => {
                     onCrop();
                   }}
                 >
-                  Готово@@@
+                  Готово
                 </p>
               </div>
               <CropperMobile imgSrc={imgSrc} editorRef={editorRef} />
@@ -3165,21 +3165,10 @@ const Admin = (props) => {
         </div>
 
         <animated.div
+          className="successSaved"
           style={{
-            height: "40px",
-            position: "fixed",
             bottom: animateSavedProps.bottom,
-            left: "50%",
-            width: "200px",
-            zIndex: 10,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#fff",
             background: defaultColor,
-            borderRadius: "5px",
-            fontWeight: "400",
-            textTransform: "uppercase",
           }}
         >
           <div>
