@@ -1,6 +1,6 @@
 const QUERY = (body, origin_data) => {
   return Promise.resolve(
-    fetch("http://194.87.95.37/graphql", {
+    fetch("https://194.87.95.37/graphql", {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(body),

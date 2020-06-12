@@ -2,7 +2,7 @@
   "name": "party_live",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://partylive.by",
+  "homepage": "http://194.87.147.60/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
