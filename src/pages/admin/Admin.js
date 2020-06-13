@@ -24,6 +24,7 @@ import {
   EN_SHORT_TO_RU_SHORT,
   SHORT_DAY_OF_WEEK,
   defaultColor,
+  queryPath,
 } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
 import {
@@ -1032,7 +1033,7 @@ const Admin = (props) => {
       formData.append("0", blob || imageDestination);
 
       axios({
-        url: "http://194.87.95.37/graphql",
+        url: `${queryPath}/graphql`,
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
@@ -1434,7 +1435,7 @@ const Admin = (props) => {
                                   {DATA.profile_image ? (
                                     <img
                                       className={"uploadImgStyle"}
-                                      src={`http://194.87.95.37/storage/${DATA.profile_image}`}
+                                      src={`${queryPath}/storage/${DATA.profile_image}`}
                                       alt="image"
                                     />
                                   ) : (
@@ -2213,7 +2214,7 @@ const Admin = (props) => {
                                       {DATA.profile_image ? (
                                         <img
                                           className={"uploadImgStyleMobile"}
-                                          src={`http://194.87.95.37/storage/${DATA.profile_image}`}
+                                          src={`${queryPath}/storage/${DATA.profile_image}`}
                                           alt="image"
                                           style={{ height: "120px" }}
                                         />

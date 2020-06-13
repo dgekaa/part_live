@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import CustomImg from "../customImg/CustomImg";
 
-import { EN_SHORT_TO_RU_LONG_V_P, EN_SHORT_TO_RU_LONG } from "../../constants";
+import {
+  EN_SHORT_TO_RU_LONG_V_P,
+  queryPath,
+  EN_SHORT_TO_RU_LONG,
+} from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import styled from "styled-components";
@@ -417,14 +421,10 @@ const SmallCompanyBlock = ({ item }) => {
           <NoTranslationD
             bg={
               item.profile_image
-                ? "http://194.87.95.37/storage/" + item.profile_image
+                ? `${queryPath}/storage/` + item.profile_image
                 : ""
             }
           >
-            {console.log(
-              "http://194.87.95.37/storage/" + item.profile_image,
-              "sss"
-            )}
             <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
           </NoTranslationD>
         )}
@@ -516,7 +516,7 @@ const SmallCompanyBlock = ({ item }) => {
           <NoTranslationM
             bg={
               item.profile_image
-                ? "http://194.87.95.37/storage/" + item.profile_image
+                ? `${queryPath}/storage/` + item.profile_image
                 : ""
             }
           >

@@ -12,6 +12,7 @@ import {
   EN_SHORT_TO_RU_LONG_V_P,
   API_KEY,
   EN_SHORT_TO_RU_LONG,
+  queryPath,
 } from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
@@ -625,7 +626,7 @@ const MapComponent = (props) => {
                             <NoTranslation
                               bg={
                                 cluster.item.profile_image
-                                  ? "http://194.87.95.37/storage/" +
+                                  ? `${queryPath}/storage/` +
                                     cluster.item.profile_image
                                   : ""
                               }

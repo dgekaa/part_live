@@ -11,14 +11,14 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 import Loader from "../../components/loader/Loader";
 import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
-import {
-  isShowStreamNow,
-  isWorkTimeNow,
-  numberDayNow,
-} from "../../calculateTime";
+import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
-import { DAY_OF_WEEK, EN_SHORT_TO_RU_LONG_V_P } from "../../constants";
+import {
+  DAY_OF_WEEK,
+  EN_SHORT_TO_RU_LONG_V_P,
+  queryPath,
+} from "../../constants";
 import { defaultColor } from "../../constants";
 
 import "./company.css";
@@ -588,8 +588,7 @@ const Company = (props) => {
                   <NoVideoD
                     bg={
                       DATA.place.profile_image
-                        ? "http://194.87.95.37/storage/" +
-                          DATA.place.profile_image
+                        ? `${queryPath}/storage/` + DATA.place.profile_image
                         : ""
                     }
                   >
@@ -724,8 +723,7 @@ const Company = (props) => {
                   <NoVideoM
                     bg={
                       DATA.place.profile_image
-                        ? "http://194.87.95.37/storage/" +
-                          DATA.place.profile_image
+                        ? `${queryPath}/storage/` + DATA.place.profile_image
                         : ""
                     }
                   >

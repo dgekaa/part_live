@@ -77,3 +77,5 @@ export const EN_SHORT_DAY_OF_WEEK = [
 ];
 
 export const defaultColor = "#f8104d";
+
+export const queryPath = "https://backend.partylive.by";
