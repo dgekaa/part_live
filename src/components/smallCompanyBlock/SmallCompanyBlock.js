@@ -409,6 +409,7 @@ const SmallCompanyBlock = ({ item }) => {
 
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
+      {console.log(item.profile_image, "item.profile_image")}
       <Desctop>
         {item.streams &&
         item.streams[0] &&
@@ -504,6 +505,13 @@ const SmallCompanyBlock = ({ item }) => {
         </DescriptionD>
       </Desctop>
       <Mobile>
+        {console.log(
+          item.streams &&
+            item.streams[0] &&
+            item.streams[0].preview &&
+            showStream &&
+            item.streams[0].preview
+        )}
         {item.streams &&
         item.streams[0] &&
         item.streams[0].preview &&

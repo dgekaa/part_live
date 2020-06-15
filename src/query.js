@@ -1,6 +1,8 @@
+import { queryPath } from "./constants";
+
 const QUERY = (body, origin_data) => {
   return Promise.resolve(
-    fetch("https://backend.partylive.by/graphql", {
+    fetch(`${queryPath}/graphql`, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(body),
