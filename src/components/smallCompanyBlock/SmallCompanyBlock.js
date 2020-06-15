@@ -505,7 +505,7 @@ const SmallCompanyBlock = ({ item }) => {
         </DescriptionD>
       </Desctop>
       <Mobile>
-        {console.log(
+        {alert(
           item.streams &&
             item.streams[0] &&
             item.streams[0].preview &&
