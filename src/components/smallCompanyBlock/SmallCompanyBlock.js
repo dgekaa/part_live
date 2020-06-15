@@ -400,21 +400,10 @@ const SmallCompanyBlock = ({ item }) => {
     }
   };
 
-  // const isTranslationDisabled = () => {
-  //   if (item.streams[0] && dateNow === item.streams[0].see_you_tomorrow) {
-  //     return true;
-  //   }
-  //   return false;
-  // };
-
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
-      {console.log(item.profile_image, "item.profile_image")}
       <Desctop>
-        {item.streams &&
-        item.streams[0] &&
-        item.streams[0].preview &&
-        showStream ? (
+        {item.streams && item.streams[0] && showStream ? (
           <PreviewBlockD
             style={{ backgroundImage: `url(${item.streams[0].preview})` }}
           />
@@ -505,7 +494,7 @@ const SmallCompanyBlock = ({ item }) => {
         </DescriptionD>
       </Desctop>
       <Mobile>
-        {item.streams && item.streams[0] ? (
+        {item.streams && item.streams[0] && showStream && isWork ? (
           <PreviewBlockM
             style={{ backgroundImage: `url(${item.streams[0].preview})` }}
           />
