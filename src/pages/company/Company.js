@@ -222,11 +222,11 @@ const FlexM = styled.div`
 `;
 
 const ShadowBlockM = styled.div`
-  padding: 0 0 50px 0;
   flex-direction: column;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
+  padding-bottom: 30px;
 `;
 
 const VideoBlockM = styled.div`
@@ -364,7 +364,7 @@ const SmallMapWrapM = styled.div`
 const SmallMapM = styled.div`
   display: block;
   border: none;
-  margin-top: 10px;
+  margin-top: 0px;
   overflow: hidden;
   height: 185px;
   border-radius: 5px;
@@ -376,7 +376,6 @@ const SmallMapM = styled.div`
 const SmallMapLocationM = styled.p`
   display: flex;
   color: #000000;
-  padding: 12px 0;
   font-weight: normal;
   font-size: 14px;
   line-height: 16px;
@@ -390,7 +389,7 @@ const SmallMapLocationM = styled.p`
 
 const SmallMapTransparentBg = styled.div`
   position: absolute;
-  top: 0;
+  top: 30px;
   left: 0;
   width: 100%;
   height: calc(100% + 10px);
@@ -574,6 +573,12 @@ const Company = (props) => {
 
         {DATA && (
           <FlexD>
+            <div>
+              <img
+                src={DATA.place.streams[0].preview}
+                style={{ width: "100px" }}
+              />
+            </div>
             <ShadowBlockD>
               <VideoBlockD>
                 {showStream && (
@@ -709,6 +714,10 @@ const Company = (props) => {
       >
         {DATA && (
           <FlexM>
+            <img
+              src={DATA.place.streams[0].preview}
+              style={{ width: "100px" }}
+            />
             <ShadowBlockM>
               <VideoBlockM>
                 {showStream && (
