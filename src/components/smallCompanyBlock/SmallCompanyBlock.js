@@ -505,7 +505,7 @@ const SmallCompanyBlock = ({ item }) => {
         </DescriptionD>
       </Desctop>
       <Mobile>
-        {true ? (
+        {item.streams && item.streams[0] ? (
           <PreviewBlockM
             style={{ backgroundImage: `url(${item.streams[0].preview})` }}
           />
