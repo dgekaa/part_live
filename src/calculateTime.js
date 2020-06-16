@@ -259,7 +259,6 @@ export const isWorkTimeNow = (
           sortedArr[i].start_time.split(":")[1] * MtoMs;
         if (currentTimeMS < todayStartStream) {
           setNextWorkTime({
-            // id: item.id,
             day: "сегодня",
             start_time: sortedArr[i].start_time,
             end_time: sortedArr[i].end_time,
@@ -274,8 +273,6 @@ export const isWorkTimeNow = (
         if (sortedArr[i] && i > numberDayNow) {
           if (sortedArr[i].start_time) {
             setNextWorkTime({
-              // id: item.id,
-
               day: sortedArr[i].day,
               start_time: sortedArr[i].start_time,
               end_time: sortedArr[i].end_time,
@@ -292,8 +289,6 @@ export const isWorkTimeNow = (
         if (sortedArr[i] && i < numberDayNow) {
           if (sortedArr[i].start_time) {
             setNextWorkTime({
-              // id: item.id,
-
               day: sortedArr[i].day,
               start_time: sortedArr[i].start_time,
               end_time: sortedArr[i].end_time,

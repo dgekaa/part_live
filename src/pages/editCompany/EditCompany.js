@@ -146,7 +146,7 @@ const Td = styled.td`
     }
 
     &:nth-child(3) {
-      display: flex;
+      display: none;
       justify-content: center;
       flex: 1.3 !important;
       font-weight: 700;
@@ -166,6 +166,14 @@ const TdDelete = styled.td`
   font-size: 22px;
   &:hover {
     color: #000;
+  }
+`;
+
+const TdDisable = styled(Td)`
+  cursor: pointer;
+  font-weight: 500;
+  &:hover {
+    opacity: 0.7;
   }
 `;
 
@@ -258,7 +266,7 @@ const EditCompany = () => {
   const refreshData = () => {
     QUERY({
       query: `query {
-            places {id name alias categories{name slug} streams{url preview}}
+            places {id name alias disabled categories{name slug} streams{url preview}}
           }`,
     })
       .then((res) => res.json())
@@ -340,6 +348,30 @@ const EditCompany = () => {
       .catch((err) => console.log(err, "EDIT ERROR"));
   };
 
+  const toggleDisabled = (id, disabled) => {
+    QUERY(
+      {
+        query: `mutation {
+        updatePlace(
+          input:{
+            id:"${id}"            
+            disabled : ${disabled ? false : true}
+          }
+        ){id disabled}
+      }`,
+      },
+      cookies.origin_data
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.errors) {
+          refreshData();
+        } else {
+        }
+      })
+      .catch((err) => {});
+  };
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else if (Number(cookies.origin_id) !== 1) {
@@ -373,7 +405,7 @@ const EditCompany = () => {
               <tbody>
                 {places &&
                   places.length &&
-                  places.map(({ id, name, alias, categories }) => {
+                  places.map(({ id, name, alias, categories, disabled }) => {
                     return (
                       <Tr key={id}>
                         <TdDelete
@@ -394,6 +426,10 @@ const EditCompany = () => {
                             categories[0].name &&
                             categories[0].name.toLowerCase()}
                         </Td>
+
+                        <TdDisable onClick={() => toggleDisabled(id, disabled)}>
+                          {disabled ? "Выкл." : "Вкл."}
+                        </TdDisable>
                       </Tr>
                     );
                   })}

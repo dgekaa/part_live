@@ -258,6 +258,22 @@ const DisableStreamTextD = styled.span`
 `;
 
 // ____________________________________________-
+const DisableStreamM = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const DisableStreamTextM = styled.div`
+  font-size: 18px;
+`;
+
+const DisableStreamToNexDayM = styled.div`
+  font-size: 16px;
+`;
+
 const PreviewPhotoM = styled.div`
   display: flex;
   height: 122px;
@@ -502,7 +518,6 @@ const Admin = (props) => {
   };
 
   const disableStream = (data) => {
-    alert(data);
     if (cookies.origin_data) {
       QUERY(
         {
@@ -2101,6 +2116,7 @@ const Admin = (props) => {
                               className=""
                               onClick={() => {
                                 closeAllSidebar();
+                                disableStream(switchChecked ? dateNow : null);
                               }}
                             >
                               Готово
@@ -2115,6 +2131,25 @@ const Admin = (props) => {
                               />
                             </div>
                           )}
+                          <DisableStreamM>
+                            <div>
+                              <DisableStreamTextM>
+                                Отключить стрим
+                              </DisableStreamTextM>
+                              <DisableStreamToNexDayM>
+                                Выключить до следующего дня
+                              </DisableStreamToNexDayM>
+                            </div>
+
+                            <Switch
+                              onChange={setSwitchChecked}
+                              checked={switchChecked}
+                              onColor={defaultColor}
+                              offColor="#999"
+                              uncheckedIcon={false}
+                              checkedIcon={false}
+                            />
+                          </DisableStreamM>
                         </div>
                       </SideBar>
                     </div>

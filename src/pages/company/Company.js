@@ -573,12 +573,6 @@ const Company = (props) => {
 
         {DATA && (
           <FlexD>
-            <div>
-              <img
-                src={DATA.place.streams[0].preview}
-                style={{ width: "100px" }}
-              />
-            </div>
             <ShadowBlockD>
               <VideoBlockD>
                 {showStream && (
@@ -714,10 +708,6 @@ const Company = (props) => {
       >
         {DATA && (
           <FlexM>
-            <img
-              src={DATA.place.streams[0].preview}
-              style={{ width: "100px" }}
-            />
             <ShadowBlockM>
               <VideoBlockM>
                 {showStream && (

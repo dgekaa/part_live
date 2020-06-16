@@ -315,7 +315,7 @@ const MapComponent = (props) => {
   useEffect(() => {
     QUERY({
       query: `query{
-          places{id name coordinates profile_image
+          places{id name coordinates profile_image disabled
           streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
           schedules{id day start_time end_time}
           categories{id name slug}}
@@ -337,24 +337,26 @@ const MapComponent = (props) => {
     }
   }, [DATA]);
 
-  const points = markers.map((el, i) => {
-    return {
-      type: "Feature",
-      item: el,
-      properties: {
-        cluster: false,
-        crimeId: i,
-        category: el.categories[0] && el.categories[0].name,
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [
-          +el.coordinates.split(",")[1],
-          +el.coordinates.split(",")[0],
-        ],
-      },
-    };
-  });
+  const points = markers
+    .filter((el) => !el.disabled)
+    .map((el, i) => {
+      return {
+        type: "Feature",
+        item: el,
+        properties: {
+          cluster: false,
+          crimeId: i,
+          category: el.categories[0] && el.categories[0].name,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [
+            +el.coordinates.split(",")[1],
+            +el.coordinates.split(",")[0],
+          ],
+        },
+      };
+    });
 
   const { clusters } = useSupercluster({
     points,
@@ -512,14 +514,12 @@ const MapComponent = (props) => {
                 />
               </Marker>
             )}
-
             {clusters.map((cluster) => {
               const [longitude, latitude] = cluster.geometry.coordinates;
               const {
                 cluster: isCluster,
                 point_count: pointCount,
               } = cluster.properties;
-
               //ЗАМЕНА НА ЦИФРЫ
               if (isCluster) {
                 return (
@@ -561,7 +561,6 @@ const MapComponent = (props) => {
                 setIsWork,
                 setNextWorkTime
               );
-
               return (
                 <Marker
                   key={cluster.properties.crimeId}
