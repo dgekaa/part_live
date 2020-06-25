@@ -416,6 +416,7 @@ const Admin = (props) => {
   const chooseNewAddress = (streetName, latLng) => {
     if (cookies.origin_data) {
       const stringLatLng = "" + latLng.lat + "," + latLng.lng;
+
       QUERY(
         {
           query: `mutation {
@@ -527,11 +528,9 @@ const Admin = (props) => {
                 id:"${DATA.streams[0].id}"
                ${
                  data
-                   ? `
-                see_you_tomorrow: "${data}"`
+                   ? ` see_you_tomorrow: "${data}"`
                    : ` see_you_tomorrow: ${data}`
-               }
-               
+               }               
               }
             ) { id name url }
           }`,
@@ -1039,6 +1038,7 @@ const Admin = (props) => {
           data,
         },
       });
+
       let formData = new FormData();
       formData.append("operations", operations);
       const map = {
