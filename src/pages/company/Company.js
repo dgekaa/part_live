@@ -440,7 +440,7 @@ const Company = (props) => {
     QUERY({
       query: `query {
         place (id: ${props.match.params.id}) {
-          id name address description profile_image
+          id name address description profile_image mobile_stream
           streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
           categories{name slug} coordinates
           schedules {day start_time end_time} user {id name email}
@@ -575,16 +575,14 @@ const Company = (props) => {
           <FlexD>
             <ShadowBlockD>
               <VideoBlockD>
-                {showStream &&
-                  DATA.place.streams[0] &&
-                  !DATA.place.mobile_stream && (
-                    <YesVideoD>
-                      <VideoPlayer
-                        preview={DATA.place.streams[0].preview}
-                        src={DATA.place.streams[0].url}
-                      />
-                    </YesVideoD>
-                  )}
+                {showStream && !DATA.place.mobile_stream && (
+                  <YesVideoD>
+                    <VideoPlayer
+                      preview={DATA.place.streams[0].preview}
+                      src={DATA.place.streams[0].url}
+                    />
+                  </YesVideoD>
+                )}
                 {!showStream && !DATA.place.mobile_stream && (
                   <NoVideoD
                     bg={
@@ -720,7 +718,7 @@ const Company = (props) => {
           <FlexM>
             <ShadowBlockM>
               <VideoBlockM>
-                {showStream && DATA.place.streams[0] && (
+                {showStream && !DATA.place.mobile_stream && (
                   <YesVideoM>
                     <VideoPlayer
                       preview={DATA.place.streams[0].preview}
@@ -728,7 +726,7 @@ const Company = (props) => {
                     />
                   </YesVideoM>
                 )}
-                {!showStream && DATA.place.streams[0] && (
+                {!showStream && !DATA.place.mobile_stream && (
                   <NoVideoM
                     bg={
                       DATA.place.profile_image
@@ -741,7 +739,7 @@ const Company = (props) => {
                     </NoVideoBgTransparentM>
                   </NoVideoM>
                 )}
-                {!DATA.place.streams[0] && (
+                {DATA.place.mobile_stream && (
                   <YesVideoM>
                     <VideoPlayer
                       preview={""}
