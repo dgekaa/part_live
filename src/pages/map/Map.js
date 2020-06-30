@@ -315,7 +315,7 @@ const MapComponent = (props) => {
   useEffect(() => {
     QUERY({
       query: `query{
-          places{id name coordinates profile_image disabled
+          places{id name coordinates profile_image disabled mobile_stream
           streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
           schedules{id day start_time end_time}
           categories{id name slug}}
@@ -614,14 +614,15 @@ const MapComponent = (props) => {
                           {cluster.item.streams &&
                             cluster.item.streams[0] &&
                             cluster.item.streams[0].preview &&
-                            !!streamTime && (
+                            !!streamTime &&
+                            !cluster.item.mobile_stream && (
                               <TranslationBlock
                                 style={{
                                   backgroundImage: `url(${cluster.item.streams[0].preview})`,
                                 }}
                               />
                             )}
-                          {!streamTime && (
+                          {!streamTime && !cluster.item.mobile_stream && (
                             <NoTranslation
                               bg={
                                 cluster.item.profile_image
@@ -666,6 +667,24 @@ const MapComponent = (props) => {
                                   } ${nextWorkTime.start_time}-${
                                     nextWorkTime.end_time
                                   }`}
+                              </TransparentBg>
+                            </NoTranslation>
+                          )}
+                          {console.log(
+                            cluster.item,
+                            "cluster.item.cluster.item.cluster.item."
+                          )}
+                          {cluster.item.mobile_stream && (
+                            <NoTranslation
+                              bg={
+                                cluster.item.profile_image
+                                  ? `${queryPath}/storage/` +
+                                    cluster.item.profile_image
+                                  : ""
+                              }
+                            >
+                              <TransparentBg>
+                                Идет мобильная трансляция
                               </TransparentBg>
                             </NoTranslation>
                           )}

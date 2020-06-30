@@ -400,13 +400,27 @@ const SmallCompanyBlock = ({ item }) => {
     }
   };
 
+  console.log(item.mobile_stream, "ITEMMMMMMM");
+
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
       <Desctop>
-        {item.streams && item.streams[0] && showStream ? (
-          <PreviewBlockD
-            style={{ backgroundImage: `url(${item.streams[0].preview})` }}
-          />
+        {!item.mobile_stream ? (
+          item.streams && item.streams[0] && showStream ? (
+            <PreviewBlockD
+              style={{ backgroundImage: `url(${item.streams[0].preview})` }}
+            />
+          ) : (
+            <NoTranslationD
+              bg={
+                item.profile_image
+                  ? `${queryPath}/storage/` + item.profile_image
+                  : ""
+              }
+            >
+              <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
+            </NoTranslationD>
+          )
         ) : (
           <NoTranslationD
             bg={
@@ -415,7 +429,7 @@ const SmallCompanyBlock = ({ item }) => {
                 : ""
             }
           >
-            <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
+            <TransparentBgD>Идет мобильная трансляция</TransparentBgD>
           </NoTranslationD>
         )}
         <DescriptionD>
@@ -494,10 +508,43 @@ const SmallCompanyBlock = ({ item }) => {
         </DescriptionD>
       </Desctop>
       <Mobile>
-        {item.streams && item.streams[0] && showStream && isWork ? (
-          <PreviewBlockM
-            style={{ backgroundImage: `url(${item.streams[0].preview})` }}
-          />
+        {!item.mobile_stream ? (
+          item.streams && item.streams[0] && showStream && isWork ? (
+            <PreviewBlockM
+              style={{ backgroundImage: `url(${item.streams[0].preview})` }}
+            />
+          ) : (
+            <NoTranslationM
+              bg={
+                item.profile_image
+                  ? `${queryPath}/storage/` + item.profile_image
+                  : ""
+              }
+            >
+              <TransparentBgM>
+                {nextWorkTime
+                  ? isWork
+                    ? whenWillBeTranslation()
+                    : "Откроется:"
+                  : isWork
+                  ? whenWillBeTranslation()
+                  : "Закрыто"}
+                <p>
+                  {nextWorkTime && nextWorkTime.start_time
+                    ? `${
+                        nextWorkTime.day.toLowerCase() !== "сегодня"
+                          ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+                          : nextWorkTime.day
+                      }`
+                    : ""}
+                  {nextWorkTime && nextWorkTime.start_time && <br />}
+                  {nextWorkTime &&
+                    nextWorkTime.start_time &&
+                    nextWorkTime.start_time + "-" + nextWorkTime.end_time}
+                </p>
+              </TransparentBgM>
+            </NoTranslationM>
+          )
         ) : (
           <NoTranslationM
             bg={
@@ -506,28 +553,7 @@ const SmallCompanyBlock = ({ item }) => {
                 : ""
             }
           >
-            <TransparentBgM>
-              {nextWorkTime
-                ? isWork
-                  ? whenWillBeTranslation()
-                  : "Откроется:"
-                : isWork
-                ? whenWillBeTranslation()
-                : "Закрыто"}
-              <p>
-                {nextWorkTime && nextWorkTime.start_time
-                  ? `${
-                      nextWorkTime.day.toLowerCase() !== "сегодня"
-                        ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
-                        : nextWorkTime.day
-                    }`
-                  : ""}
-                {nextWorkTime && nextWorkTime.start_time && <br />}
-                {nextWorkTime &&
-                  nextWorkTime.start_time &&
-                  nextWorkTime.start_time + "-" + nextWorkTime.end_time}
-              </p>
-            </TransparentBgM>
+            <TransparentBgM>Идет мобильная трансляция</TransparentBgM>
           </NoTranslationM>
         )}
         <DescriptionM>

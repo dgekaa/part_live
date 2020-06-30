@@ -575,15 +575,17 @@ const Company = (props) => {
           <FlexD>
             <ShadowBlockD>
               <VideoBlockD>
-                {showStream && (
-                  <YesVideoD>
-                    <VideoPlayer
-                      preview={DATA.place.streams[0].preview}
-                      src={DATA.place.streams[0].url}
-                    />
-                  </YesVideoD>
-                )}
-                {!showStream && (
+                {showStream &&
+                  DATA.place.streams[0] &&
+                  !DATA.place.mobile_stream && (
+                    <YesVideoD>
+                      <VideoPlayer
+                        preview={DATA.place.streams[0].preview}
+                        src={DATA.place.streams[0].url}
+                      />
+                    </YesVideoD>
+                  )}
+                {!showStream && !DATA.place.mobile_stream && (
                   <NoVideoD
                     bg={
                       DATA.place.profile_image
@@ -596,6 +598,14 @@ const Company = (props) => {
                       {whenIsTranslation()}
                     </NoVideoBgTransparentD>
                   </NoVideoD>
+                )}
+                {DATA.place.mobile_stream && (
+                  <YesVideoM>
+                    <VideoPlayer
+                      preview={""}
+                      src={`https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.m3u8`}
+                    />
+                  </YesVideoM>
                 )}
                 <VideoDescrD>
                   <VideoDescrNameD>{DATA.place.name}</VideoDescrNameD> -{" "}
@@ -710,7 +720,7 @@ const Company = (props) => {
           <FlexM>
             <ShadowBlockM>
               <VideoBlockM>
-                {showStream && (
+                {showStream && DATA.place.streams[0] && (
                   <YesVideoM>
                     <VideoPlayer
                       preview={DATA.place.streams[0].preview}
@@ -718,7 +728,7 @@ const Company = (props) => {
                     />
                   </YesVideoM>
                 )}
-                {!showStream && (
+                {!showStream && DATA.place.streams[0] && (
                   <NoVideoM
                     bg={
                       DATA.place.profile_image
@@ -730,6 +740,14 @@ const Company = (props) => {
                       {whenIsTranslation()}
                     </NoVideoBgTransparentM>
                   </NoVideoM>
+                )}
+                {!DATA.place.streams[0] && (
+                  <YesVideoM>
+                    <VideoPlayer
+                      preview={""}
+                      src={`https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.m3u8`}
+                    />
+                  </YesVideoM>
                 )}
               </VideoBlockM>
               <DescM>
