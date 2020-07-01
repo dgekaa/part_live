@@ -340,6 +340,7 @@ const SmallCompanyBlock = ({ item }) => {
   const [curDistance, setCurDistance] = useState(null);
   const [nextStreamTime, setNextStreamTime] = useState(false);
   const [nextWorkTime, setNextWorkTime] = useState(null);
+  const [ismobileStream, setIsmobileStream] = useState(false);
 
   const dateNow = new Date()
     .toLocaleDateString()
@@ -400,12 +401,25 @@ const SmallCompanyBlock = ({ item }) => {
     }
   };
 
-  console.log(item.mobile_stream, "ITEMMMMMMM");
+  const updateIsMobileStreaming = () => {
+    fetch(`https://partylivestream.web4net.ru:8080/hls/show/${item.id}.m3u8`)
+      .then((res) => setIsmobileStream(res.ok))
+      .catch(() => setIsmobileStream(false));
+  };
+
+  useEffect(() => {
+    updateIsMobileStreaming();
+  }, []);
+
+  setInterval(() => {
+    console.log(ismobileStream, "__________________");
+    updateIsMobileStreaming();
+  }, 10000);
 
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
       <Desctop>
-        {!item.mobile_stream ? (
+        {!ismobileStream ? (
           item.streams && item.streams[0] && showStream ? (
             <PreviewBlockD
               style={{ backgroundImage: `url(${item.streams[0].preview})` }}
@@ -422,15 +436,11 @@ const SmallCompanyBlock = ({ item }) => {
             </NoTranslationD>
           )
         ) : (
-          <NoTranslationD
-            bg={
-              item.profile_image
-                ? `${queryPath}/storage/` + item.profile_image
-                : ""
-            }
-          >
-            <TransparentBgD>Идет мобильная трансляция</TransparentBgD>
-          </NoTranslationD>
+          <PreviewBlockD
+            style={{
+              backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${item.id}.jpeg)`,
+            }}
+          />
         )}
         <DescriptionD>
           <TooltipTypeD>
@@ -508,7 +518,7 @@ const SmallCompanyBlock = ({ item }) => {
         </DescriptionD>
       </Desctop>
       <Mobile>
-        {!item.mobile_stream ? (
+        {!ismobileStream ? (
           item.streams && item.streams[0] && showStream && isWork ? (
             <PreviewBlockM
               style={{ backgroundImage: `url(${item.streams[0].preview})` }}
@@ -546,15 +556,11 @@ const SmallCompanyBlock = ({ item }) => {
             </NoTranslationM>
           )
         ) : (
-          <NoTranslationM
-            bg={
-              item.profile_image
-                ? `${queryPath}/storage/` + item.profile_image
-                : ""
-            }
-          >
-            <TransparentBgM>Идет мобильная трансляция</TransparentBgM>
-          </NoTranslationM>
+          <PreviewBlockM
+            style={{
+              backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${item.id}.jpeg)`,
+            }}
+          />
         )}
         <DescriptionM>
           <TopDescriptionBlockM>

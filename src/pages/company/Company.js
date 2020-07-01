@@ -409,6 +409,7 @@ const Company = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [curDistance, setCurDistance] = useState(null);
   const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
+  const [ismobileStream, setIsmobileStream] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem("uniqueCompanyType")) {
@@ -539,6 +540,24 @@ const Company = (props) => {
     config: { duration: 200 },
   });
 
+  const updateIsMobileStreaming = () => {
+    if (DATA && DATA.place) {
+      fetch(
+        `https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.m3u8`
+      )
+        .then((res) => setIsmobileStream(res.ok))
+        .catch(() => setIsmobileStream(false));
+    }
+  };
+
+  useEffect(() => {
+    updateIsMobileStreaming();
+  }, [DATA]);
+
+  setInterval(() => {
+    updateIsMobileStreaming();
+  }, 5000);
+
   return (
     <div
       onClick={(e) => {
@@ -575,7 +594,7 @@ const Company = (props) => {
           <FlexD>
             <ShadowBlockD>
               <VideoBlockD>
-                {showStream && !DATA.place.mobile_stream && (
+                {showStream && !ismobileStream && (
                   <YesVideoD>
                     <VideoPlayer
                       preview={DATA.place.streams[0].preview}
@@ -583,7 +602,7 @@ const Company = (props) => {
                     />
                   </YesVideoD>
                 )}
-                {!showStream && !DATA.place.mobile_stream && (
+                {!showStream && !ismobileStream && (
                   <NoVideoD
                     bg={
                       DATA.place.profile_image
@@ -597,13 +616,13 @@ const Company = (props) => {
                     </NoVideoBgTransparentD>
                   </NoVideoD>
                 )}
-                {DATA.place.mobile_stream && (
-                  <YesVideoM>
+                {ismobileStream && (
+                  <YesVideoD>
                     <VideoPlayer
-                      preview={""}
+                      preview={`https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.jpeg`}
                       src={`https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.m3u8`}
                     />
-                  </YesVideoM>
+                  </YesVideoD>
                 )}
                 <VideoDescrD>
                   <VideoDescrNameD>{DATA.place.name}</VideoDescrNameD> -{" "}
@@ -705,7 +724,6 @@ const Company = (props) => {
       </CompanyD>
 
       {/* ________________________________ MOBILE */}
-
       <CompanyM
         as={animated.div}
         style={SwipePageSpring}
@@ -718,7 +736,7 @@ const Company = (props) => {
           <FlexM>
             <ShadowBlockM>
               <VideoBlockM>
-                {showStream && !DATA.place.mobile_stream && (
+                {showStream && !ismobileStream && (
                   <YesVideoM>
                     <VideoPlayer
                       preview={DATA.place.streams[0].preview}
@@ -726,7 +744,7 @@ const Company = (props) => {
                     />
                   </YesVideoM>
                 )}
-                {!showStream && !DATA.place.mobile_stream && (
+                {!showStream && !ismobileStream && (
                   <NoVideoM
                     bg={
                       DATA.place.profile_image
@@ -739,10 +757,10 @@ const Company = (props) => {
                     </NoVideoBgTransparentM>
                   </NoVideoM>
                 )}
-                {DATA.place.mobile_stream && (
+                {ismobileStream && (
                   <YesVideoM>
                     <VideoPlayer
-                      preview={""}
+                      preview={`https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.jpeg`}
                       src={`https://partylivestream.web4net.ru:8080/hls/show/${DATA.place.id}.m3u8`}
                     />
                   </YesVideoM>

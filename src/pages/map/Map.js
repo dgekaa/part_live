@@ -561,6 +561,13 @@ const MapComponent = (props) => {
                 setIsWork,
                 setNextWorkTime
               );
+              setInterval(() => {
+                console.log(
+                  cluster.item.mobile_stream,
+                  "++++++++++++++++++++++"
+                );
+              }, 10000);
+
               return (
                 <Marker
                   key={cluster.properties.crimeId}
@@ -670,23 +677,12 @@ const MapComponent = (props) => {
                               </TransparentBg>
                             </NoTranslation>
                           )}
-                          {console.log(
-                            cluster.item,
-                            "cluster.item.cluster.item.cluster.item."
-                          )}
                           {cluster.item.mobile_stream && (
-                            <NoTranslation
-                              bg={
-                                cluster.item.profile_image
-                                  ? `${queryPath}/storage/` +
-                                    cluster.item.profile_image
-                                  : ""
-                              }
-                            >
-                              <TransparentBg>
-                                Идет мобильная трансляция
-                              </TransparentBg>
-                            </NoTranslation>
+                            <TranslationBlock
+                              style={{
+                                backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${cluster.item.id}.jpeg)`,
+                              }}
+                            />
                           )}
                         </PreviewBlock>
 
