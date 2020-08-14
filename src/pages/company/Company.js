@@ -556,6 +556,7 @@ const Company = (props) => {
 
   setInterval(() => {
     updateIsMobileStreaming();
+    console.log(ismobileStream, " company___________");
   }, 5000);
 
   return (

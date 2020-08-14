@@ -1046,7 +1046,7 @@ const Admin = (props) => {
       };
       formData.append("map", JSON.stringify(map));
       formData.append("0", blob || imageDestination);
-
+      console.log(formData, "FORM____DATA");
       axios({
         url: `${queryPath}/graphql`,
         method: "POST",
@@ -1133,13 +1133,13 @@ const Admin = (props) => {
   const onCrop = () => {
     if (editorRef.current) {
       const canvas = editorRef.current.getImage().toDataURL();
+      console.log(canvas, "CANVAS_____");
       fetch(canvas)
         .then((res) => res.blob())
         .then((blob) => {
+          console.log(blob, "BLOB___");
           uploadImageTranscode(blob);
         });
-
-      console.log(canvas, " ___________URL______");
     }
   };
 
@@ -2044,9 +2044,7 @@ const Admin = (props) => {
                               <div
                                 style={{ marginTop: "38px" }}
                                 className="cancelBtnProfile"
-                                onClick={() => {
-                                  setStreamAddressData("");
-                                }}
+                                onClick={() => setStreamAddressData("")}
                               >
                                 Отмена
                               </div>

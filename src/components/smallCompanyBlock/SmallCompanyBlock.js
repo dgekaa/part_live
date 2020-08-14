@@ -412,8 +412,8 @@ const SmallCompanyBlock = ({ item }) => {
   }, []);
 
   setInterval(() => {
-    console.log(ismobileStream, "__________________");
     updateIsMobileStreaming();
+    console.log(ismobileStream, " small comp___________");
   }, 10000);
 
   return (
