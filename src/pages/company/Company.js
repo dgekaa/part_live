@@ -440,7 +440,7 @@ const Company = (props) => {
   useEffect(() => {
     QUERY({
       query: `query {
-        place (id: ${props.match.params.id}) {
+        place (id: ${+props.match.params.id}) {
           id name address description profile_image mobile_stream
           streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
           categories{name slug} coordinates
@@ -453,7 +453,10 @@ const Company = (props) => {
         setIsLoading(false);
         setDATA(data.data);
       })
-      .catch((err) => console.log(err, "  ONE PLACE"));
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err, "  ONE PLACE");
+      });
   }, []);
 
   const togglePopup = () => {
@@ -842,7 +845,7 @@ const Company = (props) => {
         )}
       </CompanyM>
 
-      {!DATA && isLoading && <Loader />}
+      {isLoading && <Loader />}
       {showPopup && (
         <Popup togglePopup={togglePopup}>
           <GoogleMap

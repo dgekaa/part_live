@@ -23,18 +23,23 @@ const SmallCompBlock = styled(Link)`
   border: 1px solid #f3f3f3;
   box-shadow: 4px 4px 4px #e5e5e5;
   margin: 6px;
+  margin-left: 0;
   &:hover {
     opacity: 0.9;
   }
-  &:nth-child(1) {
-    margin-left: 0;
+  &:nth-child(2n + 2) {
+    margin-left: 6px;
+    margin-right: 12px;
   }
+
   &:nth-child(4n + 4) {
+    margin: 6px;
     margin-right: 0;
   }
-  &:nth-child(5n + 5) {
-    margin-left: 0;
-  }
+  /* &:nth-child(3n + 3) {
+    margin: 6px;
+    box-shadow: 10px 10px 10px blue;
+  } */
   @media (max-width: 760px) {
     height: 235px;
     margin: 5px;
