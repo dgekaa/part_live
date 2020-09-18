@@ -10,6 +10,7 @@ const CustomImg = ({
   onMouseEnter,
   onMouseOut,
   onClick,
+  style,
 }) => {
   return (
     <img
@@ -25,6 +26,7 @@ const CustomImg = ({
       }
       width={width}
       height={height}
+      style={style}
     />
   );
 };

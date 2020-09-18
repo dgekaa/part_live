@@ -1042,7 +1042,7 @@ const Admin = (props) => {
       let formData = new FormData();
       formData.append("operations", operations);
       const map = {
-        "0": ["variables.file"],
+        0: ["variables.file"],
       };
       formData.append("map", JSON.stringify(map));
       formData.append("0", blob || imageDestination);

@@ -9,7 +9,7 @@ import {
 } from "../../constants";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { defaultColor } from "../../constants";
 
 const SmallCompBlock = styled(Link)`
@@ -43,16 +43,18 @@ const SmallCompBlock = styled(Link)`
   @media (max-width: 760px) {
     height: 235px;
     margin: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
     width: calc(33% - 10px);
     border-radius: 5px;
-    &:nth-child(1) {
-      margin: 5px;
+    &:nth-child(2n + 2) {
+      margin-left: 5px;
+      margin-right: 5px;
     }
+
     &:nth-child(4n + 4) {
       margin: 5px;
-    }
-    &:nth-child(5n + 5) {
-      margin: 5px;
+      margin-right: 5px;
     }
   }
   @media (max-width: 650px) {
@@ -338,6 +340,33 @@ const IsOpenedM = styled.p`
   overflow: hidden;
 `;
 
+const blik = keyframes`
+  0% {
+   opacity:1;
+  }
+  50% {
+    opacity:0;
+  }
+  100% {
+   opacity:1;
+  }
+`;
+
+const FilmCircleWrap = styled.span`
+  display: flex;
+  align-items: "center";
+`;
+
+const CircleTranslation = styled.span`
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  margin-top: 9px;
+  animation: ${blik} 1s ease infinite;
+`;
+
 const SmallCompanyBlock = ({ item }) => {
   const [showStream, setShowStream] = useState(false);
   const [workTime, setWorkTime] = useState(false);
@@ -390,19 +419,19 @@ const SmallCompanyBlock = ({ item }) => {
       nextStreamTime.start_time &&
       nextStreamTime.day.toLowerCase() !== "сегодня"
     ) {
-      return (
-        "Начало трансляции: " +
-        EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-        " в " +
-        nextStreamTime.start_time
-      );
+      return "";
+      // "Начало трансляции: " +
+      // EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
+      // " в " +
+      // nextStreamTime.start_time
     } else if (
       nextStreamTime.start_time &&
       nextStreamTime.day.toLowerCase() === "сегодня"
     ) {
-      return "Начало трансляции: сегодня в " + nextStreamTime.start_time;
+      return "";
+      // "Начало трансляции: сегодня в " + nextStreamTime.start_time;
     } else if (!nextStreamTime.start_time) {
-      return "Заведение закрыто";
+      return "";
     }
   };
 
@@ -428,7 +457,20 @@ const SmallCompanyBlock = ({ item }) => {
           item.streams && item.streams[0] && showStream ? (
             <PreviewBlockD
               style={{ backgroundImage: `url(${item.streams[0].preview})` }}
-            />
+            >
+              <FilmCircleWrap>
+                {!!item.streams && !!item.streams.length && (
+                  <CustomImgStyleD
+                    alt="Icon"
+                    name={"film"}
+                    style={{ marginLeft: "7px", marginTop: "4px" }}
+                  />
+                )}
+                {item.streams && item.streams[0] && showStream && (
+                  <CircleTranslation />
+                )}
+              </FilmCircleWrap>
+            </PreviewBlockD>
           ) : (
             <NoTranslationD
               bg={
@@ -437,7 +479,19 @@ const SmallCompanyBlock = ({ item }) => {
                   : ""
               }
             >
-              <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
+              <FilmCircleWrap>
+                {!!item.streams && !!item.streams.length && (
+                  <CustomImgStyleD
+                    alt="Icon"
+                    name={"film"}
+                    style={{ marginLeft: "10px", marginTop: "5px" }}
+                  />
+                )}
+                {item.streams && item.streams[0] && showStream && (
+                  <CircleTranslation />
+                )}
+              </FilmCircleWrap>
+              {/* <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD> */}
             </NoTranslationD>
           )
         ) : (
