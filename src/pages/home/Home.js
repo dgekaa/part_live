@@ -8,6 +8,7 @@ import SmallCompanyBlock from "../../components/smallCompanyBlock/SmallCompanyBl
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 
@@ -15,6 +16,8 @@ const HomeContentWrap = styled.div`
   padding-top: 50px;
   width: 1000px;
   margin: 0 auto;
+padding-bottom: 70px;
+
   @media (max-width: 760px) {
     position: relative;
     padding-top: 100px;
@@ -171,6 +174,7 @@ const Home = () => {
           </HomeContent>
         </HomeContentWrap>
         <BottomMenu isShowMenu={isShowMenu} border />
+        <Footer/>
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

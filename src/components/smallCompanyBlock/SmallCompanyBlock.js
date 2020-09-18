@@ -19,7 +19,7 @@ const SmallCompBlock = styled(Link)`
   background-size: cover;
   background-position: center;
   background-color: #fff;
-  transition: 0.2s ease all;
+  transition: 0.3s ease opacity;
   border: 1px solid #f3f3f3;
   box-shadow: 4px 4px 4px #e5e5e5;
   margin: 6px;
@@ -491,7 +491,9 @@ const SmallCompanyBlock = ({ item }) => {
                   <CircleTranslation />
                 )}
               </FilmCircleWrap>
-              {/* <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD> */}
+              {!isWork && (
+                <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
+              )}
             </NoTranslationD>
           )
         ) : (
