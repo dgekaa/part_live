@@ -16,7 +16,7 @@ const HomeContentWrap = styled.div`
   padding-top: 50px;
   width: 1000px;
   margin: 0 auto;
-padding-bottom: 70px;
+  padding-bottom: 70px;
 
   @media (max-width: 760px) {
     position: relative;
@@ -138,6 +138,7 @@ const Home = () => {
 
   return (
     <div
+      style={{ minHeight: 1 + window.innerHeight }}
       onClick={(e) => {
         if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
           hideSideMenu();
@@ -174,7 +175,7 @@ const Home = () => {
           </HomeContent>
         </HomeContentWrap>
         <BottomMenu isShowMenu={isShowMenu} border />
-        <Footer/>
+        <Footer />
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

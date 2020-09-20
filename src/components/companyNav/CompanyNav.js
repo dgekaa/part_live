@@ -356,7 +356,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               >
                 {isClickedTypeBtn(el.name) ? (
                   <CustomImgStyle
-                    alt="Icon"
+                    alt={el.slug}
                     name={el.slug}
                     active
                     width="30"
@@ -364,7 +364,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                   />
                 ) : hoveredBtn === el.name ? (
                   <CustomImgStyle
-                    alt="Icon"
+                    alt={el.slug}
                     name={el.slug}
                     active
                     width="30"
@@ -372,7 +372,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
                   />
                 ) : (
                   <CustomImgStyle
-                    alt="Icon"
+                    alt={el.slug}
                     name={el.slug}
                     width="30"
                     height="30"

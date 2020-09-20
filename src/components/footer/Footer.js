@@ -8,9 +8,11 @@ const FooterContainer = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  right:0;
-
+  right: 0;
   z-index: 4 !important;
+  @media (max-width: 760px) {
+    display: none;
+  }
 `;
 
 const Footer = () => {
