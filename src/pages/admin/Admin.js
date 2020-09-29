@@ -492,14 +492,20 @@ const Admin = (props) => {
 
   const updateStream = (name) => {
     if (cookies.origin_data) {
+      const videoPreview = name.split("/"),
+        videoPreviewUrl = name.replace(
+          videoPreview[videoPreview.length - 1],
+          "image.jpg"
+        );
+
       QUERY(
         {
           query: `mutation {
             updateStream (
               input:{
                 id:"${DATA.streams[0].id}"
-                url :"https://partycamera.org/${name}/index.m3u8"
-                preview : "http://partycamera.org/${name}/preview.jpg"
+                url :"${name}"
+                preview : "${videoPreviewUrl}"
               }
             ) { id name url }
           }`,

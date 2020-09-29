@@ -392,7 +392,7 @@ const SmallCompanyBlock = ({ item }) => {
     isWorkTimeNow(item, setWorkTime, setIsWork, setNextWorkTime);
   }, [item]);
 
-  useEffect(() => {
+  const findLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -412,7 +412,9 @@ const SmallCompanyBlock = ({ item }) => {
     } else {
       console.log("Геолокация недоступна");
     }
-  }, []);
+  };
+
+  findLocation();
 
   const whenWillBeTranslation = () => {
     if (
@@ -447,7 +449,6 @@ const SmallCompanyBlock = ({ item }) => {
 
   setInterval(() => {
     updateIsMobileStreaming();
-    console.log(ismobileStream, " small comp___________");
   }, 10000);
 
   return (

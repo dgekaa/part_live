@@ -561,12 +561,6 @@ const MapComponent = (props) => {
                 setIsWork,
                 setNextWorkTime
               );
-              setInterval(() => {
-                console.log(
-                  cluster.item.mobile_stream,
-                  "++++++++++++++++++++++"
-                );
-              }, 10000);
 
               return (
                 <Marker
