@@ -367,7 +367,7 @@ const CircleTranslation = styled.span`
   animation: ${blik} 1s ease infinite;
 `;
 
-const SmallCompanyBlock = ({ item }) => {
+const SmallCompanyBlock = ({ item, isLocation }) => {
   const [showStream, setShowStream] = useState(false);
   const [workTime, setWorkTime] = useState(false);
   const [isWork, setIsWork] = useState(false);
@@ -393,7 +393,7 @@ const SmallCompanyBlock = ({ item }) => {
   }, [item]);
 
   const findLocation = () => {
-    if (item.isLocation) {
+    if (isLocation) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (pos) => {
