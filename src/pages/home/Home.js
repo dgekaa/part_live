@@ -69,6 +69,7 @@ const Home = () => {
   const [DATA, setDATA] = useState([]);
   const [companyData, setCompanyData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLocation, setIsLocation] = useState(false);
 
   useEffect(() => {
     QUERY({
@@ -136,6 +137,19 @@ const Home = () => {
     config: { duration: 200 },
   });
 
+  const findLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setIsLocation(true),
+        (err) => setIsLocation(false)
+      );
+    } else {
+      return setIsLocation(false);
+    }
+  };
+
+  findLocation();
+
   return (
     <div
       style={{ minHeight: 1 + window.innerHeight }}
@@ -165,7 +179,13 @@ const Home = () => {
             {!!companyData.length &&
               companyData.map((el, i) => {
                 if (!el.disabled) {
-                  return <SmallCompanyBlock item={el} key={i} />;
+                  return (
+                    <SmallCompanyBlock
+                      item={el}
+                      key={i}
+                      isLocation={isLocation}
+                    />
+                  );
                 }
               })}
             {!companyData.length && isLoading && <Loader />}

@@ -393,24 +393,26 @@ const SmallCompanyBlock = ({ item }) => {
   }, [item]);
 
   const findLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setCurDistance(
-            getDistanceFromLatLonInKm(
-              pos.coords.latitude,
-              pos.coords.longitude,
-              item.coordinates.split(",")[0],
-              item.coordinates.split(",")[1]
-            )
-          );
-        },
-        (err) => {
-          console.log(err, "Ошибка геолокации");
-        }
-      );
-    } else {
-      console.log("Геолокация недоступна");
+    if (item.isLocation) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            setCurDistance(
+              getDistanceFromLatLonInKm(
+                pos.coords.latitude,
+                pos.coords.longitude,
+                item.coordinates.split(",")[0],
+                item.coordinates.split(",")[1]
+              )
+            );
+          },
+          (err) => {
+            console.log(err, "Ошибка геолокации");
+          }
+        );
+      } else {
+        console.log("Геолокация недоступна");
+      }
     }
   };
 
