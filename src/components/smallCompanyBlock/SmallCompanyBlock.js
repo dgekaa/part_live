@@ -368,13 +368,13 @@ const CircleTranslation = styled.span`
 `;
 
 const SmallCompanyBlock = ({ item, isLocation }) => {
-  const [showStream, setShowStream] = useState(false);
-  const [workTime, setWorkTime] = useState(false);
-  const [isWork, setIsWork] = useState(false);
-  const [curDistance, setCurDistance] = useState(null);
-  const [nextStreamTime, setNextStreamTime] = useState(false);
-  const [nextWorkTime, setNextWorkTime] = useState(null);
-  const [ismobileStream, setIsmobileStream] = useState(false);
+  const [showStream, setShowStream] = useState(false),
+    [workTime, setWorkTime] = useState(false),
+    [isWork, setIsWork] = useState(false),
+    [curDistance, setCurDistance] = useState(null),
+    [nextStreamTime, setNextStreamTime] = useState(false),
+    [nextWorkTime, setNextWorkTime] = useState(null),
+    [ismobileStream, setIsmobileStream] = useState(false);
 
   const dateNow = new Date()
     .toLocaleDateString()
@@ -439,19 +439,24 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
     }
   };
 
-  const updateIsMobileStreaming = () => {
-    fetch(`https://partylivestream.web4net.ru:8080/hls/show/${item.id}.m3u8`)
-      .then((res) => setIsmobileStream(res.ok))
-      .catch(() => setIsmobileStream(false));
-  };
-
   useEffect(() => {
-    updateIsMobileStreaming();
+    setIsmobileStream(false);
+    console.log(item.profile_image, "------item.profile_image");
   }, []);
 
-  setInterval(() => {
-    updateIsMobileStreaming();
-  }, 10000);
+  // const updateIsMobileStreaming = () => {
+  //   fetch(`https://partylivestream.web4net.ru:8080/hls/show/${item.id}.m3u8`)
+  //     .then((res) => setIsmobileStream(false))
+  //     .catch(() => setIsmobileStream(false));
+  // };
+
+  // useEffect(() => {
+  //   updateIsMobileStreaming();
+  // }, []);
+
+  // setInterval(() => {
+  //   updateIsMobileStreaming();
+  // }, 10000);
 
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
@@ -478,7 +483,8 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
             <NoTranslationD
               bg={
                 item.profile_image
-                  ? `${queryPath}/storage/` + item.profile_image
+                  ? `${queryPath}/storage/` +
+                    item.profile_image.replace(".png", ".jpg")
                   : ""
               }
             >
@@ -591,7 +597,8 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
             <NoTranslationM
               bg={
                 item.profile_image
-                  ? `${queryPath}/storage/` + item.profile_image
+                  ? `${queryPath}/storage/` +
+                    item.profile_image.replace(".png", ".jpg")
                   : ""
               }
             >

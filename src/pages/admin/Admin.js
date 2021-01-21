@@ -1148,7 +1148,6 @@ const Admin = (props) => {
             if (blob) {
               const formData = new FormData();
               formData.append("my-file", blob, "filename.png");
-              console.log("@@@@@@@@@@@@@@@@@@@@");
               setImageDestination(blob);
             }
           });
@@ -1479,7 +1478,10 @@ const Admin = (props) => {
                                   {DATA.profile_image ? (
                                     <img
                                       className={"uploadImgStyle"}
-                                      src={`${queryPath}/storage/${DATA.profile_image}`}
+                                      src={`${queryPath}/storage/${DATA.profile_image.replace(
+                                        ".png",
+                                        ".jpg"
+                                      )}`}
                                       alt="image"
                                     />
                                   ) : (
@@ -2289,7 +2291,10 @@ const Admin = (props) => {
                                       {DATA.profile_image ? (
                                         <img
                                           className={"uploadImgStyleMobile"}
-                                          src={`${queryPath}/storage/${DATA.profile_image}`}
+                                          src={`${queryPath}/storage/${DATA.profile_image.replace(
+                                            ".png",
+                                            ".jpg"
+                                          )}`}
                                           alt="image"
                                           style={{ height: "120px" }}
                                         />

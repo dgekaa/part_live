@@ -628,7 +628,10 @@ const MapComponent = (props) => {
                               bg={
                                 cluster.item.profile_image
                                   ? `${queryPath}/storage/` +
-                                    cluster.item.profile_image
+                                    cluster.item.profile_image.replace(
+                                      ".png",
+                                      ".jpg"
+                                    )
                                   : ""
                               }
                             >

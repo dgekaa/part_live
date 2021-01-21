@@ -610,7 +610,8 @@ const Company = (props) => {
                   <NoVideoD
                     bg={
                       DATA.place.profile_image
-                        ? `${queryPath}/storage/` + DATA.place.profile_image
+                        ? `${queryPath}/storage/` +
+                          DATA.place.profile_image.replace(".png", ".jpg")
                         : ""
                     }
                   >
@@ -752,7 +753,8 @@ const Company = (props) => {
                   <NoVideoM
                     bg={
                       DATA.place.profile_image
-                        ? `${queryPath}/storage/` + DATA.place.profile_image
+                        ? `${queryPath}/storage/` +
+                          DATA.place.profile_image.replace(".png", ".jpg")
                         : ""
                     }
                   >
