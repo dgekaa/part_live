@@ -35,26 +35,29 @@ export function image64toCanvasRef(
   naturalSize,
   currentSize
 ) {
-  const widthDifference = (naturalSize.width / currentSize.width).toFixed(2);
-  const heightDifference = (naturalSize.height / currentSize.height).toFixed(2);
+  const widthDifference = (naturalSize.width / currentSize.width).toFixed(2),
+    heightDifference = (naturalSize.height / currentSize.height).toFixed(2),
+    canvas = canvasRef,
+    { width, height, x, y } = pixelCrop;
 
-  const canvas = canvasRef;
-  canvas.width = pixelCrop.width * heightDifference;
-  canvas.height = pixelCrop.height * widthDifference;
-  const ctx = canvas.getContext("2d");
-  const image = new Image();
+  canvas.width = width * heightDifference;
+  canvas.height = height * widthDifference;
+
+  const ctx = canvas.getContext("2d"),
+    image = new Image();
+
   image.src = image64;
-  image.onload = function () {
+  image.onload = () => {
     ctx.drawImage(
       image,
-      pixelCrop.x * widthDifference,
-      pixelCrop.y * heightDifference,
-      pixelCrop.width * widthDifference,
-      pixelCrop.height * heightDifference,
+      x * widthDifference,
+      y * heightDifference,
+      width * widthDifference,
+      height * heightDifference,
       0,
       0,
-      pixelCrop.width * widthDifference,
-      pixelCrop.height * heightDifference
+      width * widthDifference,
+      height * heightDifference
     );
   };
 }

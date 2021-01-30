@@ -112,41 +112,40 @@ const TwoDots = styled.span`
 `;
 
 const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
-  const [hours, setHours] = useState(realTimeInPicker.split(":")[0]);
-  const [minutes, setMinutes] = useState(realTimeInPicker.split(":")[1]);
+  const [hours, setHours] = useState(realTimeInPicker.split(":")[0]),
+    [minutes, setMinutes] = useState(realTimeInPicker.split(":")[1]);
 
   const clickHandlerTop = (e, max) => {
-    e.target.nextSibling.innerText = +e.target.nextSibling.innerText + 1;
-    if (+e.target.nextSibling.innerText === max) {
-      e.target.nextSibling.innerText = 0;
-    }
-    if (+e.target.nextSibling.innerText < 10) {
-      e.target.nextSibling.innerText = "0" + e.target.nextSibling.innerText;
-    }
-    if (max === 24) {
-      setHours(e.target.nextSibling.innerText);
-    } else {
-      setMinutes(e.target.nextSibling.innerText);
-    }
-  };
-
-  const clickHandlerBottom = (e, max) => {
-    if (+e.target.previousSibling.innerText === 0) {
-      e.target.previousSibling.innerText = max;
-    }
-    e.target.previousSibling.innerText =
-      +e.target.previousSibling.innerText - 1;
-
-    if (e.target.previousSibling.innerText < 10) {
+      e.target.nextSibling.innerText = +e.target.nextSibling.innerText + 1;
+      if (+e.target.nextSibling.innerText === max) {
+        e.target.nextSibling.innerText = 0;
+      }
+      if (+e.target.nextSibling.innerText < 10) {
+        e.target.nextSibling.innerText = "0" + e.target.nextSibling.innerText;
+      }
+      if (max === 24) {
+        setHours(e.target.nextSibling.innerText);
+      } else {
+        setMinutes(e.target.nextSibling.innerText);
+      }
+    },
+    clickHandlerBottom = (e, max) => {
+      if (+e.target.previousSibling.innerText === 0) {
+        e.target.previousSibling.innerText = max;
+      }
       e.target.previousSibling.innerText =
-        "0" + e.target.previousSibling.innerText;
-    }
-    if (max === 24) {
-      setHours(e.target.previousSibling.innerText);
-    } else {
-      setMinutes(e.target.previousSibling.innerText);
-    }
-  };
+        +e.target.previousSibling.innerText - 1;
+
+      if (e.target.previousSibling.innerText < 10) {
+        e.target.previousSibling.innerText =
+          "0" + e.target.previousSibling.innerText;
+      }
+      if (max === 24) {
+        setHours(e.target.previousSibling.innerText);
+      } else {
+        setMinutes(e.target.previousSibling.innerText);
+      }
+    };
 
   useEffect(() => {
     setTime(hours, minutes);
@@ -157,11 +156,7 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
       <TPName>{timePickerName}</TPName>
       <TP>
         <TPHoursMinutesWrap>
-          <TopArrow
-            onClick={(e) => {
-              clickHandlerTop(e, 24);
-            }}
-          ></TopArrow>
+          <TopArrow onClick={(e) => clickHandlerTop(e, 24)}></TopArrow>
           <TPHoursMinutes>
             {realTimeInPicker && realTimeInPicker.split(":")[0]}
           </TPHoursMinutes>
@@ -169,19 +164,11 @@ const TimePicker = ({ timePickerName, setTime, realTimeInPicker }) => {
         </TPHoursMinutesWrap>
         <TwoDots>:</TwoDots>
         <TPHoursMinutesWrap>
-          <TopArrow
-            onClick={(e) => {
-              clickHandlerTop(e, 60);
-            }}
-          ></TopArrow>
+          <TopArrow onClick={(e) => clickHandlerTop(e, 60)}></TopArrow>
           <TPHoursMinutes>
             {realTimeInPicker && realTimeInPicker.split(":")[1]}
           </TPHoursMinutes>
-          <BottomArrow
-            onClick={(e) => {
-              clickHandlerBottom(e, 60);
-            }}
-          ></BottomArrow>
+          <BottomArrow onClick={(e) => clickHandlerBottom(e, 60)}></BottomArrow>
         </TPHoursMinutesWrap>
       </TP>
     </div>

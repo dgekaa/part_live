@@ -5,9 +5,10 @@ const CropperMobile = ({ imgSrc, editorRef }) => {
   const [count, setCount] = useState(1);
 
   useEffect(() => {
-    const Hammer = window.Hammer;
-    const hammerEvent = document.getElementById("hammerEvent");
-    const mc = new Hammer(hammerEvent);
+    const Hammer = window.Hammer,
+      hammerEvent = document.getElementById("hammerEvent"),
+      mc = new Hammer(hammerEvent);
+
     mc.get("pinch").set({ enable: true });
 
     mc.on("pinch", (ev) => {

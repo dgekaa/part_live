@@ -27,11 +27,6 @@ import {
   queryPath,
 } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
-import {
-  image64toCanvasRef,
-  extractImageFileExtensionFromBase64,
-  downloadBase64File,
-} from "./EncodeToBase64";
 import SideBar from "./Sidebar";
 import CropperMobile from "./CropperMobile";
 
@@ -388,7 +383,6 @@ const Admin = (props) => {
   const [typeOfCompany, setTypeOfCompany] = useState("");
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
-  const [currentImage, setCurrentImage] = useState(null);
   const [switchChecked, setSwitchChecked] = useState(null);
   const [isSuccessSave, setIsSuccessSave] = useState(false);
 
@@ -414,8 +408,6 @@ const Admin = (props) => {
   });
 
   const chooseNewAddress = (streetName, latLng) => {
-    console.log(streetName, "---streetName");
-    console.log(latLng, "---latLng");
     if (cookies.origin_data) {
       const stringLatLng = "" + latLng.lat + "," + latLng.lng;
 
@@ -1007,7 +999,6 @@ const Admin = (props) => {
         .then((res) => res.json())
         .then((data) => {
           if (!data.errors) {
-            console.log("SUCCESS !!!");
             setIsSuccessSave(true);
             setTimeout(() => {
               setIsSuccessSave(false);
@@ -1041,7 +1032,6 @@ const Admin = (props) => {
       .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
-          console.log(data, "DATA !!!");
           handeleClearToDefault();
           refreshData();
         } else {
@@ -1077,7 +1067,6 @@ const Admin = (props) => {
       };
       formData.append("map", JSON.stringify(map));
       formData.append("0", blob || imageDestination);
-      console.log(formData, "FORM____DATA");
       axios({
         url: `${queryPath}/graphql`,
         method: "POST",
@@ -1089,46 +1078,25 @@ const Admin = (props) => {
         },
         data: formData,
       })
-        .then(function (res) {
+        .then((res) => {
           res.data.data.placeImage &&
             updateOrRemoveUploadImage(res.data.data.placeImage);
         })
-        .catch(function (err) {
-          console.log(err, " ERR");
-        });
+        .catch((err) => console.log(err, " ERR"));
     }
   };
 
   document.body.style.background = "#fff";
 
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [aspect, setAspect] = useState(1 / 1);
-  const [zoom, setZoom] = useState(1.5);
   const [imgSrc, setImgSrc] = useState(null);
-  const [naturalImageSize, setNaturalImageSize] = useState({});
-  const [currentImageSize, setCurrentImageSize] = useState({});
-  const [imgSrcExt, setImgSrcExt] = useState(null);
   const imagePreviewCanvas = useRef(null);
 
-  const imageMaxSize = 10000000000;
-  const acceptedFileTypes =
-    "image/x-png, image/png, image/jpg, image/jpeg, image/gif";
-  const acceptedFileTypesArray = acceptedFileTypes
-    .split(",")
-    .map((item) => item.trim());
-
-  // const onCropComplete = (crop) => {
-  //   const canvasRef = imagePreviewCanvas.current;
-
-  //   image64toCanvasRef(
-  //     canvasRef,
-  //     imgSrc,
-  //     crop,
-  //     naturalImageSize,
-  //     currentImageSize
-  //   );
-
-  // };
+  const imageMaxSize = 10000000000,
+    acceptedFileTypes =
+      "image/x-png, image/png, image/jpg, image/jpeg, image/gif",
+    acceptedFileTypesArray = acceptedFileTypes
+      .split(",")
+      .map((item) => item.trim());
 
   const imageElementRef = useRef(null);
   const [imageDestination, setImageDestination] = useState("");
@@ -1174,18 +1142,13 @@ const Admin = (props) => {
   };
 
   const handeleClearToDefault = () => {
-    // const canvasRef = imagePreviewCanvas.current;
-    // const ctx = canvasRef.getContext("2d");
-    // ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
     setImgSrc(null);
-    setImgSrcExt(null);
   };
 
   const verifyFile = (files) => {
     if (files && files.length > 0) {
       const currentFile = files[0];
 
-      setCurrentImage(currentFile);
       const currentFileType = currentFile.type;
       const currentFileSize = currentFile.size;
       if (currentFileSize > imageMaxSize) {
@@ -1201,10 +1164,8 @@ const Admin = (props) => {
   };
 
   const handleOnDrop = (files, rejectedFiles) => {
-    if (rejectedFiles && rejectedFiles.length > 0) {
-      console.log(rejectedFiles, "---rejectedFiles");
-      verifyFile(rejectedFiles);
-    }
+    if (rejectedFiles && rejectedFiles.length > 0) verifyFile(rejectedFiles);
+
     if (files && files.length > 0) {
       const isVerified = verifyFile(files);
       if (isVerified) {
@@ -1213,9 +1174,6 @@ const Admin = (props) => {
 
         myFileItemReader.onloadend = function (theFile) {
           var image = new Image();
-          image.onload = function () {
-            setNaturalImageSize({ width: this.width, height: this.height });
-          };
           image.src = theFile.target.result;
         };
 
@@ -1224,10 +1182,8 @@ const Admin = (props) => {
           (theFile) => {
             const myResult = myFileItemReader.result;
             setImgSrc("");
-            setImgSrcExt("");
 
             setImgSrc(myResult);
-            setImgSrcExt(extractImageFileExtensionFromBase64(myResult));
           },
           false
         );
@@ -1237,21 +1193,6 @@ const Admin = (props) => {
   };
 
   const isWorkTimeOrDayOff = (oneDay, i) => {
-    // const nextDay = () => {
-    //   if (i) {
-    //     return " (" + SHORT_DAY_OF_WEEK[tomorrowFromDay(i)] + ") ";
-    //   } else {
-    //     return "";
-    //   }
-    // };
-    // const thisDay = () => {
-    //   if (i) {
-    //     return " (" + SHORT_DAY_OF_WEEK[i] + ") ";
-    //   } else {
-    //     return "";
-    //   }
-    // };
-
     if (oneDay && oneDay.id) {
       if (
         oneDay.start_time.split(":")[0] * 3600 +
@@ -1263,9 +1204,7 @@ const Admin = (props) => {
           <p>
             {oneDay.start_time.replace(":", ".")}
             {" - "}
-            {/* <span className="dayOfWeekGray">{thisDay()}</span> -{" "} */}
             {oneDay.end_time.replace(":", ".")}{" "}
-            {/* <span className="dayOfWeekGray">{thisDay()}</span> */}
           </p>
         );
       } else {
@@ -1273,9 +1212,7 @@ const Admin = (props) => {
           <p>
             {oneDay.start_time.replace(":", ".")}
             {" - "}
-            {/* <span className="dayOfWeekGray">{thisDay()}</span> -{" "} */}
             {oneDay.end_time.replace(":", ".")}
-            {/* <span> {nextDay()}</span> */}
           </p>
         );
       }
@@ -1344,10 +1281,6 @@ const Admin = (props) => {
       return true;
     }
   };
-
-  useEffect(() => {
-    // console.log(validationErr, "validationErr");
-  }, [validationErr]);
 
   const [streamOpen, setStreamOpen] = useState(false);
   const [profileOpen, setPprofileOpen] = useState(false);
@@ -2164,7 +2097,6 @@ const Admin = (props) => {
                             </p>
                           </div>
                           <AdminMenuTitleM>Стрим</AdminMenuTitleM>
-                          {console.log(DATA, "_______________________")}
                           {!!DATA.streams && DATA.streams[0] && (
                             <>
                               <div className="videoWrapAdminMobile">
@@ -3065,6 +2997,7 @@ const Admin = (props) => {
               </div>
             </Popup>
           )}
+
           {showPopupDescription && (
             <Popup
               togglePopup={togglePopupDescription}
@@ -3131,6 +3064,7 @@ const Admin = (props) => {
               </DescLengthM>
             </Popup>
           )}
+
           {showPopupGoogleMap && (
             <Popup
               togglePopup={togglePopupGoogleMap}
