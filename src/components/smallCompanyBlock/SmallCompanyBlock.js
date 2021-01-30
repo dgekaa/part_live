@@ -441,7 +441,6 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
 
   useEffect(() => {
     setIsmobileStream(false);
-    console.log(item.profile_image, "------item.profile_image");
   }, []);
 
   // const updateIsMobileStreaming = () => {
@@ -458,25 +457,66 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
   //   updateIsMobileStreaming();
   // }, 10000);
 
+  const mouseEnter = (e) => (e.currentTarget.previousSibling.style.opacity = 1),
+    mouseOut = (e) => (e.currentTarget.previousSibling.style.opacity = 0);
+
+  const whenWillBeOpen =
+      nextWorkTime && nextWorkTime.start_time
+        ? `${
+            nextWorkTime.day.toLowerCase() !== "сегодня"
+              ? EN_SHORT_TO_RU_LONG[nextWorkTime.day][0].toUpperCase() +
+                EN_SHORT_TO_RU_LONG[nextWorkTime.day].slice(1)
+              : nextWorkTime.day
+          }: ${nextWorkTime.start_time}-${nextWorkTime.end_time}`
+        : "Закрыто",
+    locationAddress =
+      item.address &&
+      item.address
+        .split(",")[0]
+        .replace("улица", "ул.")
+        .replace("проспект", "пр-т."),
+    backgroundUrl = `url(https://partylivestream.web4net.ru:8080/hls/show/${item.id}.jpeg)`,
+    isShowStream = item.streams && item.streams[0] && showStream,
+    noTranslationBg = item.profile_image
+      ? `${queryPath}/storage/` + item.profile_image.replace(".png", ".jpg")
+      : "",
+    isWorkText = nextWorkTime
+      ? isWork
+        ? whenWillBeTranslation()
+        : "Откроется:"
+      : isWork
+      ? whenWillBeTranslation()
+      : "Закрыто",
+    dayWhenWillBeOpen =
+      nextWorkTime && nextWorkTime.start_time
+        ? `${
+            nextWorkTime.day.toLowerCase() !== "сегодня"
+              ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+              : nextWorkTime.day
+          }`
+        : "",
+    timeWhenWillBeOpen =
+      nextWorkTime &&
+      nextWorkTime.start_time &&
+      nextWorkTime.start_time + "-" + nextWorkTime.end_time;
+
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>
       <Desctop>
         {!ismobileStream ? (
-          item.streams && item.streams[0] && showStream ? (
+          isShowStream ? (
             <PreviewBlockD
               style={{ backgroundImage: `url(${item.streams[0].preview})` }}
             >
               <FilmCircleWrap>
-                {!!item.streams && !!item.streams.length && (
+                {!!item.streams.length && (
                   <CustomImgStyleD
                     alt="Icon"
                     name={"film"}
                     style={{ marginLeft: "7px", marginTop: "4px" }}
                   />
                 )}
-                {item.streams && item.streams[0] && showStream && (
-                  <CircleTranslation />
-                )}
+                {isShowStream && <CircleTranslation />}
               </FilmCircleWrap>
             </PreviewBlockD>
           ) : (
@@ -496,9 +536,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
                     style={{ marginLeft: "10px", marginTop: "5px" }}
                   />
                 )}
-                {item.streams && item.streams[0] && showStream && (
-                  <CircleTranslation />
-                )}
+                {isShowStream && <CircleTranslation />}
               </FilmCircleWrap>
               {!isWork && (
                 <TransparentBgD>{whenWillBeTranslation()}</TransparentBgD>
@@ -508,7 +546,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
         ) : (
           <PreviewBlockD
             style={{
-              backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${item.id}.jpeg)`,
+              backgroundImage: backgroundUrl,
             }}
           />
         )}
@@ -517,12 +555,8 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
             {item.categories[0] && item.categories[0].name}
           </TooltipTypeD>
           <TopDescriptionBlockD
-            onMouseEnter={(e) => {
-              e.currentTarget.previousSibling.style.opacity = 1;
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.previousSibling.style.opacity = 0;
-            }}
+            onMouseEnter={(e) => mouseEnter(e)}
+            onMouseOut={(e) => mouseOut(e)}
           >
             <HoverTooltip />
             <IconToCenter>
@@ -551,18 +585,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
                   <IconToCenter>
                     <CircleD isWork={isWork} />
                   </IconToCenter>
-                  <IsOpenedD>
-                    {nextWorkTime && nextWorkTime.start_time
-                      ? `${
-                          nextWorkTime.day.toLowerCase() !== "сегодня"
-                            ? EN_SHORT_TO_RU_LONG[
-                                nextWorkTime.day
-                              ][0].toUpperCase() +
-                              EN_SHORT_TO_RU_LONG[nextWorkTime.day].slice(1)
-                            : nextWorkTime.day
-                        }: ${nextWorkTime.start_time}-${nextWorkTime.end_time}`
-                      : "Закрыто"}
-                  </IsOpenedD>
+                  <IsOpenedD>{whenWillBeOpen}</IsOpenedD>
                 </>
               )}
             </WorkTimeWrapD>
@@ -576,52 +599,24 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
                 height="16"
               />
             </IconToCenter>
-
-            <LocationStyleD>
-              {item.address &&
-                item.address
-                  .split(",")[0]
-                  .replace("улица", "ул.")
-                  .replace("проспект", "пр-т.")}
-            </LocationStyleD>
+            <LocationStyleD>{locationAddress}</LocationStyleD>
           </LocationWrapD>
         </DescriptionD>
       </Desctop>
       <Mobile>
         {!ismobileStream ? (
-          item.streams && item.streams[0] && showStream && isWork ? (
+          isShowStream && isWork ? (
             <PreviewBlockM
               style={{ backgroundImage: `url(${item.streams[0].preview})` }}
             />
           ) : (
-            <NoTranslationM
-              bg={
-                item.profile_image
-                  ? `${queryPath}/storage/` +
-                    item.profile_image.replace(".png", ".jpg")
-                  : ""
-              }
-            >
+            <NoTranslationM bg={noTranslationBg}>
               <TransparentBgM>
-                {nextWorkTime
-                  ? isWork
-                    ? whenWillBeTranslation()
-                    : "Откроется:"
-                  : isWork
-                  ? whenWillBeTranslation()
-                  : "Закрыто"}
+                {isWorkText}
                 <p>
-                  {nextWorkTime && nextWorkTime.start_time
-                    ? `${
-                        nextWorkTime.day.toLowerCase() !== "сегодня"
-                          ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
-                          : nextWorkTime.day
-                      }`
-                    : ""}
+                  {dayWhenWillBeOpen}
                   {nextWorkTime && nextWorkTime.start_time && <br />}
-                  {nextWorkTime &&
-                    nextWorkTime.start_time &&
-                    nextWorkTime.start_time + "-" + nextWorkTime.end_time}
+                  {timeWhenWillBeOpen}
                 </p>
               </TransparentBgM>
             </NoTranslationM>
@@ -629,7 +624,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
         ) : (
           <PreviewBlockM
             style={{
-              backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${item.id}.jpeg)`,
+              backgroundImage: backgroundUrl,
             }}
           />
         )}

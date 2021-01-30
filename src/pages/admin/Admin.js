@@ -414,6 +414,8 @@ const Admin = (props) => {
   });
 
   const chooseNewAddress = (streetName, latLng) => {
+    console.log(streetName, "---streetName");
+    console.log(latLng, "---latLng");
     if (cookies.origin_data) {
       const stringLatLng = "" + latLng.lat + "," + latLng.lng;
 

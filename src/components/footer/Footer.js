@@ -15,8 +15,6 @@ const FooterContainer = styled.div`
   }
 `;
 
-const Footer = () => {
-  return <FooterContainer></FooterContainer>;
-};
+const Footer = () => <FooterContainer />;
 
 export default Footer;

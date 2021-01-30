@@ -47,16 +47,14 @@ const PopupStyle = styled.div`
 `;
 
 const Popup = ({ children, togglePopup, style, wrpaStyle }) => {
+  const click = (e) => {
+    if (e.target.className.includes("popup")) {
+      togglePopup();
+    }
+  };
+
   return (
-    <PopupStyle
-      className="popup"
-      onClick={(e) => {
-        if (e.target.className.includes("popup")) {
-          togglePopup();
-        }
-      }}
-      style={wrpaStyle}
-    >
+    <PopupStyle className="popup" onClick={(e) => click(e)} style={wrpaStyle}>
       <PopupInner style={style}>{children}</PopupInner>
     </PopupStyle>
   );

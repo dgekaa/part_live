@@ -296,15 +296,15 @@ const Opened = styled.span`
 const MapComponent = (props) => {
   const mapRef = useRef();
 
-  const [DATA, setDATA] = useState([]);
-  const [markers, setMarkers] = useState([]);
-  const [zoom, setZoom] = useState(12);
-  const [bounds, setBounds] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
-  const [referrer, setReferrer] = useState("");
-  const [currentCenterOfMap, setCurrentCenterOfMap] = useState();
-  const [defaultCenter, setDefaultCenter] = useState();
+  const [DATA, setDATA] = useState([]),
+    [markers, setMarkers] = useState([]),
+    [zoom, setZoom] = useState(12),
+    [bounds, setBounds] = useState(null),
+    [isLoading, setIsLoading] = useState(true),
+    [mouseMapCoordinates, setMouseMapCoordinates] = useState({}),
+    [referrer, setReferrer] = useState(""),
+    [currentCenterOfMap, setCurrentCenterOfMap] = useState(),
+    [defaultCenter, setDefaultCenter] = useState();
 
   const dateNow = new Date()
     .toLocaleDateString()
@@ -323,6 +323,7 @@ const MapComponent = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data.data.places, "---data.data.places");
         setIsLoading(false);
         setMarkers(data.data.places);
         setDATA(data.data.places);
@@ -363,7 +364,7 @@ const MapComponent = (props) => {
     bounds,
     zoom,
     options: {
-      radius: 170,
+      radius: 220,
       maxZoom: 20,
     },
   });
@@ -381,34 +382,33 @@ const MapComponent = (props) => {
     }
   };
 
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
+  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false);
+
   const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    setTimeout(() => {
-      document.body.style.overflow = "visible";
-    }, 400);
-    setIsShowMenu(false);
-  };
-  const showSideMenu = () => {
-    setShowSlideSideMenu(true);
-    document.body.style.overflow = "hidden";
-    setIsShowMenu(true);
-  };
-  useEffect(() => {
-    window.onresize = function (e) {
-      hideSideMenu();
+      setShowSlideSideMenu(false);
+      setTimeout(() => {
+        document.body.style.overflow = "visible";
+      }, 400);
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
     };
+
+  useEffect(() => {
+    window.onresize = (e) => hideSideMenu();
   });
 
   if (navigator.geolocation && !defaultCenter) {
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      (pos) =>
         setDefaultCenter({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
-        });
-      },
+        }),
       (err) => console.log(err, " GEOLOCATION MAP ERROR")
     );
   } else {
@@ -416,18 +416,18 @@ const MapComponent = (props) => {
   }
 
   const mouseDownHandler = ({ clientX, clientY }) =>
-    setMouseMapCoordinates({
-      clientX,
-      clientY,
-    });
-  const mouseUpHandler = (e, data) => {
-    if (
-      +mouseMapCoordinates.clientX === +e.clientX &&
-      +mouseMapCoordinates.clientY === +e.clientY
-    ) {
-      setReferrer(`/company/${data}`);
-    }
-  };
+      setMouseMapCoordinates({
+        clientX,
+        clientY,
+      }),
+    mouseUpHandler = (e, data) => {
+      if (
+        +mouseMapCoordinates.clientX === +e.clientX &&
+        +mouseMapCoordinates.clientY === +e.clientY
+      ) {
+        setReferrer(`/company/${data}`);
+      }
+    };
 
   const SwipePageSpring = useSpring({
     left: isShowMenu ? -200 : 0,
@@ -483,9 +483,7 @@ const MapComponent = (props) => {
             }
             defaultZoom={+sessionStorage.getItem("prevZoom") || 12}
             yesIWantToUseGoogleMapApiInternals
-            onGoogleApiLoaded={({ map }) => {
-              mapRef.current = map;
-            }}
+            onGoogleApiLoaded={({ map }) => (mapRef.current = map)}
             onChange={({ zoom, bounds, center }) => {
               setCurrentCenterOfMap(center);
               setZoom(zoom);
@@ -542,11 +540,11 @@ const MapComponent = (props) => {
                 nextStreamTime = false,
                 nextWorkTime = null;
 
-              const setShowStream = (time) => (streamTime = time);
-              const setWorkTime = (time) => (workTime = time);
-              const setIsWork = (bool) => (isWork = bool);
-              const setNextStreamTime = (time) => (nextStreamTime = time);
-              const setNextWorkTime = (time) => (nextWorkTime = time);
+              const setShowStream = (time) => (streamTime = time),
+                setWorkTime = (time) => (workTime = time),
+                setIsWork = (bool) => (isWork = bool),
+                setNextStreamTime = (time) => (nextStreamTime = time),
+                setNextWorkTime = (time) => (nextWorkTime = time);
 
               isShowStreamNow(
                 cluster.item,

@@ -165,35 +165,20 @@ const CompNavText = styled.p`
 
 const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   const [uniqueCompanyType, setUniqueCompanyType] = useState(
-    sessionStorage.getItem("uniqueCompanyType")
-      ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
-      : []
-  );
-  const [isDown, setIsDown] = useState(false);
-  const [startX, setStartX] = useState();
-  const [scrollLeft, setScrollLeft] = useState();
-  const [clickedTypeLocal, setClickedTypeLocal] = useState();
-  const [hoveredBtn, setHoveredBtn] = useState();
+      sessionStorage.getItem("uniqueCompanyType")
+        ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
+        : []
+    ),
+    [isDown, setIsDown] = useState(false),
+    [startX, setStartX] = useState(),
+    [scrollLeft, setScrollLeft] = useState(),
+    [clickedTypeLocal, setClickedTypeLocal] = useState(),
+    [hoveredBtn, setHoveredBtn] = useState();
 
   const slideBtnMenu = useRef(null);
 
   const supportsTouch = "ontouchstart" in document.documentElement;
   smoothscroll.polyfill();
-
-  useEffect(() => {
-    QUERY({
-      query: `query {categories {id name slug}}`,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUniqueCompanyType(
-          sessionStorage.getItem("uniqueCompanyType")
-            ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
-            : data.data.categories
-        );
-      })
-      .catch((err) => console.log(err, "  ERR"));
-  }, []);
 
   useEffect(() => {
     if (
@@ -209,56 +194,65 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
   }, [uniqueCompanyType]);
 
   const scrollBtnToCenter = (e) => {
-    e && e.preventDefault();
-    const btnPositionToCenter =
-      slideBtnMenu.current.offsetWidth / 2 -
-      (e.currentTarget.offsetLeft -
-        slideBtnMenu.current.scrollLeft +
-        e.currentTarget.offsetWidth / 2);
+      e && e.preventDefault();
+      const btnPositionToCenter =
+        slideBtnMenu.current.offsetWidth / 2 -
+        (e.currentTarget.offsetLeft -
+          slideBtnMenu.current.scrollLeft +
+          e.currentTarget.offsetWidth / 2);
 
-    slideBtnMenu.current.scrollTo({
-      left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
-      behavior: "smooth",
-    });
-  };
-
-  const scrollAllBtnToCenter = () => {
-    slideBtnMenu.current.scrollTo({
-      left: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const firstScrollBtnToCenter = () => {
-    if (sessionStorage.getItem("uniqueCompanyType")) {
-      document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
-        if (isClickedTypeBtn(el.getAttribute("data-name"))) {
-          const btnPositionToCenter =
-            slideBtnMenu.current.offsetWidth / 2 -
-            (el.offsetLeft -
-              slideBtnMenu.current.scrollLeft +
-              el.offsetWidth / 2);
-
-          slideBtnMenu.current.scrollTo({
-            left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
-          });
-        }
+      slideBtnMenu.current.scrollTo({
+        left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
+        behavior: "smooth",
       });
-    }
-  };
+    },
+    scrollAllBtnToCenter = () => {
+      slideBtnMenu.current.scrollTo({
+        left: 0,
+        behavior: "smooth",
+      });
+    },
+    firstScrollBtnToCenter = () => {
+      if (sessionStorage.getItem("uniqueCompanyType")) {
+        document.querySelectorAll(".companyNavBtn").forEach((el, i) => {
+          if (isClickedTypeBtn(el.getAttribute("data-name"))) {
+            const btnPositionToCenter =
+              slideBtnMenu.current.offsetWidth / 2 -
+              (el.offsetLeft -
+                slideBtnMenu.current.scrollLeft +
+                el.offsetWidth / 2);
 
-  const isClickedAllBtn = () => {
-    return !clickedTypeLocal && !sessionStorage.getItem("filter_type");
-  };
-
-  const isClickedTypeBtn = (name) => {
-    if (sessionStorage.getItem("filter_type") === name) {
-      return true;
-    }
-    return false;
-  };
+            slideBtnMenu.current.scrollTo({
+              left: slideBtnMenu.current.scrollLeft - btnPositionToCenter,
+            });
+          }
+        });
+      }
+    },
+    isClickedAllBtn = () => {
+      return !clickedTypeLocal && !sessionStorage.getItem("filter_type");
+    },
+    isClickedTypeBtn = (name) => {
+      if (sessionStorage.getItem("filter_type") === name) {
+        return true;
+      }
+      return false;
+    };
 
   useEffect(() => {
+    QUERY({
+      query: `query {categories {id name slug}}`,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setUniqueCompanyType(
+          sessionStorage.getItem("uniqueCompanyType")
+            ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
+            : data.data.categories
+        );
+      })
+      .catch((err) => console.log(err, "  ERR"));
+
     firstScrollBtnToCenter();
   }, []);
 
@@ -268,6 +262,32 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
       duration: 200,
     },
   });
+
+  const mouseDownEvent = (e) => {
+      setIsDown(true);
+      setStartX(e.pageX - slideBtnMenu.current.offsetLeft);
+      setScrollLeft(slideBtnMenu.current.scrollLeft);
+    },
+    mouseMoveEvent = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slideBtnMenu.current.offsetLeft;
+      const walk = (x - startX) * 2;
+      slideBtnMenu.current.scrollLeft = scrollLeft - walk;
+    },
+    btnClick = (e, el) => {
+      if (e && el) {
+        clickedType(el.name);
+        setClickedTypeLocal(el.name);
+        sessionStorage.setItem("filter_type", el.name);
+        scrollBtnToCenter(e);
+      } else {
+        clickedType();
+        setClickedTypeLocal();
+        sessionStorage.setItem("filter_type", "");
+        scrollAllBtnToCenter();
+      }
+    };
 
   return (
     <CutScroll
@@ -279,42 +299,15 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     >
       <CompanyNavStyle
         ref={slideBtnMenu}
-        onMouseDown={(e) => {
-          if (!supportsTouch) {
-            setIsDown(true);
-            setStartX(e.pageX - slideBtnMenu.current.offsetLeft);
-            setScrollLeft(slideBtnMenu.current.scrollLeft);
-          }
-        }}
-        onMouseLeave={() => {
-          if (!supportsTouch) {
-            setIsDown(false);
-          }
-        }}
-        onMouseUp={() => {
-          if (!supportsTouch) {
-            setIsDown(false);
-          }
-        }}
-        onMouseMove={(e) => {
-          if (!supportsTouch) {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - slideBtnMenu.current.offsetLeft;
-            const walk = (x - startX) * 2;
-            slideBtnMenu.current.scrollLeft = scrollLeft - walk;
-          }
-        }}
+        onMouseDown={(e) => !supportsTouch && mouseDownEvent(e)}
+        onMouseLeave={() => !supportsTouch && setIsDown(false)}
+        onMouseUp={() => !supportsTouch && setIsDown(false)}
+        onMouseMove={(e) => !supportsTouch && mouseMoveEvent(e)}
       >
         <CompanyNavBtn
           className="companyNavBtn"
           style={isClickedAllBtn() ? { backgroundColor: defaultColor } : {}}
-          onClick={(e) => {
-            clickedType();
-            setClickedTypeLocal();
-            sessionStorage.setItem("filter_type", "");
-            scrollAllBtnToCenter();
-          }}
+          onClick={() => btnClick()}
         >
           <CompanyNavLink
             style={isClickedAllBtn() ? { color: "#fff" } : {}}
@@ -334,12 +327,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               style={
                 isClickedTypeBtn(el.name) ? { background: defaultColor } : {}
               }
-              onClick={(e) => {
-                clickedType(el.name);
-                setClickedTypeLocal(el.name);
-                sessionStorage.setItem("filter_type", el.name);
-                scrollBtnToCenter(e);
-              }}
+              onClick={(e) => btnClick(e, el)}
               onMouseOver={() => setHoveredBtn(el.name)}
               onMouseOut={() => setHoveredBtn("")}
             >

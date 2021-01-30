@@ -166,56 +166,53 @@ const MapContainer = ({
 
   const initialZoom = 12;
 
-  const [streetName, setStreetName] = useState("");
-  const [latLng, setLatLng] = useState("");
-  const [toCenter, setToCenter] = useState(null);
+  const [streetName, setStreetName] = useState(""),
+    [latLng, setLatLng] = useState(""),
+    [toCenter, setToCenter] = useState(null),
+    [companyGeolocation, setCompanyGeolocation] = useState(null),
+    [dencerPosition, setDencerPosition] = useState(null);
 
   const geocoder = new google.maps.Geocoder();
 
   const getStreetFromLatLng = (location) => {
-    setTimeout(() => {
-      geocoder.geocode(
-        {
-          location: location,
-        },
-        (results, status) => {
-          if (status === "OK") {
-            if (results[0]) {
-              console.log(results[0], " !!!!!");
-              setStreetName(results[0].formatted_address);
-              getLatLngFromStreet(results[0].formatted_address);
+      setTimeout(() => {
+        setCompanyGeolocation(location);
+
+        geocoder.geocode(
+          {
+            location: location,
+          },
+          (results, status) => {
+            if (status === "OK") {
+              if (results[0]) {
+                setStreetName(results[0].formatted_address);
+                getLatLngFromStreet(results[0].formatted_address);
+              }
             } else {
+              getStreetFromLatLng(location);
             }
-          } else {
-            getStreetFromLatLng(location);
           }
+        );
+      }, 300);
+    },
+    getLatLngFromStreet = (street, fromInput) => {
+      geocoder.geocode({ address: street }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const latLng = {
+            lat: results[0].geometry.location.lat(),
+            lng: results[0].geometry.location.lng(),
+          };
+          setLatLng(latLng);
+          fromInput && setToCenter(latLng);
         }
-      );
-    }, 300);
-  };
-
-  const getLatLngFromStreet = (street, fromInput) => {
-    geocoder.geocode({ address: street }, function (results, status) {
-      if (status === google.maps.GeocoderStatus.OK) {
-        const latLng = {
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng(),
-        };
-        setLatLng(latLng);
-        fromInput && setToCenter(latLng);
-      } else {
-      }
-    });
-  };
-
-  const onDragend = (mapProps, map, e) => {
-    getStreetFromLatLng({
-      lat: map.center.lat(),
-      lng: map.center.lng(),
-    });
-  };
-
-  const [dencerPosition, setDencerPosition] = useState(null);
+      });
+    },
+    onDragend = (mapProps, map, e) => {
+      getStreetFromLatLng({
+        lat: map.center.lat(),
+        lng: map.center.lng(),
+      });
+    };
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -234,6 +231,12 @@ const MapContainer = ({
   const onPlaceSelected = (place) => {
     setStreetName(place.description);
     getLatLngFromStreet(place.description, true);
+  };
+
+  const save = () => {
+    if (streetName && latLng) {
+      chooseNewAddress(streetName, companyGeolocation || latLng);
+    }
   };
 
   return (
@@ -259,7 +262,6 @@ const MapContainer = ({
           <Marker
             name={"Dancer"}
             title={""}
-            onClick={() => {}}
             icon={{
               url: `${process.env.PUBLIC_URL}/img/dancer.png`,
               scaledSize: { width: 30, height: 30 },
@@ -280,7 +282,6 @@ const MapContainer = ({
         )}
         <Marker
           name={"Place"}
-          title={"!!"}
           position={initialCenter}
           icon={{
             url: `${process.env.PUBLIC_URL}/img/location.png`,
@@ -289,41 +290,24 @@ const MapContainer = ({
         />
       </MyMap>
       {isNewAddress && (
-        <MapHeader>
-          <MapHeaderBtn onClick={togglePopupGoogleMap}>Отмена</MapHeaderBtn>
-          <MapHeaderBtn
-            onClick={() => {
-              if (streetName && latLng) {
-                chooseNewAddress(streetName, latLng);
-              }
-            }}
-          >
-            Готово!!!
-          </MapHeaderBtn>
-        </MapHeader>
-      )}
-
-      {isNewAddress && <PointPosition alt="pos" name={"location"} />}
-      {isNewAddress && (
-        <AutocompleteWrap>
-          <GooglePlacesAutocomplete
-            onSelect={onPlaceSelected}
-            placeholder="Введите адрес"
-            initialValue={streetName}
-          />
-          <BtnWrap>
-            <SaveBtn
-              onClick={() => {
-                if (streetName && latLng) {
-                  chooseNewAddress(streetName, latLng);
-                }
-              }}
-            >
-              СОХРАНИТЬ
-            </SaveBtn>
-            <CancelBtn onClick={togglePopupGoogleMap}>ОТМЕНА</CancelBtn>
-          </BtnWrap>
-        </AutocompleteWrap>
+        <>
+          <MapHeader>
+            <MapHeaderBtn onClick={togglePopupGoogleMap}>Отмена</MapHeaderBtn>
+            <MapHeaderBtn onClick={() => save()}>Готово</MapHeaderBtn>
+          </MapHeader>
+          <PointPosition alt="pos" name={"location"} />
+          <AutocompleteWrap>
+            <GooglePlacesAutocomplete
+              onSelect={onPlaceSelected}
+              placeholder="Введите адрес"
+              initialValue={streetName}
+            />
+            <BtnWrap>
+              <SaveBtn onClick={() => save()}>СОХРАНИТЬ</SaveBtn>
+              <CancelBtn onClick={togglePopupGoogleMap}>ОТМЕНА</CancelBtn>
+            </BtnWrap>
+          </AutocompleteWrap>
+        </>
       )}
       {closeBtn && <CloseBTN onClick={togglePopupGoogleMap}>&#215;</CloseBTN>}
     </MapContainerStyle>

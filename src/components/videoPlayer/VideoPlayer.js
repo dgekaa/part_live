@@ -22,6 +22,12 @@ const VideoError = styled.div`
   }
 `;
 
+const Wrap = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+`;
+
 const VideoPlayer = ({ src, autoplay, muted, preview }) => {
   const [isVideoErr, setIsVideoErr] = useState(false);
   const videoRef = useRef(null);
@@ -43,18 +49,10 @@ const VideoPlayer = ({ src, autoplay, muted, preview }) => {
     ],
   };
 
-  const error = () => {
-    setIsVideoErr("Ошибка");
-  };
+  const error = () => setIsVideoErr("Ошибка");
 
   return (
-    <div
-      style={{
-        position: "relative",
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <Wrap>
       {!isVideoErr ? (
         <ReactAwesomePlayer ref={videoRef} options={options} error={error} />
       ) : (
@@ -63,7 +61,7 @@ const VideoPlayer = ({ src, autoplay, muted, preview }) => {
           Извините за неудобства.
         </VideoError>
       )}
-    </div>
+    </Wrap>
   );
 };
 
