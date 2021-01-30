@@ -224,26 +224,25 @@ const No = styled(Yes)`
 `;
 
 const EditCompany = () => {
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
-  const [cookies] = useCookies([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [places, setPlaces] = useState([]);
-  const [showPopupIsDelete, setShowPopupIsDelete] = useState(false);
-  const [clickedDeleteBtnName, setClickedDeleteBtnName] = useState("");
-  const [clickedDeleteBtnId, setClickedDeleteBtnId] = useState("");
+  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false),
+    [cookies] = useCookies([]),
+    [isLoading, setIsLoading] = useState(true),
+    [places, setPlaces] = useState([]),
+    [showPopupIsDelete, setShowPopupIsDelete] = useState(false),
+    [clickedDeleteBtnName, setClickedDeleteBtnName] = useState(""),
+    [clickedDeleteBtnId, setClickedDeleteBtnId] = useState("");
 
   const togglePopupIsDelete = () => {
-    showPopupIsDelete
-      ? setShowPopupIsDelete(false)
-      : setShowPopupIsDelete(true);
-  };
-
-  const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    document.body.style.overflow = "visible";
-    setIsShowMenu(false);
-  };
+      showPopupIsDelete
+        ? setShowPopupIsDelete(false)
+        : setShowPopupIsDelete(true);
+    },
+    hideSideMenu = () => {
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    };
 
   useEffect(() => {
     if (showPopupIsDelete) {
@@ -283,7 +282,6 @@ const EditCompany = () => {
 
   useEffect(() => {
     refreshData();
-
     sessionStorage.setItem("prevZoom", "");
     sessionStorage.setItem("prevCenter", "");
   }, []);
@@ -294,9 +292,9 @@ const EditCompany = () => {
   });
 
   const createNewCompany = () => {
-    QUERY(
-      {
-        query: `mutation {
+      QUERY(
+        {
+          query: `mutation {
           createPlace(
             input:{
               name: "Стандартное название",
@@ -309,49 +307,47 @@ const EditCompany = () => {
               }    
             }){id name address description coordinates categories{slug}}        
       }`,
-      },
-      cookies.origin_data
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.errors) {
-          console.log(data, "____ID____");
-          refreshData();
-          return <Redirect to={`/admin/${data.data.createPlace.id}`} />;
-        } else {
-          console.log(data.errors, "EDIT ERROR");
-        }
-      })
-      .catch((err) => console.log(err, "EDIT ERROR"));
-  };
-
-  const deleteCompany = (id) => {
-    QUERY(
-      {
-        query: `mutation {
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            console.log(data, "____ID____");
+            refreshData();
+            return <Redirect to={`/admin/${data.data.createPlace.id}`} />;
+          } else {
+            console.log(data.errors, "EDIT ERROR");
+          }
+        })
+        .catch((err) => console.log(err, "EDIT ERROR"));
+    },
+    deleteCompany = (id) => {
+      QUERY(
+        {
+          query: `mutation {
           deletePlace(
              id:${id}
             ){id name}        
       }`,
-      },
-      cookies.origin_data
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.errors) {
-          console.log(data, "____ID____");
-          refreshData();
-        } else {
-          console.log(data.errors, "EDIT ERROR");
-        }
-      })
-      .catch((err) => console.log(err, "EDIT ERROR"));
-  };
-
-  const toggleDisabled = (id, disabled) => {
-    QUERY(
-      {
-        query: `mutation {
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            console.log(data, "____ID____");
+            refreshData();
+          } else {
+            console.log(data.errors, "EDIT ERROR");
+          }
+        })
+        .catch((err) => console.log(err, "EDIT ERROR"));
+    },
+    toggleDisabled = (id, disabled) => {
+      QUERY(
+        {
+          query: `mutation {
         updatePlace(
           input:{
             id:"${id}"            
@@ -359,18 +355,28 @@ const EditCompany = () => {
           }
         ){id disabled}
       }`,
-      },
-      cookies.origin_data
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.errors) {
-          refreshData();
-        } else {
-        }
-      })
-      .catch((err) => {});
-  };
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            refreshData();
+          } else {
+          }
+        })
+        .catch((err) => {});
+    };
+
+  const hide = (e) => {
+      if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
+        hideSideMenu();
+    },
+    deleteOne = ({ name, id }) => {
+      togglePopupIsDelete();
+      setClickedDeleteBtnName(name);
+      setClickedDeleteBtnId(id);
+    };
 
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
@@ -378,12 +384,7 @@ const EditCompany = () => {
     return <Redirect to="/" />;
   } else {
     return (
-      <div
-        onClick={(e) => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
-            hideSideMenu();
-        }}
-      >
+      <div onClick={(e) => hide(e)}>
         <Header
           isShowMenu={isShowMenu}
           logo
@@ -408,13 +409,7 @@ const EditCompany = () => {
                   places.map(({ id, name, alias, categories, disabled }) => {
                     return (
                       <Tr key={id}>
-                        <TdDelete
-                          onClick={() => {
-                            togglePopupIsDelete();
-                            setClickedDeleteBtnName(name);
-                            setClickedDeleteBtnId(id);
-                          }}
-                        >
+                        <TdDelete onClick={() => deleteOne(name, id)}>
                           &#215;
                         </TdDelete>
                         <Td>

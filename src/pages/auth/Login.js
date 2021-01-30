@@ -175,13 +175,13 @@ export const ErrorField = styled.span`
 `;
 
 const Login = () => {
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isForgetPass, setIsForgetPass] = useState(false);
-  const [allValidationError, setAllValidationError] = useState("");
+  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false),
+    [isLogin, setIsLogin] = useState(false),
+    [email, setEmail] = useState(""),
+    [password, setPassword] = useState(""),
+    [isForgetPass, setIsForgetPass] = useState(false),
+    [allValidationError, setAllValidationError] = useState("");
 
   const loginRef = useRef(null);
   const [cookies, setCookie, removeCookie] = useCookies([]);
@@ -190,23 +190,35 @@ const Login = () => {
     if (sessionStorage.getItem("uniqueCompanyType")) {
       sessionStorage.setItem("uniqueCompanyType", "");
     }
+
+    sessionStorage.setItem("prevZoom", "");
+    sessionStorage.setItem("prevCenter", "");
   }, []);
 
   const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    document.body.style.overflow = "visible";
-    setIsShowMenu(false);
-  };
-
-  const showSideMenu = () => {
-    setShowSlideSideMenu(true);
-    document.body.style.overflow = "hidden";
-    setIsShowMenu(true);
-  };
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
+    };
 
   window.onresize = function (e) {
     hideSideMenu();
   };
+
+  const hideMenu = (e) => {
+      if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+        hideSideMenu();
+      }
+    },
+    loginClick = (e) => {
+      e.preventDefault();
+      !isForgetPass && userLogin(email, password);
+    };
 
   const userLogin = (email, password) => {
     QUERY({
@@ -249,11 +261,6 @@ const Login = () => {
       });
   };
 
-  useEffect(() => {
-    sessionStorage.setItem("prevZoom", "");
-    sessionStorage.setItem("prevCenter", "");
-  }, []);
-
   const SwipePageSpring = useSpring({
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
@@ -279,11 +286,7 @@ const Login = () => {
         />
         <AuthBlockWrap
           as={animated.div}
-          onClick={(e) => {
-            if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-              hideSideMenu();
-            }
-          }}
+          onClick={(e) => hideMenu(e)}
           style={SwipePageSpring}
         >
           <GoBackBtn to="/">
@@ -294,13 +297,7 @@ const Login = () => {
             <HeadTitle>
               {!isForgetPass ? "АВТОРИЗАЦИЯ" : "ВОССТАНОВЛЕНИЕ ПАРОЛЯ"}
             </HeadTitle>
-            <AuthForm
-              ref={loginRef}
-              onSubmit={(e) => {
-                e.preventDefault();
-                !isForgetPass && userLogin(email, password);
-              }}
-            >
+            <AuthForm ref={loginRef} onSubmit={(e) => loginClick(e)}>
               <AuthInput
                 autocomplete="username"
                 type="email"

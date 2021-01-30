@@ -66,10 +66,10 @@ const NoOneCompany = styled.div`
 `;
 
 const Home = () => {
-  const [DATA, setDATA] = useState([]);
-  const [companyData, setCompanyData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLocation, setIsLocation] = useState(false);
+  const [DATA, setDATA] = useState([]),
+    [companyData, setCompanyData] = useState([]),
+    [isLoading, setIsLoading] = useState(true),
+    [isLocation, setIsLocation] = useState(false);
 
   useEffect(() => {
     QUERY({
@@ -114,18 +114,20 @@ const Home = () => {
     }
   }, [DATA]);
 
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
+  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false);
+
   const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    document.body.style.overflow = "visible";
-    setIsShowMenu(false);
-  };
-  const showSideMenu = () => {
-    setShowSlideSideMenu(true);
-    document.body.style.overflow = "hidden";
-    setIsShowMenu(true);
-  };
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
+    };
+
   useEffect(() => {
     window.onresize = function (e) {
       hideSideMenu();
@@ -138,26 +140,24 @@ const Home = () => {
   });
 
   const findLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => setIsLocation(true),
-        (err) => setIsLocation(false)
-      );
-    } else {
-      return setIsLocation(false);
-    }
-  };
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => setIsLocation(true),
+          (err) => setIsLocation(false)
+        );
+      } else {
+        return setIsLocation(false);
+      }
+    },
+    hide = (e) => {
+      if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
+        hideSideMenu();
+    };
 
   findLocation();
 
   return (
-    <div
-      style={{ minHeight: 1 + window.innerHeight }}
-      onClick={(e) => {
-        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
-          hideSideMenu();
-      }}
-    >
+    <div style={{ minHeight: 1 + window.innerHeight }} onClick={(e) => hide(e)}>
       <div>
         <Header
           isShowMenu={isShowMenu}

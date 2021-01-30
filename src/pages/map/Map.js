@@ -304,7 +304,8 @@ const MapComponent = (props) => {
     [mouseMapCoordinates, setMouseMapCoordinates] = useState({}),
     [referrer, setReferrer] = useState(""),
     [currentCenterOfMap, setCurrentCenterOfMap] = useState(),
-    [defaultCenter, setDefaultCenter] = useState();
+    [defaultCenter, setDefaultCenter] = useState(),
+    [gMapDefaultCenter, setGMapDefaultCenter] = useState();
 
   const dateNow = new Date()
     .toLocaleDateString()
@@ -339,35 +340,34 @@ const MapComponent = (props) => {
   }, [DATA]);
 
   const points = markers
-    .filter((el) => !el.disabled)
-    .map((el, i) => {
-      return {
-        type: "Feature",
-        item: el,
-        properties: {
-          cluster: false,
-          crimeId: i,
-          category: el.categories[0] && el.categories[0].name,
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [
-            +el.coordinates.split(",")[1],
-            +el.coordinates.split(",")[0],
-          ],
-        },
-      };
+      .filter((el) => !el.disabled)
+      .map((el, i) => {
+        return {
+          type: "Feature",
+          item: el,
+          properties: {
+            cluster: false,
+            crimeId: i,
+            category: el.categories[0] && el.categories[0].name,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [
+              +el.coordinates.split(",")[1],
+              +el.coordinates.split(",")[0],
+            ],
+          },
+        };
+      }),
+    { clusters } = useSupercluster({
+      points,
+      bounds,
+      zoom,
+      options: {
+        radius: 220,
+        maxZoom: 20,
+      },
     });
-
-  const { clusters } = useSupercluster({
-    points,
-    bounds,
-    zoom,
-    options: {
-      radius: 220,
-      maxZoom: 20,
-    },
-  });
 
   const clickedType = (type) => {
     if (type) {
@@ -402,6 +402,17 @@ const MapComponent = (props) => {
     window.onresize = (e) => hideSideMenu();
   });
 
+  useEffect(() => {
+    const center = sessionStorage.getItem("prevCenter")
+      ? {
+          lat: JSON.parse(sessionStorage.getItem("prevCenter")).lat,
+          lng: JSON.parse(sessionStorage.getItem("prevCenter")).lng,
+        }
+      : defaultCenter;
+
+    setGMapDefaultCenter(center);
+  }, [defaultCenter]);
+
   if (navigator.geolocation && !defaultCenter) {
     navigator.geolocation.getCurrentPosition(
       (pos) =>
@@ -434,13 +445,53 @@ const MapComponent = (props) => {
     config: { duration: 200 },
   });
 
+  const dancerClick = (target) => {
+      target.previousSibling.style.opacity = 1;
+      setTimeout(() => {
+        target.previousSibling.style.opacity = 0;
+      }, 2000);
+    },
+    markerClick = () => {
+      sessionStorage.setItem("prevZoom", zoom);
+      sessionStorage.setItem("prevCenter", JSON.stringify(currentCenterOfMap));
+    },
+    markerMouseDown = (e) => {
+      !("ontouchstart" in document.documentElement) && mouseDownHandler(e);
+    },
+    markerMouseUp = (e, cluster) => {
+      !("ontouchstart" in document.documentElement) &&
+        mouseUpHandler(e, cluster.item.id);
+    },
+    hide = (e) => {
+      if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
+        hideSideMenu();
+    },
+    onChangeMap = (zoom, bounds, center) => {
+      setCurrentCenterOfMap(center);
+      setZoom(zoom);
+      setBounds([bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat]);
+    },
+    onTouchStart = (e, cluster) => {
+      mouseDownHandler(
+        {
+          clientX: e.nativeEvent.changedTouches[0].clientX,
+          clientY: e.nativeEvent.changedTouches[0].clientY,
+        },
+        cluster.item.id
+      );
+    },
+    onTouchEnd = (e, cluster) => {
+      mouseUpHandler(
+        {
+          clientX: e.nativeEvent.changedTouches[0].clientX,
+          clientY: e.nativeEvent.changedTouches[0].clientY,
+        },
+        cluster.item.id
+      );
+    };
+
   return (
-    <div
-      onClick={(e) => {
-        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
-          hideSideMenu();
-      }}
-    >
+    <div onClick={(e) => hide(e)}>
       <Header
         isShowMenu={isShowMenu}
         logo
@@ -471,40 +522,23 @@ const MapComponent = (props) => {
               key: API_KEY,
             }}
             defaultCenter={
-              sessionStorage.getItem("prevCenter")
-                ? {
-                    lat: JSON.parse(sessionStorage.getItem("prevCenter")).lat,
-                    lng: JSON.parse(sessionStorage.getItem("prevCenter")).lng,
-                  }
-                : defaultCenter || {
-                    lat: 53.904577,
-                    lng: 27.557328,
-                  }
+              gMapDefaultCenter || {
+                lat: 53.904577,
+                lng: 27.557328,
+              }
             }
             defaultZoom={+sessionStorage.getItem("prevZoom") || 12}
             yesIWantToUseGoogleMapApiInternals
             onGoogleApiLoaded={({ map }) => (mapRef.current = map)}
-            onChange={({ zoom, bounds, center }) => {
-              setCurrentCenterOfMap(center);
-              setZoom(zoom);
-              setBounds([
-                bounds.nw.lng,
-                bounds.se.lat,
-                bounds.se.lng,
-                bounds.nw.lat,
-              ]);
-            }}
+            onChange={({ zoom, bounds, center }) =>
+              onChangeMap(zoom, bounds, center)
+            }
           >
             {defaultCenter && (
               <Marker lat={defaultCenter.lat} lng={defaultCenter.lng}>
                 <YouAreHere>Вы тут</YouAreHere>
                 <CustomImg
-                  onClick={({ target }) => {
-                    target.previousSibling.style.opacity = 1;
-                    setTimeout(() => {
-                      target.previousSibling.style.opacity = 0;
-                    }, 2000);
-                  }}
+                  onClick={({ target }) => dancerClick(target)}
                   alt="me"
                   name={"dancer"}
                   width="32"
@@ -513,11 +547,12 @@ const MapComponent = (props) => {
               </Marker>
             )}
             {clusters.map((cluster) => {
-              const [longitude, latitude] = cluster.geometry.coordinates;
-              const {
-                cluster: isCluster,
-                point_count: pointCount,
-              } = cluster.properties;
+              const [longitude, latitude] = cluster.geometry.coordinates,
+                {
+                  cluster: isCluster,
+                  point_count: pointCount,
+                } = cluster.properties;
+
               //ЗАМЕНА НА ЦИФРЫ
               if (isCluster) {
                 return (
@@ -560,6 +595,30 @@ const MapComponent = (props) => {
                 setNextWorkTime
               );
 
+              const isStartTime = nextStreamTime.start_time,
+                streamNotTodayText =
+                  isStartTime &&
+                  nextStreamTime.day.toLowerCase() !== "сегодня" &&
+                  "Начало трансляции в " +
+                    EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
+                    " в " +
+                    isStartTime,
+                streamTodayText =
+                  isStartTime &&
+                  nextStreamTime.day.toLowerCase() === "сегодня" &&
+                  "Трансляция начнется сегодня в " + isStartTime,
+                closed = !isStartTime && !nextWorkTime && "Заведение закрыто",
+                isWillOpen =
+                  !isStartTime && nextWorkTime && nextWorkTime.start_time,
+                willOpen = isWillOpen && "Откроется: ",
+                whenWillOpen =
+                  isWillOpen &&
+                  `${
+                    nextWorkTime.day.toLowerCase() !== "сегодня"
+                      ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
+                      : nextWorkTime.day
+                  } ${nextWorkTime.start_time}-${nextWorkTime.end_time}`;
+
               return (
                 <Marker
                   key={cluster.properties.crimeId}
@@ -567,39 +626,11 @@ const MapComponent = (props) => {
                   lng={longitude}
                 >
                   <Link
-                    onClick={() => {
-                      sessionStorage.setItem("prevZoom", zoom);
-                      sessionStorage.setItem(
-                        "prevCenter",
-                        JSON.stringify(currentCenterOfMap)
-                      );
-                    }}
-                    onMouseDown={(e) => {
-                      !("ontouchstart" in document.documentElement) &&
-                        mouseDownHandler(e);
-                    }}
-                    onMouseUp={(e) => {
-                      !("ontouchstart" in document.documentElement) &&
-                        mouseUpHandler(e, cluster.item.id);
-                    }}
-                    onTouchStart={(e) => {
-                      mouseDownHandler(
-                        {
-                          clientX: e.nativeEvent.changedTouches[0].clientX,
-                          clientY: e.nativeEvent.changedTouches[0].clientY,
-                        },
-                        cluster.item.id
-                      );
-                    }}
-                    onTouchEnd={(e) => {
-                      mouseUpHandler(
-                        {
-                          clientX: e.nativeEvent.changedTouches[0].clientX,
-                          clientY: e.nativeEvent.changedTouches[0].clientY,
-                        },
-                        cluster.item.id
-                      );
-                    }}
+                    onClick={() => markerClick()}
+                    onMouseDown={(e) => markerMouseDown(e)}
+                    onMouseUp={(e) => markerMouseUp(e, cluster)}
+                    onTouchStart={(e) => onTouchStart(e, cluster)}
+                    onTouchEnd={(e) => onTouchEnd(e, cluster)}
                     to={{
                       pathname: referrer
                         ? `/company/${cluster.item.id}`
@@ -634,41 +665,12 @@ const MapComponent = (props) => {
                               }
                             >
                               <TransparentBg>
-                                {nextStreamTime.start_time &&
-                                  nextStreamTime.day.toLowerCase() !==
-                                    "сегодня" &&
-                                  "Начало трансляции в " +
-                                    EN_SHORT_TO_RU_LONG_V_P[
-                                      nextStreamTime.day
-                                    ] +
-                                    " в " +
-                                    nextStreamTime.start_time}
-                                {nextStreamTime.start_time &&
-                                  nextStreamTime.day.toLowerCase() ===
-                                    "сегодня" &&
-                                  "Трансляция начнется сегодня в " +
-                                    nextStreamTime.start_time}
-                                {!nextStreamTime.start_time &&
-                                  !nextWorkTime &&
-                                  "Заведение закрыто"}
-
-                                {!nextStreamTime.start_time &&
-                                  nextWorkTime &&
-                                  nextWorkTime.start_time &&
-                                  "Откроется: "}
-                                {!nextStreamTime.start_time &&
-                                  nextWorkTime &&
-                                  nextWorkTime.start_time && <br />}
-                                {!nextStreamTime.start_time &&
-                                  nextWorkTime &&
-                                  nextWorkTime.start_time &&
-                                  `${
-                                    nextWorkTime.day.toLowerCase() !== "сегодня"
-                                      ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
-                                      : nextWorkTime.day
-                                  } ${nextWorkTime.start_time}-${
-                                    nextWorkTime.end_time
-                                  }`}
+                                {streamNotTodayText}
+                                {streamTodayText}
+                                {closed}
+                                {willOpen}
+                                {isWillOpen && <br />}
+                                {whenWillOpen}
                               </TransparentBg>
                             </NoTranslation>
                           )}

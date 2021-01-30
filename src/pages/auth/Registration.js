@@ -31,29 +31,28 @@ const SuccessText = styled.p`
 `;
 
 const Registration = () => {
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
+  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false);
 
   const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    document.body.style.overflow = "visible";
-    setIsShowMenu(false);
-  };
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
+    };
 
-  const showSideMenu = () => {
-    setShowSlideSideMenu(true);
-    document.body.style.overflow = "hidden";
-    setIsShowMenu(true);
-  };
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rePassword, setRePassword] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies([]);
-  const [allValidationError, setAllValidationError] = useState(null);
-  const [oneValidationError, setOneValidationError] = useState(null);
+  const [name, setName] = useState(""),
+    [email, setEmail] = useState(""),
+    [password, setPassword] = useState(""),
+    [rePassword, setRePassword] = useState(""),
+    [isSuccess, setIsSuccess] = useState(false),
+    [cookies, setCookie, removeCookie] = useCookies([]),
+    [allValidationError, setAllValidationError] = useState(null),
+    [oneValidationError, setOneValidationError] = useState(null);
 
   const register = useRef(null);
 
@@ -61,6 +60,9 @@ const Registration = () => {
     if (sessionStorage.getItem("uniqueCompanyType")) {
       sessionStorage.setItem("uniqueCompanyType", "");
     }
+
+    sessionStorage.setItem("prevZoom", "");
+    sessionStorage.setItem("prevCenter", "");
   }, []);
 
   useEffect(() => {
@@ -123,14 +125,21 @@ const Registration = () => {
         console.log(err, "  *****************ERR");
       });
   };
-  useEffect(() => {
-    sessionStorage.setItem("prevZoom", "");
-    sessionStorage.setItem("prevCenter", "");
-  }, []);
+
   const animateProps = useSpring({
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
   });
+
+  const hide = (e) => {
+      if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
+        hideSideMenu();
+      }
+    },
+    registrationClick = (e) => {
+      e.preventDefault();
+      registration();
+    };
 
   if (!!Number(cookies.origin_id)) {
     return <Redirect to="/" />;
@@ -147,11 +156,7 @@ const Registration = () => {
         />
         <AuthBlockWrap
           as={animated.div}
-          onClick={(e) => {
-            if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-              hideSideMenu();
-            }
-          }}
+          onClick={(e) => hide(e)}
           style={animateProps}
         >
           <GoBackBtn to="/">
@@ -162,13 +167,7 @@ const Registration = () => {
             {!isSuccess && (
               <>
                 <HeadTitle>РЕГИСТРАЦИЯ</HeadTitle>
-                <AuthForm
-                  ref={register}
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    registration();
-                  }}
-                >
+                <AuthForm ref={register} onSubmit={(e) => registrationClick(e)}>
                   <AuthInput
                     type="name"
                     name="name"

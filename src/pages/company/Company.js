@@ -14,11 +14,7 @@ import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
-import {
-  DAY_OF_WEEK,
-  EN_SHORT_TO_RU_LONG_V_P,
-  queryPath,
-} from "../../constants";
+import { EN_SHORT_TO_RU_LONG_V_P, queryPath } from "../../constants";
 import { defaultColor } from "../../constants";
 
 import "./company.css";
@@ -398,22 +394,60 @@ const SmallMapTransparentBg = styled.div`
 `;
 
 const Company = (props) => {
-  const [showPopup, setShowPopap] = useState(false);
-  const [DATA, setDATA] = useState(null);
-  const [showStream, setShowStream] = useState(false);
-  const [nextStreamTime, setNextStreamTime] = useState(false);
-  const [workTime, setWorkTime] = useState(false);
-  const [isWork, setIsWork] = useState(false);
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [curDistance, setCurDistance] = useState(null);
-  const [mouseMapCoordinates, setMouseMapCoordinates] = useState({});
-  const [ismobileStream, setIsmobileStream] = useState(false);
+  const [showPopup, setShowPopap] = useState(false),
+    [DATA, setDATA] = useState(null),
+    [showStream, setShowStream] = useState(false),
+    [nextStreamTime, setNextStreamTime] = useState(false),
+    [workTime, setWorkTime] = useState(false),
+    [isWork, setIsWork] = useState(false),
+    [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false),
+    [isLoading, setIsLoading] = useState(true),
+    [curDistance, setCurDistance] = useState(null),
+    [mouseMapCoordinates, setMouseMapCoordinates] = useState({}),
+    [ismobileStream, setIsmobileStream] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem("uniqueCompanyType")) {
       sessionStorage.setItem("uniqueCompanyType", "");
+    }
+
+    QUERY({
+      query: `query {
+        place (id: ${+props.match.params.id}) {
+          id name address description profile_image mobile_stream
+          streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
+          categories{name slug} coordinates
+          schedules {day start_time end_time} user {id name email}
+        }
+      }`,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setIsLoading(false);
+        setDATA(data.data);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.log(err, "  ONE PLACE");
+      });
+
+    if (navigator.geolocation && DATA) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCurDistance(
+            getDistanceFromLatLonInKm(
+              pos.coords.latitude,
+              pos.coords.longitude,
+              DATA.place.coordinates.split(",")[0],
+              DATA.place.coordinates.split(",")[1]
+            )
+          );
+        },
+        (err) => console.log(err, "ошибка геолокации")
+      );
+    } else {
+      console.log("Геолокация недоступна ");
     }
   }, []);
 
@@ -437,43 +471,20 @@ const Company = (props) => {
     }
   }, [DATA]);
 
-  useEffect(() => {
-    QUERY({
-      query: `query {
-        place (id: ${+props.match.params.id}) {
-          id name address description profile_image mobile_stream
-          streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
-          categories{name slug} coordinates
-          schedules {day start_time end_time} user {id name email}
-        }
-      }`,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsLoading(false);
-        setDATA(data.data);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        console.log(err, "  ONE PLACE");
-      });
-  }, []);
-
   const togglePopup = () => {
     showPopup ? setShowPopap(false) : setShowPopap(true);
   };
 
   const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    document.body.style.overflow = "visible";
-    setIsShowMenu(false);
-  };
-
-  const showSideMenu = () => {
-    setShowSlideSideMenu(true);
-    document.body.style.overflow = "hidden";
-    setIsShowMenu(true);
-  };
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
+    };
 
   useEffect(() => {
     window.onresize = function (e) {
@@ -481,62 +492,40 @@ const Company = (props) => {
     };
   });
 
-  useEffect(() => {
-    if (navigator.geolocation && DATA) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          setCurDistance(
-            getDistanceFromLatLonInKm(
-              pos.coords.latitude,
-              pos.coords.longitude,
-              DATA.place.coordinates.split(",")[0],
-              DATA.place.coordinates.split(",")[1]
-            )
-          );
-        },
-        (err) => console.log(err, "ошибка геолокации")
-      );
-    } else {
-      console.log("Геолокация недоступна ");
-    }
-  }, []);
-
   const mouseDownMapHandler = (e) => {
-    setMouseMapCoordinates({
-      clientX: e.clientX,
-      clientY: e.clientY,
-    });
-  };
-
-  const mouseUpMapHandler = (e) => {
-    if (
-      +mouseMapCoordinates.clientX === +e.clientX &&
-      +mouseMapCoordinates.clientY === +e.clientY
-    ) {
-      togglePopup();
-    }
-  };
-
-  const whenIsTranslation = () => {
-    if (
-      nextStreamTime.start_time &&
-      nextStreamTime.day.toLowerCase() !== "сегодня"
-    ) {
-      return (
-        "Трансляция начнется в " +
-        EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-        " в " +
-        nextStreamTime.start_time
-      );
-    } else if (
-      nextStreamTime.start_time &&
-      nextStreamTime.day.toLowerCase() === "сегодня"
-    ) {
-      return "Трансляция начнется сегодня в " + nextStreamTime.start_time;
-    } else if (!nextStreamTime.start_time) {
-      return "Заведение закрыто";
-    }
-  };
+      setMouseMapCoordinates({
+        clientX: e.clientX,
+        clientY: e.clientY,
+      });
+    },
+    mouseUpMapHandler = (e) => {
+      if (
+        +mouseMapCoordinates.clientX === +e.clientX &&
+        +mouseMapCoordinates.clientY === +e.clientY
+      ) {
+        togglePopup();
+      }
+    },
+    whenIsTranslation = () => {
+      if (
+        nextStreamTime.start_time &&
+        nextStreamTime.day.toLowerCase() !== "сегодня"
+      ) {
+        return (
+          "Трансляция начнется в " +
+          EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
+          " в " +
+          nextStreamTime.start_time
+        );
+      } else if (
+        nextStreamTime.start_time &&
+        nextStreamTime.day.toLowerCase() === "сегодня"
+      ) {
+        return "Трансляция начнется сегодня в " + nextStreamTime.start_time;
+      } else if (!nextStreamTime.start_time) {
+        return "Заведение закрыто";
+      }
+    };
 
   const SwipePageSpring = useSpring({
     right: isShowMenu ? 200 : 0,
@@ -562,14 +551,13 @@ const Company = (props) => {
     console.log(ismobileStream, " company___________");
   }, 5000);
 
+  const hide = (e) => {
+    if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
+      hideSideMenu();
+  };
+
   return (
-    <div
-      onClick={(e) => {
-        if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-          hideSideMenu();
-        }
-      }}
-    >
+    <div onClick={(e) => hide(e)}>
       <Header
         logo
         burger
@@ -580,14 +568,10 @@ const Company = (props) => {
       />
 
       {/* _______________________________________ DESCTOP */}
-
       <CompanyD
         as={animated.div}
         style={SwipePageSpring}
-        onClick={(e) => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
-            hideSideMenu();
-        }}
+        onClick={(e) => hide(e)}
       >
         <GoBackBtnD to="/">
           <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
@@ -732,10 +716,7 @@ const Company = (props) => {
       <CompanyM
         as={animated.div}
         style={SwipePageSpring}
-        onClick={(e) => {
-          if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
-            hideSideMenu();
-        }}
+        onClick={(e) => hide(e)}
       >
         {DATA && (
           <FlexM>
