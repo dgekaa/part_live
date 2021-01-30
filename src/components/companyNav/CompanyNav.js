@@ -344,26 +344,21 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
               >
                 {isClickedTypeBtn(el.name) ? (
                   <CustomImgStyle
-                    alt={el.slug}
-                    name={el.slug}
-                    active
-                    width="30"
-                    height="30"
+                    alt={el.slug + "Sprite"}
+                    name={el.slug + "Sprite"}
+                    frame={1}
                   />
                 ) : hoveredBtn === el.name ? (
                   <CustomImgStyle
-                    alt={el.slug}
-                    name={el.slug}
-                    active
-                    width="30"
-                    height="30"
+                    alt={el.slug + "Sprite"}
+                    name={el.slug + "Sprite"}
+                    frame={1}
                   />
                 ) : (
                   <CustomImgStyle
-                    alt={el.slug}
-                    name={el.slug}
-                    width="30"
-                    height="30"
+                    alt={el.slug + "Sprite"}
+                    name={el.slug + "Sprite"}
+                    frame={2}
                   />
                 )}
                 <CompNavText>{el.name}</CompNavText>
