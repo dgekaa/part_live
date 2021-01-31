@@ -9,7 +9,6 @@ import autosize from "autosize";
 import axios from "axios";
 
 import CustomImg from "../../components/customImg/CustomImg";
-import GoogleMap from "../../components/googleMap/GoogleMap";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Popup from "../../components/popup/Popup";
@@ -33,6 +32,7 @@ import "./sidebar.css";
 import "cropperjs/dist/cropper.min.css";
 import "./imagecropper.css";
 import DatePickerPopup from "./DatePickerPopup";
+import GoogleMapPopup from "./GoogleMapPopup";
 
 const AdminStyle = styled.div`
   position: relative;
@@ -367,36 +367,6 @@ const Admin = (props) => {
       setWindowWidth(e.target.innerWidth);
     };
   });
-
-  const chooseNewAddress = (streetName, latLng) => {
-    if (cookies.origin_data) {
-      const stringLatLng = "" + latLng.lat + "," + latLng.lng;
-
-      QUERY(
-        {
-          query: `mutation {
-          updatePlace(
-            input:{
-              id:"${props.match.params.id}"
-              address : "${streetName}"
-              coordinates: "${stringLatLng}"
-            }
-          ){id address coordinates}
-        }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.errors) {
-            togglePopupGoogleMap();
-            refreshData();
-          } else {
-          }
-        })
-        .catch((err) => console.log(err, "ADMIN UPDATEPLACE ERR"));
-    }
-  };
 
   const refreshData = () => {
     QUERY({
@@ -2494,27 +2464,11 @@ const Admin = (props) => {
           )}
 
           {showPopupGoogleMap && (
-            <Popup
-              togglePopup={togglePopupGoogleMap}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <GoogleMap
-                initialCenterMap={
-                  DATA.coordinates
-                    ? {
-                        lat: Number(DATA.coordinates.split(",")[0]),
-                        lng: Number(DATA.coordinates.split(",")[1]),
-                      }
-                    : null
-                }
-                togglePopupGoogleMap={togglePopupGoogleMap}
-                chooseNewAddress={chooseNewAddress}
-                isNewAddress
-              />
-            </Popup>
+            <GoogleMapPopup
+              togglePopupGoogleMap={togglePopupGoogleMap}
+              DATA={DATA}
+              props={props} refreshData={refreshData}
+            />
           )}
 
           {showPopupUploadFile && (
