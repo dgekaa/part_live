@@ -23,7 +23,7 @@ import {
 } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
 import SideBar from "./Sidebar";
-import CropperMobile from "./CropperMobile";
+
 import Stream from "./Stream";
 import StreamMobile from "./StreamMobile";
 
@@ -34,6 +34,7 @@ import "./imagecropper.css";
 import DatePickerPopup from "./DatePickerPopup";
 import GoogleMapPopup from "./GoogleMapPopup";
 import DescriptionPopup from "./DescriptionPopup";
+import UploadFilePopup from "./UploadFilePopup";
 
 const AdminStyle = styled.div`
   position: relative;
@@ -764,17 +765,6 @@ const Admin = (props) => {
       });
     }
   }, [imageElementRef.current]);
-
-  const editorRef = useRef(null);
-
-  const onCrop = () => {
-    if (editorRef.current) {
-      const canvas = editorRef.current.getImage().toDataURL();
-      fetch(canvas)
-        .then((res) => res.blob())
-        .then((blob) => uploadImageTranscode(blob));
-    }
-  };
 
   const handeleClearToDefault = () => setImgSrc(null);
 
@@ -2367,85 +2357,16 @@ const Admin = (props) => {
           )}
 
           {showPopupUploadFile && (
-            <Popup
-              togglePopup={togglePopupUploadFile}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <div
-                className="mobileTimePickerHeader"
-                style={{
-                  height: "44px",
-                  borderBottom: "1px solid #ECECEC",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "0 25px",
-                }}
-              >
-                <p
-                  style={{
-                    letterSpacing: "0.5px",
-                    color: defaultColor,
-                    fontSize: "16px",
-                    fontWeight: 500,
-                  }}
-                  onClick={() => {
-                    setImgSrc(null);
-                    togglePopupUploadFile();
-                  }}
-                >
-                  Отмена
-                </p>
-                <p
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    letterSpacing: "0.5px",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  {titleInPicker}
-                </p>
-                <p
-                  style={{
-                    letterSpacing: "0.5px",
-                    color: defaultColor,
-                    fontSize: "16px",
-                    fontWeight: 500,
-                  }}
-                  onClick={() => {
-                    togglePopupUploadFile();
-                    onCrop();
-                  }}
-                >
-                  Готово
-                </p>
-              </div>
-              <CropperMobile imgSrc={imgSrc} editorRef={editorRef} />
-              <Dropzone
-                multiple={false}
-                accept={acceptedFileTypes}
-                maxSize={imageMaxSize}
-                onDrop={(acceptedFiles, rejectedFiles) =>
-                  handleOnDrop(acceptedFiles, rejectedFiles)
-                }
-              >
-                {({ getRootProps, getInputProps }) => {
-                  return (
-                    <section style={{ display: "flex" }}>
-                      <div className="changePhotoBlock" {...getRootProps()}>
-                        <input
-                          className="changePhotoInput previewRef"
-                          {...getInputProps()}
-                        />
-                      </div>
-                    </section>
-                  );
-                }}
-              </Dropzone>
-            </Popup>
+            <UploadFilePopup
+              togglePopupUploadFile={togglePopupUploadFile}
+              setImgSrc={setImgSrc}
+              titleInPicker={titleInPicker}
+              imgSrc={imgSrc}
+              uploadImageTranscode={uploadImageTranscode}
+              acceptedFileTypes={acceptedFileTypes}
+              imageMaxSize={imageMaxSize}
+              handleOnDrop={handleOnDrop}
+            />
           )}
         </div>
 
