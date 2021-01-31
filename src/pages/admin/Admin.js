@@ -36,6 +36,7 @@ import GoogleMapPopup from "./GoogleMapPopup";
 import DescriptionPopup from "./DescriptionPopup";
 import UploadFilePopup from "./UploadFilePopup";
 import ChooseTypePopup from "./ChooseTypePopup";
+import LeftMenu from "./LeftMenu";
 
 const AdminStyle = styled.div`
   position: relative;
@@ -100,26 +101,6 @@ const GoBackArrow = styled.span`
 
 const LeftAdminMenuInnerD = styled.div`
   position: fixed;
-`;
-
-const LeftAdminBtnD = styled.li`
-  font-size: 13px;
-  font-weight: 800;
-  height: 35px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: ${({ clicked }) => (clicked ? defaultColor : "#000")};
-  letter-spacing: 1px;
-  &:hover {
-    color: ${defaultColor};
-  }
-`;
-
-const AdminImgWrapD = styled.div`
-  width: 30px;
-  height: 30px;
-  margin-right: 16px;
 `;
 
 const AdminContentD = styled.div`
@@ -924,36 +905,13 @@ const Admin = (props) => {
                   </GoBack>
                   <LeftAdminMenuInnerD>
                     <ul>
-                      {leftMenuSettings.map((el, id) => {
-                        return (
-                          <LeftAdminBtnD
-                            clicked={el.clicked}
-                            key={id}
-                            onClick={() => {
-                              setLeftMenuSettings((prev) => {
-                                let newArr = [...prev];
-                                newArr.forEach((el) => (el.clicked = false));
-                                newArr[id] = {
-                                  ...newArr[id],
-                                  clicked: true,
-                                };
-                                return newArr;
-                              });
-                            }}
-                          >
-                            {el.img && (
-                              <AdminImgWrapD>
-                                <CustomImg
-                                  className={el.class}
-                                  alt={el.altImg}
-                                  name={el.img}
-                                />
-                              </AdminImgWrapD>
-                            )}
-                            {el.name}
-                          </LeftAdminBtnD>
-                        );
-                      })}
+                      {leftMenuSettings.map((el, id) => (
+                        <LeftMenu
+                          el={el}
+                          setLeftMenuSettings={setLeftMenuSettings}
+                          id={id}
+                        />
+                      ))}
                     </ul>
                   </LeftAdminMenuInnerD>
                 </LeftAdminMenuD>
@@ -2179,7 +2137,6 @@ const Admin = (props) => {
               tomorrowFromDay={tomorrowFromDay}
             />
           )}
-
           {showPopupChooseType && (
             <ChooseTypePopup
               togglePopupChooseType={togglePopupChooseType}
@@ -2196,7 +2153,6 @@ const Admin = (props) => {
               hoveredBtn={hoveredBtn}
             />
           )}
-
           {showPopupDescription && (
             <DescriptionPopup
               togglePopupDescription={togglePopupDescription}
@@ -2208,7 +2164,6 @@ const Admin = (props) => {
               descOfCompanyLimit={descOfCompanyLimit}
             />
           )}
-
           {showPopupGoogleMap && (
             <GoogleMapPopup
               togglePopupGoogleMap={togglePopupGoogleMap}
@@ -2217,7 +2172,6 @@ const Admin = (props) => {
               refreshData={refreshData}
             />
           )}
-
           {showPopupUploadFile && (
             <UploadFilePopup
               togglePopupUploadFile={togglePopupUploadFile}
