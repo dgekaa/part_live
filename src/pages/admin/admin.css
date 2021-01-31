@@ -30,33 +30,6 @@ textarea {
   box-sizing: content-box;
 }
 
-.popupPickerBtns {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-}
-.popupPickerBtns p {
-  border-radius: 5px;
-  width: 170px;
-  height: 36px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.popupPickerBtns p:hover {
-  opacity: 0.8;
-}
-
-.popupPickerBtns p:first-of-type {
-  background: #f8104d;
-  color: #fff;
-}
-.popupPickerBtns p:last-of-type {
-  background: #fff;
-  border: 2px solid #c4c4c4;
-}
-
 .barIconClass {
   width: 30px;
   height: 30px;
@@ -643,11 +616,6 @@ textarea {
   border-color: #f8104d;
   transition: 0.3s ease all;
 }
-.TimePickerContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
 
 .space {
   display: inline-block;
@@ -655,9 +623,6 @@ textarea {
   height: 20px;
 }
 
-.makeAsDayOffMobile {
-  display: none;
-}
 .chooseAddressHoveredDesc {
   letter-spacing: 0.5px;
   width: 244px !important;
@@ -703,9 +668,7 @@ textarea {
   .successSaved {
     display: none;
   }
-  .popupPickerBtns {
-    display: none;
-  }
+
   .MapPopupHeader {
     display: flex !important;
   }
@@ -896,19 +859,6 @@ textarea {
     flex: 1;
   }
 
-  .makeAsDayOffMobile {
-    display: block;
-
-    font-size: 18px;
-    color: #f8104d;
-    padding: 30px 0;
-    text-align: center;
-    cursor: pointer;
-    font-weight: normal;
-  }
-  .makeAsDayOffMobile:hover {
-    color: #000;
-  }
   .dayOfWeekScheduleMobile {
     font-weight: 400;
     text-transform: uppercase;

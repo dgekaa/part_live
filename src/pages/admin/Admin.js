@@ -15,9 +15,7 @@ import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import TimePicker from "./TimePicker";
 import {
-  EN_SHORT_TO_NUMBER,
   EN_SHORT_DAY_OF_WEEK,
   EN_SHORT_TO_RU_SHORT,
   SHORT_DAY_OF_WEEK,
@@ -34,6 +32,7 @@ import "./admin.css";
 import "./sidebar.css";
 import "cropperjs/dist/cropper.min.css";
 import "./imagecropper.css";
+import DatePickerPopup from "./DatePickerPopup";
 
 const AdminStyle = styled.div`
   position: relative;
@@ -328,8 +327,7 @@ const Admin = (props) => {
   const [showPopupDescription, setShowPopapDescription] = useState(false);
   const [showPopupChooseType, setShowPopapChooseType] = useState(false);
   const [showPopupUploadFile, setShowPopapUploadFile] = useState(false);
-  const [startTimePicker, setStartTimePicker] = useState("00:00");
-  const [endTimePicker, setEndTimePicker] = useState("00:00");
+
   const [startRealTimeInPicker, setStartRealTimeInPicker] = useState();
   const [endRealTimeInPicker, setEndRealTimeInPicker] = useState();
   const [isEmptyTime, setIsEmptyTime] = useState(true);
@@ -503,124 +501,6 @@ const Admin = (props) => {
     }
   };
 
-  const setStreamTimeOfOneDay = () => {
-    if (cookies.origin_data) {
-      if (DATA.streams[0] && !isEmptyTime) {
-        // не пустое время стрима и стрим уже существет
-        QUERY(
-          {
-            query: `mutation {
-              updateStream (
-                input:{
-                  id:"${DATA.streams[0].id}"
-                  schedules:{
-                    update:[
-                       {
-                        id: ${clickedTime.id}
-                        start_time: "${startTimePicker}"
-                        end_time: "${endTimePicker}"
-                      }
-                    ]
-                  }
-                }
-              ) {
-                id name url
-                }
-            }`,
-          },
-          cookies.origin_data
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
-          })
-          .catch((err) => console.log(err, " ERR"));
-      }
-      if (DATA.streams[0] && isEmptyTime) {
-        // пустое время стрима и стрим уже существет
-        QUERY(
-          {
-            query: `mutation {
-              updateStream (
-                input:{
-                  id:"${DATA.streams[0].id}"
-                  schedules:{
-                    create:[
-                       {
-                        day: ${enumWeekName}
-                        start_time: "${startTimePicker}"
-                        end_time: "${endTimePicker}"
-                      }
-                    ]
-                  }
-                }
-              ) {
-                id name url
-                }
-            }`,
-          },
-          cookies.origin_data
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
-          })
-          .catch((err) => console.log(err, " ERR"));
-      }
-    }
-  };
-
-  const setWorkTimeOfOneDay = () => {
-    if (cookies.origin_data) {
-      if (isEmptyTime) {
-        //СОЗДАТЬ время работы заведения
-        QUERY(
-          {
-            query: `mutation {
-              updatePlace(
-                input:{
-                  id:"${props.match.params.id}"
-                  schedules:{
-                    create:{
-                      day: ${enumWeekName} start_time: "${startTimePicker}" end_time: "${endTimePicker}"
-                    }
-                  }
-                }
-              ){id}
-            }`,
-          },
-          cookies.origin_data
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
-          })
-          .catch((err) => console.log(err, "  ERR"));
-      }
-
-      if (!isEmptyTime) {
-        //ИЗМЕНИТЬ время работы заведения
-        QUERY(
-          {
-            query: `mutation {
-          updateSchedule(
-            input:{
-              id:"${clickedTime.id}" start_time: "${startTimePicker}" end_time: "${endTimePicker}"
-            }
-          ){id}
-        }`,
-          },
-          cookies.origin_data
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
-          })
-          .catch((err) => console.log(err, " ERR"));
-      }
-    }
-  };
-
   const hideSideMenu = () => {
     setShowSlideSideMenu(false);
     document.body.style.overflow = "visible";
@@ -674,10 +554,6 @@ const Admin = (props) => {
     showPopupChooseType,
     showPopupUploadFile,
   ]);
-
-  const setStartTime = (h, m) => setStartTimePicker("" + h + ":" + m);
-
-  const setEndTime = (h, m) => setEndTimePicker("" + h + ":" + m);
 
   const SetNewTimeObject = (data) => {
     const timeObject = {};
@@ -745,12 +621,6 @@ const Admin = (props) => {
     DATA.alias && setAliasOfCompany(DATA.alias);
   }, [DATA.alias]);
 
-  const dateNow = new Date()
-    .toLocaleDateString()
-    .split(".")
-    .reverse()
-    .join("-");
-
   const descOfCompanyLimit = 300;
 
   const updateCategory = () => {
@@ -776,7 +646,6 @@ const Admin = (props) => {
                           }`
                     : `categories:{}`
                 }
-        
               }
             ){id}
           }`,
@@ -785,12 +654,7 @@ const Admin = (props) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          if (!data.errors) {
-            console.log("SUCCESS");
-            refreshData();
-          } else {
-            console.log(data.errors, " ERRORS");
-          }
+          !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
         })
         .catch((err) => console.log(err, "  *******ERR"));
     }
@@ -813,12 +677,7 @@ const Admin = (props) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          if (!data.errors) {
-            console.log("SUCCESS");
-            refreshData();
-          } else {
-            console.log(data.errors, " ERRORS");
-          }
+          !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
         })
         .catch((err) => console.log(err, "  *******ERR"));
     }
@@ -2246,7 +2105,6 @@ const Admin = (props) => {
                       </div>
                     </div>
                     {/* _____________________________________ График трансляций */}
-
                     <div className="menuBlockWrap streamSchedule">
                       <div
                         className="menuBlock"
@@ -2431,127 +2289,22 @@ const Admin = (props) => {
           <SlideSideMenu isShowMenu={isShowMenu} />
 
           {showPopupDatePicker && (
-            <Popup
-              togglePopup={togglePopupDatePicker}
-              wrpaStyle={windowWidth <= 760 ? { alignItems: "flex-end" } : {}}
-              style={
-                windowWidth <= 760
-                  ? { height: "100%" }
-                  : { borderRadius: "5px", transform: "scale(1.5)" }
-              }
-            >
-              <div className="popupWrapper">
-                <div
-                  className="mobileTimePickerHeader"
-                  style={{
-                    height: "44px",
-                    borderBottom: "1px solid #ECECEC",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "0 25px",
-                  }}
-                >
-                  <p
-                    className=""
-                    style={{
-                      letterSpacing: "0.5px",
-                      color: defaultColor,
-                      fontSize: "16px",
-                      fontWeight: "normal",
-                    }}
-                    onClick={() => {
-                      togglePopupDatePicker();
-                    }}
-                  >
-                    Отмена
-                  </p>
-                  <p
-                    style={{
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      letterSpacing: "0.5px",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {titleInPicker}
-                  </p>
-                  <p
-                    style={{
-                      letterSpacing: "0.5px",
-                      color: defaultColor,
-                      fontSize: "16px",
-                      fontWeight: "normal",
-                    }}
-                    className=""
-                    onClick={() => {
-                      togglePopupDatePicker();
-                      isSetWorkTimeDPick && setWorkTimeOfOneDay();
-                      !isSetWorkTimeDPick && setStreamTimeOfOneDay();
-                    }}
-                  >
-                    Готово
-                  </p>
-                </div>
-
-                <div className="TimePickerContainer">
-                  <TimePicker
-                    realTimeInPicker={startRealTimeInPicker}
-                    timePickerName={
-                      EN_SHORT_TO_RU_SHORT[enumWeekName] ||
-                      EN_SHORT_TO_RU_SHORT[clickedTime.day]
-                    }
-                    setTime={setStartTime}
-                  />
-                  <span className="space"></span>
-                  <TimePicker
-                    realTimeInPicker={endRealTimeInPicker}
-                    timePickerName={
-                      startTimePicker.split(":")[0] * 3600 +
-                        startTimePicker.split(":")[1] * 60 <=
-                      endTimePicker.split(":")[0] * 3600 +
-                        endTimePicker.split(":")[1] * 60
-                        ? EN_SHORT_TO_RU_SHORT[enumWeekName] ||
-                          EN_SHORT_TO_RU_SHORT[clickedTime.day]
-                        : SHORT_DAY_OF_WEEK[
-                            tomorrowFromDay(
-                              EN_SHORT_TO_NUMBER[
-                                enumWeekName || clickedTime.day
-                              ]
-                            )
-                          ]
-                    }
-                    setTime={setEndTime}
-                  />
-                </div>
-                <div className={"popupPickerBtns"}>
-                  <p
-                    onClick={() => {
-                      togglePopupDatePicker();
-                      isSetWorkTimeDPick && setWorkTimeOfOneDay();
-                      !isSetWorkTimeDPick && setStreamTimeOfOneDay();
-                    }}
-                  >
-                    Сохранить
-                  </p>
-                  <p
-                    onClick={() => {
-                      togglePopupDatePicker();
-                    }}
-                  >
-                    Отмена
-                  </p>
-                </div>
-                <p
-                  className="makeAsDayOffMobile"
-                  onClick={() => {
-                    setAsDayOf();
-                    togglePopupDatePicker();
-                  }}
-                >
-                  Сделать выходным
-                </p>
-              </div>
-            </Popup>
+            <DatePickerPopup
+              togglePopupDatePicker={togglePopupDatePicker}
+              windowWidth={windowWidth}
+              titleInPicker={titleInPicker}
+              setAsDayOf={setAsDayOf}
+              startRealTimeInPicker={startRealTimeInPicker}
+              isSetWorkTimeDPick={isSetWorkTimeDPick}
+              isEmptyTime={isEmptyTime}
+              props={props}
+              enumWeekName={enumWeekName}
+              endRealTimeInPicker={endRealTimeInPicker}
+              refreshData={refreshData}
+              clickedTime={clickedTime}
+              DATA={DATA}
+              tomorrowFromDay={tomorrowFromDay}
+            />
           )}
 
           {showPopupChooseType && (
