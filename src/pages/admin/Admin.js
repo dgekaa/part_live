@@ -33,6 +33,7 @@ import "cropperjs/dist/cropper.min.css";
 import "./imagecropper.css";
 import DatePickerPopup from "./DatePickerPopup";
 import GoogleMapPopup from "./GoogleMapPopup";
+import DescriptionPopup from "./DescriptionPopup";
 
 const AdminStyle = styled.div`
   position: relative;
@@ -278,35 +279,6 @@ const DescriptionM = styled.div`
   margin: 15px 0;
   padding: 15px 0;
   cursor: pointer;
-`;
-
-const DescTextareaM = styled.textarea`
-  outline: none;
-  color: #4f4f4f;
-  opacity: none;
-  border: none;
-  border-bottom: 1px solid #e5e5e5;
-  box-sizing: border-box;
-  line-height: 24px;
-  padding: 5px;
-  width: calc(100% - 30px);
-  margin: 0 15px;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 24px;
-  resize: none;
-`;
-
-const DescLengthM = styled.p`
-  font-weight: 500;
-  color: ${(props) =>
-    props.descOfCompany.length === props.descOfCompanyLimit ? "red" : "green"};
-  width: 100%;
-  font-size: 10px;
-  text-align: right;
-  padding-left: 10px;
-  padding-right: 15px;
 `;
 
 const AdminMenuTitleM = styled.p`
@@ -616,29 +588,6 @@ const Admin = (props) => {
                           }`
                     : `categories:{}`
                 }
-              }
-            ){id}
-          }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
-        })
-        .catch((err) => console.log(err, "  *******ERR"));
-    }
-  };
-
-  const updateDescription = () => {
-    if (cookies.origin_data) {
-      QUERY(
-        {
-          query: `mutation {
-            updatePlace(
-              input:{
-                id:"${props.match.params.id}"
-                description:"${descOfCompany || DATA.description}" 
               }
             ){id}
           }`,
@@ -2397,77 +2346,23 @@ const Admin = (props) => {
           )}
 
           {showPopupDescription && (
-            <Popup
-              togglePopup={togglePopupDescription}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  height: "44px",
-                  borderBottom: "1px solid #ECECEC",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "0 25px",
-                }}
-              >
-                <p
-                  className=""
-                  style={{
-                    letterSpacing: "0.5px",
-                    color: defaultColor,
-                    fontSize: "18px",
-                    fontWeight: 500,
-                  }}
-                  onClick={() => {
-                    togglePopupDescription();
-                    setDescOfCompany(DATA.description);
-                  }}
-                >
-                  Отмена
-                </p>
-
-                <p
-                  style={{
-                    letterSpacing: "0.5px",
-                    color: defaultColor,
-                    fontSize: "18px",
-                    fontWeight: 500,
-                  }}
-                  className=""
-                  onClick={() => {
-                    updateDescription();
-                    togglePopupDescription();
-                  }}
-                >
-                  Готово
-                </p>
-              </div>
-              <AdminMenuTitleM>Описание</AdminMenuTitleM>
-              <DescTextareaM
-                id="autoresizeTextarea"
-                maxLength={descOfCompanyLimit}
-                value={descOfCompany}
-                onChange={(e) => setDescOfCompany(e.target.value)}
-              />
-
-              <DescLengthM
-                descOfCompany={descOfCompany}
-                descOfCompanyLimit={descOfCompanyLimit}
-              >
-                {descOfCompany.length} / {descOfCompanyLimit}
-              </DescLengthM>
-            </Popup>
+            <DescriptionPopup
+              togglePopupDescription={togglePopupDescription}
+              DATA={DATA}
+              setDescOfCompany={setDescOfCompany}
+              props={props}
+              descOfCompany={descOfCompany}
+              refreshData={refreshData}
+              descOfCompanyLimit={descOfCompanyLimit}
+            />
           )}
 
           {showPopupGoogleMap && (
             <GoogleMapPopup
               togglePopupGoogleMap={togglePopupGoogleMap}
               DATA={DATA}
-              props={props} refreshData={refreshData}
+              props={props}
+              refreshData={refreshData}
             />
           )}
 
