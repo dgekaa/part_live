@@ -451,11 +451,14 @@ const Company = (props) => {
     }
   }, []);
 
-  const dateNow = new Date()
-    .toLocaleDateString()
-    .split(".")
-    .reverse()
-    .join("-");
+  const toNewDateFormat = (date) => {
+    const dataArr = date.split("/");
+    if (dataArr[0].length < 2) dataArr[0] = "0" + dataArr[0];
+    const dataArrNew = [dataArr[2], dataArr[0], dataArr[1]],
+      dataString = dataArrNew.join("-");
+
+    return dataString;
+  };
 
   useEffect(() => {
     if (DATA) {
@@ -465,7 +468,8 @@ const Company = (props) => {
         setNextStreamTime,
         DATA.place.streams &&
           DATA.place.streams[0] &&
-          dateNow === DATA.place.streams[0].see_you_tomorrow
+          toNewDateFormat(new Date().toLocaleDateString()) ===
+            DATA.place.streams[0].see_you_tomorrow
       );
       isWorkTimeNow(DATA.place, setWorkTime, setIsWork);
     }

@@ -376,18 +376,23 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
     [nextWorkTime, setNextWorkTime] = useState(null),
     [ismobileStream, setIsmobileStream] = useState(false);
 
-  const dateNow = new Date()
-    .toLocaleDateString()
-    .split(".")
-    .reverse()
-    .join("-");
+  const toNewDateFormat = (date) => {
+    const dataArr = date.split("/");
+    if (dataArr[0].length < 2) dataArr[0] = "0" + dataArr[0];
+    const dataArrNew = [dataArr[2], dataArr[0], dataArr[1]],
+      dataString = dataArrNew.join("-");
+
+    return dataString;
+  };
 
   useEffect(() => {
     isShowStreamNow(
       item,
       setShowStream,
       setNextStreamTime,
-      item.streams[0] && dateNow === item.streams[0].see_you_tomorrow
+      item.streams[0] &&
+        toNewDateFormat(new Date().toLocaleDateString()) ===
+          item.streams[0].see_you_tomorrow
     );
     isWorkTimeNow(item, setWorkTime, setIsWork, setNextWorkTime);
   }, [item]);

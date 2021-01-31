@@ -29,6 +29,8 @@ import {
 import { numberDayNow } from "../../calculateTime";
 import SideBar from "./Sidebar";
 import CropperMobile from "./CropperMobile";
+import Stream from "./Stream";
+import StreamMobile from "./StreamMobile";
 
 import "./admin.css";
 import "./sidebar.css";
@@ -218,19 +220,6 @@ const LengthofDescriptionD = styled.span`
   }
 `;
 
-const DisableStreamD = styled.span`
-  width: 80%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  div {
-    display: flex;
-    flex-direction: column;
-  }
-`;
-
 const DayOffDotD = styled.span`
   width: 6px;
   height: 6px;
@@ -242,32 +231,7 @@ const DayOffDotD = styled.span`
   left: 2px;
 `;
 
-const DisableStreamToNexDayD = styled.span`
-  font-size: 16px;
-  color: #6f6f6f;
-`;
-
-const DisableStreamTextD = styled.span`
-  font-size: 18px;
-  color: #000;
-`;
-
 // ____________________________________________-
-const DisableStreamM = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin: 10px;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const DisableStreamTextM = styled.div`
-  font-size: 18px;
-`;
-
-const DisableStreamToNexDayM = styled.div`
-  font-size: 16px;
-`;
 
 const PreviewPhotoM = styled.div`
   display: flex;
@@ -383,7 +347,7 @@ const Admin = (props) => {
   const [typeOfCompany, setTypeOfCompany] = useState("");
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
-  const [switchChecked, setSwitchChecked] = useState(null);
+
   const [isSuccessSave, setIsSuccessSave] = useState(false);
 
   const [cookies] = useCookies([]);
@@ -515,60 +479,6 @@ const Admin = (props) => {
           }
         })
         .catch((err) => console.log(err, "UPDATESTREAM ERR"));
-    }
-  };
-
-  const disableStream = (data) => {
-    if (cookies.origin_data && DATA.streams[0]) {
-      QUERY(
-        {
-          query: `mutation {
-            updateStream (
-              input:{
-                id:"${DATA.streams[0].id}"
-               ${
-                 data
-                   ? ` see_you_tomorrow: "${data}"`
-                   : ` see_you_tomorrow: ${data}`
-               }               
-              }
-            ) { id name url }
-          }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.errors) {
-            refreshData();
-          } else {
-            console.log(data.errors, "disableStream ERRORS");
-          }
-        })
-        .catch((err) => console.log(err, "disableStream ERR"));
-    }
-  };
-
-  const deleteStream = () => {
-    if (cookies.origin_data && DATA.streams[0]) {
-      QUERY(
-        {
-          query: `mutation {
-              deleteStream(id:"${+DATA.streams[0].id}"
-                ) {id name url}
-            }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.errors) {
-            refreshData();
-          } else {
-            console.log(data.errors, "DELETE STREAM ERRORS");
-          }
-        })
-        .catch((err) => console.log(err, "CREATE STREAM ERR"));
     }
   };
 
@@ -882,13 +792,6 @@ const Admin = (props) => {
     .split(".")
     .reverse()
     .join("-");
-
-  useEffect(() => {
-    DATA.streams &&
-      DATA.streams[0] &&
-      DATA.streams[0].see_you_tomorrow &&
-      setSwitchChecked(DATA.streams[0].see_you_tomorrow === dateNow);
-  }, [DATA.streams]);
 
   const descOfCompanyLimit = 300;
 
@@ -1920,113 +1823,14 @@ const Admin = (props) => {
                     }
                     if (el.clicked && i === 3) {
                       return (
-                        <div key={i} className="streamAdminBlock">
-                          <h3>СТРИМ</h3>
-                          {DATA.id && DATA.id == 16 && (
-                            <div className="videoWrapAdminDesctop">
-                              <VideoPlayer
-                                src={
-                                  "http://partycamera.org:80/streaming/123/index.m3u8"
-                                }
-                              />
-                            </div>
-                          )}
-
-                          {!!DATA.streams && DATA.streams[0] && (
-                            <>
-                              <div className="videoWrapAdminDesctop">
-                                <VideoPlayer
-                                  preview={
-                                    DATA.streams &&
-                                    DATA.streams[0] &&
-                                    DATA.streams[0].preview
-                                  }
-                                  src={
-                                    DATA.streams &&
-                                    DATA.streams[0] &&
-                                    DATA.streams[0].url
-                                  }
-                                />
-                              </div>
-                              <DisableStreamD>
-                                <div>
-                                  <DisableStreamTextD>
-                                    Отключить стрим
-                                  </DisableStreamTextD>
-                                  <DisableStreamToNexDayD>
-                                    Выключить до следующего дня
-                                  </DisableStreamToNexDayD>
-                                </div>
-
-                                <Switch
-                                  onChange={setSwitchChecked}
-                                  checked={switchChecked}
-                                  onColor={defaultColor}
-                                  offColor="#999"
-                                  uncheckedIcon={false}
-                                  checkedIcon={false}
-                                />
-                              </DisableStreamD>
-                            </>
-                          )}
-
-                          <div className="chooseStreamAddressDesc">
-                            <div className="cameraAddressWrapper">
-                              <span className="cameraAddresLable">
-                                Адрес камеры:
-                              </span>
-                              <input
-                                className="streamAddress"
-                                placeholder={
-                                  (DATA.streams &&
-                                    DATA.streams[0] &&
-                                    DATA.streams[0].url &&
-                                    DATA.streams[0].url) ||
-                                  "Введите адрес стрима"
-                                }
-                                value={streamAddressData}
-                                onInput={(e) =>
-                                  setStreamAddressData(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div style={{ display: "flex" }}>
-                              <div
-                                style={{ marginRight: "19px" }}
-                                className="chooseStreamAddressSaveBtn"
-                                onClick={() => {
-                                  if (
-                                    streamAddressData &&
-                                    streamAddressData.toLocaleLowerCase() !==
-                                      "delete"
-                                  ) {
-                                    if (!DATA.streams[0]) {
-                                      createStream(streamAddressData);
-                                    } else {
-                                      updateStream(streamAddressData);
-                                    }
-                                  } else if (
-                                    streamAddressData.toLocaleLowerCase() ===
-                                    "delete"
-                                  ) {
-                                    deleteStream();
-                                  }
-
-                                  disableStream(switchChecked ? dateNow : null);
-                                }}
-                              >
-                                Сохранить
-                              </div>
-                              <div
-                                style={{ marginTop: "38px" }}
-                                className="cancelBtnProfile"
-                                onClick={() => setStreamAddressData("")}
-                              >
-                                Отмена
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        <Stream
+                          index={i}
+                          DATA={DATA}
+                          props={props}
+                          setDATA={setDATA}
+                          refreshData={refreshData}
+                          setIsLoading={setIsLoading}
+                        />
                       );
                     }
                   })}
@@ -2050,83 +1854,11 @@ const Admin = (props) => {
                         outerContainerId={"App"}
                         width={"100%"}
                       >
-                        <div style={{ position: "relative", top: "-46px" }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              height: "44px",
-                              borderBottom: "1px solid #ECECEC",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              padding: "0 25px",
-                            }}
-                          >
-                            <p
-                              className=""
-                              style={{
-                                letterSpacing: "0.5px",
-                                color: defaultColor,
-                                fontSize: "16px",
-                                fontWeight: "normal",
-                              }}
-                              onClick={() => {
-                                closeAllSidebar();
-                              }}
-                            >
-                              Отмена
-                            </p>
-                            <Link to="/">
-                              <PartyLive>
-                                PARTY<Live>.LIVE</Live>
-                              </PartyLive>
-                            </Link>
-                            <p
-                              style={{
-                                letterSpacing: "0.5px",
-                                color: defaultColor,
-                                fontSize: "16px",
-                                fontWeight: "normal",
-                              }}
-                              className=""
-                              onClick={() => {
-                                closeAllSidebar();
-                                disableStream(switchChecked ? dateNow : null);
-                              }}
-                            >
-                              Готово
-                            </p>
-                          </div>
-                          <AdminMenuTitleM>Стрим</AdminMenuTitleM>
-                          {!!DATA.streams && DATA.streams[0] && (
-                            <>
-                              <div className="videoWrapAdminMobile">
-                                <VideoPlayer
-                                  preview={DATA.streams[0].preview}
-                                  src={DATA.streams[0].url}
-                                />
-                              </div>
-                              <DisableStreamM>
-                                <div>
-                                  <DisableStreamTextM>
-                                    Отключить стрим
-                                  </DisableStreamTextM>
-                                  <DisableStreamToNexDayM>
-                                    Выключить до следующего дня
-                                  </DisableStreamToNexDayM>
-                                </div>
-
-                                <Switch
-                                  onChange={setSwitchChecked}
-                                  checked={switchChecked}
-                                  onColor={defaultColor}
-                                  offColor="#999"
-                                  uncheckedIcon={false}
-                                  checkedIcon={false}
-                                />
-                              </DisableStreamM>
-                            </>
-                          )}
-                        </div>
+                        <StreamMobile
+                          closeAllSidebar={closeAllSidebar}
+                          DATA={DATA}
+                          refreshData={refreshData}
+                        />
                       </SideBar>
                     </div>
                     {/* ______________________________Профиль заведения */}
