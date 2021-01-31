@@ -5,13 +5,11 @@ import Dropzone from "react-dropzone";
 import { Redirect, Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
-import Switch from "react-switch";
 import autosize from "autosize";
 import axios from "axios";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import GoogleMap from "../../components/googleMap/GoogleMap";
-import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Popup from "../../components/popup/Popup";
@@ -365,6 +363,7 @@ const Admin = (props) => {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   !windowWidth && setWindowWidth(window.innerWidth);
+
   useEffect(() => {
     window.onresize = function (e) {
       setWindowWidth(e.target.innerWidth);
@@ -438,11 +437,9 @@ const Admin = (props) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          if (!data.errors) {
-            refreshData();
-          } else {
-            console.log(data.errors, "DELETESCHEDULE ERRORS");
-          }
+          !data.errors
+            ? refreshData()
+            : console.log(data.errors, "DELETESCHEDULE ERRORS");
         })
         .catch((err) => console.log(err, "  DELETESCHEDULE ERR"));
     }
@@ -472,11 +469,9 @@ const Admin = (props) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          if (!data.errors) {
-            refreshData();
-          } else {
-            console.log(data.errors, "UPDATESTREAM ERRORS");
-          }
+          !data.errors
+            ? refreshData()
+            : console.log(data.errors, "UPDATESTREAM ERRORS");
         })
         .catch((err) => console.log(err, "UPDATESTREAM ERR"));
     }
@@ -500,11 +495,9 @@ const Admin = (props) => {
       )
         .then((res) => res.json())
         .then((data) => {
-          if (!data.errors) {
-            refreshData();
-          } else {
-            console.log(data.errors, "CREATE STREAM ERRORS");
-          }
+          !data.errors
+            ? refreshData()
+            : console.log(data.errors, "CREATE STREAM ERRORS");
         })
         .catch((err) => console.log(err, "CREATE STREAM ERR"));
     }
@@ -539,11 +532,7 @@ const Admin = (props) => {
         )
           .then((res) => res.json())
           .then((data) => {
-            if (!data.errors) {
-              refreshData();
-            } else {
-              console.log(data.errors, " ERRORS");
-            }
+            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
           })
           .catch((err) => console.log(err, " ERR"));
       }
@@ -574,12 +563,7 @@ const Admin = (props) => {
         )
           .then((res) => res.json())
           .then((data) => {
-            if (!data.errors) {
-              refreshData();
-              console.log(data, "FETCH data");
-            } else {
-              console.log(data.errors, " ERRORS");
-            }
+            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
           })
           .catch((err) => console.log(err, " ERR"));
       }
@@ -609,11 +593,7 @@ const Admin = (props) => {
         )
           .then((res) => res.json())
           .then((data) => {
-            if (!data.errors) {
-              refreshData();
-            } else {
-              console.log(data.errors, " ERRORS");
-            }
+            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
           })
           .catch((err) => console.log(err, "  ERR"));
       }
@@ -634,11 +614,7 @@ const Admin = (props) => {
         )
           .then((res) => res.json())
           .then((data) => {
-            if (!data.errors) {
-              refreshData();
-            } else {
-              console.log(data.errors, " ERRORS");
-            }
+            !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
           })
           .catch((err) => console.log(err, " ERR"));
       }
@@ -665,34 +641,19 @@ const Admin = (props) => {
 
   const togglePopupDatePicker = (whatPickerWillShow) => {
     setTitleInPicker(whatPickerWillShow);
-    showPopupDatePicker
-      ? setShowPopapDatePicker(false)
-      : setShowPopapDatePicker(true);
+    setShowPopapDatePicker(!showPopupDatePicker);
   };
 
-  const togglePopupGoogleMap = () => {
-    showPopupGoogleMap
-      ? setShowPopapGoogleMap(false)
-      : setShowPopapGoogleMap(true);
-  };
+  const togglePopupGoogleMap = () => setShowPopapGoogleMap(!showPopupGoogleMap);
 
-  const togglePopupDescription = () => {
-    showPopupDescription
-      ? setShowPopapDescription(false)
-      : setShowPopapDescription(true);
-  };
+  const togglePopupDescription = () =>
+    setShowPopapDescription(!showPopupDescription);
 
-  const togglePopupChooseType = () => {
-    showPopupChooseType
-      ? setShowPopapChooseType(false)
-      : setShowPopapChooseType(true);
-  };
+  const togglePopupChooseType = () =>
+    setShowPopapChooseType(!showPopupChooseType);
 
-  const togglePopupUploadFile = () => {
-    showPopupUploadFile
-      ? setShowPopapUploadFile(false)
-      : setShowPopapUploadFile(true);
-  };
+  const togglePopupUploadFile = () =>
+    setShowPopapUploadFile(!showPopupUploadFile);
 
   useEffect(() => {
     if (
@@ -714,12 +675,9 @@ const Admin = (props) => {
     showPopupUploadFile,
   ]);
 
-  const setStartTime = (h, m) => {
-    setStartTimePicker("" + h + ":" + m);
-  };
-  const setEndTime = (h, m) => {
-    setEndTimePicker("" + h + ":" + m);
-  };
+  const setStartTime = (h, m) => setStartTimePicker("" + h + ":" + m);
+
+  const setEndTime = (h, m) => setEndTimePicker("" + h + ":" + m);
 
   const SetNewTimeObject = (data) => {
     const timeObject = {};
@@ -1034,26 +992,20 @@ const Admin = (props) => {
   const onCrop = () => {
     if (editorRef.current) {
       const canvas = editorRef.current.getImage().toDataURL();
-      console.log(canvas, "CANVAS_____");
       fetch(canvas)
         .then((res) => res.blob())
-        .then((blob) => {
-          console.log(blob, "BLOB___");
-          uploadImageTranscode(blob);
-        });
+        .then((blob) => uploadImageTranscode(blob));
     }
   };
 
-  const handeleClearToDefault = () => {
-    setImgSrc(null);
-  };
+  const handeleClearToDefault = () => setImgSrc(null);
 
   const verifyFile = (files) => {
     if (files && files.length > 0) {
-      const currentFile = files[0];
+      const currentFile = files[0],
+        currentFileType = currentFile.type,
+        currentFileSize = currentFile.size;
 
-      const currentFileType = currentFile.type;
-      const currentFileSize = currentFile.size;
       if (currentFileSize > imageMaxSize) {
         alert("слишком большой размер файла");
         return false;
@@ -1206,25 +1158,21 @@ const Admin = (props) => {
     autosize(document.querySelectorAll("textarea"));
   });
 
+  const hide = (e) => {
+    if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
+      hideSideMenu();
+  };
+
   if (!Number(cookies.origin_id)) {
     return <Redirect to="/login" />;
   } else {
     return (
       <div>
-        <div
-          onClick={(e) => {
-            if (e.target.className !== "SlideSideMenu" && showSlideSideMenu) {
-              hideSideMenu();
-            }
-          }}
-        >
+        <div onClick={(e) => hide(e)}>
           <AdminStyle
             as={animated.div}
             style={animateProps}
-            onClick={(e) => {
-              if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
-                hideSideMenu();
-            }}
+            onClick={(e) => hide(e)}
           >
             <Header
               isShowMenu={isShowMenu}
@@ -1356,9 +1304,9 @@ const Admin = (props) => {
                                 multiple={false}
                                 accept={acceptedFileTypes}
                                 maxSize={imageMaxSize}
-                                onDrop={(acceptedFiles, rejectedFiles) => {
-                                  handleOnDrop(acceptedFiles, rejectedFiles);
-                                }}
+                                onDrop={(acceptedFiles, rejectedFiles) =>
+                                  handleOnDrop(acceptedFiles, rejectedFiles)
+                                }
                               >
                                 {({ getRootProps, getInputProps }) => {
                                   return (
@@ -1929,12 +1877,7 @@ const Admin = (props) => {
                                 Готово
                               </p>
                             </div>
-                            {/* <span
-                            className="closeSidebarBtn"
-                            onClick={() => closeAllSidebar()}
-                          >
-                            &#10006;
-                          </span> */}
+
                             <AdminMenuTitleM>Профиль</AdminMenuTitleM>
 
                             <div
@@ -2871,7 +2814,6 @@ const Admin = (props) => {
                     fontWeight: 500,
                   }}
                   onClick={() => {
-                    // setImgSrc(null);
                     togglePopupUploadFile();
                     onCrop();
                   }}
@@ -2896,16 +2838,7 @@ const Admin = (props) => {
                           className="changePhotoInput previewRef"
                           {...getInputProps()}
                         />
-                        {/* {imgSrc && <p className="changePhoto">Изменить</p>} */}
                       </div>
-                      {/* {imgSrc && (
-                        <span
-                          className="changePhoto"
-                          onClick={handeleClearToDefault}
-                        >
-                          Удалить
-                        </span>
-                      )} */}
                     </section>
                   );
                 }}
