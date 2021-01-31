@@ -35,6 +35,7 @@ import DatePickerPopup from "./DatePickerPopup";
 import GoogleMapPopup from "./GoogleMapPopup";
 import DescriptionPopup from "./DescriptionPopup";
 import UploadFilePopup from "./UploadFilePopup";
+import ChooseTypePopup from "./ChooseTypePopup";
 
 const AdminStyle = styled.div`
   position: relative;
@@ -565,43 +566,6 @@ const Admin = (props) => {
   }, [DATA.alias]);
 
   const descOfCompanyLimit = 300;
-
-  const updateCategory = () => {
-    if (cookies.origin_data) {
-      QUERY(
-        {
-          query: `mutation {
-            updatePlace(
-              input:{
-                id:"${props.match.params.id}"
-                ${
-                  DATA.categories &&
-                  DATA.categories[0] &&
-                  typeOfCompanyId &&
-                  typeOfCompanyId !== DATA.categories[0].id
-                    ? `categories:{
-                    disconnect:"${DATA.categories[0].id}"
-                    connect:"${typeOfCompanyId}"
-                  }`
-                    : typeOfCompanyId
-                    ? `categories:{
-                            connect:"${typeOfCompanyId}"
-                          }`
-                    : `categories:{}`
-                }
-              }
-            ){id}
-          }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          !data.errors ? refreshData() : console.log(data.errors, " ERRORS");
-        })
-        .catch((err) => console.log(err, "  *******ERR"));
-    }
-  };
 
   const updatePlaceData = () => {
     if (cookies.origin_data) {
@@ -2217,122 +2181,20 @@ const Admin = (props) => {
           )}
 
           {showPopupChooseType && (
-            <Popup
-              togglePopup={togglePopupChooseType}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  height: "44px",
-                  borderBottom: "1px solid #ECECEC",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "0 25px",
-                }}
-              >
-                <p
-                  className=""
-                  style={{
-                    letterSpacing: "0.5px",
-                    color: defaultColor,
-                    fontWeight: 500,
-                    fontSize: "18px",
-                  }}
-                  onClick={() => {
-                    setTypeOfCompany(
-                      DATA.categories &&
-                        DATA.categories[0] &&
-                        DATA.categories[0].name
-                    );
-                    setTypeOfCompanyId(
-                      DATA.categories &&
-                        DATA.categories[0] &&
-                        DATA.categories[0].id
-                    );
-                    togglePopupChooseType();
-                  }}
-                >
-                  Отмена
-                </p>
-
-                <p
-                  style={{
-                    letterSpacing: "0.5px",
-                    color: defaultColor,
-                    fontWeight: 500,
-                    fontSize: "18px",
-                  }}
-                  className=""
-                  onClick={() => {
-                    updateCategory();
-                    togglePopupChooseType();
-                  }}
-                >
-                  Готово
-                </p>
-              </div>
-              <AdminMenuTitleM>Тип заведения</AdminMenuTitleM>
-              <div style={{ width: "100%" }}>
-                {!!uniqueCompanyType &&
-                  uniqueCompanyType.map((el, i) => {
-                    return (
-                      <span
-                        className="categoryBtn"
-                        key={i}
-                        style={
-                          ({},
-                          el &&
-                          el.name &&
-                          typeOfCompany &&
-                          typeOfCompany === el.name
-                            ? {
-                                background: defaultColor,
-                                color: "#fff",
-                              }
-                            : !typeOfCompany &&
-                              DATA.categories &&
-                              DATA.categories[0] &&
-                              el &&
-                              el.name &&
-                              DATA.categories[0].name === el.name
-                            ? {
-                                background: defaultColor,
-                                color: "#fff",
-                              }
-                            : {})
-                        }
-                        onClick={() => {
-                          setTypeOfCompany(el.name);
-                          setTypeOfCompanyId(el.id);
-                        }}
-                        onMouseOver={() => setHoveredBtn(el.name)}
-                        onMouseOut={() => setHoveredBtn("")}
-                      >
-                        <span style={{ position: "relative", top: "10px" }}>
-                          {typeOfCompany && typeOfCompany === el.name
-                            ? renderCustomTypeImg(el.slug, true)
-                            : !typeOfCompany &&
-                              DATA.categories &&
-                              DATA.categories[0] &&
-                              DATA.categories[0].name === el.name
-                            ? renderCustomTypeImg(el.slug, true)
-                            : hoveredBtn === el.name
-                            ? renderCustomTypeImg(el.slug, true)
-                            : renderCustomTypeImg(el.slug, false)}
-                        </span>
-
-                        <span style={{ position: "relative", top: "4px" }}>
-                          {el.name}
-                        </span>
-                      </span>
-                    );
-                  })}
-              </div>
-            </Popup>
+            <ChooseTypePopup
+              togglePopupChooseType={togglePopupChooseType}
+              DATA={DATA}
+              setTypeOfCompany={setTypeOfCompany}
+              setTypeOfCompanyId={setTypeOfCompanyId}
+              props={props}
+              typeOfCompanyId={typeOfCompanyId}
+              refreshData={refreshData}
+              uniqueCompanyType={uniqueCompanyType}
+              typeOfCompany={typeOfCompany}
+              setHoveredBtn={setHoveredBtn}
+              renderCustomTypeImg={renderCustomTypeImg}
+              hoveredBtn={hoveredBtn}
+            />
           )}
 
           {showPopupDescription && (

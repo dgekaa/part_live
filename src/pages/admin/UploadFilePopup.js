@@ -6,6 +6,31 @@ import Dropzone from "react-dropzone";
 
 import Popup from "../../components/popup/Popup";
 
+const CancelSave = styled.p`
+    letter-spacing: 0.5px;
+    color: defaultColor;
+    font-size: 16px;
+    font-weight: 500;
+  `,
+  Title = styled.p`
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  `,
+  MobileTimePickerHeader = styled.div`
+    display: none;
+    @media (max-width: 760px) {
+      display: flex;
+      margin-bottom: 31px;
+      height: 44px;
+      border-bottom: 1px solid #ececec;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 25px;
+    }
+  `;
+
 const UploadFilePopup = ({
   togglePopupUploadFile,
   setImgSrc,
@@ -19,13 +44,21 @@ const UploadFilePopup = ({
   const editorRef = useRef(null);
 
   const onCrop = () => {
-    if (editorRef.current) {
-      const canvas = editorRef.current.getImage().toDataURL();
-      fetch(canvas)
-        .then((res) => res.blob())
-        .then((blob) => uploadImageTranscode(blob));
-    }
-  };
+      if (editorRef.current) {
+        const canvas = editorRef.current.getImage().toDataURL();
+        fetch(canvas)
+          .then((res) => res.blob())
+          .then((blob) => uploadImageTranscode(blob));
+      }
+    },
+    cancel = () => {
+      setImgSrc(null);
+      togglePopupUploadFile();
+    },
+    save = () => {
+      togglePopupUploadFile();
+      onCrop();
+    };
 
   return (
     <Popup
@@ -35,55 +68,11 @@ const UploadFilePopup = ({
         height: "100%",
       }}
     >
-      <div
-        className="mobileTimePickerHeader"
-        style={{
-          height: "44px",
-          borderBottom: "1px solid #ECECEC",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 25px",
-        }}
-      >
-        <p
-          style={{
-            letterSpacing: "0.5px",
-            color: defaultColor,
-            fontSize: "16px",
-            fontWeight: 500,
-          }}
-          onClick={() => {
-            setImgSrc(null);
-            togglePopupUploadFile();
-          }}
-        >
-          Отмена
-        </p>
-        <p
-          style={{
-            fontWeight: "bold",
-            fontSize: "14px",
-            letterSpacing: "0.5px",
-            textTransform: "uppercase",
-          }}
-        >
-          {titleInPicker}
-        </p>
-        <p
-          style={{
-            letterSpacing: "0.5px",
-            color: defaultColor,
-            fontSize: "16px",
-            fontWeight: 500,
-          }}
-          onClick={() => {
-            togglePopupUploadFile();
-            onCrop();
-          }}
-        >
-          Готово
-        </p>
-      </div>
+      <MobileTimePickerHeader>
+        <CancelSave onClick={() => cancel()}>Отмена</CancelSave>
+        <Title>{titleInPicker}</Title>
+        <CancelSave onClick={() => save()}>Готово</CancelSave>
+      </MobileTimePickerHeader>
       <CropperMobile imgSrc={imgSrc} editorRef={editorRef} />
       <Dropzone
         multiple={false}
