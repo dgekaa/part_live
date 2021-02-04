@@ -11,7 +11,6 @@ import axios from "axios";
 import CustomImg from "../../components/customImg/CustomImg";
 import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
-import Popup from "../../components/popup/Popup";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import {
@@ -298,7 +297,7 @@ const Admin = (props) => {
   const [typeOfCompany, setTypeOfCompany] = useState("");
   const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
   const [descOfCompany, setDescOfCompany] = useState("");
-
+  const [titleInPicker, setTitleInPicker] = useState("");
   const [isSuccessSave, setIsSuccessSave] = useState(false);
 
   const [cookies] = useCookies([]);
@@ -427,38 +426,29 @@ const Admin = (props) => {
   };
 
   const hideSideMenu = () => {
-    setShowSlideSideMenu(false);
-    document.body.style.overflow = "visible";
-    setIsShowMenu(false);
-  };
-
-  const showSideMenu = () => {
-    setShowSlideSideMenu(true);
-    document.body.style.overflow = "hidden";
-    setIsShowMenu(true);
-  };
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
+    };
 
   window.onresize = function (e) {
     hideSideMenu();
   };
 
-  const [titleInPicker, setTitleInPicker] = useState("");
-
   const togglePopupDatePicker = (whatPickerWillShow) => {
-    setTitleInPicker(whatPickerWillShow);
-    setShowPopapDatePicker(!showPopupDatePicker);
-  };
-
-  const togglePopupGoogleMap = () => setShowPopapGoogleMap(!showPopupGoogleMap);
-
-  const togglePopupDescription = () =>
-    setShowPopapDescription(!showPopupDescription);
-
-  const togglePopupChooseType = () =>
-    setShowPopapChooseType(!showPopupChooseType);
-
-  const togglePopupUploadFile = () =>
-    setShowPopapUploadFile(!showPopupUploadFile);
+      setTitleInPicker(whatPickerWillShow);
+      setShowPopapDatePicker(!showPopupDatePicker);
+    },
+    togglePopupGoogleMap = () => setShowPopapGoogleMap(!showPopupGoogleMap),
+    togglePopupDescription = () =>
+      setShowPopapDescription(!showPopupDescription),
+    togglePopupChooseType = () => setShowPopapChooseType(!showPopupChooseType),
+    togglePopupUploadFile = () => setShowPopapUploadFile(!showPopupUploadFile);
 
   useEffect(() => {
     if (
@@ -1353,7 +1343,6 @@ const Admin = (props) => {
                         </div>
                       );
                     }
-
                     if (el.clicked && i === 2) {
                       return (
                         <div className="workTimeTableWrap">
