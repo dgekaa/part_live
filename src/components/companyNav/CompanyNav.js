@@ -229,9 +229,8 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
         });
       }
     },
-    isClickedAllBtn = () => {
-      return !clickedTypeLocal && !sessionStorage.getItem("filter_type");
-    },
+    isClickedAllBtn = () =>
+      !clickedTypeLocal && !sessionStorage.getItem("filter_type"),
     isClickedTypeBtn = (name) => {
       if (sessionStorage.getItem("filter_type") === name) {
         return true;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 
@@ -69,33 +69,13 @@ const Home = () => {
   const [DATA, setDATA] = useState([]),
     [companyData, setCompanyData] = useState([]),
     [isLoading, setIsLoading] = useState(true),
-    [isLocation, setIsLocation] = useState(false);
-
-  useEffect(() => {
-    QUERY({
-      query: `query {
-        places {
-          id name mobile_stream address description profile_image logo menu actions coordinates disabled
-          streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
-          schedules {id day start_time end_time}
-          categories {id name slug}
-        }
-      }`,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsLoading(false);
-        setCompanyData(data.data.places);
-        setDATA(data.data.places);
-      })
-      .catch((err) => console.log(err, "HOME DATA ERR"));
-
-    sessionStorage.setItem("prevZoom", "");
-    sessionStorage.setItem("prevCenter", "");
-  }, []);
+    [isLocation, setIsLocation] = useState(false),
+    [fetching, setFetching] = useState(true),
+    [first, setFirst] = useState(12);
 
   const clickedType = (type) => {
     if (type) {
+      // нажатие на не все
       const filteredData = DATA.filter((el) => {
         if (el.categories && el.categories[0]) {
           return el.categories[0].name.toUpperCase() === type.toUpperCase();
@@ -103,6 +83,7 @@ const Home = () => {
       });
       setCompanyData(filteredData);
     } else {
+      // нажатие на  все
       setCompanyData(DATA);
     }
   };
@@ -126,20 +107,8 @@ const Home = () => {
       setShowSlideSideMenu(true);
       document.body.style.overflow = "hidden";
       setIsShowMenu(true);
-    };
-
-  useEffect(() => {
-    window.onresize = function (e) {
-      hideSideMenu();
-    };
-  });
-
-  const SwipePageSpring = useSpring({
-    right: isShowMenu ? 200 : 0,
-    config: { duration: 200 },
-  });
-
-  const findLocation = () => {
+    },
+    findLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (pos) => setIsLocation(true),
@@ -154,10 +123,65 @@ const Home = () => {
         hideSideMenu();
     };
 
+  useEffect(() => {
+    window.onresize = (e) => hideSideMenu();
+  });
+
+  const SwipePageSpring = useSpring({
+    right: isShowMenu ? 200 : 0,
+    config: { duration: 200 },
+  });
+
   findLocation();
 
+  const scrollHandler = (e) => {
+    const { scrollHeight, scrollTop } = e.target.documentElement;
+    if (scrollHeight - (scrollTop + window.innerHeight) < 150)
+      setFetching(true);
+  };
+
+  useEffect(() => {
+    document.addEventListener("scroll", scrollHandler);
+    return () => document.removeEventListener("scroll", scrollHandler);
+  }, []);
+
+  useEffect(() => {
+    if (fetching) {
+      setIsLoading(true);
+      QUERY({
+        query: `query {
+          places(first:${first}) {
+            data {
+              id name mobile_stream address description profile_image logo menu actions coordinates disabled
+              streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
+              schedules {id day start_time end_time}
+              categories {id name slug}
+            }
+          }
+        }`,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setIsLoading(false);
+          setCompanyData(data.data.places.data);
+          setDATA(data.data.places.data);
+          setFirst((prev) => (prev += 12));
+          setFetching(false);
+        })
+        .catch((err) => console.log(err, "HOME DATA ERR"));
+
+      sessionStorage.setItem("prevZoom", "");
+      sessionStorage.setItem("prevCenter", "");
+    }
+  }, [fetching]);
+
   return (
-    <div style={{ minHeight: 1 + window.innerHeight }} onClick={(e) => hide(e)}>
+    <div
+      style={{
+        minHeight: 1 + window.innerHeight,
+      }}
+      onClick={(e) => hide(e)}
+    >
       <div>
         <Header
           isShowMenu={isShowMenu}
@@ -189,6 +213,7 @@ const Home = () => {
                 }
               })}
             {!companyData.length && isLoading && <Loader />}
+            {fetching && <Loader />}
             {!companyData.length && !isLoading && (
               <NoOneCompany>Нет заведений</NoOneCompany>
             )}
@@ -203,192 +228,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// =================================================
-// const [isLogin, setIsLogin] = useState(false);
-
-// const requestBody = {
-//   query: `
-//     mutation {
-//       login (input: {
-//           username: "admin@example.com",
-//           password: "password"
-//       }) {
-//         access_token
-//         refresh_token
-//         expires_in
-//         token_type
-//         user {
-//           id
-//           name
-//           email
-//         }
-//       }
-//   }`
-// };
-// useEffect(() => {
-//   if (myContext.token) {
-//     fetch("http://194.87.95.37/graphql", {
-//       method: "POST",
-//       body: JSON.stringify(requestBodyCreateNew),
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: "Bearer " + myContext.token
-//       }
-//     })
-//       .then(res => {
-//         if (res.status !== 200 && res.status !== 201) {
-//           throw new Error("Failed!!!");
-//         }
-//         return res.json();
-//       })
-//       .then(data => {
-//         console.log(data, " DATA ------2");
-//       })
-//       .catch(err => {
-//         console.log(err, "------------- ERRRRRRR");
-//       });
-//   } else {
-//     console.log("ТОКЕНА НЕТ!!!!");
-//   }
-// }, []);
-
-// ЭТО СОРТИРОВКА
-// const getSecondsTime = (year, month, day, hours, minutes) => {
-//   return Number(new Date(year, month, day, hours, minutes).getTime());
-// };
-
-// const current_time = new Date().getTime();
-// const year = new Date().getFullYear(),
-//   month = new Date().getMonth(),
-//   day = new Date().getDate();
-
-// const quickWorkTimeSort = object => {
-//   if (object.length <= 1) {
-//     return object;
-//   } else {
-//     const left = [],
-//       right = [];
-
-//     object.forEach((el, i) => {
-//       const startTime =
-//         +el.work_time[0].split(":")[0] * 3600 +
-//         +el.work_time[0].split(":")[1] * 60;
-//       let endTime =
-//         +el.work_time[1].split(":")[0] * 3600 +
-//         +el.work_time[1].split(":")[1] * 60;
-
-//       // ПОШЕЛ СЛЕДУЮЩИЙ ДЕНЬ (найти подругому)
-//       if (startTime > endTime) {
-//         //ПОЛУЧЕНИЕ СЛЕДУЮЩЕГО ДНЯ В СЕКУНДАХ
-//         const dayNow = new Date(year, month, day);
-//         const nextDay = new Date(dayNow);
-//         nextDay.setDate(dayNow.getDate() + 1);
-//         const fullEndTomorrowTime = nextDay.getTime() + endTime; // ВРЕМЯ КОНЦА РАБОТЫ ЗАВТРАШНИМ ДНЕМ
-
-//         if (
-//           getSecondsTime(
-//             year,
-//             month,
-//             day,
-//             +el.work_time[0].split(":")[0],
-//             +el.work_time[0].split(":")[1]
-//           ) <= Number(current_time) &&
-//           Number(fullEndTomorrowTime) > Number(current_time)
-//         ) {
-//           left.push(el);
-//         } else {
-//           right.push(el);
-//         }
-//       } else {
-//         // ВСЕ ПРОИСХОДИТ В ОДИН ДЕНЬ
-//         if (
-//           getSecondsTime(
-//             year,
-//             month,
-//             day,
-//             +el.work_time[0].split(":")[0],
-//             +el.work_time[0].split(":")[1]
-//           ) <= Number(current_time) &&
-//           getSecondsTime(
-//             year,
-//             month,
-//             day,
-//             +el.work_time[1].split(":")[0],
-//             +el.work_time[1].split(":")[1]
-//           ) > Number(current_time)
-//         ) {
-//           left.push(el);
-//         } else {
-//           right.push(el);
-//         }
-//       }
-//     });
-//     return [...left, ...right];
-//   }
-// };
-
-// const quickStreemTimeSort = object => {
-//   if (object.length <= 1) {
-//     return object;
-//   } else {
-//     const left = [],
-//       right = [];
-
-//     object.forEach((el, i) => {
-//       const startTime =
-//         +el.streem_time[0].split(":")[0] * 3600 +
-//         +el.streem_time[0].split(":")[1] * 60;
-//       let endTime =
-//         +el.streem_time[1].split(":")[0] * 3600 +
-//         +el.streem_time[1].split(":")[1] * 60;
-
-//       // ПОШЕЛ СЛЕДУЮЩИЙ ДЕНЬ (найти подругому)
-//       if (startTime > endTime) {
-//         //ПОЛУЧЕНИЕ СЛЕДУЮЩЕГО ДНЯ В СЕКУНДАХ
-//         const dayNow = new Date(year, month, day);
-//         const nextDay = new Date(dayNow);
-//         nextDay.setDate(dayNow.getDate() + 1);
-//         const fullEndTomorrowTime = nextDay.getTime() + endTime; // ВРЕМЯ КОНЦА РАБОТЫ ЗАВТРАШНИМ ДНЕМ
-
-//         if (
-//           getSecondsTime(
-//             year,
-//             month,
-//             day,
-//             +el.streem_time[0].split(":")[0],
-//             +el.streem_time[0].split(":")[1]
-//           ) <= Number(current_time) &&
-//           Number(fullEndTomorrowTime) > Number(current_time)
-//         ) {
-//           left.push(el);
-//         } else {
-//           right.push(el);
-//         }
-//       } else {
-//         // ВСЕ ПРОИСХОДИТ В ОДИН ДЕНЬ
-//         if (
-//           getSecondsTime(
-//             year,
-//             month,
-//             day,
-//             +el.streem_time[0].split(":")[0],
-//             +el.streem_time[0].split(":")[1]
-//           ) <= Number(current_time) &&
-//           getSecondsTime(
-//             year,
-//             month,
-//             day,
-//             +el.streem_time[1].split(":")[0],
-//             +el.streem_time[1].split(":")[1]
-//           ) > Number(current_time)
-//         ) {
-//           left.push(el);
-//         } else {
-//           right.push(el);
-//         }
-//       }
-//     });
-//     return [...left, ...right];
-//   }
-// };
