@@ -12,216 +12,202 @@ import { defaultColor } from "../../constants";
 import Popup from "../../components/popup/Popup";
 
 const GoBackBtnD = styled(Link)`
-  font-size: 16px;
-  display: block;
-  font-weight: normal;
-  height: 100px;
-  width: 150px;
-  line-height: 100px;
-  &:hover {
-    color: ${defaultColor};
-  }
-  @media (max-width: 760px) {
-    display: none;
-  }
-`;
-
-const GoBackBtnArrowD = styled.span`
-  font-size: 18px;
-  padding-right: 5px;
-`;
-
-const EditCompanyContent = styled.div`
-  width: 1000px;
-  margin: 0 auto;
-  @media (max-width: 760px) {
-    width: 100vw;
-    overflow: hidden;
-    margin: 0;
-    position: relative;
+    font-size: 16px;
     display: block;
-    padding-top: 60px;
-  }
-`;
-
-const HeaderText = styled.h3`
-  font-weight: 700;
-  font-size: 24px;
-  margin-bottom: 40px;
-  @media (max-width: 760px) {
-    width: 100vw;
-    padding: 5px;
-    font-weight: 700;
+    font-weight: normal;
+    height: 100px;
+    width: 150px;
+    line-height: 100px;
+    &:hover {
+      color: ${defaultColor};
+    }
+    @media (max-width: 760px) {
+      display: none;
+    }
+  `,
+  GoBackBtnArrowD = styled.span`
     font-size: 18px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-`;
-
-const NewCompany = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${defaultColor};
-  cursor: pointer;
-  color: #fff;
-  width: 240px;
-  height: 40px;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 20px;
-  &:hover {
-    opacity: 0.7;
-  }
-  @media (max-width: 760px) {
-    margin: 20px auto;
-  }
-`;
-
-const Table = styled.table`
-  width: 80%;
-  border-bottom: 1px solid #eaeaea;
-  @media (max-width: 760px) {
+    padding-right: 5px;
+  `,
+  EditCompanyContent = styled.div`
+    width: 1000px;
+    margin: 0 auto;
+    @media (max-width: 760px) {
+      width: 100vw;
+      overflow: hidden;
+      margin: 0;
+      position: relative;
+      display: block;
+      padding-top: 60px;
+    }
+  `,
+  HeaderText = styled.h3`
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 40px;
+    @media (max-width: 760px) {
+      width: 100vw;
+      padding: 5px;
+      font-weight: 700;
+      font-size: 18px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+  `,
+  NewCompany = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${defaultColor};
+    cursor: pointer;
+    color: #fff;
+    width: 240px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 20px;
+    &:hover {
+      opacity: 0.7;
+    }
+    @media (max-width: 760px) {
+      margin: 20px auto;
+    }
+  `,
+  Table = styled.table`
+    width: 80%;
+    border-bottom: 1px solid #eaeaea;
+    @media (max-width: 760px) {
+      display: flex;
+      flex: 1;
+      width: 100vw;
+    }
+  `,
+  Tr = styled.tr`
+    border-top: 1px solid #eaeaea;
+    display: flex;
+    @media (max-width: 760px) {
+      display: flex;
+      width: 100vw;
+      border-bottom: 1px solid #eaeaea;
+      padding: 0 15px;
+    }
+  `,
+  Td = styled.td`
+    padding: 4px;
     display: flex;
     flex: 1;
-    width: 100vw;
-  }
-`;
-
-const Tr = styled.tr`
-  border-top: 1px solid #eaeaea;
-  display: flex;
-  @media (max-width: 760px) {
-    display: flex;
-    width: 100vw;
-    border-bottom: 1px solid #eaeaea;
-    padding: 0 15px;
-  }
-`;
-
-const Td = styled.td`
-  padding: 4px;
-  display: flex;
-  flex: 1;
-  &:first-of-type {
-    flex: 1.5;
-  }
-  &:nth-child(2) {
-    font-weight: 400;
-    font-size: 18px;
-  }
-  &:nth-child(3) {
-    font-weight: 400;
-    font-size: 18px;
-    color: #aeaeae;
-  }
-  &:nth-child(4) {
-    font-weight: 500;
-    font-size: 18px;
-    color: ${defaultColor};
-  }
-  @media (max-width: 760px) {
-    display: flex;
-    height: 50px;
-    line-height: 45px;
-    font-weight: 700;
-    display: inline-block;
-    &:nth-child(2) {
-      white-space: nowrap;
-      overflow: hidden;
-      -o-text-overflow: ellipsis;
-      text-overflow: ellipsis;
-      display: flex;
-      flex: 2 !important;
+    &:first-of-type {
+      flex: 1.5;
     }
-
     &:nth-child(2) {
-      display: flex;
-      text-transform: capitalize;
-      justify-content: center;
-      font-weight: 700;
-      flex: 1.3 !important;
+      font-weight: 400;
+      font-size: 18px;
     }
-
     &:nth-child(3) {
-      display: none;
-      justify-content: center;
-      flex: 1.3 !important;
-      font-weight: 700;
+      font-weight: 400;
+      font-size: 18px;
+      color: #aeaeae;
     }
-  }
-`;
+    &:nth-child(4) {
+      font-weight: 500;
+      font-size: 18px;
+      color: ${defaultColor};
+    }
+    @media (max-width: 760px) {
+      display: flex;
+      height: 50px;
+      line-height: 45px;
+      font-weight: 700;
+      display: inline-block;
+      &:nth-child(2) {
+        white-space: nowrap;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        display: flex;
+        flex: 2 !important;
+      }
 
-const TdDelete = styled.td`
-  width: 30px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${defaultColor};
-  transition: 0.3s ease color;
-  font-weight: 400;
-  font-size: 22px;
-  &:hover {
-    color: #000;
-  }
-`;
+      &:nth-child(2) {
+        display: flex;
+        text-transform: capitalize;
+        justify-content: center;
+        font-weight: 700;
+        flex: 1.3 !important;
+      }
 
-const TdDisable = styled(Td)`
-  cursor: pointer;
-  font-weight: 500;
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const NameLink = styled(Link)`
-  display: block;
-  width: 100%;
-  transition: 0.3s ease color;
-  &:hover {
+      &:nth-child(3) {
+        display: none;
+        justify-content: center;
+        flex: 1.3 !important;
+        font-weight: 700;
+      }
+    }
+  `,
+  TdDelete = styled.td`
+    width: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: ${defaultColor};
-  }
-`;
+    transition: 0.3s ease color;
+    font-weight: 400;
+    font-size: 22px;
+    &:hover {
+      color: #000;
+    }
+  `,
+  TdDisable = styled(Td)`
+    cursor: pointer;
+    font-weight: 500;
+    &:hover {
+      opacity: 0.7;
+    }
+  `,
+  NameLink = styled(Link)`
+    display: block;
+    width: 100%;
+    transition: 0.3s ease color;
+    &:hover {
+      color: ${defaultColor};
+    }
+  `,
+  PopupQuestion = styled.p`
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+  `,
+  PopupBtnsWrap = styled.div`
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  `,
+  Yes = styled.div`
+    display: flex;
+    align-items: center;
+    width: 120px;
+    justify-content: center;
+    height: 40px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 400;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    &:hover {
+      opacity: 0.7;
+    }
 
-const PopupQuestion = styled.p`
-  font-size: 18px;
-  font-weight: 500;
-  text-align: center;
-`;
-
-const PopupBtnsWrap = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
-`;
-
-const Yes = styled.div`
-  display: flex;
-  align-items: center;
-  width: 120px;
-  justify-content: center;
-  height: 40px;
-  border-radius: 5px;
-  color: #fff;
-  font-weight: 400;
-  cursor: pointer;
-  font-size: 16px;
-  text-transform: uppercase;
-  &:hover {
-    opacity: 0.7;
-  }
-
-  background-color: ${defaultColor};
-`;
-
-const No = styled(Yes)`
-  background-color: #fff;
-  border: 2px solid ${defaultColor};
-  color: #000;
-`;
+    background-color: ${defaultColor};
+  `,
+  No = styled(Yes)`
+    background-color: #fff;
+    border: 2px solid ${defaultColor};
+    color: #000;
+  `;
 
 const EditCompany = () => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
@@ -265,14 +251,14 @@ const EditCompany = () => {
   const refreshData = () => {
     QUERY({
       query: `query {
-            places {id name alias disabled categories{name slug} streams{url preview}}
+            places(first: 200) { data {id name alias disabled categories{name slug} streams{url preview} }}
           }`,
     })
       .then((res) => res.json())
       .then((data) => {
         if (!data.errors) {
           setIsLoading(false);
-          setPlaces(data.data.places);
+          setPlaces(data.data.places.data);
         } else {
           console.log(data.errors, "EDIT ERROR");
         }
@@ -372,7 +358,7 @@ const EditCompany = () => {
       if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
         hideSideMenu();
     },
-    deleteOne = ({ name, id }) => {
+    deleteOne = (name, id) => {
       togglePopupIsDelete();
       setClickedDeleteBtnName(name);
       setClickedDeleteBtnId(id);

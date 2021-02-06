@@ -31,273 +31,254 @@ const createMapOptions = () => {
 };
 
 const NavContainerMap = styled.div`
-  position: relative;
-  display: flex;
-  width: 1000px;
-  margin: 0 auto;
-  justify-content: space-between;
-  top: 50px;
-  @media (max-width: 760px) {
-    justify-content: center;
-  }
-`;
-
-const MapContainer = styled.div`
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  @media (max-width: 760px) {
-    position: fixed;
-    top: 105px;
+    position: relative;
+    display: flex;
+    width: 1000px;
+    margin: 0 auto;
+    justify-content: space-between;
+    top: 50px;
+    @media (max-width: 760px) {
+      justify-content: center;
+    }
+  `,
+  MapContainer = styled.div`
+    position: absolute;
+    top: 0;
     width: 100%;
-    height: calc(100% - 140px);
-  }
-`;
-
-const YouAreHere = styled.p`
-  display: flex;
-  background: rgba(0, 0, 0, 0.3);
-  font-weight: bold;
-  border-radius: 5px;
-  letter-spacing: 1px;
-  width: 80px;
-  height: 25px;
-  color: #fff;
-  position: relative;
-  left: -25px;
-  bottom: 10px;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: 0.3s ease all;
-  &::after {
+    height: 100vh;
+    @media (max-width: 760px) {
+      position: fixed;
+      top: 105px;
+      width: 100%;
+      height: calc(100% - 140px);
+    }
+  `,
+  YouAreHere = styled.p`
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    width: 80px;
+    height: 25px;
+    color: #fff;
+    position: relative;
+    left: -25px;
+    bottom: 10px;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: 0.3s ease all;
+    &::after {
+      width: 0;
+      height: 0;
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      border: 5px solid transparent;
+      border-top-color: rgba(0, 0, 0, 0.3);
+      border-bottom: 0;
+    }
+  `,
+  ClusterMarker = styled.div`
+    width: 36px;
+    height: 36px;
+    background: ${defaultColor};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+  `,
+  MarkerArrow = styled.div`
     width: 0;
     height: 0;
-    content: "";
-    position: absolute;
-    bottom: -5px;
-    border: 5px solid transparent;
-    border-top-color: rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+    border: 10px solid transparent;
+    border-top-color: #fff;
     border-bottom: 0;
-  }
-`;
-
-const ClusterMarker = styled.div`
-  width: 36px;
-  height: 36px;
-  background: ${defaultColor};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  font-weight: 700;
-  font-size: 16px;
-  color: #ffffff;
-`;
-
-const MarkerArrow = styled.div`
-  width: 0;
-  height: 0;
-  margin: 0 auto;
-  border: 10px solid transparent;
-  border-top-color: #fff;
-  border-bottom: 0;
-  position: absolute;
-  bottom: -30px;
-  left: 15px;
-  @media (max-width: 760px) {
-    bottom: -10px;
-    left: 0px;
-  }
-`;
-
-const MarkerWrapp = styled.div`
-  width: 150px;
-  height: 150px;
-  background-color: #fff;
-  overflow: hidden;
-  border-radius: 10px;
-  position: relative;
-  bottom: 130px;
-  right: 50px;
-  transition: 0.3s ease opacity;
-  &:hover {
-    opacity: 0.9;
-  }
-  @media (max-width: 760px) {
-    width: 120px;
-    height: 130px;
-  }
-`;
-
-const MarkerInner = styled.div`
-  overflow: hidden;
-  display: flex;
-  border-radius: 10px 10px 0 0;
-  flex: 1;
-  align-items: flex-end;
-  @media (max-width: 760px) {
+    position: absolute;
+    bottom: -30px;
+    left: 15px;
+    @media (max-width: 760px) {
+      bottom: -10px;
+      left: 0px;
+    }
+  `,
+  MarkerWrapp = styled.div`
+    width: 150px;
+    height: 150px;
+    background-color: #fff;
+    overflow: hidden;
     border-radius: 10px;
-  }
-`;
-
-const CustomImgStyle = styled(CustomImg)``;
-
-const PreviewBlock = styled.div`
-  object-fit: cover;
-  -webkit-transition: 0.2s ease all;
-  -o-transition: 0.2s ease all;
-  transition: 0.2s ease all;
-  height: 95px;
-  display: flex;
-  padding-bottom: 26px;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  text-align: center;
-  @media (max-width: 760px) {
-    height: 90px;
-  }
-`;
-
-const TranslationBlock = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 95px;
-  width: 150px;
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
-  background-color: #000;
-  @media (max-width: 760px) {
-    height: 90px;
-    width: 120px;
-    border-radius: 5px;
-  }
-`;
-
-const NoTranslation = styled.p`
-  color: #eee;
-  padding: 3px;
-  background-color: #000;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 150px;
-  height: 95px;
-  display: flex;
-  background-image: url(${({ bg }) => bg});
-  background-size: cover;
-  background-position: center;
-  @media (max-width: 760px) {
-    height: 90px;
+    position: relative;
+    bottom: 130px;
+    right: 50px;
+    transition: 0.3s ease opacity;
+    &:hover {
+      opacity: 0.9;
+    }
+    @media (max-width: 760px) {
+      width: 120px;
+      height: 130px;
+    }
+  `,
+  MarkerInner = styled.div`
+    overflow: hidden;
+    display: flex;
+    border-radius: 10px 10px 0 0;
+    flex: 1;
+    align-items: flex-end;
+    @media (max-width: 760px) {
+      border-radius: 10px;
+    }
+  `,
+  CustomImgStyle = styled(CustomImg)``,
+  PreviewBlock = styled.div`
+    object-fit: cover;
+    -webkit-transition: 0.2s ease all;
+    -o-transition: 0.2s ease all;
+    transition: 0.2s ease all;
+    height: 95px;
+    display: flex;
+    padding-bottom: 26px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
     text-align: center;
-    width: 120px;
-  }
-`;
-
-const TransparentBg = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-self: center;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-`;
-
-const MarkerDesc = styled.p`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  height: 55px;
-  padding: 8px;
-  padding-top: 6px;
-  padding-right: 6px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  @media (max-width: 760px) {
-    height: 40px;
-    padding: 4px;
-  }
-`;
-
-const MarkerName = styled.p`
-  color: #000;
-  font-weight: 500;
-  font-size: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 19px;
-  margin-left: 5px;
-  @media (max-width: 760px) {
+    @media (max-width: 760px) {
+      height: 90px;
+    }
+  `,
+  TranslationBlock = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 95px;
+    width: 150px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    background-color: #000;
+    @media (max-width: 760px) {
+      height: 90px;
+      width: 120px;
+      border-radius: 5px;
+    }
+  `,
+  NoTranslation = styled.p`
+    color: #eee;
+    padding: 3px;
+    background-color: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 95px;
+    display: flex;
+    background-image: url(${({ bg }) => bg});
+    background-size: cover;
+    background-position: center;
+    @media (max-width: 760px) {
+      height: 90px;
+      text-align: center;
+      width: 120px;
+    }
+  `,
+  TransparentBg = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-self: center;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+  `,
+  MarkerDesc = styled.p`
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 55px;
+    padding: 8px;
+    padding-top: 6px;
+    padding-right: 6px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    @media (max-width: 760px) {
+      height: 40px;
+      padding: 4px;
+    }
+  `,
+  MarkerName = styled.p`
+    color: #000;
+    font-weight: 500;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 19px;
+    margin-left: 5px;
+    @media (max-width: 760px) {
+      font-size: 12px;
+    }
+  `,
+  BottomMarkerText = styled.p`
+    display: flex;
+    justify-content: space-between;
+    line-height: 16px;
+    padding: 2px;
+  `,
+  IsOpened = styled.span`
+    color: #000;
     font-size: 12px;
-  }
-`;
+    line-height: 13px;
+    font-weight: normal;
+    line-height: 9px;
+    @media (max-width: 760px) {
+      color: #909090;
+      font-size: 11px;
+    }
+  `,
+  Row = styled.div`
+    display: flex;
+  `,
+  Circle = styled.div`
+    width: 7px;
+    height: 7px;
+    background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
+    border-radius: 50%;
+    margin-right: 5px;
+    margin-left: 3px;
+    @media (max-width: 760px) {
+      margin-top: 3px;
+      width: 5px;
+      height: 5px;
+    }
+  `,
+  Opened = styled.span`
+    display: inline-block;
 
-const BottomMarkerText = styled.p`
-  display: flex;
-  justify-content: space-between;
-  line-height: 16px;
-  padding: 2px;
-`;
-
-const IsOpened = styled.span`
-  color: #000;
-  font-size: 12px;
-  line-height: 13px;
-  font-weight: normal;
-  line-height: 9px;
-  @media (max-width: 760px) {
-    color: #909090;
-    font-size: 11px;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-`;
-
-const Circle = styled.div`
-  width: 7px;
-  height: 7px;
-  background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
-  border-radius: 50%;
-  margin-right: 5px;
-  margin-left: 3px;
-  @media (max-width: 760px) {
-    margin-top: 3px;
-    width: 5px;
-    height: 5px;
-  }
-`;
-
-const Opened = styled.span`
-  display: inline-block;
-
-  @media (max-width: 760px) {
-    display: none;
-  }
-`;
+    @media (max-width: 760px) {
+      display: none;
+    }
+  `;
 
 const MapComponent = (props) => {
   const mapRef = useRef();
 
-  const [DATA, setDATA] = useState([]),
-    [markers, setMarkers] = useState([]),
+  const [markers, setMarkers] = useState([]),
     [zoom, setZoom] = useState(12),
     [bounds, setBounds] = useState(null),
     [isLoading, setIsLoading] = useState(true),
@@ -305,7 +286,10 @@ const MapComponent = (props) => {
     [referrer, setReferrer] = useState(""),
     [currentCenterOfMap, setCurrentCenterOfMap] = useState(),
     [defaultCenter, setDefaultCenter] = useState(),
-    [gMapDefaultCenter, setGMapDefaultCenter] = useState();
+    [gMapDefaultCenter, setGMapDefaultCenter] = useState(),
+    [typeId, setTypeId] = useState(""),
+    [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false);
 
   const dateNow = new Date()
     .toLocaleDateString()
@@ -313,31 +297,37 @@ const MapComponent = (props) => {
     .reverse()
     .join("-");
 
-  useEffect(() => {
+  const loadContent = (id) => {
+    const searchString =
+      id || sessionStorage.getItem("filter_id")
+        ? `hasCategories: { AND: [{ column: ID, operator: EQ, value:${
+            id || sessionStorage.getItem("filter_id")
+          }}] }, first:${180}`
+        : `first:${180}`;
+
     QUERY({
       query: `query{
-          places{id name coordinates profile_image disabled mobile_stream
-          streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
-          schedules{id day start_time end_time}
-          categories{id name slug}}
-        }`,
+            places(${searchString}) {
+                data{
+                  id name coordinates profile_image disabled mobile_stream
+                  streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
+                  schedules{id day start_time end_time}
+                  categories{id name slug}
+                }
+              }
+            }`,
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.data.places, "---data.data.places");
         setIsLoading(false);
-        setMarkers(data.data.places);
-        setDATA(data.data.places);
+        setMarkers(data.data.places.data);
       })
       .catch((err) => console.log(err, "MAP  ERR"));
-  }, []);
+  };
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("filter_type") && !isLoading && DATA.length) {
-  //     const filterName = sessionStorage.getItem("filter_id");
-  //     clickedType(filterName);
-  //   }
-  // }, [DATA]);
+  useEffect(() => {
+    loadContent();
+  }, []);
 
   const points = markers
       .filter((el) => !el.disabled)
@@ -369,21 +359,12 @@ const MapComponent = (props) => {
       },
     });
 
-  const clickedType = (type) => {
-    if (type) {
-      const filteredData = DATA.filter((el) => {
-        if (el.categories && el.categories[0]) {
-          return el.categories[0].name.toUpperCase() === type.toUpperCase();
-        }
-      });
-      setMarkers(filteredData);
-    } else {
-      setMarkers(DATA);
+  const clickedType = (id) => {
+    setTypeId(id);
+    if (typeId !== id) {
+      id ? loadContent(id) : loadContent("");
     }
   };
-
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
-    [isShowMenu, setIsShowMenu] = useState(false);
 
   const hideSideMenu = () => {
       setShowSlideSideMenu(false);
