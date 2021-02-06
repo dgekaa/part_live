@@ -278,6 +278,7 @@ const EditCompany = () => {
   });
 
   const createNewCompany = () => {
+      setIsLoading(true);
       QUERY(
         {
           query: `mutation {
@@ -298,6 +299,7 @@ const EditCompany = () => {
       )
         .then((res) => res.json())
         .then((data) => {
+          setIsLoading(false);
           if (!data.errors) {
             console.log(data, "____ID____");
             refreshData();
@@ -309,6 +311,7 @@ const EditCompany = () => {
         .catch((err) => console.log(err, "EDIT ERROR"));
     },
     deleteCompany = (id) => {
+      setIsLoading(true);
       QUERY(
         {
           query: `mutation {
@@ -321,6 +324,8 @@ const EditCompany = () => {
       )
         .then((res) => res.json())
         .then((data) => {
+          setIsLoading(false);
+
           if (!data.errors) {
             console.log(data, "____ID____");
             refreshData();
@@ -379,48 +384,48 @@ const EditCompany = () => {
           showSlideSideMenu={showSlideSideMenu}
           showSideMenu={showSideMenu}
         />
-        {!isLoading && (
-          <EditCompanyContent as={animated.div} style={SwipePageSpring}>
-            <GoBackBtnD to="/">
-              <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
-              На главную
-            </GoBackBtnD>
 
-            <HeaderText>СПИСОК ЗАВЕДЕНИЙ</HeaderText>
+        <EditCompanyContent as={animated.div} style={SwipePageSpring}>
+          <GoBackBtnD to="/">
+            <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
+            На главную
+          </GoBackBtnD>
 
-            <Table>
-              <tbody>
-                {places &&
-                  places.length &&
-                  places.map(({ id, name, alias, categories, disabled }) => {
-                    return (
-                      <Tr key={id}>
-                        <TdDelete onClick={() => deleteOne(name, id)}>
-                          &#215;
-                        </TdDelete>
-                        <Td>
-                          <NameLink to={`/admin/${id}`}>{name}</NameLink>
-                        </Td>
-                        <Td>{alias && alias.toLowerCase()}</Td>
-                        <Td>
-                          {categories[0] &&
-                            categories[0].name &&
-                            categories[0].name.toLowerCase()}
-                        </Td>
+          <HeaderText>СПИСОК ЗАВЕДЕНИЙ</HeaderText>
 
-                        <TdDisable onClick={() => toggleDisabled(id, disabled)}>
-                          {disabled ? "Выкл." : "Вкл."}
-                        </TdDisable>
-                      </Tr>
-                    );
-                  })}
-              </tbody>
-            </Table>
-            <NewCompany onClick={() => createNewCompany()}>
-              Создать заведение
-            </NewCompany>
-          </EditCompanyContent>
-        )}
+          <Table>
+            <tbody>
+              {!!places &&
+                !!places.length &&
+                places.map(({ id, name, alias, categories, disabled }) => {
+                  return (
+                    <Tr key={id}>
+                      <TdDelete onClick={() => deleteOne(name, id)}>
+                        &#215;
+                      </TdDelete>
+                      <Td>
+                        <NameLink to={`/admin/${id}`}>{name}</NameLink>
+                      </Td>
+                      <Td>{alias && alias.toLowerCase()}</Td>
+                      <Td>
+                        {categories[0] &&
+                          categories[0].name &&
+                          categories[0].name.toLowerCase()}
+                      </Td>
+
+                      <TdDisable onClick={() => toggleDisabled(id, disabled)}>
+                        {disabled ? "Выкл." : "Вкл."}
+                      </TdDisable>
+                    </Tr>
+                  );
+                })}
+            </tbody>
+          </Table>
+          <NewCompany onClick={() => createNewCompany()}>
+            Создать заведение
+          </NewCompany>
+        </EditCompanyContent>
+
         {isLoading && <Loader />}
         <SlideSideMenu isShowMenu={isShowMenu} />
         {showPopupIsDelete && (
