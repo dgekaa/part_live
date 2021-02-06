@@ -276,14 +276,16 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
     },
     btnClick = (e, el) => {
       if (e && el) {
-        clickedType(el.name);
-        setClickedTypeLocal(el.name);
         sessionStorage.setItem("filter_type", el.name);
+        sessionStorage.setItem("filter_id", el.id);
+        clickedType(el.id);
+        setClickedTypeLocal(el.name);
         scrollBtnToCenter(e);
       } else {
+        sessionStorage.setItem("filter_type", "");
+        sessionStorage.setItem("filter_id", "");
         clickedType();
         setClickedTypeLocal();
-        sessionStorage.setItem("filter_type", "");
         scrollAllBtnToCenter();
       }
     };

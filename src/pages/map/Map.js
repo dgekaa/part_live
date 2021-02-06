@@ -332,12 +332,12 @@ const MapComponent = (props) => {
       .catch((err) => console.log(err, "MAP  ERR"));
   }, []);
 
-  useEffect(() => {
-    if (sessionStorage.getItem("filter_type") && !isLoading && DATA.length) {
-      const filterName = sessionStorage.getItem("filter_type");
-      clickedType(filterName);
-    }
-  }, [DATA]);
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("filter_type") && !isLoading && DATA.length) {
+  //     const filterName = sessionStorage.getItem("filter_id");
+  //     clickedType(filterName);
+  //   }
+  // }, [DATA]);
 
   const points = markers
       .filter((el) => !el.disabled)

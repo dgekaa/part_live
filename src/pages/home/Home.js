@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 
@@ -11,6 +11,7 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
+import { has } from "object-path";
 
 const HomeContentWrap = styled.div`
   padding-top: 50px;
@@ -66,34 +67,23 @@ const NoOneCompany = styled.div`
 `;
 
 const Home = () => {
+  const howMachLoad = 12;
+
   const [DATA, setDATA] = useState([]),
-    [companyData, setCompanyData] = useState([]),
     [isLoading, setIsLoading] = useState(true),
     [isLocation, setIsLocation] = useState(false),
-    [fetching, setFetching] = useState(true),
-    [first, setFirst] = useState(12);
+    [first, setFirst] = useState(howMachLoad),
+    [typeId, setTypeId] = useState(""),
+    [hasMorePages, setHasMorePages] = useState(true);
 
-  const clickedType = (type) => {
-    if (type) {
-      // нажатие на не все
-      const filteredData = DATA.filter((el) => {
-        if (el.categories && el.categories[0]) {
-          return el.categories[0].name.toUpperCase() === type.toUpperCase();
-        }
-      });
-      setCompanyData(filteredData);
-    } else {
-      // нажатие на  все
-      setCompanyData(DATA);
+  const clickedType = (id) => {
+    setTypeId(id);
+    setFirst(howMachLoad);
+    setHasMorePages(true);
+    if (typeId !== id) {
+      id ? loadContent(id, howMachLoad) : loadContent("", howMachLoad);
     }
   };
-
-  useEffect(() => {
-    if (sessionStorage.getItem("filter_type") && !isLoading && DATA.length) {
-      const filterName = sessionStorage.getItem("filter_type");
-      clickedType(filterName);
-    }
-  }, [DATA]);
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
@@ -121,6 +111,36 @@ const Home = () => {
     hide = (e) => {
       if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
         hideSideMenu();
+    },
+    loadContent = (id, isFirst) => {
+      const searchString =
+        id || sessionStorage.getItem("filter_id")
+          ? `hasCategories: { AND: [{ column: ID, operator: EQ, value:${
+              id || sessionStorage.getItem("filter_id")
+            }}] }, first:${isFirst || first}`
+          : `first:${isFirst || first}`;
+
+      QUERY({
+        query: `query {
+          places(${searchString}) {
+            paginatorInfo{hasMorePages}
+            data {
+              id name mobile_stream address description profile_image logo menu actions coordinates disabled
+              streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
+              schedules {id day start_time end_time}
+              categories {id name slug}
+            }
+          }
+        }`,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setIsLoading(false);
+          setDATA(data.data.places.data);
+          setFirst((prev) => (prev += howMachLoad));
+          setHasMorePages(data.data.places.paginatorInfo.hasMorePages);
+        })
+        .catch((err) => console.log(err, "HOME DATA ERR"));
     };
 
   useEffect(() => {
@@ -135,45 +155,24 @@ const Home = () => {
   findLocation();
 
   const scrollHandler = (e) => {
-    const { scrollHeight, scrollTop } = e.target.documentElement;
-    if (scrollHeight - (scrollTop + window.innerHeight) < 150)
-      setFetching(true);
+    if (hasMorePages && !isLoading) {
+      const { scrollHeight, scrollTop } = e.target.documentElement;
+      if (scrollHeight - (scrollTop + window.innerHeight) < 200) {
+        setIsLoading(true);
+      }
+    }
   };
 
   useEffect(() => {
-    document.addEventListener("scroll", scrollHandler);
-    return () => document.removeEventListener("scroll", scrollHandler);
-  }, []);
-
-  useEffect(() => {
-    if (fetching) {
-      setIsLoading(true);
-      QUERY({
-        query: `query {
-          places(first:${first}) {
-            data {
-              id name mobile_stream address description profile_image logo menu actions coordinates disabled
-              streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
-              schedules {id day start_time end_time}
-              categories {id name slug}
-            }
-          }
-        }`,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setIsLoading(false);
-          setCompanyData(data.data.places.data);
-          setDATA(data.data.places.data);
-          setFirst((prev) => (prev += 12));
-          setFetching(false);
-        })
-        .catch((err) => console.log(err, "HOME DATA ERR"));
-
+    if (isLoading && hasMorePages) {
+      loadContent();
       sessionStorage.setItem("prevZoom", "");
       sessionStorage.setItem("prevCenter", "");
     }
-  }, [fetching]);
+
+    document.addEventListener("scroll", scrollHandler);
+    return () => document.removeEventListener("scroll", scrollHandler);
+  }, [hasMorePages, isLoading]);
 
   return (
     <div
@@ -195,13 +194,13 @@ const Home = () => {
             <CompanyNav
               currentPage="/"
               toSlideFixedNav={isShowMenu}
-              clickedType={(type) => clickedType(type)}
+              clickedType={(id) => clickedType(id)}
             />
             <TypeNav />
           </NavContainer>
           <HomeContent>
-            {!!companyData.length &&
-              companyData.map((el, i) => {
+            {!!DATA.length &&
+              DATA.map((el, i) => {
                 if (!el.disabled) {
                   return (
                     <SmallCompanyBlock
@@ -212,9 +211,8 @@ const Home = () => {
                   );
                 }
               })}
-            {!companyData.length && isLoading && <Loader />}
-            {fetching && <Loader />}
-            {!companyData.length && !isLoading && (
+            {isLoading && <Loader />}
+            {!DATA.length && !isLoading && (
               <NoOneCompany>Нет заведений</NoOneCompany>
             )}
           </HomeContent>
