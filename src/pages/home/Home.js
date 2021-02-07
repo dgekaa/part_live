@@ -200,17 +200,9 @@ const Home = () => {
           </NavContainer>
           <HomeContent>
             {!!DATA.length &&
-              DATA.map((el, i) => {
-                if (!el.disabled) {
-                  return (
-                    <SmallCompanyBlock
-                      item={el}
-                      key={i}
-                      isLocation={isLocation}
-                    />
-                  );
-                }
-              })}
+              DATA.map((el, i) => (
+                <SmallCompanyBlock item={el} key={i} isLocation={isLocation} />
+              ))}
             {isLoading && <Loader />}
             {!DATA.length && !isLoading && (
               <NoOneCompany>Нет заведений</NoOneCompany>

@@ -559,7 +559,7 @@ const Admin = (props) => {
                   }`
                     : typeOfCompanyId
                     ? `categories:{
-                      connect:"${typeOfCompanyId}"
+                      disconnect:"${typeOfCompanyId}"
                     }`
                     : `categories:{
                       

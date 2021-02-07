@@ -448,6 +448,7 @@ const MapComponent = (props) => {
         hideSideMenu();
     },
     onChangeMap = (zoom, bounds, center) => {
+      console.log(zoom, bounds, center);
       setCurrentCenterOfMap(center);
       setZoom(zoom);
       setBounds([bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat]);
@@ -470,6 +471,11 @@ const MapComponent = (props) => {
         cluster.item.id
       );
     };
+
+  // ne: {lat: 53.905449424270586, lng: 27.571740348739354} северо-восток
+  // nw: {lat: 53.905449424270586, lng: 27.55963822166416} северо-запад
+  // se: {lat: 53.90251657841472, lng: 27.571740348739354} юго-восток
+  // sw: {lat: 53.90251657841472, lng: 27.55963822166416} юго-запад
 
   return (
     <div onClick={(e) => hide(e)}>
