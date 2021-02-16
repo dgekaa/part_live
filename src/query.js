@@ -7,6 +7,7 @@ const QUERY = (body, origin_data) => {
       mode: "cors",
       body: JSON.stringify(body),
       headers: {
+        "Access-Control-Allow-Origin": "https://backend.partylive.by",
         "Content-Type": "application/json",
         Authorization: origin_data ? "Bearer " + origin_data : "",
       },

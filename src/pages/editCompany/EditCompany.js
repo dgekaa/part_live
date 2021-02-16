@@ -251,7 +251,7 @@ const EditCompany = () => {
   const refreshData = () => {
     QUERY({
       query: `query {
-            places(first: 200) { data {id name alias disabled categories{name slug} streams{url preview} }}
+            places(first: 200) { data {id name alias disabled categories{name }}}
           }`,
     })
       .then((res) => res.json())

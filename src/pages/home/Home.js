@@ -11,7 +11,6 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { has } from "object-path";
 
 const HomeContentWrap = styled.div`
   padding-top: 50px;
@@ -125,8 +124,8 @@ const Home = () => {
           places(${searchString}) {
             paginatorInfo{hasMorePages}
             data {
-              id name mobile_stream address description profile_image logo menu actions coordinates disabled
-              streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
+              id name  address  profile_image coordinates
+              streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
               schedules {id day start_time end_time}
               categories {id name slug}
             }

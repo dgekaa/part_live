@@ -326,8 +326,8 @@ const Admin = (props) => {
     QUERY({
       query: `query {
       place (id:"${props.match.params.id}") {
-        id name address description logo menu actions coordinates alias profile_image
-        streams{url name id preview schedules{id day start_time end_time} see_you_tomorrow}
+        id name address description alias profile_image
+        streams{url name id preview schedules{id day start_time end_time}}
         schedules {id day start_time end_time}
         categories {id name slug}
       }

@@ -1,13 +1,5 @@
 import React from "react";
 import { useCookies } from "react-cookie";
-import GoogleMap from "../../components/googleMap/GoogleMap";
-import {
-  EN_SHORT_DAY_OF_WEEK,
-  EN_SHORT_TO_RU_SHORT,
-  SHORT_DAY_OF_WEEK,
-  defaultColor,
-  queryPath,
-} from "../../constants";
 import styled from "styled-components";
 
 import QUERY from "../../query";

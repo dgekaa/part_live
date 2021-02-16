@@ -309,8 +309,8 @@ const MapComponent = (props) => {
       query: `query{
             places(${searchString}) {
                 data{
-                  id name coordinates profile_image disabled mobile_stream
-                  streams{url name see_you_tomorrow id preview schedules{id day start_time end_time}}
+                  id name coordinates profile_image disabled 
+                  streams{see_you_tomorrow id preview }
                   schedules{id day start_time end_time}
                   categories{id name slug}
                 }
