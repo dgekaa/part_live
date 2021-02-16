@@ -13,60 +13,57 @@ import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 
 const HomeContentWrap = styled.div`
-  padding-top: 50px;
-  width: 1000px;
-  margin: 0 auto;
-  padding-bottom: 70px;
+    padding-top: 50px;
+    width: 1000px;
+    margin: 0 auto;
+    padding-bottom: 70px;
 
-  @media (max-width: 760px) {
-    position: relative;
-    padding-top: 100px;
+    @media (max-width: 760px) {
+      position: relative;
+      padding-top: 100px;
+      width: 100%;
+      padding-bottom: 65px;
+    }
+  `,
+  NavContainer = styled.div`
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    height: 54px;
+    @media (max-width: 760px) {
+      height: 0;
+      margin: 0;
+    }
+  `,
+  HomeContent = styled.div`
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    @media (max-width: 760px) {
+      -webkit-transition: 0.3s ease all 0.2s;
+      -o-transition: 0.3s ease all 0.2s;
+      transition: 0.3s ease all 0.2s;
+      margin-top: 10px;
+      margin-right: 5px;
+      margin-left: 5px;
+    }
+  `,
+  NoOneCompany = styled.div`
     width: 100%;
-    padding-bottom: 65px;
-  }
-`;
-
-const NavContainer = styled.div`
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  height: 54px;
-  @media (max-width: 760px) {
-    height: 0;
-    margin: 0;
-  }
-`;
-
-const HomeContent = styled.div`
-  margin-top: 50px;
-  display: flex;
-  flex-wrap: wrap;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  @media (max-width: 760px) {
-    -webkit-transition: 0.3s ease all 0.2s;
-    -o-transition: 0.3s ease all 0.2s;
-    transition: 0.3s ease all 0.2s;
-    margin-top: 10px;
-    margin-right: 5px;
-    margin-left: 5px;
-  }
-`;
-
-const NoOneCompany = styled.div`
-  width: 100%;
-  text-align: center;
-  font-size: 22px;
-  padding: 30px;
-`;
+    text-align: center;
+    font-size: 22px;
+    padding: 30px;
+  `;
 
 const Home = () => {
-  const howMachLoad = 12;
+  const howMachLoad = 200;
 
   const [DATA, setDATA] = useState([]),
     [isLoading, setIsLoading] = useState(true),
@@ -122,7 +119,7 @@ const Home = () => {
       QUERY({
         query: `query {
           places(${searchString}) {
-            paginatorInfo{hasMorePages}
+            paginatorInfo{hasMorePages lastItem total}
             data {
               id name  address  profile_image coordinates
               streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
@@ -156,7 +153,7 @@ const Home = () => {
   const scrollHandler = (e) => {
     if (hasMorePages && !isLoading) {
       const { scrollHeight, scrollTop } = e.target.documentElement;
-      if (scrollHeight - (scrollTop + window.innerHeight) < 200) {
+      if (scrollHeight - (scrollTop + window.innerHeight) < 500) {
         setIsLoading(true);
       }
     }
