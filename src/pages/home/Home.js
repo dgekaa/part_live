@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
+import debounce from "lodash/debounce";
 
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import TypeNav from "../../components/typeNav/TypeNav";
@@ -57,23 +58,20 @@ const HomeContentWrap = styled.div`
   `;
 
 const Home = () => {
-  const howMachLoad = 12;
-
   const [DATA, setDATA] = useState([]),
-    [isLoading, setIsLoading] = useState(true),
     [isLocation, setIsLocation] = useState(false),
-    [first, setFirst] = useState(howMachLoad),
     [typeId, setTypeId] = useState(""),
     [hasMorePages, setHasMorePages] = useState(true),
     [lastItem, setLastItem] = useState(0),
-    [total, setTotal] = useState(0);
+    [total, setTotal] = useState(0),
+    [howMachLoad, setHowMachLoad] = useState(12);
 
   const clickedType = (id) => {
     setTypeId(id);
-    setFirst(howMachLoad);
+    setHowMachLoad(12);
     setHasMorePages(true);
     if (typeId !== id) {
-      id ? loadContent(id, howMachLoad) : loadContent("", howMachLoad);
+      id ? loadContent(id, 12) : loadContent("", 12);
     }
   };
 
@@ -109,8 +107,8 @@ const Home = () => {
         id || sessionStorage.getItem("filter_id")
           ? `hasCategories: { AND: [{ column: ID, operator: EQ, value:${
               id || sessionStorage.getItem("filter_id")
-            }}] }, first:${isFirst || first}`
-          : `first:${isFirst || first}`;
+            }}] }, first:${isFirst}`
+          : `first:${isFirst}`;
       QUERY({
         query: `query {
           places(${searchString}) {
@@ -130,12 +128,12 @@ const Home = () => {
           setDATA(data);
           setTotal(paginatorInfo.total);
           setLastItem(paginatorInfo.lastItem);
-          setIsLoading(false);
-          setFirst((prev) => (prev += howMachLoad));
           setHasMorePages(paginatorInfo.hasMorePages);
         })
         .catch((err) => console.log(err, "HOME data ERR"));
     };
+
+  const loadContentDebounce = useCallback(debounce(loadContent, 200), []);
 
   useEffect(() => {
     window.onresize = (e) => hideSideMenu();
@@ -149,24 +147,30 @@ const Home = () => {
   findLocation();
 
   const scrollHandler = (e) => {
-    if (hasMorePages && !isLoading) {
+    if (hasMorePages) {
       const { scrollHeight, scrollTop } = e.target.documentElement;
-
-      if (scrollHeight - (scrollTop + window.innerHeight) < 500)
-        setIsLoading(true);
+      if (scrollHeight - (scrollTop + window.innerHeight) < 400) {
+        setHowMachLoad((prev) => (prev = prev + 12));
+        sessionStorage.setItem("prevZoom", "");
+        sessionStorage.setItem("prevCenter", "");
+      } else {
+      }
     }
   };
 
   useEffect(() => {
-    if (isLoading && hasMorePages) {
-      loadContent();
-      sessionStorage.setItem("prevZoom", "");
-      sessionStorage.setItem("prevCenter", "");
-    }
+    loadContentDebounce("", howMachLoad, true);
+    console.log(howMachLoad, "---howMachLoad");
+  }, [howMachLoad]);
 
-    document.addEventListener("scroll", scrollHandler);
+  useEffect(() => {
+    console.log(lastItem, "---lastItem");
+  }, [lastItem]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", scrollHandler);
     return () => document.removeEventListener("scroll", scrollHandler);
-  }, [hasMorePages, isLoading]);
+  }, []);
 
   return (
     <div
@@ -198,17 +202,8 @@ const Home = () => {
                 <SmallCompanyBlock item={el} key={i} isLocation={isLocation} />
               ))}
 
-            {!!isLoading &&
-              !total &&
-              !lastItem &&
-              new Array(howMachLoad)
-                .fill(0)
-                .map((el, i) => <ClearedBlock key={i} />)}
-
-            {!!isLoading &&
-              total &&
-              lastItem &&
-              new Array(total - lastItem > howMachLoad ? 12 : total - lastItem)
+            {!!howMachLoad &&
+              new Array(howMachLoad - lastItem)
                 .fill(0)
                 .map((el, i) => <ClearedBlock key={i} />)}
           </HomeContent>
