@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
-import debounce from "lodash/debounce";
 
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import TypeNav from "../../components/typeNav/TypeNav";
 import SmallCompanyBlock from "../../components/smallCompanyBlock/SmallCompanyBlock";
-import ClearedBlock from "../../components/smallCompanyBlock/ClearedBlock";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 
 const HomeContentWrap = styled.div`
@@ -55,25 +54,23 @@ const HomeContentWrap = styled.div`
       margin-right: 5px;
       margin-left: 5px;
     }
+  `,
+  NoOneCompany = styled.div`
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    padding: 30px;
   `;
 
 const Home = () => {
-  const [DATA, setDATA] = useState([]),
-    [isLocation, setIsLocation] = useState(false),
-    [typeId, setTypeId] = useState(""),
-    [hasMorePages, setHasMorePages] = useState(true),
-    [lastItem, setLastItem] = useState(0),
-    [total, setTotal] = useState(0),
-    [howMachLoad, setHowMachLoad] = useState(12);
+  const howMachLoad = 48;
 
-  const clickedType = (id) => {
-    setTypeId(id);
-    setHowMachLoad(12);
-    setHasMorePages(true);
-    if (typeId !== id) {
-      id ? loadContent(id, 12) : loadContent("", 12);
-    }
-  };
+  const [DATA, setDATA] = useState([]),
+    [isLoading, setIsLoading] = useState(true),
+    [isLocation, setIsLocation] = useState(false),
+    [first, setFirst] = useState(howMachLoad),
+    [typeId, setTypeId] = useState(""),
+    [hasMorePages, setHasMorePages] = useState(true);
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
@@ -107,14 +104,15 @@ const Home = () => {
         id || sessionStorage.getItem("filter_id")
           ? `hasCategories: { AND: [{ column: ID, operator: EQ, value:${
               id || sessionStorage.getItem("filter_id")
-            }}] }, first:${isFirst}`
-          : `first:${isFirst}`;
+            }}] }, first:${isFirst || first}`
+          : `first:${isFirst || first}`;
+
       QUERY({
         query: `query {
           places(${searchString}) {
             paginatorInfo{hasMorePages lastItem total}
             data {
-              id name address profile_image coordinates
+              id name  address  profile_image coordinates
               streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
               schedules {id day start_time end_time}
               categories {id name slug}
@@ -123,17 +121,27 @@ const Home = () => {
         }`,
       })
         .then((res) => res.json())
-        .then((res) => {
-          const { data, paginatorInfo } = res.data.places;
-          setDATA(data);
-          setTotal(paginatorInfo.total);
-          setLastItem(paginatorInfo.lastItem);
-          setHasMorePages(paginatorInfo.hasMorePages);
+        .then((data) => {
+          setIsLoading(false);
+          setDATA(data.data.places.data);
+          setFirst((prev) => (prev += howMachLoad));
+          setHasMorePages(data.data.places.paginatorInfo.hasMorePages);
         })
-        .catch((err) => console.log(err, "HOME data ERR"));
+        .catch((err) => console.log(err, "HOME DATA ERR"));
+    },
+    clickedType = (id) => {
+      window.scrollTo(0, 0);
+      setTypeId(id);
+      setFirst(howMachLoad);
+      setHasMorePages(true);
+      if (typeId !== id) {
+        id ? loadContent(id, howMachLoad) : loadContent("", howMachLoad);
+      }
     };
 
-  const loadContentDebounce = useCallback(debounce(loadContent, 200), []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     window.onresize = (e) => hideSideMenu();
@@ -147,30 +155,23 @@ const Home = () => {
   findLocation();
 
   const scrollHandler = (e) => {
-    if (hasMorePages) {
+    if (hasMorePages && !isLoading) {
       const { scrollHeight, scrollTop } = e.target.documentElement;
-      if (scrollHeight - (scrollTop + window.innerHeight) < 400) {
-        setHowMachLoad((prev) => (prev = prev + 12));
-        sessionStorage.setItem("prevZoom", "");
-        sessionStorage.setItem("prevCenter", "");
-      } else {
-      }
+      if (scrollHeight - (scrollTop + window.innerHeight) < 3000)
+        setIsLoading(true);
     }
   };
 
   useEffect(() => {
-    loadContentDebounce("", howMachLoad, true);
-    console.log(howMachLoad, "---howMachLoad");
-  }, [howMachLoad]);
+    if (isLoading && hasMorePages) {
+      loadContent();
+      sessionStorage.setItem("prevZoom", "");
+      sessionStorage.setItem("prevCenter", "");
+    }
 
-  useEffect(() => {
-    console.log(lastItem, "---lastItem");
-  }, [lastItem]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", scrollHandler);
+    document.addEventListener("scroll", scrollHandler);
     return () => document.removeEventListener("scroll", scrollHandler);
-  }, []);
+  }, [hasMorePages, isLoading]);
 
   return (
     <div
@@ -201,11 +202,10 @@ const Home = () => {
               DATA.map((el, i) => (
                 <SmallCompanyBlock item={el} key={i} isLocation={isLocation} />
               ))}
-
-            {!!howMachLoad &&
-              new Array(howMachLoad - lastItem)
-                .fill(0)
-                .map((el, i) => <ClearedBlock key={i} />)}
+            {isLoading && <Loader isBottom={true} />}
+            {!DATA.length && !isLoading && (
+              <NoOneCompany>Нет заведений</NoOneCompany>
+            )}
           </HomeContent>
         </HomeContentWrap>
         <BottomMenu isShowMenu={isShowMenu} border />

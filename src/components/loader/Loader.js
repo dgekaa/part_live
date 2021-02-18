@@ -14,6 +14,17 @@ const LoaderWrap = styled.div`
   align-items: center;
 `;
 
+const LoaderBottomWrap = styled.div`
+  display: flex;
+  bottom: -10px;
+  left: 0;
+  position: relative;
+  width: 100%;
+  height: 100px;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Roller = styled.div`
   display: inline-block;
   position: relative;
@@ -108,19 +119,34 @@ const Roll = styled.div`
   }
 `;
 
-const Loader = () => (
-  <LoaderWrap>
-    <Roller>
-      <Roll></Roll>
-      <Roll></Roll>
-      <Roll></Roll>
-      <Roll></Roll>
-      <Roll></Roll>
-      <Roll></Roll>
-      <Roll></Roll>
-      <Roll></Roll>
-    </Roller>
-  </LoaderWrap>
-);
+const Loader = (isBottom) => {
+  return isBottom ? (
+    <LoaderBottomWrap>
+      <Roller>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+      </Roller>
+    </LoaderBottomWrap>
+  ) : (
+    <LoaderWrap>
+      <Roller>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+        <Roll></Roll>
+      </Roller>
+    </LoaderWrap>
+  );
+};
 
 export default Loader;
