@@ -9,6 +9,7 @@ import TimePicker from "./TimePicker";
 import {
   EN_SHORT_TO_NUMBER,
   EN_SHORT_TO_RU_SHORT,
+  PLACE_QUERY,
   SHORT_DAY_OF_WEEK,
 } from "../../constants";
 
@@ -100,6 +101,7 @@ const DatePickerPopup = ({
   clickedTime,
   DATA,
   tomorrowFromDay,
+  setDATA,
 }) => {
   const [cookies] = useCookies([]);
 
@@ -145,7 +147,16 @@ const DatePickerPopup = ({
                 input:{
                   id:"${clickedTime.id}" start_time: "${startTimePicker}" end_time: "${endTimePicker}"
                 }
-              ){id}
+              ){id
+                schedulable {
+                  ...on Place {
+                    id name address description alias profile_image
+                    streams{url name id preview schedules{id day start_time end_time}}
+                    schedules {id day start_time end_time}
+                    categories {id name slug}
+                  }
+              }
+            }
             }`,
             },
             cookies.origin_data
@@ -153,7 +164,7 @@ const DatePickerPopup = ({
             .then((res) => res.json())
             .then((data) => {
               !data.errors
-                ? refreshData()
+                ? setDATA(data.data.updateSchedule.schedulable)
                 : console.log(data.errors, " ERRORS");
             })
             .catch((err) => console.log(err, " ERR"));
@@ -180,17 +191,14 @@ const DatePickerPopup = ({
                     ]
                   }
                 }
-              ) {
-                id name url
-                }
-            }`,
+              ) { id name url ${PLACE_QUERY} }}`,
             },
             cookies.origin_data
           )
             .then((res) => res.json())
             .then((data) => {
               !data.errors
-                ? refreshData()
+                ? setDATA(data.data.updateStream.place)
                 : console.log(data.errors, " ERRORS");
             })
             .catch((err) => console.log(err, " ERR"));
@@ -213,17 +221,14 @@ const DatePickerPopup = ({
                     ]
                   }
                 }
-              ) {
-                id name url
-                }
-            }`,
+              ) { id name url ${PLACE_QUERY} }}`,
             },
             cookies.origin_data
           )
             .then((res) => res.json())
             .then((data) => {
               !data.errors
-                ? refreshData()
+                ? setDATA(data.data.updateStream.place)
                 : console.log(data.errors, " ERRORS");
             })
             .catch((err) => console.log(err, " ERR"));

@@ -19,6 +19,7 @@ import {
   SHORT_DAY_OF_WEEK,
   defaultColor,
   queryPath,
+  PLACE_QUERY,
 } from "../../constants";
 import { numberDayNow } from "../../calculateTime";
 import SideBar from "./Sidebar";
@@ -327,7 +328,7 @@ const Admin = (props) => {
       query: `query {
       place (id:"${props.match.params.id}") {
         id name address description alias profile_image
-        streams{url name id preview schedules{id day start_time end_time}}
+        streams{url see_you_tomorrow name id  preview schedules{id day start_time end_time}}
         schedules {id day start_time end_time}
         categories {id name slug}
       }
@@ -384,7 +385,7 @@ const Admin = (props) => {
                 url :"${name}"
                 preview : "${videoPreviewUrl}"
               }
-            ) { id name url }
+            ) { id name url ${PLACE_QUERY} }
           }`,
         },
         cookies.origin_data
@@ -392,7 +393,7 @@ const Admin = (props) => {
         .then((res) => res.json())
         .then((data) => {
           !data.errors
-            ? refreshData()
+            ? setDATA(data.data.updateStream.place)
             : console.log(data.errors, "UPDATESTREAM ERRORS");
         })
         .catch((err) => console.log(err, "UPDATESTREAM ERR"));
@@ -1484,7 +1485,7 @@ const Admin = (props) => {
                         <StreamMobile
                           closeAllSidebar={closeAllSidebar}
                           DATA={DATA}
-                          refreshData={refreshData}
+                          setDATA={setDATA}
                         />
                       </SideBar>
                     </div>
@@ -2123,6 +2124,7 @@ const Admin = (props) => {
               refreshData={refreshData}
               clickedTime={clickedTime}
               DATA={DATA}
+              setDATA={setDATA}
               tomorrowFromDay={tomorrowFromDay}
             />
           )}

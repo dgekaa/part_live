@@ -5,7 +5,7 @@ import Switch from "react-switch";
 import { useCookies } from "react-cookie";
 import { Link } from "react-router-dom";
 
-import { defaultColor } from "../../constants";
+import { defaultColor, PLACE_QUERY } from "../../constants";
 import QUERY from "../../query";
 
 const Wrap = styled.div`
@@ -75,7 +75,7 @@ const DisableStreamToNexDayM = styled.div`
   font-size: 16px;
 `;
 
-const StreamMobile = ({ closeAllSidebar, DATA, refreshData }) => {
+const StreamMobile = ({ closeAllSidebar, DATA, setDATA }) => {
   const [cookies] = useCookies([]);
 
   const [switchChecked, setSwitchChecked] = useState(null);
@@ -114,15 +114,14 @@ const StreamMobile = ({ closeAllSidebar, DATA, refreshData }) => {
                    : ` see_you_tomorrow: ${data}`
                }               
               }
-            ) { id name url }
-          }`,
+            ) { id name url see_you_tomorrow ${PLACE_QUERY} }}`,
           },
           cookies.origin_data
         )
           .then((res) => res.json())
           .then((data) => {
             !data.errors
-              ? refreshData()
+              ? setDATA(data.data.updateStream.place)
               : console.log(data.errors, "disableStream ERRORS");
           })
           .catch((err) => console.log(err, "disableStream ERR"));

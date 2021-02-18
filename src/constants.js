@@ -78,5 +78,12 @@ export const EN_SHORT_DAY_OF_WEEK = [
 
 export const defaultColor = "#f8104d";
 
+export const PLACE_QUERY = `place{
+  id name address description alias profile_image
+  streams{url name id preview schedules{id day start_time end_time}}
+  schedules {id day start_time end_time}
+  categories {id name slug}
+}`;
+
 // export const queryPath = "http://partyliveLocal";
 export const queryPath = "https://backend.partylive.by";

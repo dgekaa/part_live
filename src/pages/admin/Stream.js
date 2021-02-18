@@ -4,7 +4,7 @@ import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
 import Switch from "react-switch";
 import { useCookies } from "react-cookie";
 
-import { defaultColor } from "../../constants";
+import { defaultColor, PLACE_QUERY } from "../../constants";
 import QUERY from "../../query";
 
 const DisableStreamD = styled.span`
@@ -116,7 +116,7 @@ const CancelBtnProfile = styled.div`
   }
 `;
 
-const Stream = ({ index, DATA, props, refreshData }) => {
+const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
   const [cookies] = useCookies([]);
 
   const [switchChecked, setSwitchChecked] = useState(null),
@@ -186,18 +186,15 @@ const Stream = ({ index, DATA, props, refreshData }) => {
                 url :"${name}"
                 preview : "${videoPreviewUrl}"
               }
-            ) { id name url }
-          }`,
+            ) { id name url see_you_tomorrow ${PLACE_QUERY} }}`,
           },
           cookies.origin_data
         )
           .then((res) => res.json())
           .then((data) => {
-            if (!data.errors) {
-              refreshData();
-            } else {
-              console.log(data.errors, "UPDATESTREAM ERRORS");
-            }
+            !data.errors
+              ? setDATA(data.data.updateStream.place)
+              : console.log(data.errors, "UPDATESTREAM ERRORS");
           })
           .catch((err) => console.log(err, "UPDATESTREAM ERR"));
       }
@@ -242,16 +239,17 @@ const Stream = ({ index, DATA, props, refreshData }) => {
                    : ` see_you_tomorrow: ${data}`
                }               
               }
-            ) { id name url }
+            ) { id name url see_you_tomorrow
+                ${PLACE_QUERY}
+              }
           }`,
           },
           cookies.origin_data
         )
           .then((res) => res.json())
           .then((data) => {
-            console.log(data, "---data");
             !data.errors
-              ? refreshData()
+              ? setDATA(data.data.updateStream.place)
               : console.log(data.errors, "disableStream ERRORS");
           })
           .catch((err) => console.log(err, "disableStream ERR"));
