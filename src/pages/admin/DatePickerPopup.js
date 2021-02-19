@@ -10,6 +10,7 @@ import {
   EN_SHORT_TO_NUMBER,
   EN_SHORT_TO_RU_SHORT,
   PLACE_QUERY,
+  SCHEDULE_PLACE_QUERY,
   SHORT_DAY_OF_WEEK,
 } from "../../constants";
 
@@ -147,17 +148,7 @@ const DatePickerPopup = ({
                 input:{
                   id:"${clickedTime.id}" start_time: "${startTimePicker}" end_time: "${endTimePicker}"
                 }
-              ){id
-                schedulable {
-                  ...on Place {
-                    id name address description alias profile_image
-                    streams{url name id preview schedules{id day start_time end_time}}
-                    schedules {id day start_time end_time}
-                    categories {id name slug}
-                  }
-              }
-            }
-            }`,
+              ){id ${SCHEDULE_PLACE_QUERY} }}`,
             },
             cookies.origin_data
           )

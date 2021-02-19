@@ -13,6 +13,7 @@ import {
   API_KEY,
   EN_SHORT_TO_RU_LONG,
   queryPath,
+  PLACE_DATA_QUERY,
 } from "../../constants";
 import QUERY from "../../query";
 import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
@@ -306,16 +307,7 @@ const MapComponent = (props) => {
         : `first:${180}`;
 
     QUERY({
-      query: `query{
-            places(${searchString}) {
-                data{
-                  id name coordinates profile_image disabled 
-                  streams{see_you_tomorrow id preview }
-                  schedules{id day start_time end_time}
-                  categories{id name slug}
-                }
-              }
-            }`,
+      query: `query{ places(${searchString}) { ${PLACE_DATA_QUERY}} }`,
     })
       .then((res) => res.json())
       .then((data) => {

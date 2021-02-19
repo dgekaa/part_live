@@ -11,6 +11,7 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
+import { PLACE_DATA_QUERY } from "../../constants";
 
 const HomeContentWrap = styled.div`
     padding-top: 50px;
@@ -109,15 +110,7 @@ const Home = () => {
 
       QUERY({
         query: `query {
-          places(${searchString}) {
-            paginatorInfo{hasMorePages lastItem total}
-            data {
-              id name  address  profile_image coordinates
-              streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
-              schedules {id day start_time end_time}
-              categories {id name slug}
-            }
-          }
+          places(${searchString}) { paginatorInfo{hasMorePages lastItem total} ${PLACE_DATA_QUERY} }
         }`,
       })
         .then((res) => res.json())
@@ -157,8 +150,9 @@ const Home = () => {
   const scrollHandler = (e) => {
     if (hasMorePages && !isLoading) {
       const { scrollHeight, scrollTop } = e.target.documentElement;
-      if (scrollHeight - (scrollTop + window.innerHeight) < 3000)
+      if (scrollHeight - (scrollTop + window.innerHeight) < 3000) {
         setIsLoading(true);
+      }
     }
   };
 
@@ -202,7 +196,7 @@ const Home = () => {
               DATA.map((el, i) => (
                 <SmallCompanyBlock item={el} key={i} isLocation={isLocation} />
               ))}
-            {isLoading && <Loader isBottom={true} />}
+            {isLoading && hasMorePages && <Loader isBottom={true} />}
             {!DATA.length && !isLoading && (
               <NoOneCompany>Нет заведений</NoOneCompany>
             )}

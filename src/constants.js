@@ -85,5 +85,21 @@ export const PLACE_QUERY = `place{
   categories {id name slug}
 }`;
 
+export const PLACE_DATA_QUERY = `data {
+  id name  address  profile_image coordinates
+  streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
+  schedules {id day start_time end_time}
+  categories {id name slug}
+}`;
+
+export const SCHEDULE_PLACE_QUERY = `schedulable {
+  ...on Place {
+    id name address description alias profile_image
+    streams{url name id preview schedules{id day start_time end_time}}
+    schedules {id day start_time end_time}
+    categories {id name slug}
+  }
+}`;
+
 // export const queryPath = "http://partyliveLocal";
 export const queryPath = "https://backend.partylive.by";
