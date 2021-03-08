@@ -189,21 +189,6 @@ const NavContainerMap = styled.div`
       width: 120px;
     }
   `,
-  TransparentBg = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-self: center;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-  `,
   LoaderWrapper = styled.div`
     position: absolute;
     height: 100px;
