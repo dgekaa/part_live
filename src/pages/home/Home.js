@@ -11,7 +11,7 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { PLACE_DATA_QUERY } from "../../constants";
+import { PLACE_EXT_DATA_QUERY } from "../../constants";
 
 const HomeContentWrap = styled.div`
     padding-top: 50px;
@@ -73,6 +73,10 @@ const Home = () => {
     [typeId, setTypeId] = useState(""),
     [hasMorePages, setHasMorePages] = useState(true);
 
+  useEffect(() => {
+    console.log(DATA, "---setDATA");
+  }, [DATA]);
+
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
 
@@ -101,28 +105,28 @@ const Home = () => {
         hideSideMenu();
     },
     loadContent = (id, isFirst) => {
-      const searchString =
-        id || sessionStorage.getItem("filter_id")
-          ? `hasCategories: { AND: [{ column: ID, operator: EQ, value:${
-              id || sessionStorage.getItem("filter_id")
-            }}] }, first:${isFirst || first}`
-          : `first:${isFirst || first}`;
-
+      const current_id = id || sessionStorage.getItem("filter_id"),
+        current_first = isFirst || first,
+        searchString = current_id
+          ? `where: { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, first:${current_first}`
+          : `first:${current_first}`;
+      setIsLoading(true);
       QUERY({
         query: `query {
-          places(${searchString}) { paginatorInfo{hasMorePages lastItem total} ${PLACE_DATA_QUERY} }
+          placesExt(${searchString}) { paginatorInfo{hasMorePages lastItem total} ${PLACE_EXT_DATA_QUERY} }
         }`,
       })
         .then((res) => res.json())
         .then((data) => {
           setIsLoading(false);
-          setDATA(data.data.places.data);
+          setDATA(data.data.placesExt.data);
           setFirst((prev) => (prev += howMachLoad));
-          setHasMorePages(data.data.places.paginatorInfo.hasMorePages);
+          setHasMorePages(data.data.placesExt.paginatorInfo.hasMorePages);
         })
         .catch((err) => console.log(err, "HOME DATA ERR"));
     },
     clickedType = (id) => {
+      setDATA([]);
       window.scrollTo(0, 0);
       setTypeId(id);
       setFirst(howMachLoad);
@@ -196,7 +200,9 @@ const Home = () => {
               DATA.map((el, i) => (
                 <SmallCompanyBlock item={el} key={i} isLocation={isLocation} />
               ))}
+
             {isLoading && hasMorePages && <Loader isBottom={true} />}
+
             {!DATA.length && !isLoading && (
               <NoOneCompany>Нет заведений</NoOneCompany>
             )}

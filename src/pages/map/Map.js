@@ -13,10 +13,10 @@ import {
   API_KEY,
   EN_SHORT_TO_RU_LONG,
   queryPath,
-  PLACE_DATA_QUERY,
+  PLACE_EXT_DATA_QUERY,
 } from "../../constants";
 import QUERY from "../../query";
-import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
+// import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import TypeNav from "../../components/typeNav/TypeNav";
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -292,27 +292,22 @@ const MapComponent = (props) => {
     [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
 
-  const dateNow = new Date()
-    .toLocaleDateString()
-    .split(".")
-    .reverse()
-    .join("-");
-
   const loadContent = (id) => {
-    const searchString =
-      id || sessionStorage.getItem("filter_id")
-        ? `hasCategories: { AND: [{ column: ID, operator: EQ, value:${
-            id || sessionStorage.getItem("filter_id")
-          }}] }, first:${180}`
+    const current_id = id || sessionStorage.getItem("filter_id"),
+      searchString = current_id
+        ? `where: {column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, first:${180}`
         : `first:${180}`;
 
     QUERY({
-      query: `query{ places(${searchString}) { ${PLACE_DATA_QUERY}} }`,
+      query: `query{ 
+        placesExt(${searchString}) 
+        {${PLACE_EXT_DATA_QUERY} }
+      }`,
     })
       .then((res) => res.json())
       .then((data) => {
         setIsLoading(false);
-        setMarkers(data.data.places.data);
+        setMarkers(data.data.placesExt.data);
       })
       .catch((err) => console.log(err, "MAP  ERR"));
   };
@@ -530,7 +525,8 @@ const MapComponent = (props) => {
                 {
                   cluster: isCluster,
                   point_count: pointCount,
-                } = cluster.properties;
+                } = cluster.properties,
+                item = cluster.item;
 
               //ЗАМЕНА НА ЦИФРЫ
               if (isCluster) {
@@ -548,56 +544,6 @@ const MapComponent = (props) => {
               }
 
               //БЕЗ ЗАМЕНЫ НА ЦИФРЫ
-              let streamTime = "",
-                workTime = "",
-                isWork = false,
-                nextStreamTime = false,
-                nextWorkTime = null;
-
-              const setShowStream = (time) => (streamTime = time),
-                setWorkTime = (time) => (workTime = time),
-                setIsWork = (bool) => (isWork = bool),
-                setNextStreamTime = (time) => (nextStreamTime = time),
-                setNextWorkTime = (time) => (nextWorkTime = time);
-
-              isShowStreamNow(
-                cluster.item,
-                setShowStream,
-                setNextStreamTime,
-                cluster.item.streams[0] &&
-                  dateNow === cluster.item.streams[0].see_you_tomorrow
-              );
-              isWorkTimeNow(
-                cluster.item,
-                setWorkTime,
-                setIsWork,
-                setNextWorkTime
-              );
-
-              const isStartTime = nextStreamTime.start_time,
-                streamNotTodayText =
-                  isStartTime &&
-                  nextStreamTime.day.toLowerCase() !== "сегодня" &&
-                  "Начало трансляции в " +
-                    EN_SHORT_TO_RU_LONG_V_P[nextStreamTime.day] +
-                    " в " +
-                    isStartTime,
-                streamTodayText =
-                  isStartTime &&
-                  nextStreamTime.day.toLowerCase() === "сегодня" &&
-                  "Трансляция начнется сегодня в " + isStartTime,
-                closed = !isStartTime && !nextWorkTime && "Заведение закрыто",
-                isWillOpen =
-                  !isStartTime && nextWorkTime && nextWorkTime.start_time,
-                willOpen = isWillOpen && "Откроется: ",
-                whenWillOpen =
-                  isWillOpen &&
-                  `${
-                    nextWorkTime.day.toLowerCase() !== "сегодня"
-                      ? EN_SHORT_TO_RU_LONG[nextWorkTime.day]
-                      : nextWorkTime.day
-                  } ${nextWorkTime.start_time}-${nextWorkTime.end_time}`;
-
               return (
                 <Marker
                   key={cluster.properties.crimeId}
@@ -611,49 +557,35 @@ const MapComponent = (props) => {
                     onTouchStart={(e) => onTouchStart(e, cluster)}
                     onTouchEnd={(e) => onTouchEnd(e, cluster)}
                     to={{
-                      pathname: referrer
-                        ? `/company/${cluster.item.id}`
-                        : `/map`,
+                      pathname: referrer ? `/company/${item.id}` : `/map`,
                     }}
                   >
                     <MarkerArrow></MarkerArrow>
                     <MarkerWrapp>
                       <MarkerInner>
                         <PreviewBlock>
-                          {cluster.item.streams &&
-                            cluster.item.streams[0] &&
-                            cluster.item.streams[0].preview &&
-                            !!streamTime &&
-                            !cluster.item.mobile_stream && (
+                          {item.streams &&
+                            item.streams[0] &&
+                            item.streams[0].preview &&
+                            !!item.is_online &&
+                            !item.mobile_stream && (
                               <TranslationBlock
                                 style={{
-                                  backgroundImage: `url(${cluster.item.streams[0].preview})`,
+                                  backgroundImage: `url(${item.streams[0].preview})`,
                                 }}
                               />
                             )}
-                          {!streamTime && !cluster.item.mobile_stream && (
+                          {!item.is_online && !item.mobile_stream && (
                             <NoTranslation
                               bg={
-                                cluster.item.profile_image
+                                item.profile_image
                                   ? `${queryPath}/storage/` +
-                                    cluster.item.profile_image.replace(
-                                      ".png",
-                                      ".jpg"
-                                    )
+                                    item.profile_image.replace(".png", ".jpg")
                                   : ""
                               }
-                            >
-                              <TransparentBg>
-                                {streamNotTodayText}
-                                {streamTodayText}
-                                {closed}
-                                {willOpen}
-                                {isWillOpen && <br />}
-                                {whenWillOpen}
-                              </TransparentBg>
-                            </NoTranslation>
+                            ></NoTranslation>
                           )}
-                          {cluster.item.mobile_stream && (
+                          {item.mobile_stream && (
                             <TranslationBlock
                               style={{
                                 backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${cluster.item.id}.jpeg)`,
@@ -664,33 +596,36 @@ const MapComponent = (props) => {
 
                         <MarkerDesc>
                           <div style={{ display: "flex" }}>
-                            {cluster.item.categories[0] &&
-                              cluster.item.categories[0].slug && (
-                                <CustomImgStyle
-                                  className="qwe"
-                                  alt="Icon"
-                                  name={cluster.item.categories[0].slug}
-                                  width="16"
-                                  height="16"
-                                />
-                              )}
-                            <MarkerName>{cluster.item.name}</MarkerName>
+                            {item.categories[0] && item.categories[0].slug && (
+                              <CustomImgStyle
+                                className="qwe"
+                                alt="Icon"
+                                name={item.categories[0].slug}
+                                width="16"
+                                height="16"
+                              />
+                            )}
+                            <MarkerName>{item.name}</MarkerName>
                           </div>
 
                           <BottomMarkerText>
                             <IsOpened>
-                              {isWork && (
+                              {item.is_work && (
                                 <Row>
-                                  <Circle isWork={isWork} />
+                                  <Circle isWork={item.is_work} />
                                   <span>
                                     <Opened>Открыто</Opened> до{" "}
-                                    {workTime.split("-")[1]}
+                                    {item.currentScheduleInterval.end_time
+                                      .split(" ")[1]
+                                      .split(":")
+                                      .slice(0, 2)
+                                      .join(":")}
                                   </span>
                                 </Row>
                               )}
-                              {!isWork && (
+                              {!item.is_work && (
                                 <Row>
-                                  <Circle isWork={isWork} />
+                                  <Circle isWork={item.is_work} />
                                   <span>Закрыто</span>
                                 </Row>
                               )}

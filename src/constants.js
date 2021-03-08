@@ -85,10 +85,14 @@ export const PLACE_QUERY = `place{
   categories {id name slug}
 }`;
 
-export const PLACE_DATA_QUERY = `data {
+export const PLACE_EXT_DATA_QUERY = `data {
   id name  address  profile_image coordinates
   streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
-  schedules {id day start_time end_time}
+  schedule_intervals {start_time end_time}
+  currentScheduleInterval {start_time end_time}
+  nextScheduleInterval {start_time end_time}
+  is_work
+  is_online
   categories {id name slug}
 }`;
 
