@@ -73,10 +73,6 @@ const Home = () => {
     [typeId, setTypeId] = useState(""),
     [hasMorePages, setHasMorePages] = useState(true);
 
-  useEffect(() => {
-    console.log(DATA, "---setDATA");
-  }, [DATA]);
-
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
 
