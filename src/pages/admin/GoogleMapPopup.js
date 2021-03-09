@@ -10,8 +10,6 @@ const GoogleMapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
 
   const chooseNewAddress = (streetName, latLng) => {
     if (cookies.origin_data) {
-      const stringLatLng = "" + latLng.lat + "," + latLng.lng;
-
       QUERY(
         {
           query: `mutation {
@@ -19,9 +17,10 @@ const GoogleMapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
             input:{
               id:"${props.match.params.id}"
               address : "${streetName}"
-              coordinates: "${stringLatLng}"
+              lat: ${latLng.lat}
+              lon: ${latLng.lng}
             }
-          ){id address coordinates}
+          ){id address lat lon}
         }`,
         },
         cookies.origin_data
@@ -37,10 +36,12 @@ const GoogleMapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
     }
   };
 
-  const initialCenterMap = DATA.coordinates
+  console.log(DATA, "---DATA");
+
+  const initialCenterMap = DATA.lat
     ? {
-        lat: Number(DATA.coordinates.split(",")[0]),
-        lng: Number(DATA.coordinates.split(",")[1]),
+        lat: Number(DATA.lat),
+        lng: Number(DATA.lon),
       }
     : null;
 

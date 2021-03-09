@@ -287,12 +287,13 @@ const EditCompany = () => {
               name: "Стандартное название",
               address:"улица Ленина 8, Минск, Беларусь",
               description: "введите описание",
-              coordinates: "53.9006799,27.5582599",
+              lat: 53.9006799,
+              lon: 27.5582599,
               alias:"pseudonim",
               categories:{
                 connect: 2
               }    
-            }){id name address description coordinates categories{slug}}        
+            }){id name address description lat lon categories{slug}}        
       }`,
         },
         cookies.origin_data

@@ -322,10 +322,7 @@ const MapComponent = (props) => {
           },
           geometry: {
             type: "Point",
-            coordinates: [
-              +el.coordinates.split(",")[1],
-              +el.coordinates.split(",")[0],
-            ],
+            coordinates: [+el.lon, +el.lat],
           },
         };
       }),
@@ -340,14 +337,13 @@ const MapComponent = (props) => {
     });
 
   const clickedType = (id) => {
-    setMarkers([]);
-    setTypeId(id);
-    if (typeId !== id) {
-      id ? loadContent(id) : loadContent("");
-    }
-  };
-
-  const hideSideMenu = () => {
+      setMarkers([]);
+      setTypeId(id);
+      if (typeId !== id) {
+        id ? loadContent(id) : loadContent("");
+      }
+    },
+    hideSideMenu = () => {
       setShowSlideSideMenu(false);
       setTimeout(() => {
         document.body.style.overflow = "visible";

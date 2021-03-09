@@ -225,6 +225,8 @@ const MapContainer = ({
   };
 
   const save = () => {
+    console.log(streetName, "---streetName");
+    console.log(latLng, "---latLng");
     if (streetName && latLng) {
       chooseNewAddress(streetName, companyGeolocation || latLng);
     }

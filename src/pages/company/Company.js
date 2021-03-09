@@ -417,7 +417,7 @@ const Company = (props) => {
         place (id: ${+props.match.params.id}) {
           id name address description profile_image mobile_stream
           streams{url name id preview see_you_tomorrow schedules{id day start_time end_time}}
-          categories{name slug} coordinates
+          categories{name slug} lat lon
           schedules {day start_time end_time} user {id name email}
         }
       }`,
@@ -439,8 +439,8 @@ const Company = (props) => {
             getDistanceFromLatLonInKm(
               pos.coords.latitude,
               pos.coords.longitude,
-              DATA.place.coordinates.split(",")[0],
-              DATA.place.coordinates.split(",")[1]
+              DATA.place.lat,
+              DATA.place.lon
             )
           );
         },
@@ -701,10 +701,10 @@ const Company = (props) => {
                     togglePopupGoogleMap={togglePopup}
                     styleContainerMap={{ height: "85px" }}
                     initialCenterMap={
-                      DATA.place.coordinates
+                      DATA.place.lat
                         ? {
-                            lat: Number(DATA.place.coordinates.split(",")[0]),
-                            lng: Number(DATA.place.coordinates.split(",")[1]),
+                            lat: Number(DATA.place.lat),
+                            lng: Number(DATA.place.lon),
                           }
                         : null
                     }
@@ -812,10 +812,10 @@ const Company = (props) => {
                       togglePopupGoogleMap={togglePopup}
                       styleContainerMap={{ height: "330px" }}
                       initialCenterMap={
-                        DATA.place.coordinates
+                        DATA.place.lat
                           ? {
-                              lat: Number(DATA.place.coordinates.split(",")[0]),
-                              lng: Number(DATA.place.coordinates.split(",")[1]),
+                              lat: Number(DATA.place.lat),
+                              lng: Number(DATA.place.lon),
                             }
                           : null
                       }
@@ -840,10 +840,10 @@ const Company = (props) => {
             styleContainerMap={{ width: "100vw" }}
             closeBtn
             initialCenterMap={
-              DATA.place.coordinates
+              DATA.place.lat
                 ? {
-                    lat: Number(DATA.place.coordinates.split(",")[0]),
-                    lng: Number(DATA.place.coordinates.split(",")[1]),
+                    lat: Number(DATA.place.lat),
+                    lng: Number(DATA.place.lon),
                   }
                 : null
             }

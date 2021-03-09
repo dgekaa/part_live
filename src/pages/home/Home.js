@@ -71,7 +71,9 @@ const Home = () => {
     [isLocation, setIsLocation] = useState(false),
     [first, setFirst] = useState(howMachLoad),
     [typeId, setTypeId] = useState(""),
-    [hasMorePages, setHasMorePages] = useState(true);
+    [hasMorePages, setHasMorePages] = useState(true),
+    [userLat, setUserLat] = useState(null),
+    [userLon, setUserLon] = useState(null);
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
@@ -89,7 +91,11 @@ const Home = () => {
     findLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (pos) => setIsLocation(true),
+          (pos) => {
+            setUserLat(pos.coords.latitude);
+            setUserLon(pos.coords.longitude);
+            setIsLocation(true);
+          },
           (err) => setIsLocation(false)
         );
       } else {
@@ -102,10 +108,22 @@ const Home = () => {
     },
     loadContent = (id, isFirst) => {
       const current_id = id || sessionStorage.getItem("filter_id"),
-        current_first = isFirst || first,
-        searchString = current_id
-          ? `where: { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, first:${current_first}`
-          : `first:${current_first}`;
+        current_first = isFirst || first;
+      let searchString = current_id
+        ? `where: { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, first:${current_first}`
+        : `first:${current_first}`;
+
+      if (isLocation) {
+        searchString =
+          searchString +
+          " ,client_coordinates:" +
+          '"' +
+          userLat +
+          "," +
+          userLon +
+          '"';
+      }
+
       setIsLoading(true);
       QUERY({
         query: `query {
@@ -134,6 +152,7 @@ const Home = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    findLocation();
   }, []);
 
   useEffect(() => {
@@ -145,14 +164,15 @@ const Home = () => {
     config: { duration: 200 },
   });
 
-  findLocation();
+  useEffect(() => {
+    isLocation && loadContent();
+  }, [isLocation]);
 
   const scrollHandler = (e) => {
     if (hasMorePages && !isLoading) {
       const { scrollHeight, scrollTop } = e.target.documentElement;
-      if (scrollHeight - (scrollTop + window.innerHeight) < 3000) {
+      if (scrollHeight - (scrollTop + window.innerHeight) < 3000)
         setIsLoading(true);
-      }
     }
   };
 

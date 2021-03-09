@@ -349,8 +349,8 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
               getDistanceFromLatLonInKm(
                 pos.coords.latitude,
                 pos.coords.longitude,
-                item.coordinates.split(",")[0],
-                item.coordinates.split(",")[1]
+                item.lat,
+                item.lon
               )
             );
           },
