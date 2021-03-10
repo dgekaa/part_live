@@ -4,19 +4,13 @@ import useSupercluster from "use-supercluster";
 import { Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
+import { debounce } from "lodash";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
-import {
-  EN_SHORT_TO_RU_LONG_V_P,
-  API_KEY,
-  EN_SHORT_TO_RU_LONG,
-  queryPath,
-  PLACE_EXT_DATA_QUERY,
-} from "../../constants";
+import { API_KEY, queryPath, PLACE_EXT_DATA_QUERY } from "../../constants";
 import QUERY from "../../query";
-// import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
 import TypeNav from "../../components/typeNav/TypeNav";
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
@@ -191,11 +185,12 @@ const NavContainerMap = styled.div`
   `,
   LoaderWrapper = styled.div`
     position: absolute;
-    height: 100px;
+    top: 0;
     width: 100%;
-    top: 225px;
     z-index: 1000;
     display: flex;
+    justify-content: center;
+    align-items: center;
   `,
   MarkerDesc = styled.p`
     position: absolute;
@@ -283,13 +278,30 @@ const MapComponent = (props) => {
     [gMapDefaultCenter, setGMapDefaultCenter] = useState(),
     [typeId, setTypeId] = useState(""),
     [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
-    [isShowMenu, setIsShowMenu] = useState(false);
+    [isShowMenu, setIsShowMenu] = useState(false),
+    [bottomLeft, setBottomLeft] = useState(null),
+    [topRight, setTopRight] = useState(null);
 
   const loadContent = (id) => {
+    console.log(bottomLeft, "--=======");
     const current_id = id || sessionStorage.getItem("filter_id"),
       searchString = current_id
-        ? `where: {column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, first:${180}`
-        : `first:${180}`;
+        ? ` first : 180,
+        where: {
+          AND : [
+        { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}
+             {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
+             {column : LON, operator: BETWEEN, value: ["${bottomLeft.lng}", "${topRight.lng}"] }
+            ]
+        }`
+        : ` first : 180,
+        where: {
+          AND : [
+             {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
+             {column : LON, operator: BETWEEN, value:["${bottomLeft.lng}", "${topRight.lng}"] }
+            ]
+        }`;
+
     setIsLoading(true);
     QUERY({
       query: `query{ 
@@ -304,10 +316,15 @@ const MapComponent = (props) => {
       })
       .catch((err) => console.log(err, "MAP  ERR"));
   };
+  const debouncedLoad = debounce(() => loadContent(), 500);
 
   useEffect(() => {
-    loadContent();
-  }, []);
+    if (bottomLeft && topRight) {
+      console.log(bottomLeft, "------bottomLeft");
+      console.log(topRight, "------topRight");
+      debouncedLoad();
+    }
+  }, [bottomLeft, topRight]);
 
   const points = markers
       .filter((el) => !el.disabled)
@@ -371,18 +388,20 @@ const MapComponent = (props) => {
     setGMapDefaultCenter(center);
   }, [defaultCenter]);
 
-  if (navigator.geolocation && !defaultCenter) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) =>
-        setDefaultCenter({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        }),
-      (err) => console.log(err, " GEOLOCATION MAP ERROR")
-    );
-  } else {
-    console.log("Геолокация недоступна");
-  }
+  useEffect(() => {
+    if (navigator.geolocation && !defaultCenter) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) =>
+          setDefaultCenter({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          }),
+        (err) => console.log(err, " GEOLOCATION MAP ERROR")
+      );
+    } else {
+      console.log("Геолокация недоступна");
+    }
+  }, []);
 
   const mouseDownHandler = ({ clientX, clientY }) =>
       setMouseMapCoordinates({
@@ -425,7 +444,12 @@ const MapComponent = (props) => {
         hideSideMenu();
     },
     onChangeMap = (zoom, bounds, center) => {
-      console.log(zoom, bounds, center);
+      // ne: {lat: 53.905449424270586, lng: 27.571740348739354} северо-восток
+      // nw: {lat: 53.905449424270586, lng: 27.55963822166416} северо-запад
+      // se: {lat: 53.90251657841472, lng: 27.571740348739354} юго-восток
+      // sw: {lat: 53.90251657841472, lng: 27.55963822166416} юго-запад
+      setBottomLeft(bounds.sw);
+      setTopRight(bounds.ne);
       setCurrentCenterOfMap(center);
       setZoom(zoom);
       setBounds([bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat]);
@@ -449,11 +473,6 @@ const MapComponent = (props) => {
       );
     };
 
-  // ne: {lat: 53.905449424270586, lng: 27.571740348739354} северо-восток
-  // nw: {lat: 53.905449424270586, lng: 27.55963822166416} северо-запад
-  // se: {lat: 53.90251657841472, lng: 27.571740348739354} юго-восток
-  // sw: {lat: 53.90251657841472, lng: 27.55963822166416} юго-запад
-
   return (
     <div onClick={(e) => hide(e)}>
       <Header
@@ -473,11 +492,6 @@ const MapComponent = (props) => {
         />
         <TypeNav style={{ zIndex: 1 }} />
       </NavContainerMap>
-      {isLoading && (
-        <LoaderWrapper>
-          <Loader />
-        </LoaderWrapper>
-      )}
 
       <MapContainer as={animated.div} style={SwipePageSpring}>
         <GooggleMapReact
@@ -637,6 +651,11 @@ const MapComponent = (props) => {
 
       <BottomMenu isShowMenu={isShowMenu} border />
       <SlideSideMenu isShowMenu={isShowMenu} />
+      {isLoading && (
+        <LoaderWrapper style={{ height: window.innerHeight }}>
+          <Loader />
+        </LoaderWrapper>
+      )}
     </div>
   );
 };
