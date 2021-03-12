@@ -9,7 +9,7 @@ import { debounce } from "lodash";
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
-import { API_KEY, queryPath, PLACE_EXT_DATA_QUERY } from "../../constants";
+import { API_KEY, queryPath, PLACES_EXT_DATA_QUERY } from "../../constants";
 import QUERY from "../../query";
 import TypeNav from "../../components/typeNav/TypeNav";
 import CompanyNav from "../../components/companyNav/CompanyNav";
@@ -283,7 +283,6 @@ const MapComponent = (props) => {
     [topRight, setTopRight] = useState(null);
 
   const loadContent = (id) => {
-    console.log(bottomLeft, "--=======");
     const current_id = id || sessionStorage.getItem("filter_id"),
       searchString = current_id
         ? ` first : 180,
@@ -306,7 +305,7 @@ const MapComponent = (props) => {
     QUERY({
       query: `query{ 
         placesExt(${searchString}) 
-        {${PLACE_EXT_DATA_QUERY} }
+        {${PLACES_EXT_DATA_QUERY} }
       }`,
     })
       .then((res) => res.json())
@@ -596,7 +595,7 @@ const MapComponent = (props) => {
                         {item.mobile_stream && (
                           <TranslationBlock
                             style={{
-                              backgroundImage: `url(https://partylivestream.web4net.ru:8080/hls/show/${cluster.item.id}.jpeg)`,
+                              backgroundImage: `url(https://ms1.partylive.by/hls/show/${cluster.item.id}/image.jpg)`,
                             }}
                           />
                         )}

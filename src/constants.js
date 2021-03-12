@@ -85,16 +85,23 @@ export const PLACE_QUERY = `place{
   categories {id name slug}
 }`;
 
-export const PLACE_EXT_DATA_QUERY = `data {
+export const PLACES_EXT_DATA_QUERY = `data {
   id name  address  profile_image lat lon
-  streams{ id preview see_you_tomorrow schedules{id day start_time end_time}}
-  scheduleIntervals {start_time end_time}
+  streams{ id preview }
   currentScheduleInterval {start_time end_time}
-  nextScheduleInterval {start_time end_time}
   is_work
   is_online
   categories {id name slug}
 }`;
+
+export const PLACE_EXT_DATA_QUERY = ` 
+  id name  address  profile_image lat lon
+  streams{ id preview url }
+  currentScheduleInterval {start_time end_time}
+  is_work
+  is_online
+  categories {id name slug}
+`;
 
 export const SCHEDULE_PLACE_QUERY = `schedulable {
   ...on Place {

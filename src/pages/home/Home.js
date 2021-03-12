@@ -11,7 +11,7 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
-import { PLACE_EXT_DATA_QUERY } from "../../constants";
+import { PLACES_EXT_DATA_QUERY } from "../../constants";
 
 const HomeContentWrap = styled.div`
     padding-top: 50px;
@@ -127,7 +127,7 @@ const Home = () => {
       setIsLoading(true);
       QUERY({
         query: `query {
-          placesExt(${searchString}) { paginatorInfo{hasMorePages lastItem total} ${PLACE_EXT_DATA_QUERY} }
+          placesExt(${searchString}) { paginatorInfo{hasMorePages lastItem total} ${PLACES_EXT_DATA_QUERY} }
         }`,
       })
         .then((res) => res.json())

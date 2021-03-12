@@ -375,7 +375,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
         .split(",")[0]
         .replace("улица", "ул.")
         .replace("проспект", "пр-т."),
-    backgroundUrl = `url(https://partylivestream.web4net.ru:8080/hls/show/${item.id}.jpeg)`,
+    backgroundUrl = `url(https://ms1.partylive.by/hls/show/${item.id}/image.jpg)`,
     noTranslationBg = item.profile_image
       ? `${queryPath}/storage/` + item.profile_image.replace(".png", ".jpg")
       : "";
