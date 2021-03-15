@@ -345,15 +345,14 @@ const SmallCompanyBlock = ({ item }) => {
     backgroundUrl = `url(https://ms1.partylive.by/hls/show/${item.id}/image.jpg)`,
     noTranslationBg = item.profile_image
       ? `${queryPath}/storage/` + item.profile_image.replace(".png", ".jpg")
-      : "";
-
-  const openedTo =
-    item.currentScheduleInterval &&
-    item.currentScheduleInterval.end_time
-      .split(" ")[1]
-      .split(":")
-      .slice(0, 2)
-      .join(":");
+      : "",
+    openedTo =
+      item.currentScheduleInterval &&
+      item.currentScheduleInterval.end_time
+        .split(" ")[1]
+        .split(":")
+        .slice(0, 2)
+        .join(":");
 
   return (
     <SmallCompBlock to={{ pathname: `/company/${item.id}` }}>

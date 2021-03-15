@@ -113,10 +113,11 @@ const Home = () => {
 
       let searchString = current_id
         ? `where: { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, 
-          first:${current_first}, 
-          client_coordinates: "${userLocatin}"`
-        : `first:${current_first}, 
-          client_coordinates: "${userLocatin}"`;
+          first:${current_first}`
+        : `first:${current_first}`;
+
+      if (userLocatin)
+        searchString = searchString + `, client_coordinates: "${userLocatin}"`;
 
       setIsLoading(true);
       QUERY({
