@@ -21,7 +21,7 @@ import {
   queryPath,
   PLACE_QUERY,
 } from "../../constants";
-import { numberDayNow } from "../../calculateTime";
+
 import SideBar from "./Sidebar";
 
 import Stream from "./Stream";
@@ -273,34 +273,72 @@ const AdminMenuTitleM = styled.p`
 `;
 
 const Admin = (props) => {
-  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false);
-  const [isShowMenu, setIsShowMenu] = useState(false);
-  const [DATA, setDATA] = useState([]);
-  const [showPopupDatePicker, setShowPopapDatePicker] = useState(false);
-  const [showPopupGoogleMap, setShowPopapGoogleMap] = useState(false);
-  const [showPopupDescription, setShowPopapDescription] = useState(false);
-  const [showPopupChooseType, setShowPopapChooseType] = useState(false);
-  const [showPopupUploadFile, setShowPopapUploadFile] = useState(false);
+  const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
+    [isShowMenu, setIsShowMenu] = useState(false),
+    [DATA, setDATA] = useState([]),
+    [showPopupDatePicker, setShowPopapDatePicker] = useState(false),
+    [showPopupGoogleMap, setShowPopapGoogleMap] = useState(false),
+    [showPopupDescription, setShowPopapDescription] = useState(false),
+    [showPopupChooseType, setShowPopapChooseType] = useState(false),
+    [showPopupUploadFile, setShowPopapUploadFile] = useState(false),
+    [startRealTimeInPicker, setStartRealTimeInPicker] = useState(),
+    [endRealTimeInPicker, setEndRealTimeInPicker] = useState(),
+    [isEmptyTime, setIsEmptyTime] = useState(true),
+    [enumWeekName, setEnumWeekName] = useState(""),
+    [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false),
+    [streamAddressData, setStreamAddressData] = useState(""),
+    [clickedTime, setClickedTime] = useState([]),
+    [isLoading, setIsLoading] = useState(true),
+    [uniqueCompanyType, setUniqueCompanyType] = useState(),
+    [hoveredBtn, setHoveredBtn] = useState(""),
+    [nameOfCompany, setNameOfCompany] = useState(""),
+    [aliasOfCompany, setAliasOfCompany] = useState(""),
+    [typeOfCompany, setTypeOfCompany] = useState(""),
+    [typeOfCompanyId, setTypeOfCompanyId] = useState(""),
+    [descOfCompany, setDescOfCompany] = useState(""),
+    [titleInPicker, setTitleInPicker] = useState(""),
+    [isSuccessSave, setIsSuccessSave] = useState(false),
+    [leftMenuSettings, setLeftMenuSettings] = useState(
+      sessionStorage.getItem("opened_li_admin")
+        ? JSON.parse(sessionStorage.getItem("opened_li_admin"))
+        : [
+            {
+              name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
+              img: "barIcon",
+              altImg: "profile",
+              clicked: true,
+              class: "barIconClass",
+            },
+            {
+              name: "ГРАФИК РАБОТЫ",
+              img: "clocklite",
+              altImg: "work",
+              clicked: false,
+              class: "clockliteClass",
+            },
+            {
+              name: "ГРАФИК ТРАНСЛЯЦИЙ",
+              img: "video-camera",
+              altImg: "camera",
+              clicked: false,
+              class: "videoCameraClass",
+            },
+            {
+              name: "СТРИМ",
+              img: "streaming",
+              altImg: "stream",
+              clicked: false,
+              class: "streamingClass",
+            },
+          ]
+    );
 
-  const [startRealTimeInPicker, setStartRealTimeInPicker] = useState();
-  const [endRealTimeInPicker, setEndRealTimeInPicker] = useState();
-  const [isEmptyTime, setIsEmptyTime] = useState(true);
-  const [enumWeekName, setEnumWeekName] = useState("");
-  const [isSetWorkTimeDPick, setIsSetWorkTimeDPick] = useState(false);
-  const [streamAddressData, setStreamAddressData] = useState("");
-  const [clickedTime, setClickedTime] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [uniqueCompanyType, setUniqueCompanyType] = useState();
-  const [hoveredBtn, setHoveredBtn] = useState("");
-  const [nameOfCompany, setNameOfCompany] = useState("");
-  const [aliasOfCompany, setAliasOfCompany] = useState("");
-  const [typeOfCompany, setTypeOfCompany] = useState("");
-  const [typeOfCompanyId, setTypeOfCompanyId] = useState("");
-  const [descOfCompany, setDescOfCompany] = useState("");
-  const [titleInPicker, setTitleInPicker] = useState("");
-  const [isSuccessSave, setIsSuccessSave] = useState(false);
+  const numberDayNow = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   const [cookies] = useCookies([]);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  !windowWidth && setWindowWidth(window.innerWidth);
 
   useEffect(() => {
     if (cookies.origin_data) {
@@ -313,142 +351,11 @@ const Admin = (props) => {
       .catch((err) => console.log(err, "UNIQUE ADMIN ERR"));
   }, []);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  !windowWidth && setWindowWidth(window.innerWidth);
-
   useEffect(() => {
     window.onresize = function (e) {
       setWindowWidth(e.target.innerWidth);
     };
   });
-
-  const refreshData = () => {
-    QUERY({
-      query: `query {
-      place (id:"${props.match.params.id}") {
-        id name address description alias profile_image lat lon
-        streams{url see_you_tomorrow name id  preview schedules{id day start_time end_time}}
-        schedules {id day start_time end_time}
-        categories {id name slug}
-      }
-  }`,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.errors) {
-          setIsLoading(false);
-          setDATA(data.data.place);
-        } else {
-          console.log(data.errors, "REFRESH ERRORS");
-        }
-      })
-      .catch((err) => console.log(err, "REFRESH ERR"));
-  };
-
-  const setAsDayOf = (id) => {
-    if (cookies.origin_data) {
-      QUERY(
-        {
-          query: `mutation {
-            deleteSchedule(id:"${id || clickedTime.id}"){
-              id day start_time end_time
-            }
-          }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          !data.errors
-            ? refreshData()
-            : console.log(data.errors, "DELETESCHEDULE ERRORS");
-        })
-        .catch((err) => console.log(err, "  DELETESCHEDULE ERR"));
-    }
-  };
-
-  const updateStream = (name) => {
-    if (cookies.origin_data) {
-      const videoPreview = name.split("/"),
-        videoPreviewUrl = name.replace(
-          videoPreview[videoPreview.length - 1],
-          "image.jpg"
-        );
-
-      QUERY(
-        {
-          query: `mutation {
-            updateStream (
-              input:{
-                id:"${DATA.streams[0].id}"
-                url :"${name}"
-                preview : "${videoPreviewUrl}"
-              }
-            ) { id name url ${PLACE_QUERY} }
-          }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          !data.errors
-            ? setDATA(data.data.updateStream.place)
-            : console.log(data.errors, "UPDATESTREAM ERRORS");
-        })
-        .catch((err) => console.log(err, "UPDATESTREAM ERR"));
-    }
-  };
-
-  const createStream = (name) => {
-    if (cookies.origin_data) {
-      QUERY(
-        {
-          query: `mutation {
-              createStream(
-                input:{
-                  name: "${DATA.name}"
-                  url :"https://partycamera.org/${name}/index.m3u8"
-                  preview : "http://partycamera.org:80/${name}/preview.mp4"
-                  place:{connect:"${props.match.params.id}"}                  
-                }) {id name url}
-            }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          !data.errors
-            ? refreshData()
-            : console.log(data.errors, "CREATE STREAM ERRORS");
-        })
-        .catch((err) => console.log(err, "CREATE STREAM ERR"));
-    }
-  };
-
-  const hideSideMenu = () => {
-      setShowSlideSideMenu(false);
-      document.body.style.overflow = "visible";
-      setIsShowMenu(false);
-    },
-    showSideMenu = () => {
-      setShowSlideSideMenu(true);
-      document.body.style.overflow = "hidden";
-      setIsShowMenu(true);
-    };
-
-  window.onresize = function (e) {
-    hideSideMenu();
-  };
-
-  const togglePopupDatePicker = (whatPickerWillShow) => {
-      setTitleInPicker(whatPickerWillShow);
-      setShowPopapDatePicker(!showPopupDatePicker);
-    },
-    togglePopupGoogleMap = () => setShowPopapGoogleMap(!showPopupGoogleMap),
-    togglePopupDescription = () =>
-      setShowPopapDescription(!showPopupDescription),
-    togglePopupChooseType = () => setShowPopapChooseType(!showPopupChooseType),
-    togglePopupUploadFile = () => setShowPopapUploadFile(!showPopupUploadFile);
 
   useEffect(() => {
     if (
@@ -470,6 +377,129 @@ const Admin = (props) => {
     showPopupUploadFile,
   ]);
 
+  window.onresize = function (e) {
+    hideSideMenu();
+  };
+
+  const refreshData = () => {
+      QUERY({
+        query: `query {
+      place (id:"${props.match.params.id}") {
+        id name address description alias profile_image lat lon
+        streams{url see_you_tomorrow name id  preview schedules{id day start_time end_time}}
+        schedules {id day start_time end_time}
+        categories {id name slug}
+      }
+  }`,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            setIsLoading(false);
+            setDATA(data.data.place);
+          } else {
+            console.log(data.errors, "REFRESH ERRORS");
+          }
+        })
+        .catch((err) => console.log(err, "REFRESH ERR"));
+    },
+    setAsDayOf = (id) => {
+      if (cookies.origin_data) {
+        QUERY(
+          {
+            query: `mutation {
+            deleteSchedule(id:"${id || clickedTime.id}"){
+              id day start_time end_time
+            }
+          }`,
+          },
+          cookies.origin_data
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            !data.errors
+              ? refreshData()
+              : console.log(data.errors, "DELETESCHEDULE ERRORS");
+          })
+          .catch((err) => console.log(err, "  DELETESCHEDULE ERR"));
+      }
+    },
+    updateStream = (name) => {
+      if (cookies.origin_data) {
+        const videoPreview = name.split("/"),
+          videoPreviewUrl = name.replace(
+            videoPreview[videoPreview.length - 1],
+            "image.jpg"
+          );
+
+        QUERY(
+          {
+            query: `mutation {
+            updateStream (
+              input:{
+                id:"${DATA.streams[0].id}"
+                url :"${name}"
+                preview : "${videoPreviewUrl}"
+              }
+            ) { id name url ${PLACE_QUERY} }
+          }`,
+          },
+          cookies.origin_data
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            !data.errors
+              ? setDATA(data.data.updateStream.place)
+              : console.log(data.errors, "UPDATESTREAM ERRORS");
+          })
+          .catch((err) => console.log(err, "UPDATESTREAM ERR"));
+      }
+    },
+    createStream = (name) => {
+      if (cookies.origin_data) {
+        QUERY(
+          {
+            query: `mutation {
+              createStream(
+                input:{
+                  name: "${DATA.name}"
+                  url :"https://partycamera.org/${name}/index.m3u8"
+                  preview : "http://partycamera.org:80/${name}/preview.mp4"
+                  place:{connect:"${props.match.params.id}"}                  
+                }) {id name url}
+            }`,
+          },
+          cookies.origin_data
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            !data.errors
+              ? refreshData()
+              : console.log(data.errors, "CREATE STREAM ERRORS");
+          })
+          .catch((err) => console.log(err, "CREATE STREAM ERR"));
+      }
+    },
+    hideSideMenu = () => {
+      setShowSlideSideMenu(false);
+      document.body.style.overflow = "visible";
+      setIsShowMenu(false);
+    },
+    showSideMenu = () => {
+      setShowSlideSideMenu(true);
+      document.body.style.overflow = "hidden";
+      setIsShowMenu(true);
+    },
+    togglePopupDatePicker = (whatPickerWillShow) => {
+      setTitleInPicker(whatPickerWillShow);
+      setShowPopapDatePicker(!showPopupDatePicker);
+    },
+    togglePopupGoogleMap = () => setShowPopapGoogleMap(!showPopupGoogleMap),
+    togglePopupDescription = () =>
+      setShowPopapDescription(!showPopupDescription),
+    togglePopupChooseType = () => setShowPopapChooseType(!showPopupChooseType),
+    togglePopupUploadFile = () => setShowPopapUploadFile(!showPopupUploadFile);
+
   const SetNewTimeObject = (data) => {
     const timeObject = {};
     EN_SHORT_DAY_OF_WEEK.forEach((e, i) => {
@@ -484,41 +514,6 @@ const Admin = (props) => {
     });
     return timeObject;
   };
-
-  const [leftMenuSettings, setLeftMenuSettings] = useState(
-    sessionStorage.getItem("opened_li_admin")
-      ? JSON.parse(sessionStorage.getItem("opened_li_admin"))
-      : [
-          {
-            name: "ПРОФИЛЬ ЗАВЕДЕНИЯ",
-            img: "barIcon",
-            altImg: "profile",
-            clicked: true,
-            class: "barIconClass",
-          },
-          {
-            name: "ГРАФИК РАБОТЫ",
-            img: "clocklite",
-            altImg: "work",
-            clicked: false,
-            class: "clockliteClass",
-          },
-          {
-            name: "ГРАФИК ТРАНСЛЯЦИЙ",
-            img: "video-camera",
-            altImg: "camera",
-            clicked: false,
-            class: "videoCameraClass",
-          },
-          {
-            name: "СТРИМ",
-            img: "streaming",
-            altImg: "stream",
-            clicked: false,
-            class: "streamingClass",
-          },
-        ]
-  );
 
   useEffect(() => {
     sessionStorage.setItem("opened_li_admin", JSON.stringify(leftMenuSettings));
@@ -539,10 +534,10 @@ const Admin = (props) => {
   const descOfCompanyLimit = 300;
 
   const updatePlaceData = () => {
-    if (cookies.origin_data) {
-      QUERY(
-        {
-          query: `mutation {
+      if (cookies.origin_data) {
+        QUERY(
+          {
+            query: `mutation {
             updatePlace(
               input:{
                 id:"${props.match.params.id}"
@@ -568,28 +563,27 @@ const Admin = (props) => {
               }
             ){id}
           }`,
-        },
-        cookies.origin_data
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.errors) {
-            setIsSuccessSave(true);
-            setTimeout(() => {
-              setIsSuccessSave(false);
-            }, 2000);
-          } else {
-            console.log(data.errors, " ERRORS");
-          }
-        })
-        .catch((err) => console.log(err, "  *******ERR"));
-    }
-  };
-
-  const updateOrRemoveUploadImage = (profile_image) => {
-    QUERY(
-      {
-        query: `mutation {
+          },
+          cookies.origin_data
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data.errors) {
+              setIsSuccessSave(true);
+              setTimeout(() => {
+                setIsSuccessSave(false);
+              }, 2000);
+            } else {
+              console.log(data.errors, " ERRORS");
+            }
+          })
+          .catch((err) => console.log(err, "  *******ERR"));
+      }
+    },
+    updateOrRemoveUploadImage = (profile_image) => {
+      QUERY(
+        {
+          query: `mutation {
           updatePlace(
             input:{
               id:"${props.match.params.id}"
@@ -601,70 +595,73 @@ const Admin = (props) => {
             }
           ){id profile_image}
         }`,
-      },
-      cookies.origin_data
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.errors) {
-          handeleClearToDefault();
-          refreshData();
-        } else {
-          console.log(data.errors, " ERRORS");
-        }
-      })
-      .catch((err) => console.log(err, "  *******ERR"));
-  };
-
-  const uploadImageTranscode = (blob) => {
-    if (cookies.origin_data) {
-      const query = `
+        },
+        cookies.origin_data
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.errors) {
+            handeleClearToDefault();
+            refreshData();
+          } else {
+            console.log(data.errors, " ERRORS");
+          }
+        })
+        .catch((err) => console.log(err, "  *******ERR"));
+    },
+    uploadImageTranscode = (blob) => {
+      if (cookies.origin_data) {
+        const query = `
           mutation ($file: Upload!) {
             placeImage(file: $file)
           }
         `;
 
-      const data = {
-        file: null,
-      };
+        const data = {
+          file: null,
+        };
 
-      const operations = JSON.stringify({
-        query,
-        variables: {
-          data,
-        },
-      });
+        const operations = JSON.stringify({
+          query,
+          variables: {
+            data,
+          },
+        });
 
-      let formData = new FormData();
-      formData.append("operations", operations);
-      const map = {
-        0: ["variables.file"],
-      };
-      formData.append("map", JSON.stringify(map));
-      formData.append("0", blob || imageDestination);
-      axios({
-        url: `${queryPath}/graphql`,
-        method: "POST",
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: cookies.origin_data
-            ? "Bearer " + cookies.origin_data
-            : "",
-        },
-        data: formData,
-      })
-        .then((res) => {
-          res.data.data.placeImage &&
-            updateOrRemoveUploadImage(res.data.data.placeImage);
+        let formData = new FormData();
+        formData.append("operations", operations);
+        const map = {
+          0: ["variables.file"],
+        };
+        formData.append("map", JSON.stringify(map));
+        formData.append("0", blob || imageDestination);
+        axios({
+          url: `${queryPath}/graphql`,
+          method: "POST",
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: cookies.origin_data
+              ? "Bearer " + cookies.origin_data
+              : "",
+          },
+          data: formData,
         })
-        .catch((err) => console.log(err, " ERR"));
-    }
-  };
+          .then((res) => {
+            res.data.data.placeImage &&
+              updateOrRemoveUploadImage(res.data.data.placeImage);
+          })
+          .catch((err) => console.log(err, " ERR"));
+      }
+    };
 
   document.body.style.background = "#fff";
 
-  const [imgSrc, setImgSrc] = useState(null);
-  const imagePreviewCanvas = useRef(null);
+  const [imgSrc, setImgSrc] = useState(null),
+    [imageDestination, setImageDestination] = useState(""),
+    [validationErr, setValidationErr] = useState({});
+
+  const imagePreviewCanvas = useRef(null),
+    imageElementRef = useRef(null);
 
   const imageMaxSize = 10000000000,
     acceptedFileTypes =
@@ -672,9 +669,6 @@ const Admin = (props) => {
     acceptedFileTypesArray = acceptedFileTypes
       .split(",")
       .map((item) => item.trim());
-
-  const imageElementRef = useRef(null);
-  const [imageDestination, setImageDestination] = useState("");
 
   useEffect(() => {
     if (imageElementRef.current) {
@@ -704,91 +698,86 @@ const Admin = (props) => {
   const handeleClearToDefault = () => setImgSrc(null);
 
   const verifyFile = (files) => {
-    if (files && files.length > 0) {
-      const currentFile = files[0],
-        currentFileType = currentFile.type,
-        currentFileSize = currentFile.size;
+      if (files && files.length > 0) {
+        const currentFile = files[0],
+          currentFileType = currentFile.type,
+          currentFileSize = currentFile.size;
 
-      if (currentFileSize > imageMaxSize) {
-        alert("слишком большой размер файла");
-        return false;
+        if (currentFileSize > imageMaxSize) {
+          alert("слишком большой размер файла");
+          return false;
+        }
+        if (!acceptedFileTypesArray.includes(currentFileType)) {
+          alert("поддерживаются только изображения");
+          return false;
+        }
+        return true;
       }
-      if (!acceptedFileTypesArray.includes(currentFileType)) {
-        alert("поддерживаются только изображения");
-        return false;
+    },
+    handleOnDrop = (files, rejectedFiles) => {
+      if (rejectedFiles && rejectedFiles.length > 0) verifyFile(rejectedFiles);
+
+      if (files && files.length > 0) {
+        const isVerified = verifyFile(files);
+        if (isVerified) {
+          const currentFile = files[0];
+          const myFileItemReader = new FileReader();
+
+          myFileItemReader.onloadend = function (theFile) {
+            var image = new Image();
+            image.src = theFile.target.result;
+          };
+
+          myFileItemReader.addEventListener(
+            "load",
+            (theFile) => {
+              const myResult = myFileItemReader.result;
+              setImgSrc("");
+
+              setImgSrc(myResult);
+            },
+            false
+          );
+          myFileItemReader.readAsDataURL(currentFile);
+        }
       }
-      return true;
-    }
-  };
-
-  const handleOnDrop = (files, rejectedFiles) => {
-    if (rejectedFiles && rejectedFiles.length > 0) verifyFile(rejectedFiles);
-
-    if (files && files.length > 0) {
-      const isVerified = verifyFile(files);
-      if (isVerified) {
-        const currentFile = files[0];
-        const myFileItemReader = new FileReader();
-
-        myFileItemReader.onloadend = function (theFile) {
-          var image = new Image();
-          image.src = theFile.target.result;
-        };
-
-        myFileItemReader.addEventListener(
-          "load",
-          (theFile) => {
-            const myResult = myFileItemReader.result;
-            setImgSrc("");
-
-            setImgSrc(myResult);
-          },
-          false
-        );
-        myFileItemReader.readAsDataURL(currentFile);
-      }
-    }
-  };
-
-  const isWorkTimeOrDayOff = (oneDay, i) => {
-    if (oneDay && oneDay.id) {
-      if (
-        oneDay.start_time.split(":")[0] * 3600 +
-          oneDay.start_time.split(":")[1] * 60 <=
-        oneDay.end_time.split(":")[0] * 3600 +
-          oneDay.end_time.split(":")[1] * 60
-      ) {
-        return (
-          <p>
-            {oneDay.start_time.replace(":", ".")}
-            {" - "}
-            {oneDay.end_time.replace(":", ".")}{" "}
-          </p>
-        );
+    },
+    isWorkTimeOrDayOff = (oneDay, i) => {
+      if (oneDay && oneDay.id) {
+        if (
+          oneDay.start_time.split(":")[0] * 3600 +
+            oneDay.start_time.split(":")[1] * 60 <=
+          oneDay.end_time.split(":")[0] * 3600 +
+            oneDay.end_time.split(":")[1] * 60
+        ) {
+          return (
+            <p>
+              {oneDay.start_time.replace(":", ".")}
+              {" - "}
+              {oneDay.end_time.replace(":", ".")}{" "}
+            </p>
+          );
+        } else {
+          return (
+            <p>
+              {oneDay.start_time.replace(":", ".")}
+              {" - "}
+              {oneDay.end_time.replace(":", ".")}
+            </p>
+          );
+        }
       } else {
-        return (
-          <p>
-            {oneDay.start_time.replace(":", ".")}
-            {" - "}
-            {oneDay.end_time.replace(":", ".")}
-          </p>
-        );
+        return "Выходной";
       }
-    } else {
-      return "Выходной";
-    }
-  };
-
-  const isSetAsDayOff = (oneDay) => {
-    if (oneDay && oneDay.id) {
-      return "Сделать выходным";
-    } else {
-      return "Выходной";
-    }
-  };
-
-  const renderCustomTypeImg = (slug, active) => {
-    return (
+    },
+    isSetAsDayOff = (oneDay) => {
+      if (oneDay && oneDay.id) {
+        return "Сделать выходным";
+      } else {
+        return "Выходной";
+      }
+    },
+    renderCustomTypeImg = (slug, active) => (
       <CustomImg
         alt="Icon"
         className="сompanyNavImg"
@@ -798,17 +787,15 @@ const Admin = (props) => {
         height="30"
       />
     );
-  };
 
   const animateProps = useSpring({
-    right: isShowMenu ? 200 : 0,
-    config: { duration: 200 },
-  });
-
-  const animateSavedProps = useSpring({
-    bottom: isSuccessSave ? 20 : -100,
-    config: { duration: 200 },
-  });
+      right: isShowMenu ? 200 : 0,
+      config: { duration: 200 },
+    }),
+    animateSavedProps = useSpring({
+      bottom: isSuccessSave ? 20 : -100,
+      config: { duration: 200 },
+    });
 
   const tomorrowFromDay = (day) => {
     if (day === 6) {
@@ -817,8 +804,6 @@ const Admin = (props) => {
       return day + 1;
     }
   };
-
-  const [validationErr, setValidationErr] = useState({});
 
   const checkValidationError = () => {
     if (nameOfCompany.length < 1) {
@@ -840,10 +825,10 @@ const Admin = (props) => {
     }
   };
 
-  const [streamOpen, setStreamOpen] = useState(false);
-  const [profileOpen, setPprofileOpen] = useState(false);
-  const [workScheduleOpen, setWorkScheduleOpen] = useState(false);
-  const [streamScheduleOpen, setStreamScheduleOpen] = useState(false);
+  const [streamOpen, setStreamOpen] = useState(false),
+    [profileOpen, setPprofileOpen] = useState(false),
+    [workScheduleOpen, setWorkScheduleOpen] = useState(false),
+    [streamScheduleOpen, setStreamScheduleOpen] = useState(false);
 
   const closeAllSidebar = () => {
     setStreamOpen(false);

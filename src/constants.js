@@ -91,6 +91,7 @@ export const PLACES_EXT_DATA_QUERY = `data {
   currentScheduleInterval {start_time end_time}
   is_work
   is_online
+  distance
   categories {id name slug}
 }`;
 

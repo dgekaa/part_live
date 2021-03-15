@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CustomImg from "../customImg/CustomImg";
 
-import {
-  EN_SHORT_TO_RU_LONG_V_P,
-  queryPath,
-  EN_SHORT_TO_RU_LONG,
-} from "../../constants";
-import { isShowStreamNow, isWorkTimeNow } from "../../calculateTime";
-import { getDistanceFromLatLonInKm } from "../../getDistance";
+import { queryPath } from "../../constants";
 import styled, { keyframes } from "styled-components";
 import { defaultColor } from "../../constants";
 
@@ -336,35 +330,8 @@ const SmallCompBlock = styled(Link)`
     animation: ${blik} 1s ease infinite;
   `;
 
-const SmallCompanyBlock = ({ item, isLocation }) => {
-  const [curDistance, setCurDistance] = useState(null),
-    [ismobileStream, setIsmobileStream] = useState(false);
-
-  const findLocation = () => {
-    if (isLocation) {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            setCurDistance(
-              getDistanceFromLatLonInKm(
-                pos.coords.latitude,
-                pos.coords.longitude,
-                item.lat,
-                item.lon
-              )
-            );
-          },
-          (err) => {
-            console.log(err, "Ошибка геолокации");
-          }
-        );
-      } else {
-        console.log("Геолокация недоступна");
-      }
-    }
-  };
-
-  findLocation();
+const SmallCompanyBlock = ({ item }) => {
+  const [ismobileStream, setIsmobileStream] = useState(false);
 
   const mouseEnter = (e) => (e.currentTarget.previousSibling.style.opacity = 1),
     mouseOut = (e) => (e.currentTarget.previousSibling.style.opacity = 0);
@@ -495,16 +462,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
               style={{ backgroundImage: `url(${item.streams[0].preview})` }}
             />
           ) : (
-            <NoTranslationM bg={noTranslationBg}>
-              {/* <TransparentBgM> */}
-              {/* {isWorkText} 
-                <p>
-                  {dayWhenWillBeOpen} 
-                  {nextWorkTime && nextWorkTime.start_time && <br />}
-                   {timeWhenWillBeOpen}
-                </p> */}
-              {/* </TransparentBgM> */}
-            </NoTranslationM>
+            <NoTranslationM bg={noTranslationBg}></NoTranslationM>
           )
         ) : (
           <PreviewBlockM
@@ -542,7 +500,7 @@ const SmallCompanyBlock = ({ item, isLocation }) => {
               </CircleRowM>
 
               <DistanceM>
-                {curDistance && curDistance.toFixed(2) + "km"}
+                {item.distance && item.distance.toFixed(2) + "km"}
               </DistanceM>
             </WorkTimeDistanceWrapM>
           </BottomDescriptionBlockM>

@@ -282,7 +282,7 @@ const MapComponent = (props) => {
     [bottomLeft, setBottomLeft] = useState(null),
     [topRight, setTopRight] = useState(null);
 
-  const loadContent = (id) => {
+  const loadContent = (id, loaderDelete) => {
     const current_id = id || sessionStorage.getItem("filter_id"),
       searchString = current_id
         ? ` first : 180,
@@ -301,7 +301,7 @@ const MapComponent = (props) => {
             ]
         }`;
 
-    setIsLoading(true);
+    !loaderDelete && setIsLoading(true);
     QUERY({
       query: `query{ 
         placesExt(${searchString}) 
@@ -315,14 +315,10 @@ const MapComponent = (props) => {
       })
       .catch((err) => console.log(err, "MAP  ERR"));
   };
-  const debouncedLoad = debounce(() => loadContent(), 500);
+  const debouncedLoad = debounce(() => loadContent(null, true), 500);
 
   useEffect(() => {
-    if (bottomLeft && topRight) {
-      console.log(bottomLeft, "------bottomLeft");
-      console.log(topRight, "------topRight");
-      debouncedLoad();
-    }
+    bottomLeft && topRight && debouncedLoad();
   }, [bottomLeft, topRight]);
 
   const points = markers
@@ -590,7 +586,7 @@ const MapComponent = (props) => {
                                   item.profile_image.replace(".png", ".jpg")
                                 : ""
                             }
-                          ></NoTranslation>
+                          />
                         )}
                         {item.mobile_stream && (
                           <TranslationBlock

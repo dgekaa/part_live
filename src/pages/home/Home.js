@@ -108,21 +108,15 @@ const Home = () => {
     },
     loadContent = (id, isFirst) => {
       const current_id = id || sessionStorage.getItem("filter_id"),
-        current_first = isFirst || first;
-      let searchString = current_id
-        ? `where: { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, first:${current_first}`
-        : `first:${current_first}`;
+        current_first = isFirst || first,
+        userLocatin = userLon && userLat ? `${userLat},${userLon}` : "";
 
-      if (isLocation) {
-        searchString =
-          searchString +
-          " ,client_coordinates:" +
-          '"' +
-          userLat +
-          "," +
-          userLon +
-          '"';
-      }
+      let searchString = current_id
+        ? `where: { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}, 
+          first:${current_first}, 
+          client_coordinates: "${userLocatin}"`
+        : `first:${current_first}, 
+          client_coordinates: "${userLocatin}"`;
 
       setIsLoading(true);
       QUERY({
