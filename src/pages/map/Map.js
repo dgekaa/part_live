@@ -37,14 +37,14 @@ const NavContainerMap = styled.div`
     }
   `,
   MapContainer = styled.div`
-    position: absolute;
+    position: fixed;
     top: 0;
-    width: 100%;
+    width: 130%;
     height: 100vh;
+    margin-left: -15%;
     @media (max-width: 760px) {
       position: fixed;
       top: 105px;
-      width: 100%;
       height: calc(100% - 140px);
     }
   `,
@@ -278,28 +278,28 @@ const MapComponent = (props) => {
     [gMapDefaultCenter, setGMapDefaultCenter] = useState(),
     [typeId, setTypeId] = useState(""),
     [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
-    [isShowMenu, setIsShowMenu] = useState(false),
-    [bottomLeft, setBottomLeft] = useState(null),
-    [topRight, setTopRight] = useState(null);
+    [isShowMenu, setIsShowMenu] = useState(false);
+  // [bottomLeft, setBottomLeft] = useState(null),
+  // [topRight, setTopRight] = useState(null);
+
+  // {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
+  // {column : LON, operator: BETWEEN, value: ["${bottomLeft.lng}", "${topRight.lng}"] }
+
+  // where: {
+  //   AND : [
+  //      {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
+  //      {column : LON, operator: BETWEEN, value:["${bottomLeft.lng}", "${topRight.lng}"] }
+  //     ]
+  // }
 
   const loadContent = (id, loaderDelete) => {
     const current_id = id || sessionStorage.getItem("filter_id"),
       searchString = current_id
         ? ` first : 180,
         where: {
-          AND : [
-        { column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}
-             {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
-             {column : LON, operator: BETWEEN, value: ["${bottomLeft.lng}", "${topRight.lng}"] }
-            ]
+          AND : [{ column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}]
         }`
-        : ` first : 180,
-        where: {
-          AND : [
-             {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
-             {column : LON, operator: BETWEEN, value:["${bottomLeft.lng}", "${topRight.lng}"] }
-            ]
-        }`;
+        : ` first : 180`;
 
     !loaderDelete && setIsLoading(true);
     QUERY({
@@ -315,11 +315,15 @@ const MapComponent = (props) => {
       })
       .catch((err) => console.log(err, "MAP  ERR"));
   };
-  const debouncedLoad = debounce(() => loadContent(null, true), 500);
+  // const debouncedLoad = debounce(() => loadContent(null, true), 500);
+
+  // useEffect(() => {
+  //   bottomLeft && topRight && debouncedLoad();
+  // }, [bottomLeft, topRight]);
 
   useEffect(() => {
-    bottomLeft && topRight && debouncedLoad();
-  }, [bottomLeft, topRight]);
+    loadContent();
+  }, []);
 
   const points = markers
       .filter((el) => !el.disabled)
@@ -398,6 +402,11 @@ const MapComponent = (props) => {
     }
   }, []);
 
+  const SwipePageSpring = useSpring({
+    left: isShowMenu ? -200 : 0,
+    config: { duration: 200 },
+  });
+
   const mouseDownHandler = ({ clientX, clientY }) =>
       setMouseMapCoordinates({
         clientX,
@@ -410,14 +419,8 @@ const MapComponent = (props) => {
       ) {
         setReferrer(`/company/${data}`);
       }
-    };
-
-  const SwipePageSpring = useSpring({
-    left: isShowMenu ? -200 : 0,
-    config: { duration: 200 },
-  });
-
-  const dancerClick = (target) => {
+    },
+    dancerClick = (target) => {
       target.previousSibling.style.opacity = 1;
       setTimeout(() => {
         target.previousSibling.style.opacity = 0;
@@ -443,8 +446,8 @@ const MapComponent = (props) => {
       // nw: {lat: 53.905449424270586, lng: 27.55963822166416} северо-запад
       // se: {lat: 53.90251657841472, lng: 27.571740348739354} юго-восток
       // sw: {lat: 53.90251657841472, lng: 27.55963822166416} юго-запад
-      setBottomLeft(bounds.sw);
-      setTopRight(bounds.ne);
+      // setBottomLeft(bounds.sw);
+      // setTopRight(bounds.ne);
       setCurrentCenterOfMap(center);
       setZoom(zoom);
       setBounds([bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat]);
@@ -469,7 +472,15 @@ const MapComponent = (props) => {
     };
 
   return (
-    <div onClick={(e) => hide(e)}>
+    <div
+      onClick={(e) => hide(e)}
+      // style={{
+      //   width: "100%",
+      //   height: "100%",
+      //   background: "red",
+      //   overflow: "hidden",
+      // }}
+    >
       <Header
         isShowMenu={isShowMenu}
         logo
