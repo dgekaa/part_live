@@ -4,7 +4,7 @@ import useSupercluster from "use-supercluster";
 import { Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
-import { debounce } from "lodash";
+// import { debounce } from "lodash";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -40,12 +40,12 @@ const NavContainerMap = styled.div`
     position: fixed;
     top: 0;
     width: 130%;
-    height: 100vh;
+    height: 120vh;
     margin-left: -15%;
     @media (max-width: 760px) {
       position: fixed;
       top: 105px;
-      height: calc(100% - 140px);
+      height: calc(100% - 30px);
     }
   `,
   YouAreHere = styled.p`
@@ -347,7 +347,7 @@ const MapComponent = (props) => {
       bounds,
       zoom,
       options: {
-        radius: 220,
+        radius: 250,
         maxZoom: 20,
       },
     });
@@ -448,6 +448,7 @@ const MapComponent = (props) => {
       // sw: {lat: 53.90251657841472, lng: 27.55963822166416} юго-запад
       // setBottomLeft(bounds.sw);
       // setTopRight(bounds.ne);
+
       setCurrentCenterOfMap(center);
       setZoom(zoom);
       setBounds([bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat]);
@@ -469,18 +470,27 @@ const MapComponent = (props) => {
         },
         cluster.item.id
       );
+    },
+    clusterClick = (latitude, longitude) => {
+      mapRef.current.setZoom(zoom + 1);
+      setTimeout(() => {
+        setZoom((prev) => prev + 1);
+      }, 500);
+
+      mapRef.current.setCenter({
+        lat: latitude,
+        lng: longitude,
+      });
+      setTimeout(() => {
+        setCurrentCenterOfMap({
+          lat: latitude,
+          lng: longitude,
+        });
+      }, 500);
     };
 
   return (
-    <div
-      onClick={(e) => hide(e)}
-      // style={{
-      //   width: "100%",
-      //   height: "100%",
-      //   background: "red",
-      //   overflow: "hidden",
-      // }}
-    >
+    <div onClick={(e) => hide(e)}>
       <Header
         isShowMenu={isShowMenu}
         logo
@@ -550,9 +560,11 @@ const MapComponent = (props) => {
                   lat={latitude}
                   lng={longitude}
                 >
-                  <ClusterMarker>
-                    <p> {pointCount}</p>
-                  </ClusterMarker>
+                  <Link onClick={(e) => clusterClick(latitude, longitude)}>
+                    <ClusterMarker>
+                      <p> {pointCount}</p>
+                    </ClusterMarker>
+                  </Link>
                 </Marker>
               );
             }

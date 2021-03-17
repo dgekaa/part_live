@@ -386,7 +386,11 @@ const Admin = (props) => {
         query: `query {
       place (id:"${props.match.params.id}") {
         id name address description alias profile_image lat lon
-        streams{url see_you_tomorrow name id  preview schedules{id day start_time end_time}}
+        streams{uuid url see_you_tomorrow name id  preview schedules{id day start_time end_time}
+        rtsp_connection {
+         id login password host port address
+        }
+      }
         schedules {id day start_time end_time}
         categories {id name slug}
       }
@@ -465,7 +469,8 @@ const Admin = (props) => {
                   name: "${DATA.name}"
                   url :"https://partycamera.org/${name}/index.m3u8"
                   preview : "http://partycamera.org:80/${name}/preview.mp4"
-                  place:{connect:"${props.match.params.id}"}                  
+                  place:{connect:"${props.match.params.id}"}     
+                  rtsp             
                 }) {id name url}
             }`,
           },

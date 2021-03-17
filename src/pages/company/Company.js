@@ -11,7 +11,6 @@ import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 import Loader from "../../components/loader/Loader";
 import VideoPlayer from "../../components/videoPlayer/VideoPlayer";
-// import { getDistanceFromLatLonInKm } from "../../getDistance";
 import QUERY from "../../query";
 import { queryPath } from "../../constants";
 import { defaultColor, PLACE_EXT_DATA_QUERY } from "../../constants";
@@ -383,24 +382,6 @@ const Company = (props) => {
         setIsLoading(false);
         console.log(err, "  ONE PLACE");
       });
-
-    // if (navigator.geolocation && DATA) {
-    //   navigator.geolocation.getCurrentPosition(
-    //     (pos) => {
-    //       setCurDistance(
-    //         getDistanceFromLatLonInKm(
-    //           pos.coords.latitude,
-    //           pos.coords.longitude,
-    //           DATA.placeExt.lat,
-    //           DATA.placeExt.lon
-    //         )
-    //       );
-    //     },
-    //     (err) => console.log(err, "ошибка геолокации")
-    //   );
-    // } else {
-    //   console.log("Геолокация недоступна ");
-    // }
   }, []);
 
   useEffect(() => {
