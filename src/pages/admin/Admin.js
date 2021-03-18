@@ -428,63 +428,63 @@ const Admin = (props) => {
           .catch((err) => console.log(err, "  DELETESCHEDULE ERR"));
       }
     },
-    updateStream = (name) => {
-      if (cookies.origin_data) {
-        const videoPreview = name.split("/"),
-          videoPreviewUrl = name.replace(
-            videoPreview[videoPreview.length - 1],
-            "image.jpg"
-          );
+    // updateStream = (name) => {
+    //   if (cookies.origin_data) {
+    //     const videoPreview = name.split("/"),
+    //       videoPreviewUrl = name.replace(
+    //         videoPreview[videoPreview.length - 1],
+    //         "image.jpg"
+    //       );
 
-        QUERY(
-          {
-            query: `mutation {
-            updateStream (
-              input:{
-                id:"${DATA.streams[0].id}"
-                url :"${name}"
-                preview : "${videoPreviewUrl}"
-              }
-            ) { id name url ${PLACE_QUERY} }
-          }`,
-          },
-          cookies.origin_data
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            !data.errors
-              ? setDATA(data.data.updateStream.place)
-              : console.log(data.errors, "UPDATESTREAM ERRORS");
-          })
-          .catch((err) => console.log(err, "UPDATESTREAM ERR"));
-      }
-    },
-    createStream = (name) => {
-      if (cookies.origin_data) {
-        QUERY(
-          {
-            query: `mutation {
-              createStream(
-                input:{
-                  name: "${DATA.name}"
-                  url :"https://partycamera.org/${name}/index.m3u8"
-                  preview : "http://partycamera.org:80/${name}/preview.mp4"
-                  place:{connect:"${props.match.params.id}"}     
-                  rtsp             
-                }) {id name url}
-            }`,
-          },
-          cookies.origin_data
-        )
-          .then((res) => res.json())
-          .then((data) => {
-            !data.errors
-              ? refreshData()
-              : console.log(data.errors, "CREATE STREAM ERRORS");
-          })
-          .catch((err) => console.log(err, "CREATE STREAM ERR"));
-      }
-    },
+    //     QUERY(
+    //       {
+    //         query: `mutation {
+    //         updateStream (
+    //           input:{
+    //             id:"${DATA.streams[0].id}"
+    //             url :"${name}"
+    //             preview : "${videoPreviewUrl}"
+    //           }
+    //         ) { id name url ${PLACE_QUERY} }
+    //       }`,
+    //       },
+    //       cookies.origin_data
+    //     )
+    //       .then((res) => res.json())
+    //       .then((data) => {
+    //         !data.errors
+    //           ? setDATA(data.data.updateStream.place)
+    //           : console.log(data.errors, "UPDATESTREAM ERRORS");
+    //       })
+    //       .catch((err) => console.log(err, "UPDATESTREAM ERR"));
+    //   }
+    // },
+    // createStream = (name) => {
+    //   if (cookies.origin_data) {
+    //     QUERY(
+    //       {
+    //         query: `mutation {
+    //           createStream(
+    //             input:{
+    //               name: "${DATA.name}"
+    //               url :"https://partycamera.org/${name}/index.m3u8"
+    //               preview : "http://partycamera.org:80/${name}/preview.mp4"
+    //               place:{connect:"${props.match.params.id}"}
+    //               rtsp
+    //             }) {id name url}
+    //         }`,
+    //       },
+    //       cookies.origin_data
+    //     )
+    //       .then((res) => res.json())
+    //       .then((data) => {
+    //         !data.errors
+    //           ? refreshData()
+    //           : console.log(data.errors, "CREATE STREAM ERRORS");
+    //       })
+    //       .catch((err) => console.log(err, "CREATE STREAM ERR"));
+    //   }
+    // },
     hideSideMenu = () => {
       setShowSlideSideMenu(false);
       document.body.style.overflow = "visible";
@@ -1968,16 +1968,13 @@ const Admin = (props) => {
                                   fontSize: "16px",
                                   fontWeight: "normal",
                                 }}
-                                className=""
-                                onClick={() => {
-                                  closeAllSidebar();
-                                }}
+                                onClick={() => closeAllSidebar()}
                               >
                                 Готово
                               </p>
                             </div>
                             <div>
-                              <div className="chooseStreamAddress">
+                              {/* <div className="chooseStreamAddress">
                                 <input
                                   className="streamAddress"
                                   placeholder={
@@ -1995,20 +1992,17 @@ const Admin = (props) => {
                                 <div
                                   className="chooseStreamAddressSaveBtn"
                                   onClick={() => {
-                                    if (streamAddressData) {
-                                      if (!DATA.streams[0]) {
-                                        createStream(streamAddressData);
-                                      } else {
-                                        updateStream(streamAddressData);
-                                      }
-                                    } else {
-                                      alert("Заполните поле");
-                                    }
+                                    streamAddressData
+                                      ? !DATA.streams[0]
+                                        ? createStream(streamAddressData)
+                                        : updateStream(streamAddressData)
+                                      : alert("Заполните поле");
                                   }}
                                 >
                                   Сохранить
                                 </div>
                               </div>
+                             */}
                               <AdminMenuTitleM>
                                 График трансляций
                               </AdminMenuTitleM>

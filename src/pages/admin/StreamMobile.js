@@ -146,6 +146,7 @@ const StreamMobile = ({ closeAllSidebar, DATA, setDATA }) => {
         <CancelSave onClick={() => save()}>Готово</CancelSave>
       </HeaderWrap>
       <AdminMenuTitleM>Стрим</AdminMenuTitleM>
+
       {isStream && (
         <>
           <div className="videoWrapAdminMobile">

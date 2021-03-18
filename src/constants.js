@@ -83,6 +83,16 @@ export const PLACE_QUERY = `place{
   streams{url name id preview schedules{id day start_time end_time}}
   schedules {id day start_time end_time}
   categories {id name slug}
+ 
+}`;
+
+export const RTSP_CONNECTION = `rtsp_connection {
+  id
+  login
+  password
+  host
+  port
+  address
 }`;
 
 export const PLACES_EXT_DATA_QUERY = `data {
