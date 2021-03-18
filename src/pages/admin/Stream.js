@@ -155,22 +155,21 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
     [inputErrors, setInputErrors] = useState(false);
 
   const toNewDateFormat = (date) => {
-    const dataArr = date.split("/");
-    if (dataArr[0].length < 2) dataArr[0] = "0" + dataArr[0];
-    const dataArrNew = [dataArr[2], dataArr[0], dataArr[1]],
-      dataString = dataArrNew.join("-");
+      const dataArr = date.split("/");
+      if (dataArr[0].length < 2) dataArr[0] = "0" + dataArr[0];
+      const dataArrNew = [dataArr[2], dataArr[0], dataArr[1]],
+        dataString = dataArrNew.join("-");
 
-    return dataString;
-  };
-
-  const clearData = () => {
-    setStreamAddressData("");
-    setStreamPortData("");
-    setStreamHostData("");
-    setStreamPasswordData("");
-    setStreamLoginData("");
-    setRtmpUrl("");
-  };
+      return dataString;
+    },
+    clearData = () => {
+      setStreamAddressData("");
+      setStreamPortData("");
+      setStreamHostData("");
+      setStreamPasswordData("");
+      setStreamLoginData("");
+      setRtmpUrl("");
+    };
 
   useEffect(() => {
     if (DATA.streams && !DATA.streams[0]) {
@@ -327,6 +326,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
     save = () => {
       !isStream && createStream(streamAddressData);
     };
+
   let wasInterval = false;
   useEffect(() => {
     if (isStream && isStream.url && !wasInterval) {
