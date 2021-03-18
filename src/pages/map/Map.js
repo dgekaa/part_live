@@ -472,6 +472,12 @@ const MapComponent = (props) => {
       );
     },
     clusterClick = (latitude, longitude) => {
+      setCurrentCenterOfMap({
+        lat: latitude,
+        lng: longitude,
+      });
+      setZoom(zoom + 1);
+
       mapRef.current.setZoom(zoom + 1);
       setTimeout(() => {
         setZoom((prev) => prev + 1);
