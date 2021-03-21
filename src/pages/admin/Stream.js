@@ -7,7 +7,6 @@ import Loader from "../../components/loader/Loader";
 
 import { defaultColor, PLACE_QUERY, RTSP_CONNECTION } from "../../constants";
 import QUERY from "../../query";
-import { setDate } from "date-fns";
 
 const DisableStreamD = styled.span`
     width: 80%;
@@ -245,6 +244,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
               setDATA(data.data.createStream.place);
             } else {
               setInputErrors(true);
+
               console.log(data.errors, "CREATE STREAM ERRORS");
             }
           })
@@ -541,6 +541,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
           )}
         </div>
       </ChooseStreamAddress>
+
       {isLoading && (
         <LoaderWrap>
           <Loader />

@@ -1475,6 +1475,7 @@ const Admin = (props) => {
                           closeAllSidebar={closeAllSidebar}
                           DATA={DATA}
                           setDATA={setDATA}
+                          refreshData={refreshData}
                         />
                       </SideBar>
                     </div>
