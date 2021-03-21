@@ -478,6 +478,8 @@ const MapComponent = (props) => {
       });
       setZoom(zoom + 1);
 
+      console.log(zoom + 1, "____zoom+1");
+
       mapRef.current.setZoom(zoom + 1);
       setTimeout(() => {
         setZoom((prev) => prev + 1);
@@ -534,9 +536,11 @@ const MapComponent = (props) => {
           defaultZoom={+sessionStorage.getItem("prevZoom") || 12}
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={({ map }) => (mapRef.current = map)}
-          onChange={({ zoom, bounds, center }) =>
-            onChangeMap(zoom, bounds, center)
-          }
+          onChange={({ zoom, bounds, center }) => {
+            console.log(zoom, "----ZOOM");
+            console.log(bounds, "----bounds");
+            onChangeMap(zoom, bounds, center);
+          }}
         >
           {!isLoading && defaultCenter && (
             <Marker lat={defaultCenter.lat} lng={defaultCenter.lng}>
