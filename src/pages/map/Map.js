@@ -497,7 +497,7 @@ const MapComponent = (props) => {
               // url="https://maps.geoapify.com/v1/tile/maptiler-3d/{z}/{x}/{y}.png?apiKey=b749b5a5506045238983e5c7ebba195b"
             />
             <MarkerClusterGroup
-              showCoverageOnHover={false}
+              showCoverageOnHover={true}
               maxClusterRadius={145}
               spiderLegPolylineOptions={{
                 weight: 0,
