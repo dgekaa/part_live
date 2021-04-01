@@ -1,14 +1,11 @@
-import React, { useState, useRef, useEffect, PureComponent } from "react";
-import PropTypes from "prop-types";
-import { Redirect, Link } from "react-router-dom";
-
+import React, { useState, useRef, useEffect } from "react";
+import { Redirect } from "react-router-dom";
+import L from "leaflet";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
-import { MapContainer, TileLayer, useMap, MapConsumer } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import Marker from "react-leaflet-enhanced-marker";
-import L from "leaflet";
 // import { debounce } from "lodash";
-import countries from "./countries.json";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
 import "./Map.css";
@@ -82,11 +79,11 @@ const NavContainerMap = styled.div`
     border-top-color: #fff;
     border-bottom: 0;
     position: absolute;
-    bottom: 21px;
+    bottom: 1px;
     left: 15px;
     @media (max-width: 760px) {
-      bottom: -10px;
-      left: 0px;
+      bottom: 1px;
+      left: 10px;
     }
   `,
   MarkerWrapp = styled.div`
@@ -96,13 +93,15 @@ const NavContainerMap = styled.div`
     overflow: hidden;
     border-radius: 10px;
     position: relative;
-    bottom: 130px;
+    bottom: 110px;
     right: 50px;
     transition: 0.3s ease opacity;
     &:hover {
       opacity: 0.9;
     }
     @media (max-width: 760px) {
+      bottom: 90px;
+      right: 40px;
       width: 120px;
       height: 130px;
     }
@@ -175,14 +174,13 @@ const NavContainerMap = styled.div`
     padding-top: 4px;
     padding-right: 6px;
     padding-left: 15px;
-
     background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     @media (max-width: 760px) {
-      height: 40px;
-      padding: 4px;
+      /* height: 40px; */
+      padding: 0px;
     }
   `,
   MarkerName = styled.p`
@@ -195,6 +193,7 @@ const NavContainerMap = styled.div`
     line-height: 19px;
     margin-left: 5px;
     @media (max-width: 760px) {
+      margin-top: 2px;
       font-size: 12px;
     }
   `,
@@ -203,6 +202,11 @@ const NavContainerMap = styled.div`
     justify-content: space-between;
     line-height: 16px;
     padding: 2px;
+    @media (max-width: 760px) {
+      line-height: 8px;
+      justify-content: space-around;
+      padding: 1px;
+    }
   `,
   IsOpened = styled.span`
     color: #000;
@@ -217,6 +221,7 @@ const NavContainerMap = styled.div`
   `,
   Row = styled.div`
     display: flex;
+    align-items: center;
   `,
   Circle = styled.div`
     width: 7px;
@@ -225,7 +230,7 @@ const NavContainerMap = styled.div`
     border-radius: 50%;
     margin-right: 5px;
     margin-left: 8px;
-    margin-top: 5px;
+
     @media (max-width: 760px) {
       margin-top: 3px;
       width: 5px;
@@ -240,7 +245,7 @@ const NavContainerMap = styled.div`
   `;
 
 const CustomMarker = ({ place, props }) => (
-  <>
+  <div style={{ background: "gold", width: 0, height: 0 }}>
     <MarkerArrow />
     <MarkerWrapp>
       <PreviewBlock>
@@ -315,7 +320,7 @@ const CustomMarker = ({ place, props }) => (
         </BottomMarkerText>
       </MarkerDesc>
     </MarkerWrapp>
-  </>
+  </div>
 );
 
 const MapComponent = (props) => {
@@ -424,6 +429,25 @@ const MapComponent = (props) => {
       if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
         hideSideMenu();
     };
+
+  // const resizeHidenMarker = () => {
+  //   const MMM = document.querySelectorAll(
+  //     ".leaflet-marker-icon.dummy.leaflet-zoom-animated.leaflet-interactive"
+  //   );
+  //   MMM.forEach((el) => {
+  //     el.style.background = "red";
+  //     el.style.width = "20px";
+  //     el.style.height = "20px";
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   if (markers) {
+  //     setTimeout(() => {
+  //       resizeHidenMarker();
+  //     }, 3000);
+  //   }
+  // }, [markers]);
 
   const [isRedirect, setIsRedirect] = useState(false);
 
