@@ -1,29 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
-import GooggleMapReact from "google-map-react";
-import useSupercluster from "use-supercluster";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect, PureComponent } from "react";
+import PropTypes from "prop-types";
+import { Redirect, Link } from "react-router-dom";
+
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
+import { MapContainer, TileLayer, useMap, MapConsumer } from "react-leaflet";
+import Marker from "react-leaflet-enhanced-marker";
+import L from "leaflet";
 // import { debounce } from "lodash";
+import countries from "./countries.json";
+import "leaflet/dist/leaflet.css";
+import "react-leaflet-markercluster/dist/styles.min.css";
+import "./Map.css";
+import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
-import { API_KEY, queryPath, PLACES_EXT_DATA_QUERY } from "../../constants";
+import { queryPath, PLACES_EXT_DATA_QUERY } from "../../constants";
 import QUERY from "../../query";
 import TypeNav from "../../components/typeNav/TypeNav";
 import CompanyNav from "../../components/companyNav/CompanyNav";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import Loader from "../../components/loader/Loader";
-import { defaultColor } from "../../constants";
-
-import { styles } from "../../components/googleMap/GoogleMapStyles";
-
-const Marker = ({ children }) => children;
-
-const createMapOptions = () => {
-  return { styles: styles };
-};
 
 const NavContainerMap = styled.div`
     position: relative;
@@ -36,7 +35,7 @@ const NavContainerMap = styled.div`
       justify-content: center;
     }
   `,
-  MapContainer = styled.div`
+  Container = styled.div`
     position: fixed;
     top: 0;
     width: 130%;
@@ -75,18 +74,6 @@ const NavContainerMap = styled.div`
       border-bottom: 0;
     }
   `,
-  ClusterMarker = styled.div`
-    width: 36px;
-    height: 36px;
-    background: ${defaultColor};
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 16px;
-    color: #ffffff;
-  `,
   MarkerArrow = styled.div`
     width: 0;
     height: 0;
@@ -95,7 +82,7 @@ const NavContainerMap = styled.div`
     border-top-color: #fff;
     border-bottom: 0;
     position: absolute;
-    bottom: -30px;
+    bottom: 21px;
     left: 15px;
     @media (max-width: 760px) {
       bottom: -10px;
@@ -118,16 +105,6 @@ const NavContainerMap = styled.div`
     @media (max-width: 760px) {
       width: 120px;
       height: 130px;
-    }
-  `,
-  MarkerInner = styled.div`
-    overflow: hidden;
-    display: flex;
-    border-radius: 10px 10px 0 0;
-    flex: 1;
-    align-items: flex-end;
-    @media (max-width: 760px) {
-      border-radius: 10px;
     }
   `,
   CustomImgStyle = styled(CustomImg)``,
@@ -193,14 +170,12 @@ const NavContainerMap = styled.div`
     align-items: center;
   `,
   MarkerDesc = styled.p`
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    height: 55px;
-    padding: 8px;
-    padding-top: 6px;
+    position: relative;
+    padding: 6px;
+    padding-top: 4px;
     padding-right: 6px;
+    padding-left: 15px;
+
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -249,7 +224,8 @@ const NavContainerMap = styled.div`
     background: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
     border-radius: 50%;
     margin-right: 5px;
-    margin-left: 3px;
+    margin-left: 8px;
+    margin-top: 5px;
     @media (max-width: 760px) {
       margin-top: 3px;
       width: 5px;
@@ -258,39 +234,102 @@ const NavContainerMap = styled.div`
   `,
   Opened = styled.span`
     display: inline-block;
-
     @media (max-width: 760px) {
       display: none;
     }
   `;
+
+const CustomMarker = ({ place, props }) => (
+  <>
+    <MarkerArrow />
+    <MarkerWrapp>
+      <PreviewBlock>
+        {place.streams &&
+          place.streams[0] &&
+          place.streams[0].preview &&
+          !!place.is_online &&
+          !place.mobile_stream && (
+            <TranslationBlock
+              style={{
+                backgroundImage: `url(${place.streams[0].preview})`,
+              }}
+            />
+          )}
+        {!place.is_online && !place.mobile_stream && (
+          <NoTranslation
+            bg={
+              place.profile_image
+                ? `${queryPath}/storage/` +
+                  place.profile_image.replace(".png", ".jpg")
+                : ""
+            }
+          />
+        )}
+
+        {/* {place.mobile_stream && (
+              <TranslationBlock
+                style={{
+                  backgroundImage: `url(https://ms1.partylive.by/hls/show/${cluster.item.id}/image.jpg)`,
+                }}
+              />
+            )} */}
+      </PreviewBlock>
+
+      <MarkerDesc>
+        <div style={{ display: "flex", padding: "0 5px" }}>
+          {place.categories[0] && place.categories[0].slug && (
+            <CustomImgStyle
+              className="qwe"
+              alt="Icon"
+              name={place.categories[0].slug}
+              width="16"
+              height="16"
+            />
+          )}
+          <MarkerName>{place.name}</MarkerName>
+        </div>
+
+        <BottomMarkerText>
+          <IsOpened>
+            {place.is_work && (
+              <Row>
+                <Circle isWork={place.is_work} />
+                <span>
+                  <Opened>Открыто</Opened> до{" "}
+                  {place.currentScheduleInterval.end_time
+                    .split(" ")[1]
+                    .split(":")
+                    .slice(0, 2)
+                    .join(":")}
+                </span>
+              </Row>
+            )}
+
+            {!place.is_work && (
+              <Row>
+                <Circle isWork={place.is_work} />
+                <span>Закрыто</span>
+              </Row>
+            )}
+          </IsOpened>
+        </BottomMarkerText>
+      </MarkerDesc>
+    </MarkerWrapp>
+  </>
+);
 
 const MapComponent = (props) => {
   const mapRef = useRef();
 
   const [markers, setMarkers] = useState([]),
     [zoom, setZoom] = useState(12),
-    [bounds, setBounds] = useState(null),
     [isLoading, setIsLoading] = useState(true),
-    [mouseMapCoordinates, setMouseMapCoordinates] = useState({}),
-    [referrer, setReferrer] = useState(""),
     [currentCenterOfMap, setCurrentCenterOfMap] = useState(),
     [defaultCenter, setDefaultCenter] = useState(),
     [gMapDefaultCenter, setGMapDefaultCenter] = useState(),
     [typeId, setTypeId] = useState(""),
     [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
-  // [bottomLeft, setBottomLeft] = useState(null),
-  // [topRight, setTopRight] = useState(null);
-
-  // {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
-  // {column : LON, operator: BETWEEN, value: ["${bottomLeft.lng}", "${topRight.lng}"] }
-
-  // where: {
-  //   AND : [
-  //      {column : LAT, operator: BETWEEN, value: ["${bottomLeft.lat}", "${topRight.lat}"] }
-  //      {column : LON, operator: BETWEEN, value:["${bottomLeft.lng}", "${topRight.lng}"] }
-  //     ]
-  // }
 
   const loadContent = (id, loaderDelete) => {
     const current_id = id || sessionStorage.getItem("filter_id"),
@@ -315,42 +354,10 @@ const MapComponent = (props) => {
       })
       .catch((err) => console.log(err, "MAP  ERR"));
   };
-  // const debouncedLoad = debounce(() => loadContent(null, true), 500);
-
-  // useEffect(() => {
-  //   bottomLeft && topRight && debouncedLoad();
-  // }, [bottomLeft, topRight]);
 
   useEffect(() => {
     loadContent();
   }, []);
-
-  const points = markers
-      .filter((el) => !el.disabled)
-      .map((el, i) => {
-        return {
-          type: "Feature",
-          item: el,
-          properties: {
-            cluster: false,
-            crimeId: i,
-            category: el.categories[0] && el.categories[0].name,
-          },
-          geometry: {
-            type: "Point",
-            coordinates: [+el.lon, +el.lat],
-          },
-        };
-      }),
-    { clusters } = useSupercluster({
-      points,
-      bounds,
-      zoom,
-      options: {
-        radius: 250,
-        maxZoom: 20,
-      },
-    });
 
   const clickedType = (id) => {
       setMarkers([]);
@@ -407,285 +414,118 @@ const MapComponent = (props) => {
     config: { duration: 200 },
   });
 
-  const mouseDownHandler = ({ clientX, clientY }) =>
-      setMouseMapCoordinates({
-        clientX,
-        clientY,
-      }),
-    mouseUpHandler = (e, data) => {
-      if (
-        +mouseMapCoordinates.clientX === +e.clientX &&
-        +mouseMapCoordinates.clientY === +e.clientY
-      ) {
-        setReferrer(`/company/${data}`);
-      }
-    },
-    dancerClick = (target) => {
+  const dancerClick = (target) => {
       target.previousSibling.style.opacity = 1;
       setTimeout(() => {
         target.previousSibling.style.opacity = 0;
       }, 2000);
     },
-    markerClick = () => {
-      sessionStorage.setItem("prevZoom", zoom);
-      sessionStorage.setItem("prevCenter", JSON.stringify(currentCenterOfMap));
-    },
-    markerMouseDown = (e) => {
-      !("ontouchstart" in document.documentElement) && mouseDownHandler(e);
-    },
-    markerMouseUp = (e, cluster) => {
-      !("ontouchstart" in document.documentElement) &&
-        mouseUpHandler(e, cluster.item.id);
-    },
     hide = (e) => {
       if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
         hideSideMenu();
-    },
-    onChangeMap = (zoom, bounds, center) => {
-      // ne: {lat: 53.905449424270586, lng: 27.571740348739354} северо-восток
-      // nw: {lat: 53.905449424270586, lng: 27.55963822166416} северо-запад
-      // se: {lat: 53.90251657841472, lng: 27.571740348739354} юго-восток
-      // sw: {lat: 53.90251657841472, lng: 27.55963822166416} юго-запад
-      // setBottomLeft(bounds.sw);
-      // setTopRight(bounds.ne);
-
-      setCurrentCenterOfMap(center);
-      setZoom(zoom);
-      setBounds([bounds.nw.lng, bounds.se.lat, bounds.se.lng, bounds.nw.lat]);
-    },
-    onTouchStart = (e, cluster) => {
-      mouseDownHandler(
-        {
-          clientX: e.nativeEvent.changedTouches[0].clientX,
-          clientY: e.nativeEvent.changedTouches[0].clientY,
-        },
-        cluster.item.id
-      );
-    },
-    onTouchEnd = (e, cluster) => {
-      mouseUpHandler(
-        {
-          clientX: e.nativeEvent.changedTouches[0].clientX,
-          clientY: e.nativeEvent.changedTouches[0].clientY,
-        },
-        cluster.item.id
-      );
-    },
-    clusterClick = (latitude, longitude) => {
-      setCurrentCenterOfMap({
-        lat: latitude,
-        lng: longitude,
-      });
-      setZoom(zoom + 1);
-
-      console.log(zoom + 1, "____zoom+1");
-
-      mapRef.current.setZoom(zoom + 1);
-      setTimeout(() => {
-        setZoom((prev) => prev + 1);
-      }, 500);
-
-      mapRef.current.setCenter({
-        lat: latitude,
-        lng: longitude,
-      });
-      setTimeout(() => {
-        setCurrentCenterOfMap({
-          lat: latitude,
-          lng: longitude,
-        });
-      }, 500);
     };
 
-  return (
-    <div onClick={(e) => hide(e)}>
-      <Header
-        isShowMenu={isShowMenu}
-        logo
-        arrow
-        burger
-        showSlideSideMenu={showSlideSideMenu}
-        showSideMenu={showSideMenu}
-      />
-      <NavContainerMap>
-        <CompanyNav
-          style={{ zIndex: 1 }}
-          currentPage="/map"
-          clickedType={clickedType}
-          toSlideFixedNav={isShowMenu}
+  const [isRedirect, setIsRedirect] = useState(false);
+
+  if (isRedirect) {
+    return <Redirect to={`/company/${isRedirect}`} />;
+  } else {
+    return (
+      <div onClick={(e) => hide(e)}>
+        <Header
+          isShowMenu={isShowMenu}
+          logo
+          arrow
+          burger
+          showSlideSideMenu={showSlideSideMenu}
+          showSideMenu={showSideMenu}
         />
-        <TypeNav style={{ zIndex: 1 }} />
-      </NavContainerMap>
+        <NavContainerMap>
+          <CompanyNav
+            style={{ zIndex: 1 }}
+            currentPage="/map"
+            clickedType={clickedType}
+            toSlideFixedNav={isShowMenu}
+          />
+          <TypeNav style={{ zIndex: 1 }} />
+        </NavContainerMap>
 
-      <MapContainer as={animated.div} style={SwipePageSpring}>
-        <GooggleMapReact
-          options={createMapOptions}
-          style={{
-            height: "100%",
-            width: "100%",
-          }}
-          bootstrapURLKeys={{
-            key: API_KEY,
-          }}
-          defaultCenter={
-            gMapDefaultCenter || {
-              lat: 53.904577,
-              lng: 27.557328,
+        <Container as={animated.div} style={SwipePageSpring}>
+          <MapContainer
+            className="markercluster-map"
+            style={{ height: "100%" }}
+            zoom={+sessionStorage.getItem("prevZoom") || 12}
+            // maxZoom={20}
+            center={
+              gMapDefaultCenter
+                ? [gMapDefaultCenter.lat, gMapDefaultCenter.lng]
+                : [53.904577, 27.557328]
             }
-          }
-          defaultZoom={+sessionStorage.getItem("prevZoom") || 12}
-          yesIWantToUseGoogleMapApiInternals
-          onGoogleApiLoaded={({ map }) => (mapRef.current = map)}
-          onChange={({ zoom, bounds, center }) => {
-            console.log(zoom, "----ZOOM");
-            console.log(bounds, "----bounds");
-            onChangeMap(zoom, bounds, center);
-          }}
-        >
-          {!isLoading && defaultCenter && (
-            <Marker lat={defaultCenter.lat} lng={defaultCenter.lng}>
-              <YouAreHere>Вы тут</YouAreHere>
-              <CustomImg
-                onClick={({ target }) => dancerClick(target)}
-                alt="me"
-                name={"dancer"}
-                width="32"
-                height="32"
-              />
-            </Marker>
-          )}
-          {clusters.map((cluster) => {
-            const [longitude, latitude] = cluster.geometry.coordinates,
-              {
-                cluster: isCluster,
-                point_count: pointCount,
-              } = cluster.properties,
-              item = cluster.item;
-
-            //ЗАМЕНА НА ЦИФРЫ
-            if (isCluster) {
-              return (
+          >
+            <TileLayer
+              opacity={0.8}
+              maxZoom={20}
+              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://maps.geoapify.com/v1/tile/maptiler-3d/{z}/{x}/{y}.png?apiKey=b749b5a5506045238983e5c7ebba195b"
+              // https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+              // https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+              // https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png
+              // url="https://maps.geoapify.com/v1/tile/maptiler-3d/{z}/{x}/{y}.png?apiKey=b749b5a5506045238983e5c7ebba195b"
+            />
+            <MarkerClusterGroup
+              showCoverageOnHover={false}
+              maxClusterRadius={145}
+              spiderLegPolylineOptions={{
+                weight: 0,
+                opacity: 0,
+              }}
+              spiderfyOnMaxZoom={true}
+              spiderfyDistanceMultiplier={5}
+            >
+              {markers.map((place) => (
                 <Marker
-                  key={cluster.properties.cluster_id}
-                  lat={latitude}
-                  lng={longitude}
-                >
-                  <Link onClick={(e) => clusterClick(latitude, longitude)}>
-                    <ClusterMarker>
-                      <p> {pointCount}</p>
-                    </ClusterMarker>
-                  </Link>
-                </Marker>
-              );
-            }
+                  key={place.id}
+                  position={[place.lat, place.lon]}
+                  eventHandlers={{
+                    click: (e) => {
+                      console.log("marker clicked", e);
+                      console.log(place, "---place");
 
-            //БЕЗ ЗАМЕНЫ НА ЦИФРЫ
-            return (
-              <Marker
-                key={cluster.properties.crimeId}
-                lat={latitude}
-                lng={longitude}
-              >
-                <Link
-                  onClick={() => markerClick()}
-                  onMouseDown={(e) => markerMouseDown(e)}
-                  onMouseUp={(e) => markerMouseUp(e, cluster)}
-                  onTouchStart={(e) => onTouchStart(e, cluster)}
-                  onTouchEnd={(e) => onTouchEnd(e, cluster)}
-                  to={{
-                    pathname: referrer ? `/company/${item.id}` : `/map`,
+                      setIsRedirect(place.id);
+                    },
                   }}
-                >
-                  <MarkerArrow></MarkerArrow>
-                  <MarkerWrapp>
-                    <MarkerInner>
-                      <PreviewBlock>
-                        {item.streams &&
-                          item.streams[0] &&
-                          item.streams[0].preview &&
-                          !!item.is_online &&
-                          !item.mobile_stream && (
-                            <TranslationBlock
-                              style={{
-                                backgroundImage: `url(${item.streams[0].preview})`,
-                              }}
-                            />
-                          )}
-                        {!item.is_online && !item.mobile_stream && (
-                          <NoTranslation
-                            bg={
-                              item.profile_image
-                                ? `${queryPath}/storage/` +
-                                  item.profile_image.replace(".png", ".jpg")
-                                : ""
-                            }
-                          />
-                        )}
-                        {item.mobile_stream && (
-                          <TranslationBlock
-                            style={{
-                              backgroundImage: `url(https://ms1.partylive.by/hls/show/${cluster.item.id}/image.jpg)`,
-                            }}
-                          />
-                        )}
-                      </PreviewBlock>
+                  icon={
+                    <CustomMarker place={place} props={props} />
+                    // <Link
+                    //   //  onClick={() => markerClick()}
+                    //   //  onMouseDown={(e) => markerMouseDown(e)}
+                    //   //  onMouseUp={(e) => markerMouseUp(e, cluster)}
+                    //   //  onTouchStart={(e) => onTouchStart(e, cluster)}
+                    //   //  onTouchEnd={(e) => onTouchEnd(e, cluster)}
+                    //   // to={`/company/${place.id}`}
+                    //   to={{
+                    //     pathname: `/company/${place.id}`,
+                    //   }}
+                    // >
+                    //   <CustomMarker place={place} />
+                    // </Link>
+                  }
+                />
+              ))}
+            </MarkerClusterGroup>
+          </MapContainer>
+        </Container>
 
-                      <MarkerDesc>
-                        <div style={{ display: "flex" }}>
-                          {item.categories[0] && item.categories[0].slug && (
-                            <CustomImgStyle
-                              className="qwe"
-                              alt="Icon"
-                              name={item.categories[0].slug}
-                              width="16"
-                              height="16"
-                            />
-                          )}
-                          <MarkerName>{item.name}</MarkerName>
-                        </div>
-
-                        <BottomMarkerText>
-                          <IsOpened>
-                            {item.is_work && (
-                              <Row>
-                                <Circle isWork={item.is_work} />
-                                <span>
-                                  <Opened>Открыто</Opened> до{" "}
-                                  {item.currentScheduleInterval.end_time
-                                    .split(" ")[1]
-                                    .split(":")
-                                    .slice(0, 2)
-                                    .join(":")}
-                                </span>
-                              </Row>
-                            )}
-                            {!item.is_work && (
-                              <Row>
-                                <Circle isWork={item.is_work} />
-                                <span>Закрыто</span>
-                              </Row>
-                            )}
-                          </IsOpened>
-                        </BottomMarkerText>
-                      </MarkerDesc>
-                    </MarkerInner>
-                  </MarkerWrapp>
-                </Link>
-              </Marker>
-            );
-          })}
-        </GooggleMapReact>
-      </MapContainer>
-
-      <BottomMenu isShowMenu={isShowMenu} border />
-      <SlideSideMenu isShowMenu={isShowMenu} />
-      {isLoading && (
-        <LoaderWrapper style={{ height: window.innerHeight }}>
-          <Loader />
-        </LoaderWrapper>
-      )}
-    </div>
-  );
+        <BottomMenu isShowMenu={isShowMenu} border />
+        <SlideSideMenu isShowMenu={isShowMenu} />
+        {isLoading && (
+          <LoaderWrapper style={{ height: window.innerHeight }}>
+            <Loader />
+          </LoaderWrapper>
+        )}
+      </div>
+    );
+  }
 };
 
 export default MapComponent;
