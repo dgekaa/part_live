@@ -333,28 +333,28 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
       setVedeoLoading(true);
       let count = 0;
 
-      const urlTimer = setInterval(() => {
-        count++;
+      // const urlTimer = setInterval(() => {
+      //   count++;
 
-        setVedeoLoading(true);
-        fetch(isStream.url)
-          .then((res) => {
-            if (res.ok) {
-              clearInterval(urlTimer);
-              count = 0;
-              wasInterval = true;
-              setVedeoLoading(false);
-            } else {
-              setVedeoLoading(true);
-            }
-          })
-          .catch((err) => setVedeoLoading(true));
+      //   setVedeoLoading(true);
+      //   fetch(isStream.url)
+      //     .then((res) => {
+      //       if (res.ok) {
+      //         clearInterval(urlTimer);
+      //         count = 0;
+      //         wasInterval = true;
+      //         setVedeoLoading(false);
+      //       } else {
+      //         setVedeoLoading(true);
+      //       }
+      //     })
+      //     .catch((err) => setVedeoLoading(true));
 
-        if (count > 120) {
-          clearInterval(urlTimer);
-          setInputErrors(true);
-        }
-      }, 2500);
+      //   if (count > 120) {
+      //     clearInterval(urlTimer);
+      //     setInputErrors(true);
+      //   }
+      // }, 2500);
     }
   }, [isStream]);
 

@@ -4,7 +4,7 @@ import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 
 import CustomImg from "../../components/customImg/CustomImg";
-import GoogleMap from "../../components/googleMap/GoogleMap";
+import Map from "../../components/Map/Map";
 import Popup from "../../components/popup/Popup";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -577,7 +577,7 @@ const Company = (props) => {
                   onMouseDown={mouseDownMapHandler}
                   onMouseUp={mouseUpMapHandler}
                 >
-                  <GoogleMap
+                  <Map
                     togglePopupGoogleMap={togglePopup}
                     styleContainerMap={{ height: "85px" }}
                     initialCenterMap={
@@ -690,7 +690,7 @@ const Company = (props) => {
                     onMouseDown={mouseDownMapHandler}
                     onMouseUp={mouseUpMapHandler}
                   >
-                    <GoogleMap
+                    <Map
                       togglePopupGoogleMap={togglePopup}
                       styleContainerMap={{ height: "330px" }}
                       initialCenterMap={
@@ -717,7 +717,7 @@ const Company = (props) => {
       {isLoading && <Loader />}
       {showPopup && (
         <Popup togglePopup={togglePopup}>
-          <GoogleMap
+          <Map
             togglePopupGoogleMap={togglePopup}
             styleContainerMap={{ width: "100vw" }}
             closeBtn

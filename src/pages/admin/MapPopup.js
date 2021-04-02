@@ -1,11 +1,11 @@
 import React from "react";
 import { useCookies } from "react-cookie";
-import GoogleMap from "../../components/googleMap/GoogleMap";
+import Map from "../../components/Map/Map";
 
 import QUERY from "../../query";
 import Popup from "../../components/popup/Popup";
 
-const GoogleMapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
+const MapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
   const [cookies] = useCookies([]);
 
   const chooseNewAddress = (streetName, latLng) => {
@@ -53,7 +53,7 @@ const GoogleMapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
         height: "100%",
       }}
     >
-      <GoogleMap
+      <Map
         initialCenterMap={initialCenterMap}
         togglePopupGoogleMap={togglePopupGoogleMap}
         chooseNewAddress={chooseNewAddress}
@@ -63,4 +63,4 @@ const GoogleMapPopup = ({ togglePopupGoogleMap, DATA, props, refreshData }) => {
   );
 };
 
-export default GoogleMapPopup;
+export default MapPopup;

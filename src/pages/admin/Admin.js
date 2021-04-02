@@ -32,7 +32,7 @@ import "./sidebar.css";
 import "cropperjs/dist/cropper.min.css";
 import "./imagecropper.css";
 import DatePickerPopup from "./DatePickerPopup";
-import GoogleMapPopup from "./GoogleMapPopup";
+import MapPopup from "./MapPopup";
 import DescriptionPopup from "./DescriptionPopup";
 import UploadFilePopup from "./UploadFilePopup";
 import ChooseTypePopup from "./ChooseTypePopup";
@@ -2140,7 +2140,7 @@ const Admin = (props) => {
             />
           )}
           {showPopupGoogleMap && (
-            <GoogleMapPopup
+            <MapPopup
               togglePopupGoogleMap={togglePopupGoogleMap}
               DATA={DATA}
               props={props}

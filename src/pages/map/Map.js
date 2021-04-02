@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import L from "leaflet";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 import { MapContainer, TileLayer } from "react-leaflet";
@@ -492,8 +491,11 @@ const MapComponent = (props) => {
               maxNativeZoom={19}
               maxZoom={41}
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             />
+            {/* https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png */}
+            {/* https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png */}
+            {/* "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" */}
             <MarkerClusterGroup
               showCoverageOnHover={false}
               maxClusterRadius={100}
