@@ -493,10 +493,6 @@ const MapComponent = (props) => {
               maxZoom={41}
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              // https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
-              // https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
-              // https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png
-              // url="https://maps.geoapify.com/v1/tile/maptiler-3d/{z}/{x}/{y}.png?apiKey=b749b5a5506045238983e5c7ebba195b"
             />
             <MarkerClusterGroup
               showCoverageOnHover={false}
