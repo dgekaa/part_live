@@ -490,7 +490,7 @@ const MapComponent = (props) => {
               opacity={0.8}
               maxZoom={20}
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://maps.geoapify.com/v1/tile/maptiler-3d/{z}/{x}/{y}.png?apiKey=b749b5a5506045238983e5c7ebba195b"
+              url="https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=b749b5a5506045238983e5c7ebba195b"
               // https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
               // https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
               // https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png
@@ -498,7 +498,7 @@ const MapComponent = (props) => {
             />
             <MarkerClusterGroup
               showCoverageOnHover={true}
-              maxClusterRadius={145}
+              maxClusterRadius={100}
               spiderLegPolylineOptions={{
                 weight: 0,
                 opacity: 0,
@@ -511,12 +511,7 @@ const MapComponent = (props) => {
                   key={place.id}
                   position={[place.lat, place.lon]}
                   eventHandlers={{
-                    click: (e) => {
-                      console.log("marker clicked", e);
-                      console.log(place, "---place");
-
-                      setIsRedirect(place.id);
-                    },
+                    click: (e) => setIsRedirect(place.id),
                   }}
                   icon={
                     <CustomMarker place={place} props={props} />
