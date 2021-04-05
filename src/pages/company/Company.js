@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import Map from "../../components/Map/Map";
@@ -17,7 +17,8 @@ import { defaultColor, PLACE_EXT_DATA_QUERY } from "../../constants";
 
 import "./company.css";
 
-const GoBackBtnD = styled(Link)`
+const GoBackBtnD = styled.div`
+    cursor: pointer;
     font-size: 16px;
     display: block;
     font-weight: normal;
@@ -434,6 +435,8 @@ const Company = (props) => {
         hideSideMenu();
     };
 
+  const history = useHistory();
+
   // setInterval(() => {
   //   updateIsMobileStreaming();
   // }, 5000);
@@ -442,6 +445,8 @@ const Company = (props) => {
     right: isShowMenu ? 200 : 0,
     config: { duration: 200 },
   });
+
+  console.log(props, "---PR");
 
   return (
     <div onClick={(e) => hide(e)}>
@@ -460,7 +465,11 @@ const Company = (props) => {
         style={SwipePageSpring}
         onClick={(e) => hide(e)}
       >
-        <GoBackBtnD to="/">
+        <GoBackBtnD
+          onClick={() => {
+            history.goBack();
+          }}
+        >
           <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
           На главную
         </GoBackBtnD>

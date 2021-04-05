@@ -180,7 +180,7 @@ const Header = ({
             </PartyLive>
           </Link>
         )}
-        {arrow && <GoBackArrow onClick={() => history.goBack()}></GoBackArrow>}
+        {arrow && <GoBackArrow onClick={() => history.goBack()} />}
 
         <RightHeaderMenu>
           {!Number(cookies.origin_id) && (

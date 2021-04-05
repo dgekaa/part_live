@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
 import { MapContainer, TileLayer } from "react-leaflet";
+import { L } from "leaflet";
 import Marker from "react-leaflet-enhanced-marker";
 // import { debounce } from "lodash";
 import "leaflet/dist/leaflet.css";
@@ -323,17 +324,13 @@ const CustomMarker = ({ place, props }) => (
 );
 
 const MapComponent = (props) => {
-  const mapRef = useRef();
-
   const [markers, setMarkers] = useState([]),
-    [zoom, setZoom] = useState(12),
     [isLoading, setIsLoading] = useState(true),
-    [currentCenterOfMap, setCurrentCenterOfMap] = useState(),
-    [defaultCenter, setDefaultCenter] = useState(),
     [gMapDefaultCenter, setGMapDefaultCenter] = useState(),
     [typeId, setTypeId] = useState(""),
     [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
-    [isShowMenu, setIsShowMenu] = useState(false);
+    [isShowMenu, setIsShowMenu] = useState(false),
+    [mapRef, setMapRef] = useState(null);
 
   const loadContent = (id, loaderDelete) => {
     const current_id = id || sessionStorage.getItem("filter_id"),
@@ -388,30 +385,29 @@ const MapComponent = (props) => {
   });
 
   useEffect(() => {
-    const center = sessionStorage.getItem("prevCenter")
-      ? {
-          lat: JSON.parse(sessionStorage.getItem("prevCenter")).lat,
-          lng: JSON.parse(sessionStorage.getItem("prevCenter")).lng,
-        }
-      : defaultCenter;
-
-    setGMapDefaultCenter(center);
-  }, [defaultCenter]);
-
-  useEffect(() => {
-    if (navigator.geolocation && !defaultCenter) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) =>
-          setDefaultCenter({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          }),
-        (err) => console.log(err, " GEOLOCATION MAP ERROR")
-      );
-    } else {
-      console.log("Геолокация недоступна");
+    if (sessionStorage.getItem("prevCenter")) {
+      mapRef &&
+        mapRef.setView([
+          JSON.parse(sessionStorage.getItem("prevCenter")).lat,
+          JSON.parse(sessionStorage.getItem("prevCenter")).lng,
+        ]);
     }
-  }, []);
+  }, [mapRef]);
+
+  // useEffect(() => {
+  //   if (navigator.geolocation && !defaultCenter) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (pos) =>
+  //         setDefaultCenter({
+  //           lat: pos.coords.latitude,
+  //           lng: pos.coords.longitude,
+  //         }),
+  //       (err) => console.log(err, " GEOLOCATION MAP ERROR")
+  //     );
+  //   } else {
+  //     console.log("Геолокация недоступна");
+  //   }
+  // }, []);
 
   const SwipePageSpring = useSpring({
     left: isShowMenu ? -200 : 0,
@@ -429,29 +425,10 @@ const MapComponent = (props) => {
         hideSideMenu();
     };
 
-  // const resizeHidenMarker = () => {
-  //   const MMM = document.querySelectorAll(
-  //     ".leaflet-marker-icon.dummy.leaflet-zoom-animated.leaflet-interactive"
-  //   );
-  //   MMM.forEach((el) => {
-  //     el.style.background = "red";
-  //     el.style.width = "20px";
-  //     el.style.height = "20px";
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   if (markers) {
-  //     setTimeout(() => {
-  //       resizeHidenMarker();
-  //     }, 3000);
-  //   }
-  // }, [markers]);
-
   const [isRedirect, setIsRedirect] = useState(false);
 
   if (isRedirect) {
-    return <Redirect to={`/company/${isRedirect}`} />;
+    return <Redirect push to={`/company/${isRedirect}`} />;
   } else {
     return (
       <div onClick={(e) => hide(e)}>
@@ -476,15 +453,15 @@ const MapComponent = (props) => {
         <Container as={animated.div} style={SwipePageSpring}>
           <MapContainer
             className="markercluster-map"
+            whenCreated={(mapInstance) => {
+              console.log(mapInstance, "--mapInstance");
+              setMapRef(mapInstance);
+            }}
             style={{ height: "100%" }}
             zoom={+sessionStorage.getItem("prevZoom") || 12}
             maxNativeZoom={19}
             maxZoom={41}
-            center={
-              gMapDefaultCenter
-                ? [gMapDefaultCenter.lat, gMapDefaultCenter.lng]
-                : [53.904577, 27.557328]
-            }
+            center={[53.904577, 27.557328]}
           >
             <TileLayer
               opacity={0.8}
@@ -493,9 +470,6 @@ const MapComponent = (props) => {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             />
-            {/* https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png */}
-            {/* https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png */}
-            {/* "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" */}
             <MarkerClusterGroup
               showCoverageOnHover={false}
               maxClusterRadius={100}
@@ -511,7 +485,14 @@ const MapComponent = (props) => {
                   key={place.id}
                   position={[place.lat, place.lon]}
                   eventHandlers={{
-                    click: (e) => setIsRedirect(place.id),
+                    click: (e) => {
+                      sessionStorage.setItem("prevZoom", mapRef._zoom);
+                      sessionStorage.setItem(
+                        "prevCenter",
+                        JSON.stringify({ lat: place.lat, lng: place.lon })
+                      );
+                      setIsRedirect(place.id);
+                    },
                   }}
                   icon={
                     <CustomMarker place={place} props={props} />
