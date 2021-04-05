@@ -9,7 +9,7 @@ import "react-leaflet-markercluster/dist/styles.min.css";
 import "./Map.css";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { renderToStaticMarkup } from "react-dom/server";
-
+import { defaultColor } from "../../constants";
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
@@ -75,14 +75,14 @@ const NavContainerMap = styled.div`
     height: 0;
     margin: 0 auto;
     border: 10px solid transparent;
-    border-top-color: #000;
+    border-top-color: ${defaultColor};
     border-bottom: 0;
     position: relative;
     bottom: 0;
     left: 65px;
     @media (max-width: 760px) {
       bottom: 0;
-      left: 55px;
+      left: 50px;
     }
   `,
   MarkerWrapp = styled.div`

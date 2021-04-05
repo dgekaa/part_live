@@ -77,6 +77,7 @@ const Map = ({
   isNewAddress,
   styleContainerMap,
   closeBtn,
+  height,
 }) => {
   const initialCenter = initialCenterMap || {
     lat: 53.904241,
@@ -116,8 +117,6 @@ const Map = ({
       },
     }).addTo(mapRef);
 
-    console.log(mapRef, "---mapRef");
-
     mapRef.on("geosearch/showlocation", (data) => {
       console.log(data.location, "---1");
       const { x, y, label } = data.location;
@@ -142,8 +141,6 @@ const Map = ({
   }, [mapRef]);
 
   const save = () => {
-    console.log(streetName, "---streetName");
-    console.log(latLng, "---latLng");
     if (streetName && latLng) chooseNewAddress(streetName, latLng);
   };
 
@@ -151,7 +148,7 @@ const Map = ({
     <MapContainerStyle style={styleContainerMap}>
       <MapContainer
         whenCreated={(mapInstance) => setMapRef(mapInstance)}
-        style={{ height: "100vh" }}
+        style={{ height: height || "100vh" }}
         center={initialCenter}
         zoom={14}
         maxNativeZoom={19}
@@ -178,9 +175,10 @@ const Map = ({
           maxZoom={20}
           maxNativeZoom={19}
           attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
-          url={"http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
+          url={
+            "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          }
         />
-        {/* "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" */}
       </MapContainer>
     </MapContainerStyle>
   );

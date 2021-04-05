@@ -311,12 +311,12 @@ const GoBackBtnD = styled.div`
   `,
   SmallMapWrapM = styled.div`
     position: relative;
-    height: 200px;
+    height: 270px;
     display: block;
     opacity: 1;
     background-color: #fff;
     @media (max-width: 500px) {
-      height: 100px;
+      height: 220px;
     }
   `,
   SmallMapM = styled.div`
@@ -324,10 +324,10 @@ const GoBackBtnD = styled.div`
     border: none;
     margin-top: 0px;
     overflow: hidden;
-    height: 185px;
+    height: 255px;
     border-radius: 5px;
     @media (max-width: 500px) {
-      height: 90px;
+      height: 200px;
     }
   `,
   SmallMapLocationM = styled.p`
@@ -710,6 +710,7 @@ const Company = (props) => {
                             }
                           : null
                       }
+                      height={"100%"}
                     />
                   </SmallMapM>
 

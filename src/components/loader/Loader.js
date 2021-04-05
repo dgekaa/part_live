@@ -12,6 +12,7 @@ const LoaderWrap = styled.div`
   height: 300px;
   justify-content: center;
   align-items: center;
+  background-color: red;
 `;
 
 const LoaderBottomWrap = styled.div`
