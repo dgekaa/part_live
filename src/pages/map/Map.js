@@ -271,13 +271,13 @@ const CustomMarker = ({ place, props }) => (
           />
         )}
 
-        {/* {place.mobile_stream && (
-              <TranslationBlock
-                style={{
-                  backgroundImage: `url(https://ms1.partylive.by/hls/show/${cluster.item.id}/image.jpg)`,
-                }}
-              />
-            )} */}
+        {place.mobile_stream && (
+          <TranslationBlock
+            style={{
+              backgroundImage: `url(https://ms1.partylive.by/hls/show/${place.id}/image.jpg)`,
+            }}
+          />
+        )}
       </PreviewBlock>
 
       <MarkerDesc>
@@ -326,41 +326,36 @@ const CustomMarker = ({ place, props }) => (
 const MapComponent = (props) => {
   const [markers, setMarkers] = useState([]),
     [isLoading, setIsLoading] = useState(true),
-    [gMapDefaultCenter, setGMapDefaultCenter] = useState(),
     [typeId, setTypeId] = useState(""),
     [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false),
-    [mapRef, setMapRef] = useState(null);
+    [mapRef, setMapRef] = useState(null),
+    [isRedirect, setIsRedirect] = useState(false);
 
   const loadContent = (id, loaderDelete) => {
-    const current_id = id || sessionStorage.getItem("filter_id"),
-      searchString = current_id
-        ? ` first : 180,
+      const current_id = id || sessionStorage.getItem("filter_id"),
+        searchString = current_id
+          ? ` first : 180,
         where: {
           AND : [{ column: CATEGORY_IDS, operator: LIKE, value: "%[${current_id}]%"}]
         }`
-        : ` first : 180`;
+          : ` first : 180`;
 
-    !loaderDelete && setIsLoading(true);
-    QUERY({
-      query: `query{ 
+      !loaderDelete && setIsLoading(true);
+      QUERY({
+        query: `query{ 
         placesExt(${searchString}) 
         {${PLACES_EXT_DATA_QUERY} }
       }`,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setIsLoading(false);
-        setMarkers(data.data.placesExt.data);
       })
-      .catch((err) => console.log(err, "MAP  ERR"));
-  };
-
-  useEffect(() => {
-    loadContent();
-  }, []);
-
-  const clickedType = (id) => {
+        .then((res) => res.json())
+        .then((data) => {
+          setIsLoading(false);
+          setMarkers(data.data.placesExt.data);
+        })
+        .catch((err) => console.log(err, "MAP  ERR"));
+    },
+    clickedType = (id) => {
       setMarkers([]);
       setTypeId(id);
       if (typeId !== id) {
@@ -378,43 +373,8 @@ const MapComponent = (props) => {
       setShowSlideSideMenu(true);
       document.body.style.overflow = "hidden";
       setIsShowMenu(true);
-    };
-
-  useEffect(() => {
-    window.onresize = (e) => hideSideMenu();
-  });
-
-  useEffect(() => {
-    if (sessionStorage.getItem("prevCenter")) {
-      mapRef &&
-        mapRef.setView([
-          JSON.parse(sessionStorage.getItem("prevCenter")).lat,
-          JSON.parse(sessionStorage.getItem("prevCenter")).lng,
-        ]);
-    }
-  }, [mapRef]);
-
-  // useEffect(() => {
-  //   if (navigator.geolocation && !defaultCenter) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (pos) =>
-  //         setDefaultCenter({
-  //           lat: pos.coords.latitude,
-  //           lng: pos.coords.longitude,
-  //         }),
-  //       (err) => console.log(err, " GEOLOCATION MAP ERROR")
-  //     );
-  //   } else {
-  //     console.log("Геолокация недоступна");
-  //   }
-  // }, []);
-
-  const SwipePageSpring = useSpring({
-    left: isShowMenu ? -200 : 0,
-    config: { duration: 200 },
-  });
-
-  const dancerClick = (target) => {
+    },
+    dancerClick = (target) => {
       target.previousSibling.style.opacity = 1;
       setTimeout(() => {
         target.previousSibling.style.opacity = 0;
@@ -423,9 +383,42 @@ const MapComponent = (props) => {
     hide = (e) => {
       if (e.target.className !== "SlideSideMenu" && showSlideSideMenu)
         hideSideMenu();
+    },
+    markerClick = (place) => {
+      sessionStorage.setItem("prevZoom", mapRef._zoom);
+      sessionStorage.setItem(
+        "prevCenter",
+        JSON.stringify({ lat: place.lat, lng: place.lon })
+      );
+      setIsRedirect(place.id);
     };
 
-  const [isRedirect, setIsRedirect] = useState(false);
+  useEffect(() => {
+    loadContent();
+  }, []);
+
+  useEffect(() => {
+    window.onresize = (e) => hideSideMenu();
+  });
+
+  useEffect(() => {
+    if (sessionStorage.getItem("prevCenter") && mapRef) {
+      const { lat, lng } = JSON.parse(sessionStorage.getItem("prevCenter")),
+        prevZoom = +sessionStorage.getItem("prevZoom");
+
+      mapRef.setView([lat, lng], prevZoom, {
+        animate: false,
+        pan: {
+          duration: 0,
+        },
+      });
+    }
+  }, [mapRef]);
+
+  const SwipePageSpring = useSpring({
+    left: isShowMenu ? -200 : 0,
+    config: { duration: 200 },
+  });
 
   if (isRedirect) {
     return <Redirect push to={`/company/${isRedirect}`} />;
@@ -453,12 +446,9 @@ const MapComponent = (props) => {
         <Container as={animated.div} style={SwipePageSpring}>
           <MapContainer
             className="markercluster-map"
-            whenCreated={(mapInstance) => {
-              console.log(mapInstance, "--mapInstance");
-              setMapRef(mapInstance);
-            }}
+            whenCreated={(mapInstance) => setMapRef(mapInstance)}
             style={{ height: "100%" }}
-            zoom={+sessionStorage.getItem("prevZoom") || 12}
+            zoom={12}
             maxNativeZoom={19}
             maxZoom={41}
             center={[53.904577, 27.557328]}
@@ -485,31 +475,9 @@ const MapComponent = (props) => {
                   key={place.id}
                   position={[place.lat, place.lon]}
                   eventHandlers={{
-                    click: (e) => {
-                      sessionStorage.setItem("prevZoom", mapRef._zoom);
-                      sessionStorage.setItem(
-                        "prevCenter",
-                        JSON.stringify({ lat: place.lat, lng: place.lon })
-                      );
-                      setIsRedirect(place.id);
-                    },
+                    click: (e) => markerClick(place),
                   }}
-                  icon={
-                    <CustomMarker place={place} props={props} />
-                    // <Link
-                    //   //  onClick={() => markerClick()}
-                    //   //  onMouseDown={(e) => markerMouseDown(e)}
-                    //   //  onMouseUp={(e) => markerMouseUp(e, cluster)}
-                    //   //  onTouchStart={(e) => onTouchStart(e, cluster)}
-                    //   //  onTouchEnd={(e) => onTouchEnd(e, cluster)}
-                    //   // to={`/company/${place.id}`}
-                    //   to={{
-                    //     pathname: `/company/${place.id}`,
-                    //   }}
-                    // >
-                    //   <CustomMarker place={place} />
-                    // </Link>
-                  }
+                  icon={<CustomMarker place={place} props={props} />}
                 />
               ))}
             </MarkerClusterGroup>
