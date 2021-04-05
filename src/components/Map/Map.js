@@ -110,8 +110,7 @@ const Map = ({
         icon: L.icon({
           iconUrl: `${process.env.PUBLIC_URL}/img/location.png`,
           iconSize: [30, 30],
-          iconAnchor: [22, 94],
-          popupAnchor: [-3, -76],
+          iconAnchor: [15, 30],
         }),
         draggable: true,
       },
