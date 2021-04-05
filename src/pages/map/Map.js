@@ -153,15 +153,6 @@ const NavContainerMap = styled.div`
       width: 120px;
     }
   `,
-  LoaderWrapper = styled.div`
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `,
   MarkerDesc = styled.p`
     position: relative;
     padding: 6px;
@@ -502,11 +493,7 @@ const MapComponent = (props) => {
 
         <BottomMenu isShowMenu={isShowMenu} border />
         <SlideSideMenu isShowMenu={isShowMenu} />
-        {isLoading && (
-          <LoaderWrapper style={{ height: window.innerHeight }}>
-            <Loader />
-          </LoaderWrapper>
-        )}
+        {isLoading && <Loader />}
       </div>
     );
   }
