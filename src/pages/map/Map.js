@@ -1,15 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 import styled from "styled-components";
-import { MapContainer, TileLayer } from "react-leaflet";
-import { L } from "leaflet";
-import Marker from "react-leaflet-enhanced-marker";
-// import { debounce } from "lodash";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
 import "./Map.css";
 import MarkerClusterGroup from "react-leaflet-markercluster";
+import { renderToStaticMarkup } from "react-dom/server";
 
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
@@ -76,13 +75,13 @@ const NavContainerMap = styled.div`
     height: 0;
     margin: 0 auto;
     border: 10px solid transparent;
-    border-top-color: #fff;
+    border-top-color: #000;
     border-bottom: 0;
-    position: absolute;
-    bottom: 1px;
-    left: 15px;
+    position: relative;
+    bottom: 0;
+    left: 65px;
     @media (max-width: 760px) {
-      bottom: 1px;
+      top: 200px;
       left: 10px;
     }
   `,
@@ -90,18 +89,13 @@ const NavContainerMap = styled.div`
     width: 150px;
     height: 150px;
     background-color: #fff;
-    overflow: hidden;
-    border-radius: 10px;
-    position: relative;
-    bottom: 110px;
-    right: 50px;
+    overflow: hidden !important;
+    border-radius: 10px !important;
     transition: 0.3s ease opacity;
     &:hover {
-      opacity: 0.9;
+      opacity: 1;
     }
     @media (max-width: 760px) {
-      bottom: 90px;
-      right: 40px;
       width: 120px;
       height: 130px;
     }
@@ -178,6 +172,7 @@ const NavContainerMap = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    border-bottom-right-radius: 10px;
     @media (max-width: 760px) {
       /* height: 40px; */
       padding: 0px;
@@ -244,9 +239,8 @@ const NavContainerMap = styled.div`
     }
   `;
 
-const CustomMarker = ({ place, props }) => (
+const CustomMarker = ({ place }) => (
   <div style={{ background: "gold", width: 0, height: 0 }}>
-    <MarkerArrow />
     <MarkerWrapp>
       <PreviewBlock>
         {place.streams &&
@@ -320,6 +314,7 @@ const CustomMarker = ({ place, props }) => (
         </BottomMarkerText>
       </MarkerDesc>
     </MarkerWrapp>
+    <MarkerArrow />
   </div>
 );
 
@@ -402,6 +397,11 @@ const MapComponent = (props) => {
   });
 
   useEffect(() => {
+    console.log(mapRef, "_REF");
+    if (mapRef)
+      mapRef._onResize = (e) => {
+        console.log(e);
+      };
     if (sessionStorage.getItem("prevCenter") && mapRef) {
       const { lat, lng } = JSON.parse(sessionStorage.getItem("prevCenter")),
         prevZoom = +sessionStorage.getItem("prevZoom");
@@ -454,12 +454,14 @@ const MapComponent = (props) => {
             center={[53.904577, 27.557328]}
           >
             <TileLayer
-              opacity={0.8}
+              opacity={1}
               maxNativeZoom={19}
+              zoom={12}
               maxZoom={41}
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             />
+
             <MarkerClusterGroup
               showCoverageOnHover={false}
               maxClusterRadius={100}
@@ -473,11 +475,22 @@ const MapComponent = (props) => {
               {markers.map((place) => (
                 <Marker
                   key={place.id}
-                  position={[place.lat, place.lon]}
                   eventHandlers={{
                     click: (e) => markerClick(place),
                   }}
-                  icon={<CustomMarker place={place} props={props} />}
+                  icon={L.divIcon({
+                    html: renderToStaticMarkup(
+                      <CustomMarker place={place} props={props} />
+                    ),
+                    iconAnchor: [75, 160],
+                    iconSize: [150, 150],
+
+                    popupAnchor: null,
+                    shadowUrl: null,
+                    shadowSize: [0, 0],
+                    shadowAnchor: null,
+                  })}
+                  position={[place.lat, place.lon]}
                 />
               ))}
             </MarkerClusterGroup>

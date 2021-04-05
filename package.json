@@ -39,7 +39,6 @@
     "react-easy-crop": "^2.1.1",
     "react-image-crop": "^8.6.2",
     "react-leaflet": "^3.1.0",
-    "react-leaflet-enhanced-marker": "^1.0.19",
     "react-leaflet-markercluster": "^3.0.0-rc1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.1",

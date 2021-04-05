@@ -10,3 +10,7 @@
   color: #fff;
   font-weight: bold;
 }
+.leaflet-div-icon {
+  border: none;
+  border-radius: 10px;
+}
