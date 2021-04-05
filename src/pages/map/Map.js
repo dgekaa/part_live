@@ -81,8 +81,8 @@ const NavContainerMap = styled.div`
     bottom: 0;
     left: 65px;
     @media (max-width: 760px) {
-      top: 200px;
-      left: 10px;
+      bottom: 0;
+      left: 55px;
     }
   `,
   MarkerWrapp = styled.div`
@@ -482,13 +482,16 @@ const MapComponent = (props) => {
                     html: renderToStaticMarkup(
                       <CustomMarker place={place} props={props} />
                     ),
-                    iconAnchor: [75, 160],
-                    iconSize: [150, 150],
-
+                    iconAnchor: [
+                      window.innerWidth < 760 ? 60 : 75,
+                      window.innerWidth < 760 ? 140 : 160,
+                    ],
+                    iconSize: [
+                      window.innerWidth < 760 ? 120 : 150,
+                      window.innerWidth < 760 ? 130 : 150,
+                    ],
                     popupAnchor: null,
-                    shadowUrl: null,
                     shadowSize: [0, 0],
-                    shadowAnchor: null,
                   })}
                   position={[place.lat, place.lon]}
                 />
