@@ -125,7 +125,7 @@ const SmallCompBlock = styled(Link)`
   CustomImgStyleD = styled(CustomImg)``,
   CompanyNameD = styled.p`
     color: #000;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 18px;
     line-height: 21px;
     white-space: nowrap;
@@ -151,9 +151,9 @@ const SmallCompBlock = styled(Link)`
     border-radius: 50%;
   `,
   IsOpenedD = styled.p`
-    font-weight: normal;
+    font-weight: 500;
     font-size: 14px;
-    color: #000;
+    color: #9d9d9d;
     line-height: 16px;
     white-space: nowrap;
     text-overflow: ellipsis;
