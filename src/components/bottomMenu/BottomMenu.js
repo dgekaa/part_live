@@ -43,7 +43,11 @@ const BottomMenu = ({ isShowMenu, border }) => {
   const current = window.location.pathname;
 
   return (
-    <Button to={current === "/" ? "/map" : "/"} style={{ color: defaultColor }}>
+    <Button
+      style={swipeFixedElementSpring}
+      as={animated(Link)}
+      to={current === "/" ? "/map" : "/"}
+    >
       <MenuText>{current === "/" ? "НА КАРТУ" : "НА ГЛАВНУЮ"}</MenuText>
     </Button>
   );
