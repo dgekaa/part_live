@@ -62,7 +62,7 @@ const SmallCompBlock = styled(Link)`
     }
   `,
   PreviewBlockD = styled.div`
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     overflow: hidden;
     height: 150px;
     background: #000;
@@ -70,7 +70,7 @@ const SmallCompBlock = styled(Link)`
     background-position: center;
   `,
   NoTranslationD = styled.div`
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     overflow: hidden;
     height: 150px;
     font-weight: 400;
