@@ -196,7 +196,7 @@ const GoBackBtnD = styled.div`
   ShadowBlockM = styled.div`
     flex-direction: column;
     background: #ffffff;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /* box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); */
     border-radius: 5px;
     padding-bottom: 30px;
   `,
@@ -275,7 +275,7 @@ const GoBackBtnD = styled.div`
   `,
   NameM = styled.span`
     font-weight: 700;
-    font-size: 18px;
+    font-size: 22px;
     line-height: 21px;
     letter-spacing: 0.5px;
     color: #000000;
@@ -302,8 +302,8 @@ const GoBackBtnD = styled.div`
   `,
   CircleM = styled.span`
     display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 9px;
+    height: 9px;
     border-radius: 7px;
     margin-top: -2px;
     background-color: ${({ isWork }) => (isWork ? "#04B000" : "#6D6D6D")};
@@ -334,7 +334,7 @@ const GoBackBtnD = styled.div`
     display: flex;
     color: #000000;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 16px;
     letter-spacing: 0.5px;
     white-space: nowrap;
