@@ -106,7 +106,7 @@ const GoBackBtnD = styled.div`
   DescD = styled.span`
     flex: 1;
     padding: 0 5px 0 20px;
-    height: 300px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -173,7 +173,7 @@ const GoBackBtnD = styled.div`
     overflow: hidden;
     cursor: pointer;
     width: 100%;
-    height: 85px;
+    height: 170px;
   `,
   CompanyM = styled.div`
     display: none;
@@ -471,7 +471,7 @@ const Company = (props) => {
           }}
         >
           <GoBackBtnArrowD>&#8592;</GoBackBtnArrowD>
-          На главную
+          Назад
         </GoBackBtnD>
 
         {DATA && (
@@ -588,7 +588,7 @@ const Company = (props) => {
                 >
                   <Map
                     togglePopupGoogleMap={togglePopup}
-                    styleContainerMap={{ height: "85px" }}
+                    zoom={13}
                     initialCenterMap={
                       DATA.placeExt.lat
                         ? {
@@ -597,6 +597,7 @@ const Company = (props) => {
                           }
                         : null
                     }
+                    height={"170px"}
                   />
                 </SmallMapD>
               </DescD>

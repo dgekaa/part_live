@@ -220,7 +220,7 @@ const Home = () => {
           </HomeContent>
         </HomeContentWrap>
         <BottomMenu isShowMenu={isShowMenu} border />
-        <Footer />
+        {/* <Footer /> */}
       </div>
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>

@@ -15,28 +15,22 @@ const CloseBTN = styled.span`
     position: absolute;
     top: 20px;
     left: 85%;
-    height: 25px;
-    width: 25px;
+    padding-bottom: 2px;
+    height: 50px;
+    width: 50px;
     display: -webkit-box;
     z-index: 1001;
     display: -ms-flexbox;
     display: flex;
-    font-size: 25px;
+    font-size: 40px;
     justify-content: center;
     align-items: center;
-    line-height: 21px;
+    line-height: 50px;
     background-color: #fff;
     cursor: pointer;
     border-radius: 3px;
     &:hover {
       color: red;
-    }
-    @media (max-width: 760px) {
-      height: 50px;
-      width: 50px;
-      font-size: 40px;
-      padding: 0;
-      line-height: 42px;
     }
   `,
   MapContainerStyle = styled.div`
@@ -78,6 +72,7 @@ const Map = ({
   styleContainerMap,
   closeBtn,
   height,
+  zoom,
 }) => {
   const initialCenter = initialCenterMap || {
     lat: 53.904241,
@@ -144,13 +139,14 @@ const Map = ({
     if (streetName && latLng) chooseNewAddress(streetName, latLng);
   };
 
+  const currentZoom = zoom || 14;
   return (
     <MapContainerStyle style={styleContainerMap}>
       <MapContainer
         whenCreated={(mapInstance) => setMapRef(mapInstance)}
         style={{ height: height || "100vh" }}
         center={initialCenter}
-        zoom={14}
+        zoom={currentZoom}
         maxNativeZoom={19}
         maxZoom={20}
       >

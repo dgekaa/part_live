@@ -8,14 +8,14 @@ import { defaultColor } from "../../constants";
 
 const SmallCompBlock = styled(Link)`
     width: 240px;
-    height: 240px;
+    height: 215px;
     border-radius: 10px;
     background-size: cover;
     background-position: center;
     background-color: #fff;
     transition: 0.3s ease opacity;
-    border: 1px solid #f3f3f3;
-    box-shadow: 4px 4px 4px #e5e5e5;
+    border: 1px solid #eee;
+    /* box-shadow: 4px 4px 4px #e5e5e5; */
     margin: 6px;
     margin-left: 0;
     &:hover {
@@ -30,10 +30,7 @@ const SmallCompBlock = styled(Link)`
       margin: 6px;
       margin-right: 0;
     }
-    /* &:nth-child(3n + 3) {
-    margin: 6px;
-    box-shadow: 10px 10px 10px blue;
-  } */
+
     @media (max-width: 760px) {
       height: 235px;
       margin: 5px;
@@ -333,8 +330,8 @@ const SmallCompBlock = styled(Link)`
 const SmallCompanyBlock = ({ item }) => {
   const [ismobileStream, setIsmobileStream] = useState(false);
 
-  const mouseEnter = (e) => (e.currentTarget.previousSibling.style.opacity = 1),
-    mouseOut = (e) => (e.currentTarget.previousSibling.style.opacity = 0);
+  // const mouseEnter = (e) => (e.currentTarget.previousSibling.style.opacity = 1),
+  //   mouseOut = (e) => (e.currentTarget.previousSibling.style.opacity = 0);
 
   const locationAddress =
       item.address &&
@@ -402,14 +399,14 @@ const SmallCompanyBlock = ({ item }) => {
           />
         )}
         <DescriptionD>
-          <TooltipTypeD>
+          {/* <TooltipTypeD>
             {item.categories[0] && item.categories[0].name}
-          </TooltipTypeD>
+          </TooltipTypeD> */}
           <TopDescriptionBlockD
-            onMouseEnter={(e) => mouseEnter(e)}
-            onMouseOut={(e) => mouseOut(e)}
+          // onMouseEnter={(e) => mouseEnter(e)}
+          // onMouseOut={(e) => mouseOut(e)}
           >
-            <HoverTooltip />
+            {/* <HoverTooltip /> */}
             <IconToCenter>
               {item.categories[0] && (
                 <CustomImgStyleD
@@ -441,7 +438,7 @@ const SmallCompanyBlock = ({ item }) => {
               )}
             </WorkTimeWrapD>
           </MiddleDescriptionBlockD>
-          <LocationWrapD>
+          {/* <LocationWrapD>
             <IconToCenter>
               <CustomImgStyleD
                 alt="Icon"
@@ -451,7 +448,7 @@ const SmallCompanyBlock = ({ item }) => {
               />
             </IconToCenter>
             <LocationStyleD>{locationAddress}</LocationStyleD>
-          </LocationWrapD>
+          </LocationWrapD> */}
         </DescriptionD>
       </Desctop>
       <Mobile>
