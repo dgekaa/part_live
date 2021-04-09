@@ -75,11 +75,11 @@ const NavContainerMap = styled.div`
     height: 0;
     margin: 0 auto;
     border: 10px solid transparent;
-    border-top-color: ${defaultColor};
     border-bottom: 0;
     position: relative;
     bottom: 0;
     left: 65px;
+    border-top-color: ${({ isWork }) => (isWork ? "#04b000" : " #C4C4C4")};
     @media (max-width: 760px) {
       bottom: 0;
       left: 50px;
@@ -171,8 +171,8 @@ const NavContainerMap = styled.div`
   `,
   MarkerName = styled.p`
     color: #000;
-    font-weight: 500;
-    font-size: 16px;
+    font-weight: 700;
+    font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -195,10 +195,10 @@ const NavContainerMap = styled.div`
     }
   `,
   IsOpened = styled.span`
-    color: #000;
-    font-size: 12px;
-    line-height: 13px;
-    font-weight: normal;
+    color: #9d9d9d;
+    font-size: 14px;
+    /* line-height: 14px; */
+    font-weight: 500;
     line-height: 9px;
     @media (max-width: 760px) {
       color: #909090;
@@ -224,7 +224,7 @@ const NavContainerMap = styled.div`
     }
   `,
   Opened = styled.span`
-    display: inline-block;
+    /* display: inline-block; */
     @media (max-width: 760px) {
       display: none;
     }
@@ -284,8 +284,15 @@ const CustomMarker = ({ place }) => (
             {place.is_work && (
               <Row>
                 <Circle isWork={place.is_work} />
-                <span>
-                  <Opened>Открыто</Opened> до{" "}
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#9d9d9d",
+                    marginLeft: "7px",
+                  }}
+                >
+                  До{" "}
                   {place.currentScheduleInterval.end_time
                     .split(" ")[1]
                     .split(":")
@@ -298,14 +305,23 @@ const CustomMarker = ({ place }) => (
             {!place.is_work && (
               <Row>
                 <Circle isWork={place.is_work} />
-                <span>Закрыто</span>
+                <span
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: "#9d9d9d",
+                    marginLeft: "7px",
+                  }}
+                >
+                  Закрыто
+                </span>
               </Row>
             )}
           </IsOpened>
         </BottomMarkerText>
       </MarkerDesc>
     </MarkerWrapp>
-    <MarkerArrow />
+    <MarkerArrow isWork={place.is_work} />
   </div>
 );
 
