@@ -180,7 +180,7 @@ const GoBackBtnD = styled.div`
     @media (max-width: 760px) {
       display: block;
       padding: 0;
-      margin-bottom: 100px;
+      /* margin-bottom: 100px; */
       position: relative;
     }
   `,
@@ -274,7 +274,7 @@ const GoBackBtnD = styled.div`
     justify-content: center;
   `,
   NameM = styled.span`
-    font-weight: 500;
+    font-weight: 700;
     font-size: 18px;
     line-height: 21px;
     letter-spacing: 0.5px;
@@ -282,7 +282,7 @@ const GoBackBtnD = styled.div`
   `,
   CompanyTypeM = styled.div`
     font-weight: normal;
-    font-size: 14px;
+    font-size: 16px;
     letter-spacing: 0.5px;
     padding: 8px 0 3px 0;
     display: flex;
@@ -293,19 +293,19 @@ const GoBackBtnD = styled.div`
   `,
   OpenedToM = styled.p`
     display: block;
-    font-size: 14px;
-    font-weight: normal;
+    font-size: 16px;
+    font-weight: 500;
     letter-spacing: 0.5px;
-    color: #000;
+    color: #9d9d9d;
     height: 25px;
     line-height: 25px;
-    text-transform: lowercase;
   `,
   CircleM = styled.span`
     display: inline-block;
     width: 7px;
     height: 7px;
     border-radius: 7px;
+    margin-top: -2px;
     background-color: ${({ isWork }) => (isWork ? "#04B000" : "#6D6D6D")};
     margin-right: 6px;
   `,
@@ -315,8 +315,8 @@ const GoBackBtnD = styled.div`
     display: block;
     opacity: 1;
     background-color: #fff;
-    @media (max-width: 500px) {
-      height: 220px;
+    @media (max-width: 760px) {
+      height: 190px;
     }
   `,
   SmallMapM = styled.div`
@@ -326,8 +326,8 @@ const GoBackBtnD = styled.div`
     overflow: hidden;
     height: 255px;
     border-radius: 5px;
-    @media (max-width: 500px) {
-      height: 200px;
+    @media (max-width: 760px) {
+      height: 175px;
     }
   `,
   SmallMapLocationM = styled.p`
@@ -647,7 +647,7 @@ const Company = (props) => {
               <DescM>
                 <NameRowM>
                   <NameM>{DATA.placeExt.name}</NameM>
-                  <CustomImg alt="ico" name={"back"} height="20" width="20" />
+                  {/* <CustomImg alt="ico" name={"back"} height="20" width="20" /> */}
                 </NameRowM>
                 <WithIconBlockM>
                   <DescIconsColumnM>
@@ -657,8 +657,8 @@ const Company = (props) => {
                         DATA.placeExt.categories[0] &&
                         DATA.placeExt.categories[0].slug
                       }
-                      height="16"
-                      width="16"
+                      height="20"
+                      width="20"
                     />
                     <CircleM isWork={DATA.placeExt.is_work} />
                   </DescIconsColumnM>
@@ -669,7 +669,7 @@ const Company = (props) => {
                     </CompanyTypeM>
                     <OpenedToM>
                       {DATA.placeExt.is_work && (
-                        <span>
+                        <span style={{ fontSize: "16px" }}>
                           Открыто: до{" "}
                           {DATA.placeExt.currentScheduleInterval.end_time
                             .split(" ")[1]
@@ -686,8 +686,8 @@ const Company = (props) => {
                     <CustomImgTypeM
                       alt="ico"
                       name={"location"}
-                      height="16"
-                      width="16"
+                      height="20"
+                      width="20"
                     />
                     {DATA
                       ? DATA.placeExt.address
@@ -701,8 +701,9 @@ const Company = (props) => {
                     onMouseUp={mouseUpMapHandler}
                   >
                     <Map
+                      zoom={10}
                       togglePopupGoogleMap={togglePopup}
-                      styleContainerMap={{ height: "330px" }}
+                      styleContainerMap={{ height: "180px" }}
                       initialCenterMap={
                         DATA.placeExt.lat
                           ? {
@@ -743,7 +744,6 @@ const Company = (props) => {
           />
         </Popup>
       )}
-      <BottomMenu isShowMenu={isShowMenu} />
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>
   );

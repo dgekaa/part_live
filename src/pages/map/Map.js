@@ -9,7 +9,6 @@ import "react-leaflet-markercluster/dist/styles.min.css";
 import "./Map.css";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import { renderToStaticMarkup } from "react-dom/server";
-import { defaultColor } from "../../constants";
 import CustomImg from "../../components/customImg/CustomImg";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
@@ -210,6 +209,7 @@ const NavContainerMap = styled.div`
     color: #9d9d9d;
     margin-left: 7px;
     @media (max-width: 760px) {
+      font-weight: 700;
       font-size: 11px;
       color: #bababa;
       margin-top: 2px;
@@ -385,6 +385,8 @@ const MapComponent = (props) => {
       );
       setIsRedirect(place.id);
     };
+
+  console.log(markers, "----markers");
 
   useEffect(() => {
     loadContent();
