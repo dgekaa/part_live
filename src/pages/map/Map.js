@@ -180,7 +180,7 @@ const NavContainerMap = styled.div`
     line-height: 19px;
     margin-left: 5px;
     @media (max-width: 760px) {
-      margin-top: 2px;
+      margin-top: -1px;
       font-size: 14px;
     }
   `,
@@ -211,9 +211,7 @@ const NavContainerMap = styled.div`
     margin-left: 7px;
     @media (max-width: 760px) {
       font-size: 11px;
-      font-weight: 700;
       color: #bababa;
-      margin-left: 9px;
     }
   `,
   Row = styled.div`
@@ -230,8 +228,6 @@ const NavContainerMap = styled.div`
 
     @media (max-width: 760px) {
       margin-top: 3px;
-      width: 5px;
-      height: 5px;
     }
   `,
   Opened = styled.span`
