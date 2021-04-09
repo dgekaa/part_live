@@ -212,6 +212,7 @@ const NavContainerMap = styled.div`
     @media (max-width: 760px) {
       font-size: 11px;
       color: #bababa;
+      margin-top: 2px;
     }
   `,
   Row = styled.div`
@@ -225,7 +226,6 @@ const NavContainerMap = styled.div`
     border-radius: 50%;
     margin-right: 5px;
     margin-left: 8px;
-
     @media (max-width: 760px) {
       margin-top: 3px;
     }
@@ -433,6 +433,7 @@ const MapComponent = (props) => {
         />
         <NavContainerMap>
           <CompanyNav
+            opacity={true}
             style={{ zIndex: 1 }}
             currentPage="/map"
             clickedType={clickedType}

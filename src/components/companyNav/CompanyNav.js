@@ -20,7 +20,9 @@ const CutScroll = styled.div`
     top: 48px;
     width: 100%;
     height: 60px;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: ${({ opacity }) =>
+      opacity ? "rgba(0, 0, 0, 0)" : " #eee"};
+
     -webkit-overflow-scrolling: touch;
   }
 `;
@@ -163,7 +165,13 @@ const CompNavText = styled.p`
   }
 `;
 
-const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
+const CompanyNav = ({
+  style,
+  clickedType,
+  currentPage,
+  toSlideFixedNav,
+  opacity,
+}) => {
   const [uniqueCompanyType, setUniqueCompanyType] = useState(
       sessionStorage.getItem("uniqueCompanyType")
         ? JSON.parse(sessionStorage.getItem("uniqueCompanyType"))
@@ -292,6 +300,7 @@ const CompanyNav = ({ style, clickedType, currentPage, toSlideFixedNav }) => {
 
   return (
     <CutScroll
+      opacity={opacity}
       as={animated.div}
       style={{
         ...style,
