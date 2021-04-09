@@ -28,7 +28,7 @@ const Block = styled(Link)`
   border-right: none;
   cursor: pointer;
   transition: 0.5s ease all;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
   color: #000;
