@@ -126,7 +126,7 @@ const SmallCompBlock = styled(Link)`
   CompanyNameD = styled.p`
     color: #000;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 19px;
     line-height: 21px;
     white-space: nowrap;
     text-overflow: ellipsis;
