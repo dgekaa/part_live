@@ -83,7 +83,7 @@ const CompanyNavBtn = styled.div`
   min-width: 120px;
   max-width: 150px;
   height: 54px;
-  border: 2px solid #c4c4c4;
+  border: 1px solid #eee;
   cursor: pointer;
   border-right: none;
   transition: 0.2s ease all;
@@ -94,7 +94,7 @@ const CompanyNavBtn = styled.div`
     color: #fff;
   }
   &:last-of-type {
-    border-right: 2px solid #c4c4c4;
+    border-right: 1px solid #eee;
     border-radius: 0 5px 5px 0;
   }
   &:first-of-type {

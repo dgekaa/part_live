@@ -24,7 +24,7 @@ const Block = styled(Link)`
   justify-content: center;
   width: 110px;
   height: 54px;
-  border: 2px solid #c4c4c4;
+  border: 1px solid #eee;
   border-right: none;
   cursor: pointer;
   transition: 0.5s ease all;
@@ -33,7 +33,7 @@ const Block = styled(Link)`
   text-decoration: none;
   color: #000;
   &:last-of-type {
-    border-right: 2px solid #c4c4c4;
+    border-right: 1px solid #eee;
     border-radius: 0 5px 5px 0;
   }
   &:first-of-type {
