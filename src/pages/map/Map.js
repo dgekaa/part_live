@@ -167,8 +167,7 @@ const NavContainerMap = styled.div`
     justify-content: space-around;
     border-bottom-right-radius: 10px;
     @media (max-width: 760px) {
-      /* height: 40px; */
-      padding: 0px;
+      padding: 2px;
     }
   `,
   MarkerName = styled.p`
@@ -203,8 +202,8 @@ const NavContainerMap = styled.div`
     font-weight: 500;
     line-height: 9px;
     @media (max-width: 760px) {
-      color: #909090;
       font-size: 11px;
+      line-height: 11px;
     }
   `,
   Row = styled.div`
