@@ -170,7 +170,7 @@ const Map = ({
         <TileLayer
           maxZoom={20}
           maxNativeZoom={19}
-          attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
+          // attribution="&copy; <a href='https://osm.org/copyright'>OpenStreetMap</a> contributors"
           url={
             "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           }

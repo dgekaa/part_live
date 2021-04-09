@@ -588,7 +588,7 @@ const Company = (props) => {
                 >
                   <Map
                     togglePopupGoogleMap={togglePopup}
-                    zoom={13}
+                    zoom={10}
                     initialCenterMap={
                       DATA.placeExt.lat
                         ? {
