@@ -20,7 +20,7 @@ const CutScroll = styled.div`
     top: 48px;
     width: 100%;
     height: 60px;
-    background-color: #eef1f6;
+    background-color: rgba(0, 0, 0, 0);
     -webkit-overflow-scrolling: touch;
   }
 `;

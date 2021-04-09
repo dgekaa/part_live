@@ -8,7 +8,6 @@ import SmallCompanyBlock from "../../components/smallCompanyBlock/SmallCompanyBl
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 import Loader from "../../components/loader/Loader";
 import QUERY from "../../query";
 import { PLACES_EXT_DATA_QUERY } from "../../constants";
@@ -68,6 +67,7 @@ const Home = () => {
 
   const [DATA, setDATA] = useState([]),
     [isLoading, setIsLoading] = useState(true),
+    [isBottomLoading, setIsBottomLoading] = useState(false),
     [isLocation, setIsLocation] = useState(false),
     [first, setFirst] = useState(howMachLoad),
     [typeId, setTypeId] = useState(""),
@@ -128,6 +128,7 @@ const Home = () => {
         .then((res) => res.json())
         .then((data) => {
           setIsLoading(false);
+          setIsBottomLoading(false);
           setDATA(data.data.placesExt.data);
           setFirst((prev) => (prev += howMachLoad));
           setHasMorePages(data.data.placesExt.paginatorInfo.hasMorePages);
@@ -168,6 +169,7 @@ const Home = () => {
       const { scrollHeight, scrollTop } = e.target.documentElement;
       if (scrollHeight - (scrollTop + window.innerHeight) < 3000)
         setIsLoading(true);
+      setIsBottomLoading(true);
     }
   };
 
@@ -212,7 +214,9 @@ const Home = () => {
                 <SmallCompanyBlock item={el} key={i} isLocation={isLocation} />
               ))}
 
-            {isLoading && hasMorePages && <Loader isBottom={true} />}
+            {isLoading && hasMorePages && isBottomLoading && (
+              <Loader isBottom={true} />
+            )}
 
             {!DATA.length && !isLoading && (
               <NoOneCompany>Нет заведений</NoOneCompany>
@@ -222,6 +226,9 @@ const Home = () => {
         <BottomMenu isShowMenu={isShowMenu} border />
         {/* <Footer /> */}
       </div>
+      {isLoading && hasMorePages && !isBottomLoading && (
+        <Loader isBottom={false} />
+      )}
       <SlideSideMenu isShowMenu={isShowMenu} />
     </div>
   );

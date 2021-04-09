@@ -97,7 +97,7 @@ const NavContainerMap = styled.div`
     }
     @media (max-width: 760px) {
       width: 120px;
-      height: 130px;
+      height: 120px;
     }
   `,
   CustomImgStyle = styled(CustomImg)``,
@@ -114,7 +114,7 @@ const NavContainerMap = styled.div`
     position: relative;
     text-align: center;
     @media (max-width: 760px) {
-      height: 90px;
+      height: 80px;
     }
   `,
   TranslationBlock = styled.div`
@@ -130,7 +130,7 @@ const NavContainerMap = styled.div`
     background-color: #000;
     border-radius: 10px;
     @media (max-width: 760px) {
-      height: 90px;
+      height: 80px;
       width: 120px;
       border-radius: 5px;
     }
@@ -150,7 +150,7 @@ const NavContainerMap = styled.div`
     background-size: cover;
     background-position: center;
     @media (max-width: 760px) {
-      height: 90px;
+      height: 80px;
       text-align: center;
       width: 120px;
     }
@@ -181,7 +181,7 @@ const NavContainerMap = styled.div`
     margin-left: 5px;
     @media (max-width: 760px) {
       margin-top: 2px;
-      font-size: 12px;
+      font-size: 14px;
     }
   `,
   BottomMarkerText = styled.p`
@@ -190,9 +190,7 @@ const NavContainerMap = styled.div`
     line-height: 16px;
     padding: 2px;
     @media (max-width: 760px) {
-      line-height: 8px;
-      justify-content: space-around;
-      padding: 1px;
+      margin-top: -6px;
     }
   `,
   IsOpened = styled.span`
@@ -204,6 +202,18 @@ const NavContainerMap = styled.div`
     @media (max-width: 760px) {
       font-size: 11px;
       line-height: 11px;
+    }
+  `,
+  IsOpenedText = styled.span`
+    font-size: 14px;
+    font-weight: 500;
+    color: #9d9d9d;
+    margin-left: 7px;
+    @media (max-width: 760px) {
+      font-size: 11px;
+      font-weight: 700;
+      color: #bababa;
+      margin-left: 9px;
     }
   `,
   Row = styled.div`
@@ -285,37 +295,21 @@ const CustomMarker = ({ place }) => (
             {place.is_work && (
               <Row>
                 <Circle isWork={place.is_work} />
-                <span
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#9d9d9d",
-                    marginLeft: "7px",
-                  }}
-                >
+                <IsOpenedText>
                   До{" "}
                   {place.currentScheduleInterval.end_time
                     .split(" ")[1]
                     .split(":")
                     .slice(0, 2)
                     .join(":")}
-                </span>
+                </IsOpenedText>
               </Row>
             )}
 
             {!place.is_work && (
               <Row>
                 <Circle isWork={place.is_work} />
-                <span
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: "#9d9d9d",
-                    marginLeft: "7px",
-                  }}
-                >
-                  Закрыто
-                </span>
+                <IsOpenedText>Закрыто</IsOpenedText>
               </Row>
             )}
           </IsOpened>
@@ -455,7 +449,7 @@ const MapComponent = (props) => {
           <MapContainer
             className="markercluster-map"
             whenCreated={(mapInstance) => setMapRef(mapInstance)}
-            style={{ height: "100%" }}
+            style={{ height: "100%", top: "-80px" }}
             zoom={12}
             maxNativeZoom={19}
             maxZoom={41}

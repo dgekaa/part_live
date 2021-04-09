@@ -13,7 +13,7 @@ const MenuText = styled.span`
 
 const Button = styled(Link)`
   position: fixed;
-  bottom: 24px;
+  bottom: 19px;
   margin-left: calc(50% - 65px);
   display: inline-block;
   font-size: 14px;
