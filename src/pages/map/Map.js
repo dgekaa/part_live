@@ -128,6 +128,7 @@ const NavContainerMap = styled.div`
     background-position: center;
     overflow: hidden;
     background-color: #000;
+    border-radius: 10px;
     @media (max-width: 760px) {
       height: 90px;
       width: 120px;
@@ -135,6 +136,7 @@ const NavContainerMap = styled.div`
     }
   `,
   NoTranslation = styled.p`
+    border-radius: 10px;
     color: #eee;
     padding: 3px;
     background-color: #000;
@@ -155,7 +157,7 @@ const NavContainerMap = styled.div`
   `,
   MarkerDesc = styled.p`
     position: relative;
-    padding: 6px;
+    padding: 4px;
     padding-top: 4px;
     padding-right: 6px;
     padding-left: 15px;
