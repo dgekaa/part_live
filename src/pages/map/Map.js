@@ -273,7 +273,7 @@ const CustomMarker = ({ place }) => (
             <CustomImgStyle
               className="qwe"
               alt="Icon"
-              name={place.categories[0].slug}
+              name={place.categories[0].slug + "_map"}
               width="16"
               height="16"
             />
