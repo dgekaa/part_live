@@ -80,7 +80,7 @@ const CompanyNavBtn = styled.div`
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  min-width: 110px;
+  min-width: 120px;
   max-width: 150px;
   height: 54px;
   border: 2px solid #c4c4c4;
