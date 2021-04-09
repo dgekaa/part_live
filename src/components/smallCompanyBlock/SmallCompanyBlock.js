@@ -280,6 +280,7 @@ const SmallCompBlock = styled(Link)`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top: -1px;
   `,
   WorkTimeDistanceWrapM = styled.div`
     display: flex;
