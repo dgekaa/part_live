@@ -294,9 +294,8 @@ const GoBackBtnD = styled.div`
   OpenedToM = styled.p`
     display: block;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: normal;
     letter-spacing: 0.5px;
-    color: #9d9d9d;
     height: 25px;
     line-height: 25px;
   `,
