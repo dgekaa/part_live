@@ -448,7 +448,7 @@ const MapComponent = (props) => {
           <MapContainer
             className="markercluster-map"
             whenCreated={(mapInstance) => setMapRef(mapInstance)}
-            style={{ height: "100%", top: "-80px" }}
+            style={{ height: "125%", top: "-80px" }}
             zoom={12}
             maxNativeZoom={19}
             maxZoom={41}

@@ -158,10 +158,6 @@ const PreviewPhotoD = styled.div`
   align-items: center;
   flex-direction: column;
   cursor: pointer;
-  &:hover {
-    border: ${({ doNotHoverBorder }) =>
-      doNotHoverBorder ? "" : `2px solid ${defaultColor}`};
-  }
   &:hover ${PreviewPhotoTextD} {
     color: ${defaultColor};
     transition: 0.3s ease all;
@@ -788,8 +784,6 @@ const Admin = (props) => {
         className="сompanyNavImg"
         name={slug}
         active={active ? true : false}
-        width="30"
-        height="30"
       />
     );
 
@@ -908,20 +902,16 @@ const Admin = (props) => {
                           <ProfileContentD>
                             <div>
                               {imgSrc ? (
-                                <div>
-                                  <CropWrapperD>
-                                    <ImgContainerD>
-                                      <img
-                                        ref={imageElementRef}
-                                        src={imgSrc}
-                                        alt="src"
-                                      />
-                                    </ImgContainerD>
-                                    <CanvasImageD
-                                      ref={imagePreviewCanvas}
-                                    ></CanvasImageD>
-                                  </CropWrapperD>
-                                </div>
+                                <CropWrapperD>
+                                  <ImgContainerD>
+                                    <img
+                                      ref={imageElementRef}
+                                      src={imgSrc}
+                                      alt="src"
+                                    />
+                                  </ImgContainerD>
+                                  <CanvasImageD ref={imagePreviewCanvas} />
+                                </CropWrapperD>
                               ) : (
                                 <PreviewPhotoD
                                   doNotHoverBorder={DATA.profile_image}
@@ -941,11 +931,9 @@ const Admin = (props) => {
                                       alt="image"
                                     />
                                   ) : (
-                                    <>
-                                      <PreviewPhotoTextD>
-                                        Загрузить фото
-                                      </PreviewPhotoTextD>
-                                    </>
+                                    <PreviewPhotoTextD>
+                                      Загрузить фото
+                                    </PreviewPhotoTextD>
                                   )}
                                 </PreviewPhotoD>
                               )}
@@ -1106,7 +1094,7 @@ const Admin = (props) => {
                             </div>
                             <div className="bigInputBlockWrap">
                               <p className="blockNameDesc">Категория:</p>
-                              <div className="categoryBtnWrap">
+                              <div className="categoryBtnWrapDesctop">
                                 {!!uniqueCompanyType &&
                                   uniqueCompanyType.map((el, i) => {
                                     return (
@@ -1144,24 +1132,30 @@ const Admin = (props) => {
                                         }
                                         onMouseOut={() => setHoveredBtn("")}
                                       >
-                                        {typeOfCompany &&
-                                        typeOfCompany === el.name
-                                          ? renderCustomTypeImg(el.slug, true)
-                                          : !typeOfCompany &&
-                                            DATA.categories &&
-                                            DATA.categories[0] &&
-                                            DATA.categories[0].name === el.name
-                                          ? renderCustomTypeImg(el.slug, true)
-                                          : hoveredBtn === el.name
-                                          ? renderCustomTypeImg(el.slug, true)
-                                          : renderCustomTypeImg(el.slug, false)}
-                                        <span
+                                        <div
                                           style={{
-                                            display: "inline-block",
-                                            width: "5px",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                           }}
-                                        ></span>
-                                        {el.name}
+                                        >
+                                          {typeOfCompany &&
+                                          typeOfCompany === el.name
+                                            ? renderCustomTypeImg(el.slug, true)
+                                            : !typeOfCompany &&
+                                              DATA.categories &&
+                                              DATA.categories[0] &&
+                                              DATA.categories[0].name ===
+                                                el.name
+                                            ? renderCustomTypeImg(el.slug, true)
+                                            : hoveredBtn === el.name
+                                            ? renderCustomTypeImg(el.slug, true)
+                                            : renderCustomTypeImg(
+                                                el.slug,
+                                                false
+                                              )}
+                                          {el.name}
+                                        </div>
                                       </span>
                                     );
                                   })}

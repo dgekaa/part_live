@@ -178,10 +178,6 @@ const Home = () => {
     wasLoacation && loadContent();
   }, [wasLoacation]);
 
-  // useEffect(() => {
-  //   !isLocation && loadContent();
-  // }, [isLocation]);
-
   useEffect(() => {
     if (isLoading && hasMorePages && first > howMachLoad) {
       loadContent();
