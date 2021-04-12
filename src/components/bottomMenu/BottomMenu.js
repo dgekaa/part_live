@@ -22,13 +22,17 @@ const Button = styled(Link)`
   cursor: pointer;
   width: 130px;
   border-radius: 10px;
-  display: flex;
+
   justify-content: center;
   align-items: center;
   background: ${defaultColor};
   z-index: 1;
   &:hover {
     transition: 0.3s ease all;
+  }
+  display: none;
+  @media (max-width: 760px) {
+    display: flex;
   }
 `;
 

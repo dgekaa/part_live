@@ -7,7 +7,6 @@ import CustomImg from "../../components/customImg/CustomImg";
 import Map from "../../components/Map/Map";
 import Popup from "../../components/popup/Popup";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
-import BottomMenu from "../../components/bottomMenu/BottomMenu";
 import Header from "../../components/header/Header";
 import Loader from "../../components/loader/Loader";
 import VideoPlayer from "../../components/videoPlayer/VideoPlayer";

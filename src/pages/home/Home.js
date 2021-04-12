@@ -17,7 +17,6 @@ const HomeContentWrap = styled.div`
     width: 1000px;
     margin: 0 auto;
     padding-bottom: 70px;
-
     @media (max-width: 760px) {
       position: relative;
       padding-top: 100px;
@@ -73,7 +72,8 @@ const Home = () => {
     [typeId, setTypeId] = useState(""),
     [hasMorePages, setHasMorePages] = useState(true),
     [userLat, setUserLat] = useState(null),
-    [userLon, setUserLon] = useState(null);
+    [userLon, setUserLon] = useState(null),
+    [wasLoacation, setWasLoacation] = useState(false);
 
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
     [isShowMenu, setIsShowMenu] = useState(false);
@@ -95,11 +95,16 @@ const Home = () => {
             setUserLat(pos.coords.latitude);
             setUserLon(pos.coords.longitude);
             setIsLocation(true);
+            setWasLoacation(true);
           },
-          (err) => setIsLocation(false)
+          (err) => {
+            setIsLocation(false);
+            setWasLoacation(true);
+          }
         );
       } else {
-        return setIsLocation(false);
+        setIsLocation(false);
+        setWasLoacation(true);
       }
     },
     hide = (e) => {
@@ -160,10 +165,6 @@ const Home = () => {
     config: { duration: 200 },
   });
 
-  useEffect(() => {
-    isLocation && loadContent();
-  }, [isLocation]);
-
   const scrollHandler = (e) => {
     if (hasMorePages && !isLoading) {
       const { scrollHeight, scrollTop } = e.target.documentElement;
@@ -174,12 +175,19 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (isLoading && hasMorePages) {
+    wasLoacation && loadContent();
+  }, [wasLoacation]);
+
+  // useEffect(() => {
+  //   !isLocation && loadContent();
+  // }, [isLocation]);
+
+  useEffect(() => {
+    if (isLoading && hasMorePages && first > howMachLoad) {
       loadContent();
       sessionStorage.setItem("prevZoom", "");
       sessionStorage.setItem("prevCenter", "");
     }
-
     document.addEventListener("scroll", scrollHandler);
     return () => document.removeEventListener("scroll", scrollHandler);
   }, [hasMorePages, isLoading]);
