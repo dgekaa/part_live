@@ -7,7 +7,7 @@ import CustomImg from "../../components/customImg/CustomImg";
 const LeftAdminBtnD = styled.li`
     font-size: 13px;
     font-weight: 800;
-    height: 35px;
+    height: 50px;
     cursor: pointer;
     display: flex;
     align-items: center;

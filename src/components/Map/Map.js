@@ -49,7 +49,7 @@ const CloseBTN = styled.span`
   SaveBtn = styled.div`
     background-color: #fff;
     margin-right: 10px;
-    padding: 6px;
+    height: 40px;
     border-radius: 4px;
     width: 150px;
     text-align: center;
@@ -57,16 +57,23 @@ const CloseBTN = styled.span`
     font-weight: 700;
     background-color: ${defaultColor};
     color: #fff;
+    line-height: 40px;
+    &:hover {
+      font-size: 15px;
+    }
   `,
   CancelBtn = styled.div`
     background-color: #fff;
     margin-right: 10px;
-    padding: 6px;
+    line-height: 40px;
     border-radius: 4px;
     width: 150px;
     text-align: center;
     cursor: pointer;
     font-weight: 700;
+    &:hover {
+      font-size: 15px;
+    }
   `;
 
 const Map = ({

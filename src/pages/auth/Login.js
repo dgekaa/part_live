@@ -8,6 +8,7 @@ import Header from "../../components/header/Header";
 import SlideSideMenu from "../../components/slideSideMenu/SlideSideMenu";
 import QUERY from "../../query";
 import { defaultColor } from "../../constants";
+import Loader from "../../components/loader/Loader";
 
 export const GoBackBtn = styled(Link)`
   position: relative;
@@ -181,6 +182,7 @@ const Login = () => {
     [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [isForgetPass, setIsForgetPass] = useState(false),
+    [isLoading, setIsLoading] = useState(false),
     [allValidationError, setAllValidationError] = useState("");
 
   const loginRef = useRef(null);
@@ -221,6 +223,7 @@ const Login = () => {
     };
 
   const userLogin = (email, password) => {
+    setIsLoading(true);
     QUERY({
       query: `mutation {
         login (input: {username: "${email}", password: "${password}"}) 
@@ -229,6 +232,7 @@ const Login = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        setIsLoading(false);
         if (!data.errors) {
           setCookie("origin_data", data.data.login.access_token);
           setCookie("origin_id", data.data.login.user.id);
@@ -254,6 +258,7 @@ const Login = () => {
         }
       })
       .catch((err) => {
+        setIsLoading(false);
         removeCookie("origin_data");
         removeCookie("origin_id");
         setIsLogin(false);
@@ -330,6 +335,7 @@ const Login = () => {
           </AuthBlock>
           <SlideSideMenu isShowMenu={isShowMenu} />
         </AuthBlockWrap>
+        {isLoading && <Loader />}
       </div>
     );
   }

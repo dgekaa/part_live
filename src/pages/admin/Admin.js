@@ -532,7 +532,7 @@ const Admin = (props) => {
     DATA.alias && setAliasOfCompany(DATA.alias);
   }, [DATA.alias]);
 
-  const descOfCompanyLimit = 300;
+  const descOfCompanyLimit = 180;
 
   const updatePlaceData = () => {
       if (cookies.origin_data) {
