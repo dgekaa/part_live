@@ -133,7 +133,9 @@ const Map = ({
       )
         .then((res) => res.json())
         .then((res) => {
-          setStreetName(res.address.road);
+          const { house_number, road } = res.address;
+          const addr = house_number ? road + " " + house_number : road;
+          setStreetName(addr);
           console.log(res.address, "-res address");
         })
         .catch((err) => console.log("address err", err));

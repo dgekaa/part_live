@@ -679,6 +679,7 @@ const Admin = (props) => {
         dragMode: "move",
         aspectRatio: 16 / 9,
         rotatable: true,
+        minCropBoxWidth: 50,
         movableL: true,
         modal: true,
         imageSmoothingEnabled: true,
@@ -694,7 +695,7 @@ const Admin = (props) => {
         },
       });
     }
-  }, [imageElementRef.current]);
+  }, [imgSrc]);
 
   const handeleClearToDefault = () => setImgSrc(null);
 
@@ -948,6 +949,7 @@ const Admin = (props) => {
                                         .click()
                                     }
                                   >
+                                    {/* !!!!!!!!!!!!!!! */}
                                     Изменить
                                   </span>
                                   <span
