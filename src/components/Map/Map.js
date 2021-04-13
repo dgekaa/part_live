@@ -6,10 +6,11 @@ import { defaultColor } from "../../constants";
 import L from "leaflet";
 import { MapContainer, TileLayer } from "react-leaflet";
 
-import { GeoSearchControl, OpenStreetMapProvider } from "leaflet-geosearch";
+import { GeoSearchControl, AlgoliaProvider } from "leaflet-geosearch";
 import "leaflet-geosearch/dist/geosearch.css";
 
 import "leaflet/dist/leaflet.css";
+import "./Map.css";
 
 const CloseBTN = styled.span`
     position: absolute;
@@ -37,9 +38,13 @@ const CloseBTN = styled.span`
     height: 100vh;
   `,
   BtnWrap = styled.div`
+    z-index: 1001;
+    position: absolute;
+    left: 730px;
     display: flex;
-    margin-top: 10px;
-    margin-left: 20px;
+    justify-content: center;
+    width: 300px;
+    top: 16px;
   `,
   SaveBtn = styled.div`
     background-color: #fff;
@@ -97,7 +102,7 @@ const Map = ({
 
     if (!isNewAddress) return;
 
-    const provider = new OpenStreetMapProvider();
+    const provider = new AlgoliaProvider();
     new GeoSearchControl({
       provider: provider,
       style: "bar",
@@ -151,20 +156,10 @@ const Map = ({
         maxZoom={20}
       >
         {isNewAddress && (
-          <div
-            style={{
-              zIndex: 1001,
-              position: "absolute",
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-            }}
-          >
-            <BtnWrap>
-              <SaveBtn onClick={() => save()}>СОХРАНИТЬ</SaveBtn>
-              <CancelBtn onClick={togglePopupGoogleMap}>ОТМЕНА</CancelBtn>
-            </BtnWrap>
-          </div>
+          <BtnWrap>
+            <SaveBtn onClick={() => save()}>СОХРАНИТЬ</SaveBtn>
+            <CancelBtn onClick={togglePopupGoogleMap}>ОТМЕНА</CancelBtn>
+          </BtnWrap>
         )}
         {closeBtn && <CloseBTN onClick={togglePopupGoogleMap}>&#215;</CloseBTN>}
         <TileLayer

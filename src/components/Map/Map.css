@@ -1,0 +1,28 @@
+.leaflet-control-geosearch input {
+  font-size: 14px !important;
+}
+.leaflet-control-geosearch,
+.leaflet-control-geosearch ul {
+  border-radius: 7px;
+  /* background: none repeat scroll 0 0 rgba(0, 0, 0, 0.25); */
+  margin: 10px 0 0 100px;
+  padding: 5px;
+  width: 600px;
+  height: auto;
+}
+.leaflet-touch .leaflet-geosearch-bar form {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.leaflet-control-geosearch form {
+  padding: 0;
+}
+.leaflet-control-geosearch .results.active {
+  padding: 0;
+  border: none;
+}
+.leaflet-container {
+  font: 14px Montserrat, Arial, Helvetica, sans-serif;
+}
+.leaflet-control-geosearch .results.active div {
+  border-top: 1px solid rgb(206, 206, 206);
+}
