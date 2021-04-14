@@ -145,14 +145,14 @@ const DisableStreamD = styled.span`
     -webkit-appearance: none;
     transition: 0.3s ease all;
     width: 100%;
-    font-size: 14px;
-    height: 40px;
+    font-size: 20px;
+    height: 45px;
     outline: none;
     background: #ffffff;
     border: 1px solid #e5e5e5;
     border-color: ${({ err }) => (err ? "red" : "#e5e5e5")};
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 7px;
     margin: 7px 0px;
     padding: 0 10px;
   `;
@@ -491,7 +491,6 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
           {vedeoLoading && (
             <div
               style={{
-                padding: "15px",
                 color: inputErrors["cameraError"] ? "red" : "#000",
               }}
             >
@@ -513,7 +512,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
             </div>
           )}
 
-          <DisableStreamD>
+          {/* <DisableStreamD>
             <div>
               <DisableStreamTextD>Отключить стрим</DisableStreamTextD>
               <DisableStreamToNexDayD>
@@ -532,7 +531,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
               uncheckedIcon={false}
               checkedIcon={false}
             />
-          </DisableStreamD>
+          </DisableStreamD> */}
         </>
       )}
 
@@ -542,7 +541,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
             <Inputs
               disabled={isStream}
               err={inputErrors["login"]}
-              placeholder={"Логин"}
+              placeholder={"логин"}
               value={
                 streamLoginData ||
                 (isStream &&
@@ -618,11 +617,20 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
         )}
 
         {streamType === "rtmp" && (
-          <UserSelectDiv>
-            {rtmpUrl
-              ? rtmpUrl
-              : 'Нажмите "Создать" для генерации ссылки видео-потока'}
-          </UserSelectDiv>
+          <div>
+            {rtmpUrl ? (
+              <div>
+                <p style={{ fontWeight: 500, fontSize: "16px" }}>
+                  Скопируйте адрес видеосервера в соответствующее поле в панели
+                  настроек Вашей ip-камеры
+                </p>
+
+                <UserSelectDiv>{rtmpUrl}</UserSelectDiv>
+              </div>
+            ) : (
+              <p>Нажмите "Создать" для генерации ссылки видео-потока</p>
+            )}
+          </div>
         )}
 
         <div style={{ display: "flex" }}>
