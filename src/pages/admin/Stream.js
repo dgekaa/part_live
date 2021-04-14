@@ -177,7 +177,9 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
       host: false,
       port: false,
       address: false,
-    });
+      cameraError: false,
+    }),
+    [rtmpError, setrtmpError] = useState(false);
 
   const toNewDateFormat = (date) => {
       const dataArr = date.split("/");
@@ -296,7 +298,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
         type: ${"RTMP"} 
       `;
 
-  const createStream = (name) => {
+  const createStream = (isRtmp) => {
       if (cookies.origin_data) {
         setIsLoading(true);
         QUERY(
@@ -325,12 +327,20 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
               setDATA(data.data.createStream.place);
             } else {
               createAllErrors(true);
+              setInputErrors((prevState) => {
+                return { ...prevState, cameraError: true };
+              });
               console.log(data.errors, "CREATE STREAM ERRORS");
             }
           })
           .catch((err) => {
             setIsLoading(false);
+
             createAllErrors(true);
+            setInputErrors((prevState) => {
+              return { ...prevState, cameraError: true };
+            });
+
             console.log(err, "CREATE STREAM ERR");
           });
       }
@@ -404,7 +414,11 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
       }
     },
     save = () => {
-      !isStream && !checkInpudData() && createStream(streamAddressData);
+      if (streamType === "rtsp") {
+        !isStream && !checkInpudData() && createStream();
+      } else {
+        !isStream && createStream(true);
+      }
     };
 
   let wasInterval = false;
@@ -432,6 +446,9 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
         if (count > 120) {
           clearInterval(urlTimer);
           createAllErrors(true);
+          setInputErrors((prevState) => {
+            return { ...prevState, cameraError: true };
+          });
         }
       }, 2500);
     }
@@ -445,13 +462,19 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
         <StreamTypeWrap>
           <RtspBtn
             active={streamType === "rtsp"}
-            onClick={() => setStreamType("rtsp")}
+            onClick={() => {
+              deleteErrors();
+              setStreamType("rtsp");
+            }}
           >
             RTSP
           </RtspBtn>
           <RtmpBtn
             active={streamType === "rtmp"}
-            onClick={() => setStreamType("rtmp")}
+            onClick={() => {
+              deleteErrors();
+              setStreamType("rtmp");
+            }}
           >
             RTMP
           </RtmpBtn>
@@ -469,10 +492,24 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
             <div
               style={{
                 padding: "15px",
-                color: inputErrors ? "red" : "#000",
+                color: inputErrors["cameraError"] ? "red" : "#000",
               }}
             >
-              {inputErrors ? "Неверные данные" : "Идет настройка камеры..."}
+              {inputErrors["cameraError"] ? (
+                "Неверные данные"
+              ) : (
+                <VideoWrap
+                  style={{
+                    border: "1px solid #3d3d3d",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    height: "300px",
+                  }}
+                >
+                  Идет настройка камеры...
+                </VideoWrap>
+              )}
             </div>
           )}
 
@@ -598,7 +635,12 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
             </ChooseStreamAddressSaveBtn>
           )}
           {!isStream && streamType === "rtsp" && (
-            <CancelBtnProfile onClick={() => clearData("")}>
+            <CancelBtnProfile
+              onClick={() => {
+                deleteErrors();
+                clearData("");
+              }}
+            >
               Отмена
             </CancelBtnProfile>
           )}
