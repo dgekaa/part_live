@@ -250,6 +250,7 @@ const StreamMobile = ({ closeAllSidebar, DATA, setDATA, refreshData }) => {
     }
     if (DATA.streams && DATA.streams[0]) {
       setIsStream(DATA.streams[0]);
+
       if (DATA.streams[0].rtsp_connection) {
         const RTSP = DATA.streams[0].rtsp_connection;
         setStreamPortData(RTSP.port);
@@ -257,6 +258,9 @@ const StreamMobile = ({ closeAllSidebar, DATA, setDATA, refreshData }) => {
         setStreamPasswordData(RTSP.password);
         setStreamLoginData(RTSP.login);
         setStreamAddressData(RTSP.address);
+      } else {
+        setStreamType("rtmp");
+        setRtmpUrl(DATA.streams[0].url.replace("https://", "rtmp://"));
       }
 
       DATA.streams[0].see_you_tomorrow &&
@@ -312,7 +316,9 @@ const StreamMobile = ({ closeAllSidebar, DATA, setDATA, refreshData }) => {
 
             data.data.createStream &&
               data.data.createStream.rtmp_url &&
-              setRtmpUrl(data.data.createStream.rtmp_url);
+              setRtmpUrl(
+                data.data.createStream.rtmp_url.replace("https://", "rtmp://")
+              );
             if (!data.errors) {
               refreshData();
               setDATA(data.data.createStream.place);

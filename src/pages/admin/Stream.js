@@ -184,6 +184,9 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
         setStreamPasswordData(RTSP.password);
         setStreamLoginData(RTSP.login);
         setStreamAddressData(RTSP.address);
+      } else {
+        setStreamType("rtmp");
+        setRtmpUrl(DATA.streams[0].url.replace("https://", "rtmp://"));
       }
 
       DATA.streams[0].see_you_tomorrow &&
@@ -238,7 +241,9 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
 
             data.data.createStream &&
               data.data.createStream.rtmp_url &&
-              setRtmpUrl(data.data.createStream.rtmp_url);
+              setRtmpUrl(
+                data.data.createStream.rtmp_url.replace("https://", "rtmp://")
+              );
             if (!data.errors) {
               refreshData();
               setDATA(data.data.createStream.place);
@@ -335,7 +340,6 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
 
       const urlTimer = setInterval(() => {
         count++;
-
         setVedeoLoading(true);
         fetch(isStream.url)
           .then((res) => {
