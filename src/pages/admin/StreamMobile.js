@@ -580,8 +580,12 @@ const StreamMobile = ({ closeAllSidebar, DATA, setDATA, refreshData }) => {
           </>
         )}
 
-        {streamType === "rtmp" && rtmpUrl && (
-          <UserSelectDiv>{rtmpUrl}</UserSelectDiv>
+        {streamType === "rtmp" && (
+          <UserSelectDiv>
+            {rtmpUrl
+              ? rtmpUrl
+              : 'Нажмите "Создать" для генерации ссылки видео-потока'}
+          </UserSelectDiv>
         )}
 
         <div style={{ display: "flex" }}>

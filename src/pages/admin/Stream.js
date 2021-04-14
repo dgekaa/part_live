@@ -77,7 +77,7 @@ const DisableStreamD = styled.span`
     cursor: pointer;
     border: 1px solid #eee;
     height: 40px;
-    width: 244px;
+    width: 50%;
     margin-top: 37px;
     border-radius: 5px;
     background-color: #f8104d;
@@ -98,7 +98,7 @@ const DisableStreamD = styled.span`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 244px;
+    width: 48%;
     height: 39px;
     cursor: pointer;
     margin: 38px 0 15px 0;
@@ -110,9 +110,9 @@ const DisableStreamD = styled.span`
   `,
   StreamTypeWrap = styled.div`
     display: flex;
+    justify-content: space-between;
   `,
   RtspBtn = styled(CancelBtnProfile)`
-    margin-right: 10px;
     background-color: ${({ active }) => (active ? defaultColor : "#fff")};
     color: ${({ active }) => (active ? "#fff" : "#000")};
     &:hover {
@@ -135,6 +135,26 @@ const DisableStreamD = styled.span`
     display: flex;
     align-items: center;
     margin-left: -200px;
+  `,
+  Inputs = styled.input`
+    -webkit-user-select: initial;
+    -khtml-user-select: initial;
+    -moz-user-select: initial;
+    -ms-user-select: initial;
+    user-select: initial;
+    -webkit-appearance: none;
+    transition: 0.3s ease all;
+    width: 100%;
+    font-size: 14px;
+    height: 40px;
+    outline: none;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-color: ${({ err }) => (err ? "red" : "#e5e5e5")};
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin: 7px 0px;
+    padding: 0 10px;
   `;
 
 const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
@@ -151,7 +171,13 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
     [rtmpUrl, setRtmpUrl] = useState(""),
     [isLoading, setIsLoading] = useState(false),
     [vedeoLoading, setVedeoLoading] = useState(false),
-    [inputErrors, setInputErrors] = useState(false);
+    [inputErrors, setInputErrors] = useState({
+      login: false,
+      password: false,
+      host: false,
+      port: false,
+      address: false,
+    });
 
   const toNewDateFormat = (date) => {
       const dataArr = date.split("/");
@@ -168,6 +194,56 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
       setStreamPasswordData("");
       setStreamLoginData("");
       setRtmpUrl("");
+    },
+    deleteErrors = () => {
+      setInputErrors({
+        login: false,
+        password: false,
+        host: false,
+        port: false,
+        address: false,
+      });
+    },
+    createAllErrors = () => {
+      setInputErrors({
+        login: true,
+        password: true,
+        host: true,
+        port: true,
+        address: true,
+      });
+    },
+    checkInpudData = () => {
+      if (
+        !streamAddressData ||
+        !streamPortData ||
+        !streamHostData ||
+        !streamPasswordData ||
+        !streamLoginData
+      ) {
+        !streamAddressData &&
+          setInputErrors((prevState) => {
+            return { ...prevState, address: true };
+          });
+        !streamPortData &&
+          setInputErrors((prevState) => {
+            return { ...prevState, port: true };
+          });
+        !streamHostData &&
+          setInputErrors((prevState) => {
+            return { ...prevState, host: true };
+          });
+        !streamPasswordData &&
+          setInputErrors((prevState) => {
+            return { ...prevState, password: true };
+          });
+        !streamLoginData &&
+          setInputErrors((prevState) => {
+            return { ...prevState, login: true };
+          });
+        return true;
+      }
+      return false;
     };
 
   useEffect(() => {
@@ -248,14 +324,13 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
               refreshData();
               setDATA(data.data.createStream.place);
             } else {
-              setInputErrors(true);
-
+              createAllErrors(true);
               console.log(data.errors, "CREATE STREAM ERRORS");
             }
           })
           .catch((err) => {
             setIsLoading(false);
-            setInputErrors(true);
+            createAllErrors(true);
             console.log(err, "CREATE STREAM ERR");
           });
       }
@@ -329,7 +404,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
       }
     },
     save = () => {
-      !isStream && createStream(streamAddressData);
+      !isStream && !checkInpudData() && createStream(streamAddressData);
     };
 
   let wasInterval = false;
@@ -356,7 +431,7 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
 
         if (count > 120) {
           clearInterval(urlTimer);
-          setInputErrors(true);
+          createAllErrors(true);
         }
       }, 2500);
     }
@@ -427,101 +502,90 @@ const Stream = ({ index, DATA, props, refreshData, setDATA }) => {
       <ChooseStreamAddress>
         {streamType === "rtsp" && (
           <>
-            <CameraAddressWrapper>
-              <CameraAddresLable>Логин:</CameraAddresLable>
-              <StreamAddress
-                disabled={isStream}
-                err={inputErrors}
-                placeholder={"Логин"}
-                value={
-                  streamLoginData ||
-                  (isStream &&
-                    isStream.rtsp_connection &&
-                    isStream.rtsp_connection.login)
-                }
-                onInput={(e) => {
-                  setInputErrors(false);
-                  setStreamLoginData(e.target.value);
-                }}
-              />
-            </CameraAddressWrapper>
-            <CameraAddressWrapper>
-              <CameraAddresLable>Пароль:</CameraAddresLable>
-              <StreamAddress
-                disabled={isStream}
-                err={inputErrors}
-                placeholder={"пароль"}
-                value={
-                  streamPasswordData ||
-                  (isStream &&
-                    isStream.rtsp_connection &&
-                    isStream.rtsp_connection.password)
-                }
-                onInput={(e) => {
-                  setInputErrors(false);
-                  setStreamPasswordData(e.target.value);
-                }}
-              />
-            </CameraAddressWrapper>
-            <CameraAddressWrapper>
-              <CameraAddresLable>Хост:</CameraAddresLable>
-              <StreamAddress
-                disabled={isStream}
-                err={inputErrors}
-                placeholder={"хост"}
-                value={
-                  streamHostData ||
-                  (isStream &&
-                    isStream.rtsp_connection &&
-                    isStream.rtsp_connection.host)
-                }
-                onInput={(e) => {
-                  setInputErrors(false);
-                  setStreamHostData(e.target.value);
-                }}
-              />
-            </CameraAddressWrapper>
-            <CameraAddressWrapper>
-              <CameraAddresLable>Порт:</CameraAddresLable>
-              <StreamAddress
-                disabled={isStream}
-                err={inputErrors}
-                placeholder={"порт"}
-                value={
-                  streamPortData ||
-                  (isStream &&
-                    isStream.rtsp_connection &&
-                    isStream.rtsp_connection.port)
-                }
-                onInput={(e) => {
-                  setInputErrors(false);
-                  setStreamPortData(e.target.value);
-                }}
-              />
-            </CameraAddressWrapper>
-            <CameraAddressWrapper>
-              <CameraAddresLable>Адрес:</CameraAddresLable>
-              <StreamAddress
-                disabled={isStream}
-                err={inputErrors}
-                placeholder={"адрес"}
-                value={
-                  streamAddressData ||
-                  (isStream &&
-                    isStream.rtsp_connection &&
-                    isStream.rtsp_connection.address)
-                }
-                onInput={(e) => {
-                  setInputErrors(false);
-                  setStreamAddressData(e.target.value);
-                }}
-              />
-            </CameraAddressWrapper>
+            <Inputs
+              disabled={isStream}
+              err={inputErrors["login"]}
+              placeholder={"Логин"}
+              value={
+                streamLoginData ||
+                (isStream &&
+                  isStream.rtsp_connection &&
+                  isStream.rtsp_connection.login)
+              }
+              onInput={(e) => {
+                deleteErrors();
+                setStreamLoginData(e.target.value);
+              }}
+            />
+            <Inputs
+              disabled={isStream}
+              err={inputErrors["password"]}
+              placeholder={"пароль"}
+              value={
+                streamPasswordData ||
+                (isStream &&
+                  isStream.rtsp_connection &&
+                  isStream.rtsp_connection.password)
+              }
+              onInput={(e) => {
+                deleteErrors();
+                setStreamPasswordData(e.target.value);
+              }}
+            />
+            <Inputs
+              disabled={isStream}
+              err={inputErrors["host"]}
+              placeholder={"хост"}
+              value={
+                streamHostData ||
+                (isStream &&
+                  isStream.rtsp_connection &&
+                  isStream.rtsp_connection.host)
+              }
+              onInput={(e) => {
+                deleteErrors();
+                setStreamHostData(e.target.value);
+              }}
+            />
+            <Inputs
+              disabled={isStream}
+              err={inputErrors["port"]}
+              placeholder={"порт"}
+              value={
+                streamPortData ||
+                (isStream &&
+                  isStream.rtsp_connection &&
+                  isStream.rtsp_connection.port)
+              }
+              onInput={(e) => {
+                deleteErrors();
+                setStreamPortData(e.target.value);
+              }}
+            />
+            <Inputs
+              disabled={isStream}
+              err={inputErrors["address"]}
+              placeholder={"адрес"}
+              value={
+                streamAddressData ||
+                (isStream &&
+                  isStream.rtsp_connection &&
+                  isStream.rtsp_connection.address)
+              }
+              onInput={(e) => {
+                deleteErrors();
+                setStreamAddressData(e.target.value);
+              }}
+            />
           </>
         )}
 
-        {streamType === "rtmp" && rtmpUrl && (
-          <UserSelectDiv>{rtmpUrl}</UserSelectDiv>
+        {streamType === "rtmp" && (
+          <UserSelectDiv>
+            {rtmpUrl
+              ? rtmpUrl
+              : 'Нажмите "Создать" для генерации ссылки видео-потока'}
+          </UserSelectDiv>
         )}
 
         <div style={{ display: "flex" }}>
