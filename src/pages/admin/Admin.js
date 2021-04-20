@@ -103,10 +103,15 @@ const LeftAdminMenuInnerD = styled.div`
 `;
 
 const AdminContentD = styled.div`
+  border-radius: 10px;
+  border: 1px solid #d3d3d3;
+  background-color: #fff;
   display: flex;
   flex: 4;
-  padding: 100px 10px 10px 10px;
+  margin-top: 35px;
+  padding: 35px 70px 45px 45px;
   flex-direction: column;
+  margin-bottom: 35px;
   @media (max-width: 760px) {
     display: none;
   }
@@ -137,23 +142,23 @@ const ProfileContentD = styled.div`
 
 const CropWrapperD = styled.div`
   position: relative;
-  height: 205px;
   background: #fff;
 `;
 
 const PreviewPhotoTextD = styled.p`
-  font-size: 22px;
+  font-size: 14px;
   font-weight: 500;
-  color: #aeaeae;
+  color: #4f4f4f;
 `;
 
 const PreviewPhotoD = styled.div`
   display: flex;
-  height: 200px;
-  width: 320px;
-  background-color: #f2f2f7;
+  height: 100px;
+  width: 150px;
+  background-color: #fff;
   border-radius: 10px;
   color: #aeaeae;
+  border: 1px solid #d3d3d3;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -165,8 +170,8 @@ const PreviewPhotoD = styled.div`
 `;
 
 const ImgContainerD = styled.div`
-  width: 320px;
-  height: 200px;
+  width: 150px;
+  height: 100px;
   overflow: hidden;
 `;
 
@@ -174,16 +179,8 @@ const CanvasImageD = styled.canvas`
   display: none;
 `;
 
-const DescriptionWrapD = styled.div`
-  display: flex;
-  flex-direction: column !important;
-  font-size: 10px;
-  margin-top: 10px;
-  width: ${(props) => props.width && props.width};
-  height: ${(props) => props.height && props.height};
-`;
-
 const LengthofDescriptionD = styled.span`
+  margin-top: 10px;
   padding-left: 10px;
   font-weight: 500;
   font-size: 11px;
@@ -213,7 +210,7 @@ const PreviewPhotoM = styled.div`
   display: flex;
   height: 122px;
   width: 213px;
-  background-color: #f2f2f7;
+  background-color: #fff;
   border: 2px solid #909090;
   border-radius: 10px;
   color: #aeaeae;
@@ -260,13 +257,31 @@ const DescriptionM = styled.div`
 `;
 
 const AdminMenuTitleM = styled.p`
-  text-align: center;
-  padding-top: 20px;
-  padding-bottom: 10px;
-  font-weight: bold;
-  font-size: 18px;
-  text-transform: uppercase;
-`;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
+  `,
+  Inputs = styled.input`
+    user-select: initial;
+    font-weight: 500;
+    transition: 0.3s ease all;
+    font-size: 14px;
+    display: flex;
+    height: 35px;
+    outline: none;
+    flex: 2;
+    color: #4f4f4f;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-color: ${({ err }) => (err ? "red" : "#e5e5e5")};
+    box-sizing: border-box;
+    border-radius: 7px;
+    /* margin: 7px 0px; */
+    padding: 0 10px;
+  `;
 
 const Admin = (props) => {
   const [showSlideSideMenu, setShowSlideSideMenu] = useState(false),
@@ -855,7 +870,7 @@ const Admin = (props) => {
     return <Redirect to="/login" />;
   } else {
     return (
-      <div>
+      <div style={{ background: "#EDEEF0", height: "100%" }}>
         <div onClick={(e) => hide(e)}>
           <AdminStyle
             as={animated.div}
@@ -896,207 +911,161 @@ const Admin = (props) => {
                     if (el.clicked && i === 0) {
                       return (
                         <div key={i}>
-                          <ProfileTitleD>
-                            <ProfileTitleH3D>ПРОФИЛЬ ЗАВЕДЕНИЯ</ProfileTitleH3D>
-                            <ProfileTitleNameD>({DATA.name})</ProfileTitleNameD>
-                          </ProfileTitleD>
-                          <ProfileContentD>
-                            <div>
-                              {imgSrc ? (
-                                <CropWrapperD>
-                                  <ImgContainerD>
-                                    <img
-                                      ref={imageElementRef}
-                                      src={imgSrc}
-                                      alt="src"
-                                    />
-                                  </ImgContainerD>
-                                  <CanvasImageD ref={imagePreviewCanvas} />
-                                </CropWrapperD>
-                              ) : (
-                                <PreviewPhotoD
-                                  doNotHoverBorder={DATA.profile_image}
-                                  onClick={() =>
-                                    document
-                                      .querySelector(".previewRef")
-                                      .click()
-                                  }
-                                >
-                                  {DATA.profile_image ? (
-                                    <img
-                                      className={"uploadImgStyle"}
-                                      src={`${queryPath}/storage/${DATA.profile_image.replace(
-                                        ".png",
-                                        ".jpg"
-                                      )}`}
-                                      alt="image"
-                                    />
-                                  ) : (
-                                    <PreviewPhotoTextD>
-                                      Загрузить фото
-                                    </PreviewPhotoTextD>
-                                  )}
-                                </PreviewPhotoD>
-                              )}
-                              {DATA.profile_image && !imgSrc && (
-                                <div style={{ marginTop: "10px" }}>
-                                  <span
-                                    className="changePhoto"
-                                    style={{ marginRight: "20px" }}
-                                    onClick={() =>
-                                      document
-                                        .querySelector(".previewRef")
-                                        .click()
-                                    }
-                                  >
-                                    {/* !!!!!!!!!!!!!!! */}
-                                    Изменить
-                                  </span>
-                                  <span
-                                    className="changePhoto"
-                                    onClick={() => updateOrRemoveUploadImage()}
-                                  >
-                                    Удалить
-                                  </span>
-                                </div>
-                              )}
-                              <Dropzone
-                                multiple={false}
-                                accept={acceptedFileTypes}
-                                maxSize={imageMaxSize}
-                                onDrop={(acceptedFiles, rejectedFiles) =>
-                                  handleOnDrop(acceptedFiles, rejectedFiles)
+                          <div
+                            style={{ display: "flex", marginBottom: "15px" }}
+                          >
+                            <p className="blockNameDesc">Фото:</p>
+                            {imgSrc ? (
+                              <CropWrapperD>
+                                <ImgContainerD>
+                                  <img
+                                    ref={imageElementRef}
+                                    src={imgSrc}
+                                    alt="src"
+                                  />
+                                </ImgContainerD>
+                                <CanvasImageD ref={imagePreviewCanvas} />
+                              </CropWrapperD>
+                            ) : (
+                              <PreviewPhotoD
+                                doNotHoverBorder={DATA.profile_image}
+                                onClick={() =>
+                                  document.querySelector(".previewRef").click()
                                 }
                               >
-                                {({ getRootProps, getInputProps }) => {
-                                  return (
-                                    <section style={{ display: "flex" }}>
-                                      <div
-                                        className="changePhotoBlock previewRef"
-                                        {...getRootProps()}
-                                      >
-                                        <input
-                                          className="changePhotoInput"
-                                          {...getInputProps()}
-                                        />
-                                        {imgSrc && (
-                                          <p className="changePhoto">
-                                            Изменить
-                                          </p>
-                                        )}
-                                      </div>
-                                      {imgSrc && (
-                                        <span
-                                          className="changePhoto"
-                                          onClick={handeleClearToDefault}
-                                        >
-                                          Отмена
-                                        </span>
-                                      )}
-                                    </section>
-                                  );
-                                }}
-                              </Dropzone>
+                                {DATA.profile_image ? (
+                                  <img
+                                    className={"uploadImgStyle"}
+                                    src={`${queryPath}/storage/${DATA.profile_image.replace(
+                                      ".png",
+                                      ".jpg"
+                                    )}`}
+                                    alt="image"
+                                  />
+                                ) : (
+                                  <PreviewPhotoTextD>
+                                    Загрузить
+                                  </PreviewPhotoTextD>
+                                )}
+                              </PreviewPhotoD>
+                            )}
+                          </div>
+
+                          {/* {DATA.profile_image && !imgSrc && (
+                            <div style={{ marginTop: "10px" }}>
+                              <span
+                                className="changePhoto"
+                                style={{ marginRight: "20px" }}
+                                onClick={() =>
+                                  document.querySelector(".previewRef").click()
+                                }
+                              >
+                                Изменить
+                              </span>
+                              <span
+                                className="changePhoto"
+                                onClick={() => updateOrRemoveUploadImage()}
+                              >
+                                Удалить
+                              </span>
                             </div>
+                          )} */}
+                          <Dropzone
+                            multiple={false}
+                            accept={acceptedFileTypes}
+                            maxSize={imageMaxSize}
+                            onDrop={(acceptedFiles, rejectedFiles) =>
+                              handleOnDrop(acceptedFiles, rejectedFiles)
+                            }
+                          >
+                            {({ getRootProps, getInputProps }) => {
+                              return (
+                                <section style={{ display: "flex" }}>
+                                  <div
+                                    className="changePhotoBlock previewRef"
+                                    {...getRootProps()}
+                                  >
+                                    <input
+                                      className="changePhotoInput"
+                                      {...getInputProps()}
+                                    />
+                                    {imgSrc && (
+                                      <p className="changePhoto">Изменить</p>
+                                    )}
+                                  </div>
+                                  {imgSrc && (
+                                    <span
+                                      className="changePhoto"
+                                      onClick={handeleClearToDefault}
+                                    >
+                                      Отмена
+                                    </span>
+                                  )}
+                                </section>
+                              );
+                            }}
+                          </Dropzone>
+
+                          <div className="profileDataDesc">
                             <div
-                              className="profileDataDesc"
                               style={{
-                                width: "100%",
-                                height: "250px",
-                                margin: 0,
-                                paddingLeft: "29px",
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                padding: "15px 0",
                               }}
                             >
-                              <div
-                                className="inputBlockWrap"
-                                style={{
-                                  flexDirection: "column",
-                                  alignItems: "flex-start",
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    fontWeight: "700",
-                                    fontSize: "16px",
-                                  }}
-                                >
-                                  Описание:
-                                </p>
-                                <DescriptionWrapD
-                                  width={"100%"}
-                                  height={"185px"}
-                                >
-                                  <textarea
-                                    className="descTextarea"
-                                    style={{
-                                      padding: "0 5px",
-                                    }}
-                                    maxLength={descOfCompanyLimit}
-                                    value={descOfCompany}
-                                    onChange={(e) =>
-                                      setDescOfCompany(e.target.value)
-                                    }
-                                  />
-                                  <LengthofDescriptionD
-                                    descOfCompany={descOfCompany}
-                                    descOfCompanyLimit={descOfCompanyLimit}
-                                  >
-                                    {descOfCompany.length} /{" "}
-                                    {descOfCompanyLimit}
-                                  </LengthofDescriptionD>
-                                </DescriptionWrapD>
-                              </div>
-                            </div>
-                          </ProfileContentD>
-                          <div className="profileDataDesc">
-                            <div className="inputBlockWrap">
-                              <p
-                                className="blockNameDesc"
-                                style={
-                                  validationErr["nameOfCompany"]
-                                    ? { color: "red" }
-                                    : {}
-                                }
-                              >
-                                Название заведения:
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                              <input
-                                type="text"
+                              <p className="blockNameDesc">Название:</p>
+                              <Inputs
+                                err={validationErr["nameOfCompany"]}
                                 placeholder={DATA.name}
                                 value={nameOfCompany}
-                                onChange={(e) =>
+                                onInput={(e) =>
                                   setNameOfCompany(e.target.value)
                                 }
                               />
                             </div>
-                            <div className="inputBlockWrap">
-                              <p
-                                className="blockNameDesc"
-                                style={
-                                  validationErr["aliasOfCompany"]
-                                    ? { color: "red" }
-                                    : {}
-                                }
-                              >
-                                Псевдоним:
-                                <span style={{ color: "red" }}>*</span>
-                              </p>
-                              <input
-                                pattern="^[a-zA-Z0-9]+$"
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                padding: "15px 0",
+                              }}
+                            >
+                              <p className="blockNameDesc">Псевдоним:</p>
+                              <Inputs
+                                err={validationErr["aliasOfCompany"]}
                                 type="text"
                                 placeholder={DATA.alias}
+                                value={aliasOfCompany}
+                                pattern="^[a-zA-Z0-9]+$"
+                                onInput={(e) =>
+                                  setNameOfCompany(e.target.value)
+                                }
+                              />
+                              {/* <input
+                                pattern="^[a-zA-Z0-9]+$"
+                              
+                              
                                 value={aliasOfCompany}
                                 onChange={(e) =>
                                   setAliasOfCompany(
                                     e.target.value.toLowerCase()
                                   )
                                 }
-                              />
+                              /> */}
                             </div>
-                            <div className="bigInputBlockWrap">
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                padding: "15px 0",
+                              }}
+                            >
                               <p className="blockNameDesc">Категория:</p>
-                              <div className="categoryBtnWrapDesctop">
+                              <div>
                                 {!!uniqueCompanyType &&
                                   uniqueCompanyType.map((el, i) => {
                                     return (
@@ -1139,6 +1108,7 @@ const Admin = (props) => {
                                             display: "flex",
                                             justifyContent: "center",
                                             alignItems: "center",
+                                            fontSize: "10px",
                                           }}
                                         >
                                           {typeOfCompany &&
@@ -1163,33 +1133,86 @@ const Admin = (props) => {
                                   })}
                               </div>
                             </div>
-                            <div className="inputBlockWrap">
-                              <p className="addressText blockNameDesc">
-                                Адрес заведения:
-                              </p>
-                              <div className="addressBlockWrapp">
-                                <input
-                                  disabled
-                                  type="text"
-                                  value={
-                                    DATA.address &&
-                                    DATA.address
-                                      .split(",")[0]
-                                      .replace("улица", "ул.")
-                                      .replace("проспект", "пр-т.")
-                                  }
-                                />
-                                <div>
-                                  <span
-                                    className="chooseAddressHoveredDesc"
-                                    onClick={() => togglePopupGoogleMap()}
-                                  >
-                                    ВЫБРАТЬ АДРЕС НА КАРТЕ
-                                  </span>
-                                </div>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "row",
+                                padding: "15px 0",
+                                position: "relative",
+                              }}
+                            >
+                              <p className="blockNameDesc">Адрес:</p>
+                              <Inputs
+                                type="text"
+                                disabled
+                                value={
+                                  DATA.address &&
+                                  DATA.address
+                                    .split(",")[0]
+                                    .replace("улица", "ул.")
+                                    .replace("проспект", "пр-т.")
+                                }
+                                onInput={(e) =>
+                                  setNameOfCompany(e.target.value)
+                                }
+                              />
+                              <div
+                                className="chooseAddressHoveredDesc"
+                                onClick={() => togglePopupGoogleMap()}
+                              >
+                                Указать адрес на карте
                               </div>
                             </div>
-                            <div>
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "row",
+                                padding: "15px 0 0 0",
+                                position: "relative",
+                                marginTop: "20px",
+                              }}
+                            >
+                              <p className="blockNameDesc">Описание:</p>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <textarea
+                                  className="descTextarea"
+                                  style={{
+                                    outline: "none",
+                                    overflow: "hidden",
+                                    resize: "none",
+                                    minHeight: "150px",
+                                    fontSize: "14px",
+                                    fontWeight: "500",
+                                    color: "#4f4f4f",
+                                    flex: 2,
+                                    opacity: "none",
+                                    border: "1px solid #d3d3d3",
+                                    padding: "12px",
+                                    boxSizing: "border-box",
+                                    lineHeight: "24px",
+                                    letterSpacing: " 0.5px",
+                                  }}
+                                  maxLength={descOfCompanyLimit}
+                                  value={descOfCompany}
+                                  onChange={(e) =>
+                                    setDescOfCompany(e.target.value)
+                                  }
+                                />
+                                <LengthofDescriptionD
+                                  descOfCompany={descOfCompany}
+                                  descOfCompanyLimit={descOfCompanyLimit}
+                                >
+                                  {descOfCompany.length} / {descOfCompanyLimit}
+                                </LengthofDescriptionD>
+                              </div>
+                            </div>
+                            <div style={{ marginLeft: "112px" }}>
                               <p
                                 style={{ marginRight: "20px" }}
                                 className="saveBtnProfile"
