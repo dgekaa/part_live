@@ -40,12 +40,15 @@ import LeftMenu from "./LeftMenu";
 
 const AdminStyle = styled.div`
   position: relative;
+  background: #edeef0;
+  height: 100%;
 `;
 
 const AdminWrapper = styled.div`
   display: flex;
   width: 1000px;
   margin: 0 auto;
+  background: #edeef0;
   @media (max-width: 760px) {
     max-width: 100%;
   }
@@ -73,7 +76,7 @@ const Live = styled.span`
 `;
 const LeftAdminMenuD = styled.div`
   flex: 1.5;
-  padding: 0px 10px 10px 0;
+  padding: 30px 10px 10px 0;
   @media (max-width: 760px) {
     display: none;
   }
@@ -153,12 +156,13 @@ const PreviewPhotoTextD = styled.p`
 
 const PreviewPhotoD = styled.div`
   display: flex;
-  height: 100px;
-  width: 150px;
+  height: 150px;
+  width: 200px;
   background-color: #fff;
   border-radius: 10px;
   color: #aeaeae;
   border: 1px solid #d3d3d3;
+  box-sizing: border-box;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -170,8 +174,8 @@ const PreviewPhotoD = styled.div`
 `;
 
 const ImgContainerD = styled.div`
-  width: 150px;
-  height: 100px;
+  width: 200px;
+  height: 150px;
   overflow: hidden;
 `;
 
@@ -870,8 +874,11 @@ const Admin = (props) => {
     return <Redirect to="/login" />;
   } else {
     return (
-      <div style={{ background: "#EDEEF0", height: "100%" }}>
-        <div onClick={(e) => hide(e)}>
+      <div style={{ height: "100%", background: "#edeef0" }}>
+        <div
+          onClick={(e) => hide(e)}
+          style={{ minHeight: "100%", background: "#edeef0" }}
+        >
           <AdminStyle
             as={animated.div}
             style={animateProps}
@@ -890,9 +897,6 @@ const Admin = (props) => {
               <AdminWrapper>
                 {/* __________________DESCTOP__________________ */}
                 <LeftAdminMenuD>
-                  <GoBack to={"/editCompany"}>
-                    <GoBackArrow>&#8592;</GoBackArrow>К списку заведений
-                  </GoBack>
                   <LeftAdminMenuInnerD>
                     <ul>
                       {leftMenuSettings.map((el, id) => (
@@ -1183,6 +1187,7 @@ const Admin = (props) => {
                                 <textarea
                                   className="descTextarea"
                                   style={{
+                                    borderRadius: "5px",
                                     outline: "none",
                                     overflow: "hidden",
                                     resize: "none",
@@ -1222,7 +1227,7 @@ const Admin = (props) => {
                                   checkValidationError() && updatePlaceData();
                                 }}
                               >
-                                СОХРАНИТЬ
+                                Сохранить
                               </p>
                               <Link
                                 to={"/editCompany"}
@@ -1244,7 +1249,7 @@ const Admin = (props) => {
                                   setDescOfCompany(DATA.description);
                                 }}
                               >
-                                ОТМЕНА
+                                Отмена
                               </Link>
                             </div>
                           </div>

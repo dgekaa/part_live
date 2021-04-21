@@ -238,7 +238,7 @@ const NavContainerMap = styled.div`
   `;
 
 const CustomMarker = ({ place }) => (
-  <div style={{ background: "gold", width: 0, height: 0 }}>
+  <div style={{ width: 0, height: 0 }}>
     <MarkerWrapp>
       <PreviewBlock>
         {place.streams &&
