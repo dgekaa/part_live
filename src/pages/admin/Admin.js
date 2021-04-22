@@ -940,10 +940,7 @@ const Admin = (props) => {
                                 {DATA.profile_image ? (
                                   <img
                                     className={"uploadImgStyle"}
-                                    src={`${queryPath}/storage/${DATA.profile_image.replace(
-                                      ".png",
-                                      ".jpg"
-                                    )}`}
+                                    src={`${queryPath}/storage/${DATA.profile_image}`}
                                     alt="image"
                                   />
                                 ) : (
@@ -1259,7 +1256,6 @@ const Admin = (props) => {
                     if (el.clicked && i === 1) {
                       return (
                         <div key={i} className="workTimeTableWrap">
-                          <h3 style={{ paddingLeft: "15px" }}>ГРАФИК РАБОТЫ</h3>
                           <table className="tableWorkDesc">
                             <tbody>
                               {DATA.schedules &&
@@ -1267,20 +1263,24 @@ const Admin = (props) => {
                                   const oneDay = SetNewTimeObject(
                                     DATA.schedules
                                   )[el.day];
+
                                   return (
                                     <tr key={i}>
                                       <td
                                         style={
                                           numberDayNow === i
                                             ? {
-                                                fontWeight: "700",
+                                                fontWeight: "600",
+                                                fontSize: "14px",
                                                 color: defaultColor,
                                               }
-                                            : { fontWeight: "normal" }
+                                            : {
+                                                fontWeight: "600",
+                                                fontSize: "14px",
+                                              }
                                         }
                                       >
                                         {EN_SHORT_TO_RU_SHORT[el.day]}
-
                                         {oneDay &&
                                           oneDay.start_time &&
                                           (oneDay.start_time.split(":")[0] *
@@ -1295,7 +1295,7 @@ const Admin = (props) => {
                                                   tomorrowFromDay(i)
                                                 ]
                                               }`)}
-                                        {numberDayNow === i && <DayOffDotD />}
+                                        :{numberDayNow === i && <DayOffDotD />}
                                       </td>
                                       <td
                                         style={
@@ -1594,10 +1594,7 @@ const Admin = (props) => {
                                       {DATA.profile_image ? (
                                         <img
                                           className={"uploadImgStyleMobile"}
-                                          src={`${queryPath}/storage/${DATA.profile_image.replace(
-                                            ".png",
-                                            ".jpg"
-                                          )}`}
+                                          src={`${queryPath}/storage/${DATA.profile_image}`}
                                           alt="image"
                                           style={{ height: "120px" }}
                                         />

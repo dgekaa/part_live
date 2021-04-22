@@ -256,8 +256,7 @@ const CustomMarker = ({ place }) => (
           <NoTranslation
             bg={
               place.profile_image
-                ? `${queryPath}/storage/` +
-                  place.profile_image.replace(".png", ".jpg")
+                ? `${queryPath}/storage/` + place.profile_image
                 : ""
             }
           />

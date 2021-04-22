@@ -342,7 +342,7 @@ const SmallCompanyBlock = ({ item }) => {
         .replace("проспект", "пр-т."),
     backgroundUrl = `url(https://ms1.partylive.by/hls/show/${item.id}/image.jpg)`,
     noTranslationBg = item.profile_image
-      ? `${queryPath}/storage/` + item.profile_image.replace(".png", ".jpg")
+      ? `${queryPath}/storage/` + item.profile_image
       : "",
     openedTo =
       item.currentScheduleInterval &&
@@ -375,8 +375,7 @@ const SmallCompanyBlock = ({ item }) => {
             <NoTranslationD
               bg={
                 item.profile_image
-                  ? `${queryPath}/storage/` +
-                    item.profile_image.replace(".png", ".jpg")
+                  ? `${queryPath}/storage/` + item.profile_image
                   : ""
               }
             >
